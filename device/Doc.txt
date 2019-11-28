@@ -1,0 +1,1 @@
+cordova build android --release -- --keystore=teknoerp.keystore --storePassword=syncmaster750s --alias=Nitrogen --password=syncmaster750s
