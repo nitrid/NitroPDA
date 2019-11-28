@@ -2,7 +2,7 @@ function KullaniciParametreCtrl($scope,$window,db)
 {
     let KullaniciSelectedRow = null;
     let DGetir = false;
-    let File = "./www/_terminal/lib/Param.js";
+    let File = "./www/lib/Param.js";
 
     $scope.Init = function()
     {
