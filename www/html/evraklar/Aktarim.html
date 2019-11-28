@@ -1,0 +1,277 @@
+<div ng-controller = "AktarimCtrl" ng-init = "YeniEvrak()">
+        <div class="row px-0">
+                <div class="nav-tabs-horizontal" data-plugin="tabs">
+                    <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item " role="presentation"><a class="nav-link active bg-info" data-toggle="tab" href="#!/Aktarim"
+                        aria-controls="Aktarim" role="tab">Mikarodan Verileri Al</a></li>
+                    <li class="nav-item " role="presentation"><a class="nav-link " data-toggle="tab" href="#!/EvrakGonder"
+                        aria-controls="EvrakGonder" role="tab">Evrak Gönder</a></li>
+                    </ul>
+                </div>
+            </div>
+    <div class="row">
+        <div class="col-4 px-1 offset-2">
+            <div class="checkbox-custom checkbox-info">
+                <input type="checkbox" name="inputCheckboxes" ng-model="DBDelete" checked="">
+                <label for="inputUnchecked"><div class="text-info"><div class="col-form-label py-0"><b>Tabloları Temizle</b></div></div></label>
+            </div>
+        </div>
+        <div class="col-4 py-5">
+                <div class="col-12 px-1">
+                        <input type="text" class="form-control" placeholder="Depo No" ng-model="StokDepoNo">
+                    </div>
+            </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h3 class="text-center">{{TransferEventMaster}}</h3>
+            <h4 class="text-center">{{TransferEventAlt}}</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="progress-bar progress-bar-striped acrive" aria-valuenow="900" aria-valuemin="0" aria-valuemax="100" ng-attr-style="width: {{TransferEventProgress}}%" role="progressbar">
+                <span class="sr-onyl">{{TransferEventProgress}} % Tamamlandı</span>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0">
+        <div class="col-2 px-0 mx-0">
+                <div class="panel-actions panel-actions-keep">
+                <div class="checkbox-custom checkbox-primary" >
+                    <input type="checkbox" id="inputChecked4" checked="" ng-model="StokChec">
+                    <label for="inputChecked"></label>
+                </div>
+            </div>
+        </div>
+        <div class="col-10 pt-10 px-0">
+            <div class="panel is-collapse mb-10" style="background:#FBF8F7">
+                <div class="panel-heading" data-toggle="panel-collapse" style="color:dodgerblue">
+                    <h3 class="panel-title" style="color:dodgerblue">Stok Aktarım</h3>
+                    <div class="panel-actions panel-actions-keep">
+                    <a class="panel-action icon wb-arrow-left" aria-hidden="true"></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row mt-10">
+                        <div class="col-4 px-1">
+                            <div class="col-4 offset-4 text-primary px-1"><div class="col-form-label float-right py-2"><b>AnaGrup:</b></div></div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="İlk" ng-model="AnaGrup1">
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="Son" ng-model="AnaGrup2">
+                        </div>
+                    </div>
+                    <div class="row mt-10">
+                        <div class="col-4 px-1">
+                            <div class="col-4 offset-4 text-primary px-1"><div class="col-form-label float-right py-2"><b>AltGrup:</b></div></div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="İlk" ng-model="AltGrup1">
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="Son" ng-model="AltGrup2">
+                        </div>
+                    </div>
+                    <div class="row mt-10">
+                        <div class="col-4 px-1">
+                            <div class="col-4 offset-4 text-primary px-1"><div class="col-form-label float-right py-2"><b>Uretici:</b></div></div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="İlk" ng-model="Uretici1">
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="Son" ng-model="Uretici2">
+                        </div>
+                    </div>
+                    <div class="row mt-10">
+                        <div class="col-4 px-1">
+                            <div class="col-4 offset-4 text-primary px-1"><div class="col-form-label float-right py-2"><b>Sektör:</b></div></div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="İlk" ng-model="Sektor1">
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="Son" ng-model="Sektor2">
+                        </div>
+                    </div>
+                    <div class="row mt-10">
+                        <div class="col-4 px-1">
+                            <div class="col-4 offset-4 text-primary px-1"><div class="col-form-label float-right py-2"><b>Marka:</b></div></div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="İlk" ng-model="Marka1">
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="Son" ng-model="Marka2">
+                        </div>
+                    </div>
+                    <div class="row mt-20">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary btn-block px-0 mx-0" ng-click = "BtnStokAktar()">Stok Aktar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0">
+        <div class="col-2 px-0 mx-0">
+                <div class="panel-actions panel-actions-keep">
+                <div class="checkbox-custom checkbox-primary" >
+                    <input type="checkbox" id="inputChecked4" checked="" ng-model="CariChec">
+                    <label for="inputChecked"></label>
+                </div>
+            </div>
+        </div>
+        <div class="col-10 px-0">
+            <div class="panel is-collapse my-10" style="background:#FBF8F7">
+                <div class="panel-heading" data-toggle="panel-collapse" style="color:dodgerblue">
+                    <h3 class="panel-title" style="color:dodgerblue">Cari Aktarım</h3>
+                    <div class="panel-actions panel-actions-keep">
+                    <a class="panel-action icon wb-arrow-left" aria-hidden="true"></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row mt-10">
+                        <div class="col-4 px-1">
+                            <div class="col-4 offset-4 text-primary px-1"><div class="col-form-label float-right py-2"><b>Grup:</b></div></div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="İlk" ng-model="Grup1">
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="Son" ng-model="Grup2">
+                        </div>
+                    </div>
+                    <div class="row mt-10">
+                        <div class="col-4 px-1">
+                            <div class="col-4 offset-4 text-primary px-1"><div class="col-form-label float-right py-2"><b>Bölge:</b></div></div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="İlk" ng-model="Bolge1">
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="Son" ng-model="Bolge2">
+                        </div>
+                    </div>
+                    <div class="row mt-10">
+                        <div class="col-4 px-1">
+                            <div class="col-4 offset-4 text-primary px-1"><div class="col-form-label float-right py-2"><b>Temsilci:</b></div></div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="İlk" ng-model="Temsilci1">
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="Son" ng-model="Temsilci2">
+                        </div>
+                    </div>
+                    <div class="row mt-10">
+                        <div class="col-4 px-1">
+                            <div class="col-4 offset-4 text-primary px-1"><div class="col-form-label float-right py-2"><b>Sektör:</b></div></div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="İlk" ng-model="CSektor1">
+                        </div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control" placeholder="Son" ng-model="CSektor2">
+                        </div>
+                    </div>
+                    <div class="row mt-20">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary btn-block px-0 mx-0"  ng-click = "BtnCariAktar()">Cari Aktar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0">
+        <div class="col-2 px-0 mx-0">
+                <div class="panel-actions panel-actions-keep">
+                <div class="checkbox-custom checkbox-primary" >
+                    <input type="checkbox" id="inputChecked4" checked="" ng-model="SipChec">
+                    <label for="inputChecked"></label>
+                </div>
+            </div>
+        </div>
+        <div class="col-10 px-0">
+            <div class="panel is-collapse my-10" style="background:#FBF8F7">
+                <div class="panel-heading" data-toggle="panel-collapse" style="color:dodgerblue">
+                    <h3 class="panel-title" style="color:dodgerblue">Sipariş Aktarım</h3>
+                    <div class="panel-actions panel-actions-keep">
+                    <a class="panel-action icon wb-arrow-left" aria-hidden="true"></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row mt-20">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary btn-block px-0 mx-0" ng-click = "BtnSipAktar()">Sipariş Aktar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0">
+        <div class="col-2 px-0 mx-0">
+            <div class="panel-actions panel-actions-keep">
+            <div class="checkbox-custom checkbox-primary" >
+                <input type="checkbox" id="inputChecked4" checked="" ng-model="NakChec">
+                <label for="inputChecked"></label>
+            </div>
+        </div>
+        </div>
+        <div class="col-10 px-0">
+            <div class="panel is-collapse my-10" style="background:#FBF8F7">
+                <div class="panel-heading" data-toggle="panel-collapse" style="color:dodgerblue">
+                    <h3 class="panel-title" style="color:dodgerblue">Depo Nakliye Aktarım</h3>
+                    <div class="panel-actions panel-actions-keep">
+                    <a class="panel-action icon wb-arrow-left" aria-hidden="true"></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row mt-20">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary btn-block px-0 mx-0" ng-click = "BtnNakAktar()">Nakliye Aktar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="row mt-20">
+        <div class="col-6 offset-3">
+            <button type="submit" class="btn btn-primary btn-block px-0 mx-0" ng-click = "BtnTopluAktar()"> Seçilenleri Aktar</button>
+        </div>
+    </div>
+        
+    <!-- <div class="row px-10">
+        <div class="col-12">
+            <div class="example-wrap my-0 py-0">
+                <h6>Yükleniyor...
+                <span class="float-right">40%</span>
+                </h6>
+                <div class="progress progress-sm my-0 py-0">
+                <div class="progress-bar progress-bar-indicating active " style="width: 40%;" role="progressbar"></div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- <div class="row mt-20 px-10">
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary btn-block px-0 mx-0" ng-click = "Aktarim()">Seçili Olanları Aktar</button>
+        </div>
+    </div> -->
+</div>
+
+
+<h3 class="text-center">{{TransferEventMaster}}</h3>
+<h4 class="text-center">{{TransferEventAlt}}</h4>
+<!-- <h2 class="text-center">{{TransferEventProgress | number:0}}</h2> -->
+<div class="progress-bar progress-bar-striped acrive" aria-valuenow="900" aria-valuemin="0" aria-valuemax="100" ng-attr-style="width: {{TransferEventProgress}}%" role="progressbar">
+  <span class="sr-onyl">{{TransferEventProgress}} % Tamamlandı</span>
+</div>
+
