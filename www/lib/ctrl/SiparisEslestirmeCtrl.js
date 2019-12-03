@@ -1422,6 +1422,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.ChaTip = 0;
             $scope.ChaCins = 6;
             $scope.ChaNormalIade = 0;
+            $scope.EvrakTip = 4;
 
             $scope.CariEvrakTip = 63;
             $scope.CariTip = 0;
