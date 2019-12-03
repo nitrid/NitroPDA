@@ -260,18 +260,18 @@
                 <div class="modal-body py-10">
                     <div class="panel">
                         <div class="form-group row my-2">
-                            <label class="form-control-label col-lg-2 col-md-2 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Evrak No:</b></span></div></label>
-                            <input type="text" class="form-control col-lg-10 col-md-10 col-sm-8 offset-0" ng-model="EvrakNo">
+                            <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Evrak No:</b></span></div></label>
+                            <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrakNo">
                         </div>
                         <div class="form-group row my-2">
-                            <label class="form-control-label col-lg-2 col-md-2 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Depo:</b></span></div></label>
-                            <select class="form-control col-lg-10 col-md-10 col-sm-8" ng-model="DepoNo" ng-change="PageRefresh()" ng-disabled="EvrakLock">
+                            <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Depo:</b></span></div></label>
+                            <select class="form-control col-lg-9 col-md-9 col-sm-8" ng-model="DepoNo" ng-change="PageRefresh()" ng-disabled="EvrakLock">
                                 <option ng-repeat="option in DepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
                         <div class="row my-0 py-0">
-                            <div class="col-sm-4 col-lg-2 col-md-2 px-1"><div class="col-form-label px-1 float-right  py-2"><span style="color:dodgerblue;"><b>Tarih:</b></span></div></div>
-                            <div class="col-sm-8 col-lg-10 col-md-10 px-1">
+                            <div class="col-sm-4 col-lg-3 col-md-3 "><div class="col-form-label px-1 float-right  py-2"><span style="color:dodgerblue;"><b>Tarih:</b></span></div></div>
+                            <div class="col-sm-8 col-lg-9 col-md-9 px-0">
                                 <div class="input-group input-group-icon">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">

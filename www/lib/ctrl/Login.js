@@ -90,23 +90,21 @@ function Login ($scope,$rootScope,$window,db)
         $window.location.reload();
     }
     $scope.BtnEntry = function()
-    { console.log(Param[$scope.User])
-        Param.forEach(function(item)
-        {            
-            if(item.Kullanici == Param[$scope.User].Kullanici && item.Sifre == $scope.Password)
+    {
+        for(i = 0;i < Param.length;i++)
+        {
+            if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
             {
+                console.log("Kullanıcı adı ve şifre doğru");
+                
                 $window.sessionStorage.setItem('Firma', $scope.Firm);
-                $window.sessionStorage.setItem('User', $scope.User);
+                $window.sessionStorage.setItem('User', i);
                 
                 var url = "main.html";
                 $window.location.href = url;
                 return;
             }
-            else
-            {
-                console.log("Kullanıcı adı ve şifre yanlış");   
-            }
-        });
+        }
         alertify.okBtn("Tamam");
         alertify.alert("Kullanıcı adı veya şifre yanlış");
     }
