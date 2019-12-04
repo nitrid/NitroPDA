@@ -18,7 +18,6 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
             }
         }
 
-        
         for(i = 0; i < MenuList.length; i ++)
         {
             if(i % 2 == 0)
@@ -43,6 +42,8 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
     }
     $scope.YeniEvrak = function()
     {
+        console.log(1)
+
         gtag('config', 'UA-12198315-14', 
         {
             'page_title' : 'Anasayfa',
