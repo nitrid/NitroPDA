@@ -2,6 +2,7 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
 {
     $scope.Firma = $window.sessionStorage.getItem('Firma');
     $scope.User = $window.sessionStorage.getItem('User');
+    $scope.Loading = true;
     function MenuOlustur(MenuData)
     {   
         let MenuList = [];
@@ -13,14 +14,16 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
             {   
                 if(Param[$scope.User].Menu[MenuData.Menu.Item[i].Item[x].Name] == "1")
                 {
+                    $scope.Loading = false;
                     MenuList.push(MenuData.Menu.Item[i].Item[x])
                 }
             }
         }
 
         for(i = 0; i < MenuList.length; i ++)
-        {
+        {        
             if(i % 2 == 0)
+            
             {
                 HtmlText = HtmlText + "<div class='row mx-5 pt-5'>";
                 HtmlText = HtmlText + "<div class='col-6 px-5'>"
@@ -55,6 +58,7 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
             db.Emit('GetMenu','',function(MenuData)
             {
                 MenuOlustur(JSON.parse(MenuData));
+
             });
         }
         else
