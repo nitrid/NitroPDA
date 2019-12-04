@@ -2,7 +2,6 @@
 {
     $scope.Firma = $window.sessionStorage.getItem('Firma');
     $scope.User = $window.sessionStorage.getItem('User');
-    console.log(1)
 
     function MenuOlustur(MenuData)
     {   

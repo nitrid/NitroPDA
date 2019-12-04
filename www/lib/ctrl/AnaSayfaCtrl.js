@@ -2,6 +2,7 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
 {
     $scope.Firma = $window.sessionStorage.getItem('Firma');
     $scope.User = $window.sessionStorage.getItem('User');
+    $scope.Loading = true;
     function MenuOlustur(MenuData)
     {   
         let MenuList = [];
@@ -13,7 +14,7 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
             {   
                 if(Param[$scope.User].Menu[MenuData.Menu.Item[i].Item[x].Name] == "1")
                 {
-                   
+                    $scope.Loading = false;
                     MenuList.push(MenuData.Menu.Item[i].Item[x])
                 }
             }
@@ -45,7 +46,6 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
     }
     $scope.YeniEvrak = function()
     {
-        $scope.Deneme = "Mahir"
         gtag('config', 'UA-12198315-14', 
         {
             'page_title' : 'Anasayfa',
@@ -57,8 +57,7 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
             db.Emit('GetMenu','',function(MenuData)
             {
                 MenuOlustur(JSON.parse(MenuData));
-                $scope.Loading = true;
-                $scope.Uploaded = false;
+
             });
         }
         else
