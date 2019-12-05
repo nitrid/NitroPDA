@@ -14,7 +14,7 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
             {   
                 if(Param[$scope.User].Menu[MenuData.Menu.Item[i].Item[x].Name] == "1")
                 {
-                    $scope.Loading = false;
+                    
                     MenuList.push(MenuData.Menu.Item[i].Item[x])
                 }
             }
@@ -45,7 +45,6 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
     }
     $scope.YeniEvrak = function()
     {
-        console.log(1)
 
         gtag('config', 'UA-12198315-14', 
         {
@@ -57,8 +56,14 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
         {
             db.Emit('GetMenu','',function(MenuData)
             {
-                MenuOlustur(JSON.parse(MenuData));
 
+                if(MenuData.length > 0)
+                {
+                    $scope.Loading = false;
+                }
+                MenuOlustur(JSON.parse(MenuData));
+      
+               // $scope.AnimLoading = false;
             });
         }
         else
