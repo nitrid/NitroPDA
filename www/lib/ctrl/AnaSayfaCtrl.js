@@ -20,7 +20,6 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
             }
         }
 
-        
         for(i = 0; i < MenuList.length; i ++)
         {        
             if(i % 2 == 0)
