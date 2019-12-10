@@ -923,7 +923,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     $scope.StokHarListe = IrsaliyeData;
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
-                        BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
+                        BedenHarInsert(InsertResult.result.recordset[0].sth_RECno);
                     } 
                     InsertAfterRefresh(IrsaliyeData);       
                     $scope.InsertLock = false  
@@ -1271,11 +1271,11 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0, //CARİCİNSİ
             $scope.CariKodu,
             $scope.Personel,
-            0, //HARDOVİZCİNSİ
-            0, //HARDOVİZKURU
-            0, //ALTDOVİZKURU
-            0, //STOKDOVİZCİNSİ
-            0, //STOKDOVİZKURU
+            $scope.CariDovizCinsi, //HARDOVİZCİNSİ
+            $scope.CariDovizKuru, //HARDOVİZKURU
+            $scope.CariAltDovizKuru, //ALTDOVİZKURU
+            $scope.Stok[0].DOVIZCINSI, //STOKDOVİZCİNSİ
+            $scope.Stok[0].DOVIZCINSKURU, //STOKDOVİZKURU
             $scope.Miktar * $scope.Stok[0].CARPAN,
             $scope.Miktar2,
             $scope.Stok[0].BIRIMPNTR,
@@ -1296,7 +1296,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0, // MASRAFVERGİ
             $scope.OdemeNo,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
             '',//AÇIKLAMA
-            '00000000-0000-0000-0000-000000000000', //sth_sip_uid
+            $scope.Stok[0].RECNO, //sth_sip_uid
             ChaGuid, //sth_fat_uid,
             $scope.DepoNo, //GİRİSDEPONO
             0,             //CİKİSDEPONO
@@ -1406,6 +1406,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.CariCins = 0;        
             $scope.CariNormalIade = 0;
             $scope.CariEvrakTip = 1;
+            $scope.EvrakTip = 1;
 
             $scope.StokEvrakTip = 1;
             $scope.StokNormalIade = 0;
@@ -1422,6 +1423,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.ChaTip = 0;
             $scope.ChaCins = 6;
             $scope.ChaNormalIade = 0;
+            $scope.EvrakTip = 4;
 
             $scope.CariEvrakTip = 63;
             $scope.CariTip = 0;
@@ -1447,7 +1449,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.CariCins = 0;        
             $scope.CariNormalIade = 0;
             $scope.CariEvrakTip = 1;
- 
+            $scope.EvrakTip = 1;
             
             $scope.StokEvrakTip = 1;
             $scope.StokNormalIade = 0;
@@ -1463,6 +1465,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.CariCins = 0;        
             $scope.CariNormalIade = 0;
             $scope.CariEvrakTip = 1;
+            $scope.EvrakTip = 1;
  
             
             $scope.StokEvrakTip = 1;

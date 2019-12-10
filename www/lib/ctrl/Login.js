@@ -1,6 +1,6 @@
 function Login ($scope,$rootScope,$window,db)
 {
-    let Firma = "TEST";
+    let Firma = "";
     $scope.server_adress = localStorage.host;
     $scope.server_port = localStorage.port;
     $scope.socket_port = localStorage.socketport;        

@@ -1960,7 +1960,7 @@ var QuerySql =
                 ",@cha_e_islem_turu								--<cha_e_islem_turu, tinyint,> \n" + 
                 ",0												--<cha_fatura_belge_turu, tinyint,> \n" + 
                 ",''											--<cha_diger_belge_adi, nvarchar(50),> \n" + 
-                ",'00000000-0000-0000-0000-00000000000000'											--<cha_uuid, nvarchar(40),> \n" + 
+                ",NEWID()											--<cha_uuid, nvarchar(40),> \n" + 
                 ",1												--<cha_adres_no, int,> \n" + 
                 ",0												--<cha_vergifon_toplam, float,> \n" + 
                 ",'18991230'									--<cha_ilk_belge_tarihi> \n" + 

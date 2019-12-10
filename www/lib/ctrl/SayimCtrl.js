@@ -92,7 +92,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             }, 
             {
                 name: "sip_miktar",
-                title: "MİKTAR",
+                title: "SAYIM1",
                 type: "number",
                 align: "center",
                 width: 100
