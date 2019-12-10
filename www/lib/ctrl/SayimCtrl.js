@@ -92,21 +92,21 @@ function SayimCtrl($scope,$window,$timeout,db)
             }, 
             {
                 name: "sym_miktar1",
-                title: "MİKTAR1",
+                title: "SAYIM1",
                 type: "number",
                 align: "center",
                 width: 100
             }, 
             {
                 name: "sym_miktar2",
-                title: "MİKTAR2",
+                title: "SAYIM2",
                 type: "number",
                 align: "center",
                 width: 100
             }, 
             {
                 name: "sym_miktar3",
-                title: "MİKTAR3",
+                title: "SAYIM3",
                 type: "number",
                 align: "center",
                 width: 100
