@@ -60,7 +60,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             updateOnResize: true,
             heading: true,
             selecting: true,
-            data : $scope.SiparisListe,
+            data : $scope.SayimListe,
             paging : true,
             pageSize: 50,
             pageButtonCount: 3,
@@ -77,7 +77,7 @@ function SayimCtrl($scope,$window,$timeout,db)
                 
             }, 
             {
-                name: "sip_stok_kod",
+                name: "sym_Stokkodu",
                 title: "KODU",
                 type: "text",
                 align: "center",
@@ -91,68 +91,26 @@ function SayimCtrl($scope,$window,$timeout,db)
                 width: 200
             }, 
             {
-                name: "sip_miktar",
-                title: "MİKTAR",
+                name: "sym_miktar1",
+                title: "MİKTAR1",
                 type: "number",
                 align: "center",
                 width: 100
             }, 
             {
-                name: "FIYAT",
-                title: "FİYAT",
+                name: "sym_miktar2",
+                title: "MİKTAR2",
                 type: "number",
                 align: "center",
                 width: 100
             }, 
             {
-                name: "sip_tutar",
-                title: "TUTAR",
+                name: "sym_miktar3",
+                title: "MİKTAR3",
                 type: "number",
                 align: "center",
                 width: 100
             }, 
-            {
-                name: "sip_iskonto_1",
-                title: "IND1",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sip_iskonto_2",
-                title: "IND2",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sip_iskonto_3",
-                title: "IND3",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sip_iskonto_4",
-                title: "IND4",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sip_iskonto_5",
-                title: "IND5",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sip_iskonto_6",
-                title: "IND6",
-                type: "number",
-                align: "center",
-                width: 100
-            }
            ],
             rowClick: function(args)
             {

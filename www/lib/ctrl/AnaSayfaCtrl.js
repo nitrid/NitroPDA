@@ -56,7 +56,6 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
         {
             db.Emit('GetMenu','',function(MenuData)
             {
-
                 if(MenuData.length > 0)
                 {
                     $scope.Loading = false;
