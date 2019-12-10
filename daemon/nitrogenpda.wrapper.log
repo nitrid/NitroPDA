@@ -1,2 +1,17 @@
 2019-12-03 11:55:10 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Projects\NitroPDA\node_modules\node-windows\lib\wrapper.js --file C:\Projects\NitroPDA\server.js --log "NitroGen PDA wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2019-12-03 11:55:10 - Started 6704
+2019-12-03 16:16:36 - Stopping nitrogenpda.exe
+2019-12-03 16:16:36 - ProcessKill 6704
+2019-12-03 16:16:36 - Found child process: 15184 Name: conhost.exe
+2019-12-03 16:16:37 - Found child process: 6780 Name: node.exe
+2019-12-03 16:16:37 - Stopping process 15184
+2019-12-03 16:16:37 - Send SIGINT 15184
+2019-12-03 16:16:37 - SIGINT to 15184 failed - Killing as fallback
+2019-12-03 16:16:37 - Stopping process 6780
+2019-12-03 16:16:37 - Send SIGINT 6780
+2019-12-03 16:16:37 - SIGINT to 6780 failed - Killing as fallback
+2019-12-03 16:16:37 - Stopping process 6704
+2019-12-03 16:16:37 - Send SIGINT 6704
+2019-12-03 16:16:37 - SIGINT to 6704 failed - Killing as fallback
+2019-12-03 16:16:37 - Finished nitrogenpda.exe
+2019-12-05 10:00:50 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Projects\NitroPDA\node_modules\node-windows\lib\wrapper.js --file C:\Projects\NitroPDA\server.js --log "NitroGen PDA wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined

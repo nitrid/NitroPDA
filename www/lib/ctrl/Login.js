@@ -93,18 +93,27 @@ function Login ($scope,$rootScope,$window,db)
     {
         for(i = 0;i < Param.length;i++)
         {
-            if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
+            if($scope.Firm != "")
             {
-                console.log("Kullanıcı adı ve şifre doğru");
-                
-                $window.sessionStorage.setItem('Firma', $scope.Firm);
-                $window.sessionStorage.setItem('User', i);
-                
-                var url = "main.html";
-                $window.location.href = url;
-                return;
+                if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
+                {
+                    console.log("Kullanıcı adı ve şifre doğru");
+                    
+                    $window.sessionStorage.setItem('Firma', $scope.Firm);
+                    $window.sessionStorage.setItem('User', i);
+                    
+                    var url = "main.html";
+                    $window.location.href = url;
+                    return;
+                } 
             }
-        }
+            else
+            {
+                alertify.alert("Firmanın yüklenmesini bekleyin"); 
+                return;  
+            }   
+        }  
+        
         alertify.okBtn("Tamam");
         alertify.alert("Kullanıcı adı veya şifre yanlış");
     }
