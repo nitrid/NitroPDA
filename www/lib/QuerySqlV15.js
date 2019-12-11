@@ -474,7 +474,7 @@ var QuerySql =
         "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sth_har_doviz_cinsi,0))),'TL') AS DOVIZSEMBOL, " + 
         "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sth_har_doviz_cinsi,0),2)),1) AS DOVIZKUR " + 
         "FROM STOK_HAREKETLERI AS Hesaplama WHERE sth_evraktip IN (13,3) AND  " + 
-        "sth_Guid = (SELECT TOP 1 sth_Guid FROM STOK_HAREKETLERI AS Hesaplama1  " + 
+        "sth_RECno = (SELECT TOP 1 sth_RECno FROM STOK_HAREKETLERI AS Hesaplama1  " + 
         "WHERE Hesaplama1.sth_evraktip IN (13,3)  AND Hesaplama1.sth_stok_kod = Hesaplama.sth_stok_kod  " + 
         "ORDER BY sth_create_date DESC) AND Hesaplama.sth_stok_kod  = @sth_stok_kod" , 
         param : ['sth_stok_kod'],

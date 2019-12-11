@@ -1082,7 +1082,6 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.CariFiyatListe ,  // FİYATLİSTENO
             0   //NAKLİYEDEPO
           ];
-          console.log(InsertData)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
