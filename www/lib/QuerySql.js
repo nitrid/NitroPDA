@@ -612,7 +612,7 @@ var QuerySql =
                 "SIPARIS.sip_belge_tarih AS BELGETARIH, " +
                 "SIPARIS.sip_satici_kod AS SATICIKOD, " +
                 "SIPARIS.sip_musteri_kod AS CARI, " +
-                "SIPARIS.sip_b_fiyat AS FIYAT, " +
+                "ROUND(SIPARIS.sip_b_fiyat * SIPARIS.sip_doviz_kuru,2)  AS FIYAT, " +
                 "ISNULL(BEDENHAR.BdnHar_HarGor,SIPARIS.sip_miktar) AS SIPMIKTAR, " +
                 "SIPARIS.sip_birim_pntr AS BIRIMPNTR, " +
                 "ISNULL(BEDENHAR.BdnHar_TesMik,SIPARIS.sip_teslim_miktar) AS TESLIMMIKTAR, " +
