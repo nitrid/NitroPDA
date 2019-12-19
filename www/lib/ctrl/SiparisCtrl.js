@@ -120,7 +120,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.IskTplTutar4 = 0;
         $scope.IskTplTutar5 = 0;
         $scope.IskTplTutar = 0;
-        
+
+        $scope.Loading = false;
+        $scope.TblLoading = false;
     }
     function InitCariGrid()
     {
@@ -136,14 +138,13 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             pageSize: 50,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
-            fields: 
+            fields:
             [
                 {
                     name: "KODU",
                     type: "number",
                     align: "center",
                     width: 100
-                    
                 },
                 {
                     name: "UNVAN1",
@@ -810,6 +811,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnCariListele = function()
     {   
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -827,8 +830,19 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
-            $scope.CariListe = data;      
-            $("#TblCari").jsGrid({data : $scope.CariListe});
+            $scope.CariListe = data;
+            if($scope.CariListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCari").jsGrid({data : $scope.CariListe});  
+            }
+            else
+            {
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            }
+
+            
         });
     }
     $scope.BtnPartiLotGetir = function()
@@ -919,6 +933,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnStokGridGetir = function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -930,13 +946,22 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             Adi = $scope.StokGridText.replace("*","%").replace("*","%");
         }
-            
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+                
+            
         });
-
     }
     $scope.BtnStokGridSec = function()
     {
