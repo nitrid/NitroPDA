@@ -103,7 +103,10 @@ angular.module("app",
     {
         templateUrl : "html/ayarlar/KullaniciParametre.html"
     })
-    //RAPORLAR
+    .when("/CariSecimliSiparisRaporu",
+    {
+        templateUrl : "html/rapor/CariSecimliSiparisRaporu.html"
+    })
     .when("/CariHesapHareket",
     {
         templateUrl : "html/rapor/CariHesapHareket.html"
@@ -115,10 +118,6 @@ angular.module("app",
     .when("/StokRapor",
     {
         templateUrl : "html/rapor/StokRapor.html"
-    })
-    .when("/Cari Seçimli Sipariş Raporu",
-    {
-        templateUrl : "html/rapor/CariSecimliSiparisRaporu.html"
     });
 });
 

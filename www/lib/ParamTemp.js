@@ -248,6 +248,6 @@ var ParamTemp =
 			"Cari Hesap Hareket" : {"Title" : "Cari Hesap Hareket","DefaultValue" : "1"},
 			"Cari Hesap Bakiye" : {"Title" : "Cari Hesap Bakiye","DefaultValue" : "1"},
 			"Stok Rapor" : {"Title" : "Stok Rapor","DefaultValue" : "1"},
-			"Cari Seçimli Sipariş Raporu" : {"Title" : "Cari Seçimli Sipariş Raporu","DefaultValue" : "1"}
+			"Cari Secimli Siparis Raporu" : {"Title" : "Cari Secimli Siparis Raporu","DefaultValue" : "1"}
 		}
 	}

@@ -1,6 +1,6 @@
 <div class="col-12" ng-controller="CariHesapBakiyeCtrl" ng-init="Init()">
     <br>
-    <div class="panel ">
+    <div class="panel my-2">
         <div class="row">
             <div class="col-xl-4 offset-xl-4 col-md-4 offset-md-4 col-sm-11 offset-1">
                 <h4 class="text-primary">Cari Hesap Bakiye Raporu</h4>
@@ -13,7 +13,7 @@
                 <label class="form-control-label text-primary">Cari Seçim</label>
                 <input type="text" class="form-control focus" placeholder="Cari Listelemek İçin Tıklayınız..." data-target="#MdlCariGetir" data-toggle="modal" ng-model="CariAdi">
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-sm-4 col-md-1 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
                 <div class="col-sm-8 col-md-4 px-1">
                     <div class="input-group input-group-icon">
@@ -38,7 +38,7 @@
                         <input type="text" class="form-control" id="SonTarih" type="text" ng-model="SonTarih" data-provide="datepicker" ng-disabled="EvrakLock">
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="row py-5">
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">Getir</button>
@@ -47,8 +47,6 @@
             <div id="TblCariFoy" class="pt-5"></div>
         </div>
     </div>
-
-
     <!-- Cari Listele Modal -->
     <div class="modal fade" id="MdlCariGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-simple modal-center modal-primary">
@@ -87,11 +85,11 @@
 </div>
 
 <script>
-        $("#IlkTarih").datepicker({
+    $("#IlkTarih").datepicker({
         language: "tr"
         });
-        $("#SonTarih").datepicker({
+    $("#SonTarih").datepicker({
         language: "tr"
         });
-    </script>
+</script>
         

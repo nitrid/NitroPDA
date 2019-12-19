@@ -225,7 +225,7 @@ var Param = [
 			"Cari Hesap Hareket" : "1",
 			"Stok Rapor": "0",
 			"EvrakGonder": "1",
-			"Cari Seçimli Sipariş Raporu" : ""
+			"Cari Secimli Siparis Raporu" : "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "1",
