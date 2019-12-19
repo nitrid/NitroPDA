@@ -88,7 +88,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.TxtCariAra = ""; 
         $scope.OtoEkle = false;
         $scope.EvrakLock = false;
-        $scope.BarkodLock = false;   
+        $scope.BarkodLock = false;
+        $scope.FiyatLock = UserParam.AlinanSiparis.FiyatLock;
+
         $scope.IslemListeSelectedIndex = -1;  
         $scope.PartiLotListeSelectedIndex = 0;
 
@@ -823,7 +825,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
         }
         
-        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi],function(data)
+        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -1066,7 +1068,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         InitCariGrid();
         InitIslemGrid();
         InitStokGrid();
-
         InitPartiLotGrid();
 
         //ALINAN = 0 VERİLEN = 1
@@ -1074,6 +1075,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             ParamName = "AlinanSiparis";
         else
             ParamName = "VerilenSiparis";
+
 
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
@@ -1096,7 +1098,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         
         if($scope.CariKodu != "")
         {
-            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,''],function(data)
+            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
             {
                 $scope.CariListe = data;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -1192,7 +1194,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
-        $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;  
+        $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
+        $scope.Personel = $scope.CariListe[pIndex].TEMSILCI;
+        $scope.PersonelAdi = $scope.CariListe[pIndex].TEMSILCIADI;
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -1491,7 +1495,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     $scope.BedenHarListe = BedenData;
                 });
                 
-                db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,''],function(data)
+                db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
                 {   
                     $scope.CariListe = data;
             

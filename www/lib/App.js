@@ -83,14 +83,6 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/Aktarim.html"
     })
-    .when("/CariRapor",
-    {
-        templateUrl : "html/rapor/CariRapor.html"
-    })
-    .when("/StokRapor",
-    {
-        templateUrl : "html/rapor/StokRapor.html"
-    })
     .when("/UrunGirisCikis",
     {
         templateUrl : "html/evraklar/UrunGirisCikis.html"
@@ -110,6 +102,23 @@ angular.module("app",
     .when("/KullaniciParametre",
     {
         templateUrl : "html/ayarlar/KullaniciParametre.html"
+    })
+    //RAPORLAR
+    .when("/CariHesapHareket",
+    {
+        templateUrl : "html/rapor/CariHesapHareket.html"
+    })
+    .when("/CariHesapBakiye",
+    {
+        templateUrl : "html/rapor/CariHesapBakiye.html"
+    })
+    .when("/StokRapor",
+    {
+        templateUrl : "html/rapor/StokRapor.html"
+    })
+    .when("/Cari Seçimli Sipariş Raporu",
+    {
+        templateUrl : "html/rapor/CariSecimliSiparisRaporu.html"
     });
 });
 

@@ -1358,7 +1358,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                     
                     if($scope.CariKodu != "")
                     {
-                        db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,''],function(data)
+                        db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
                         {
                             $scope.CariListe = data;
                             $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -1799,7 +1799,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
 
         if($scope.CariKodu != "")
         {
-            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,''],function(data)
+            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
             {
                 $scope.CariListe = data;
                 $("#TblCari").jsGrid({data : $scope.CariListe});

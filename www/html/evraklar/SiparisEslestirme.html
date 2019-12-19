@@ -83,11 +83,8 @@
                         </div>
                     </div>
                     <div class="row my-0 py-0">
-                        <div class="col-3 text-info px-1"><div class="col-form-label px-1 float-right  py-2">SERİ:</div></div>
-                        <div class="col-3 px-1">
-                            <input type="text" class="form-control" ng-model="SipSeri" ng-disabled="EvrakLock">
-                        </div>
-                        <div class="col-6 px-1">
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">İlk Tarih :</div></div>
+                        <div class="col-8 px-1">
                             <div class="input-group input-group-icon">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">
@@ -99,11 +96,8 @@
                         </div>
                     </div>
                     <div class="row my-0 py-0">
-                        <div class="col-3 text-info px-1"><div class="col-form-label px-1 float-right  py-2">SIRA:</div></div>
-                        <div class="col-3 px-1">
-                            <input type="text" class="form-control" ng-model="SipSira" ng-disabled="EvrakLock">
-                        </div>
-                        <div class="col-6 px-1">
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Son Tarih :</div></div>
+                        <div class="col-8 px-1">
                             <div class="input-group input-group-icon">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">
@@ -112,6 +106,12 @@
                                 </div>
                                 <input type="text" class="form-control" id="SipTarih2" type="text" ng-model="SipTarih2" data-provide="datepicker" ng-disabled="EvrakLock">
                             </div>
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">SERİ - SIRA:</div></div>
+                        <div class="col-8 px-1">
+                            <input type="text" class="form-control" ng-model="SipSeriSira" ng-keypress = "BarkodSiparisAra($event)">
                         </div>
                     </div>
                     <div class="row py-1">

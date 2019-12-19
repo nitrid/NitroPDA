@@ -1,4 +1,4 @@
-function CariRaporCtrl($scope,$window,db)
+function CariHesapHareketCtrl($scope,$window,db)
 {   
     let CariSelectedRow = null;
 
@@ -74,7 +74,7 @@ function CariRaporCtrl($scope,$window,db)
                     title: "EVRAK TİP",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 180
                 },
                 {
                     name: "CINSI",
@@ -106,52 +106,52 @@ function CariRaporCtrl($scope,$window,db)
                 },
                 {
                     name: "ANADOVIZBORC",
-                    title: "A.D BORC",
+                    title: "ANA DOViZ BORÇ",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 200
                 },
                 {
                     name: "ANADOVIZALACAK",
-                    title: "A.D ALACAK",
+                    title: "ANA DÖVİZ ALACAK",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 200
                 },
                 {
                     name: "ANADOVIZBORCBAKIYE",
-                    title: "A.D BORÇ BAKIYE",
+                    title: "ANA DÖVİZ BORÇ BAKIYE",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 200
                 },
                 {
                     name: "ANADOVIZALACAKBAKIYE",
-                    title: "A.D ALACAK BAKİYE",
+                    title: "ANA DÖVİZ ALACAK BAKİYE",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 220
                 },
                 {
                     name: "ORJINALDOVIZBORCBAKIYE",
-                    title: "O.D.B BORÇ BAKİYE",
+                    title: "ORJINAL DÖVİZ BORÇ BAKİYE",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 250
                 },
                 {
                     name: "ORJINALDOVIZALACAKBAKİYE",
-                    title: "O.D ALACAK BAKİYE",
+                    title: "ORJINAL DÖVİZ ALACAK BAKİYE",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 250
                 },
                 {
                     name: "ORJINALDOVIZ",
                     title: "ORJINAL DÖVİZ",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 180
                 }
             ],
         });
@@ -171,38 +171,6 @@ function CariRaporCtrl($scope,$window,db)
 
         InitCariGrid();
         InitCariFoyGrid();
-    }
-    $scope.BtnGetir = function()
-    {
-        var TmpQuery = 
-        {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT " +
-                    "CASE WHEN EVRAKTIP = 0 THEN 'ÖDEME' WHEN EVRAKTIP = 1 THEN 'TEDİYE' END AS TIPADI, " +
-                    "EVRAKTIP AS EVRAKTIP, " +
-                    "MKODU AS KODU, " +
-                    "ISNULL((SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MKODU),'') AS CARIADI, " +
-                    "CASE WHEN TIP = 0 THEN " +
-                    "'NAKİT' " +
-                    "WHEN TIP = 1 THEN " +
-                    "'KREDİ KARTI' " +
-                    "WHEN TIP = 2 THEN " +
-                    "'AÇIK HESAP' " +
-                    "END AS TIP, " +
-                    "CAST(SUM(TUTAR) AS decimal(10,2)) AS TUTAR " +
-                    "FROM TERP_POS_TAHSILAT WHERE SUBE = @SUBE AND TARIH >= @ILKTARIH AND TARIH <= @SONTARIH " +
-                    "GROUP BY MKODU,TIP,EVRAKTIP",
-            param:  ['SUBE','ILKTARIH','SONTARIH'],
-            type:   ['int','date','date'],
-            value:  [$scope.Sube,$scope.IlkTarih,$scope.SonTarih]
-        }
-
-        db.GetDataQuery(TmpQuery,function(Data)
-        {
-            $scope.IslemListe = Data;
-            $("#TblIslem").jsGrid({data : $scope.IslemListe});
-            $scope.GenelToplam = db.SumColumn($scope.IslemListe,"TUTAR","EVRAKTIP = 0") - db.SumColumn($scope.IslemListe,"TUTAR","EVRAKTIP = 1");
-        });
     }
     $scope.BtnCariSec = function()
     {   
@@ -225,7 +193,7 @@ function CariRaporCtrl($scope,$window,db)
             }
         }
         
-        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi],function(data)
+        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -240,7 +208,7 @@ function CariRaporCtrl($scope,$window,db)
                     "msg_S_0090 AS SERI, " +
                     "msg_S_0091 AS SIRA, " +
                     "msg_S_0094 AS EVRAKTIP, " +
-                    "msg_S_0090 AS CINSI, " +
+                    "msg_S_0003 AS CINSI, " +
                     "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
                     "msg_S_0099 AS VADEGUN, " +
                     "msg_S_0100 AS BA, " +

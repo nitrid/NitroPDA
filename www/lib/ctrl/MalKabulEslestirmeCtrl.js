@@ -1371,7 +1371,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             }
         }
         
-        db.GetData($scope.Firma,'CariGetir',[Kodu,Adi],function(data)
+        db.GetData($scope.Firma,'CariGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -1443,7 +1443,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         let Kodu =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
         let Adi = '';
 
-        db.GetData($scope.Firma,'CariGetir',[Kodu,Adi],function(data)
+        db.GetData($scope.Firma,'CariGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
             $scope.CariListe = data;
             $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -1695,7 +1695,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                     
                     if($scope.CariKodu != "")
                     {
-                        db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,''],function(data)
+                        db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
                         {
                             $scope.CariListe = data;
                             $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -1846,7 +1846,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
 
         if($scope.CariKodu != "")
         {
-            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,''],function(data)
+            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
             {
                 $scope.CariListe = data;
                 $("#TblCari").jsGrid({data : $scope.CariListe});

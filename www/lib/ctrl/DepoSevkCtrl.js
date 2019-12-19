@@ -762,7 +762,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                 Adi = $scope.TxtCariAra;
         }
         
-        db.CariListe($scope.Firma,'CariListeGetir',[Kodu,Adi],function(data)
+        db.CariListe($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
