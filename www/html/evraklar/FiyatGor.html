@@ -255,7 +255,10 @@
                             <button class="btn btn-block btn-primary" ng-click="BtnStokGridGetir()">Getir</button>
                         </div>
                     </div>
-                    <div id="TblStok" class="pt-5"></div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblStok" class="pt-5" ng-show="TblLoading"></div>
                     <div ng-hide="Combo">
                         <div class="row">
                             <div class="col-11 offset-1">

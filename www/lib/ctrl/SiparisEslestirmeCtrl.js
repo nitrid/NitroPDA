@@ -115,6 +115,9 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         // DÜZENLE MODAL
         $scope.MiktarEdit = 0;
         $scope.FiyatEdit = 0;
+
+        $scope.Loading = false;
+        $scope.TblLoading = false;
     }
     function InitCariGrid()
     {   
@@ -1535,6 +1538,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnCariListele = function()
     {   
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -1552,8 +1557,18 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
-            $scope.CariListe = data;      
-            $("#TblCari").jsGrid({data : $scope.CariListe});
+            $scope.CariListe = data;   
+            if ($scope.CariListe.length > 0)   
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            }
+            else
+            {
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            }
+            
         });
     }
     $scope.MiktarFiyatValid = function()
@@ -2016,6 +2031,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.DepoChange = function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         $scope.DepoListe.forEach(function(item) 
         {
             if(item.KODU == $scope.DepoNo)
@@ -2024,6 +2041,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnStokGridGetir = function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI
         let Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA
         let Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD
@@ -2031,7 +2050,12 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,0],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblSiparisListe").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblSiparisListe").jsGrid({data : $scope.StokListe});
+            }   
         });
     }
     $scope.BtnStokGridSec = function()

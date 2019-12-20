@@ -122,7 +122,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.IskTplTutar = 0;
 
         $scope.Loading = false;
-        $scope.TblLoading = false;
+        $scope.TblLoading = true;
     }
     function InitCariGrid()
     {

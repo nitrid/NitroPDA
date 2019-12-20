@@ -87,6 +87,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
 
         // DÜZENLE MODAL
         $scope.MiktarEdit = 0;
+
+        $scope.TblLoading = true;
         
     }
     function InitIslemGrid()
@@ -770,6 +772,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnStokGridGetir = function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -785,7 +789,17 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if ($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            
         });
     }
     $scope.BtnStokGridSec = function()

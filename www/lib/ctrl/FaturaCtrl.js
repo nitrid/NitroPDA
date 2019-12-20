@@ -1105,9 +1105,10 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                 Kodu = $scope.TxtCariAra.replace("*","%").replace("*","%");
             }
         }
-        
-        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi],function(data)
+        console.log(1)
+        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
+            console.log(2)
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
         });

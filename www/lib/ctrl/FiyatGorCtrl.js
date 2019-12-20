@@ -54,6 +54,9 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = false;
         $scope.DepoMiktar = false;
         $scope.Combo = true;
+
+        $scope.Loading = false;
+        $scope.TblLoading = true;
     }
     function InitDepoMiktarGrid()
     {
@@ -386,6 +389,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         let Kodu = '';
         let Adi = '';
         let Marka = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;
 
         if($scope.StokGridTip == "0")
         {   
@@ -399,15 +404,24 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         {
             Marka = $scope.Marka;
         }
-      
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,Marka],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+           
         });
     }
     $scope.BtnStokGridSec = function()
-    {   
+    {
         $("#MdlStokGetir").modal('hide');
         StokBarkodGetir($scope.Barkod);
         $scope.StokListe = [];
