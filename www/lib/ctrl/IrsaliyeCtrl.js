@@ -121,6 +121,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.IskTplTutar4 = 0;
         $scope.IskTplTutar5 = 0;
         $scope.IskTplTutar = 0;
+
+        $scope.TblLoading = true;
     }
     function InitCariGrid()
     {   
@@ -911,6 +913,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnCariListele = function()
     {   
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -926,10 +930,20 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
         }
         
-        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi],function(data)
+        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
-            $scope.CariListe = data;      
-            $("#TblCari").jsGrid({data : $scope.CariListe});
+            $scope.CariListe = data;
+            if($scope.CariListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            } 
+            else
+            {
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            }     
+            
         });
     }
     $scope.BtnPartiLotGetir = function()
@@ -1018,6 +1032,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnStokGridGetir = function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -1033,6 +1049,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
+            if($scope.StokListe.length > 0)
+            $scope.Loading = false;
+            $scope.TblLoading = true;
             $("#TblStok").jsGrid({data : $scope.StokListe});
         });
 

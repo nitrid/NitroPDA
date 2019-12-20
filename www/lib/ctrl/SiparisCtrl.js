@@ -958,9 +958,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             else
             {
                 $("#TblStok").jsGrid({data : $scope.StokListe});
-            }
-                
-            
+            }     
         });
     }
     $scope.BtnStokGridSec = function()

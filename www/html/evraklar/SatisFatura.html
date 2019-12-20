@@ -183,6 +183,9 @@
                             <button class="form-group btn btn-block btn-primary my-1 h-40" ng-click="BtnCariListele()">Cari Listele</button>
                         </div>
                     </div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
                     <div class="row py-1 px-1">
                         <div id="TblCari"></div>
                     </div>
@@ -393,7 +396,10 @@
                             </div>
                         </div>
                     </div>
-                    <div id="TblStok" class="pt-5"></div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblStok" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
         </div>

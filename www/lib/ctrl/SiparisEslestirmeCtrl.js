@@ -117,7 +117,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.FiyatEdit = 0;
 
         $scope.Loading = false;
-        $scope.TblLoading = false;
+        $scope.TblLoading = true;
     }
     function InitCariGrid()
     {   
@@ -1734,7 +1734,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     {
         if(keyEvent.which  === 13)
         {
-            $scope.SipTarih1 = "01.01.2000";
+            $scope.SipTarih1 = "01.01.2019";
             $scope.BtnSiparisKabulListele();
         }
     }
@@ -1985,11 +1985,16 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         let PlasiyerKodu = '';
 
         $scope.CariKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
-        PlasiyerKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].TEMSILCIKODU
-        $scope.Personel = PlasiyerKodu;
 
-        console.log($scope.Personel)
-
+        if(typeof($scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].TEMSILCIKODU) != 'undefined')
+        {
+            PlasiyerKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].TEMSILCIKODU;
+            $scope.Personel = PlasiyerKodu;
+        }
+        else
+        {
+            db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data){$scope.PersonelListe = data;$scope.Personel = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].PERSONEL.toString();});
+        }
         db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',PlasiyerKodu],function(data)
         {
             $scope.CariListe = data;
@@ -2013,9 +2018,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     $scope.DepoAdi = item.ADI;
             });     
         });
-
         db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data){$scope.SorumlulukListe = data;$scope.Sorumluluk = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SORUMLULUK.toString();});
-        //db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data){$scope.PersonelListe = data;$scope.Personel = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].PERSONEL.toString();});    
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data;$scope.ProjeKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].PROJE.toString();});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].ODEMENO.toString();});
     }

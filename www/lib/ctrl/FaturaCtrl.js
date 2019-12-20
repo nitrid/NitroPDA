@@ -115,6 +115,8 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
+
+        $scope.TblLoading = true; 
        
     }
     function InitCariGrid()
@@ -1066,6 +1068,8 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnStokGridGetir = function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -1081,7 +1085,13 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            
         });
     }
     $scope.BtnStokGridSec = function()
@@ -1091,6 +1101,8 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnCariListele = function()
     {   
+        $scope.Loading = true;
+        $scope.TblLoading = false;    
         let Kodu = '';
         let Adi = '';
 
@@ -1105,12 +1117,19 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                 Kodu = $scope.TxtCariAra.replace("*","%").replace("*","%");
             }
         }
-        console.log(1)
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
-            console.log(2)
-            $scope.CariListe = data;      
-            $("#TblCari").jsGrid({data : $scope.CariListe});
+            $scope.CariListe = data;  
+            if($scope.CariListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;    
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            }
+            else
+            {
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            }
         });
     }
     $scope.BirimChange = function()
