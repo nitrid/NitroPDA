@@ -75,7 +75,7 @@ function CariHesapBakiyeCtrl($scope,$window,db)
                     type: "text",
                     align: "center",
                     width: 200
-                }
+                },
             ],
         });
     }
@@ -86,6 +86,7 @@ function CariHesapBakiyeCtrl($scope,$window,db)
 
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = "";
+        $scope.CariKodu = "";
         $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
 
@@ -127,15 +128,27 @@ function CariHesapBakiyeCtrl($scope,$window,db)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "exec dbo.msp_CARI_BAKIYE_ANALIZ_FOYU N'0',0,0,@KODU,@KODU,@KODU,N'0,1,2',null,null,1,0,N'',0,N'',0,N'',0,0,0,0,0,0,1 ",
+            query:  "exec dbo.msp_CARI_BAKIYE_ANALIZ_FOYU N'0',0,0,@KODU ,@KODU,@KODU,N'0,1,2',null,null,1,0,N'',0,N'',0,N'',0,0,0,0,0,0,1 ",
 
             param:  ['KODU'],
             type:   ['string|25'],
-            value:  [$scope.Carikodu]
+            value:  [$scope.CariKodu]
         }
 
         db.GetDataQuery(TmpQuery,function(Data)
         {
+            for(i=0; i < Data.length; i++)
+            {
+                if(Data[i].msg_S_0957 < 0)
+                {
+                    $scope.Deneme ="Borç"
+                }
+                else
+                {
+                    console.log("Alacak")
+                }
+            }
+
             $scope.CariFoyListe = Data;
             $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
         });
