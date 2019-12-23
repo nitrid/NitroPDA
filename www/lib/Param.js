@@ -2,7 +2,7 @@ var Param = [
 	{
 		"Kullanici": "Admin",
 		"Sifre": "1",
-		"MikroId": "1",
+		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "1",
 			"SubeNo": "0",
@@ -21,6 +21,7 @@ var Param = [
 			"AktarimDepoNo": "2",
 			"PlasiyerKodu" : "",
 			"FiyatDegistir" : "1",
+			"SiparisOnayListele" : "-1",
 		},
 		"Sayim": {
 			"EvrakNo": "50",
@@ -47,6 +48,7 @@ var Param = [
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": false,
+			"SiparisOnay" : "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -63,7 +65,8 @@ var Param = [
 			"AlisSarti": "1",
 			"FiyatListe": "0",
 			"EvrakSil": "0",
-			"PartiSec": "0"
+			"PartiSec": "0",
+			"SiparisOnay" : "1"
 		},
 		"DepoSevk": {
 			"EvrakTip": "2",
@@ -225,7 +228,8 @@ var Param = [
 			"Cari Hesap Hareket" : "1",
 			"Stok Rapor": "0",
 			"EvrakGonder": "1",
-			"Cari Secimli Siparis Raporu" : "1"
+			"Cari Secimli Siparis Raporu" : "1",
+			"Cari Secimli Siparis Durum Raporu" : "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "1",

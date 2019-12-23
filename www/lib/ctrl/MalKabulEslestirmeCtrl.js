@@ -1356,7 +1356,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnCariListele = function()
     {   
-        let Kodu = '002';
+        let Kodu = '';
         let Adi = '';
 
         if($scope.TxtCariAra != "")

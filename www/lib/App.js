@@ -107,6 +107,10 @@ angular.module("app",
     {
         templateUrl : "html/rapor/CariSecimliSiparisRaporu.html"
     })
+    .when("/CariSecimliSiparisDurumRaporu",
+    {
+        templateUrl : "html/rapor/CariSecimliSiparisDurumRaporu.html"
+    })
     .when("/CariHesapHareket",
     {
         templateUrl : "html/rapor/CariHesapHareket.html"
