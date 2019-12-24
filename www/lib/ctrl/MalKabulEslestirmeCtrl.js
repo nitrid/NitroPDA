@@ -121,6 +121,8 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         // DÜZENLE MODAL
         $scope.MiktarEdit = 0;
         $scope.FiyatEdit = 0;
+
+        $scope.TblLoading = true;
     }
     function InitCariGrid()
     {   
@@ -1356,7 +1358,9 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnCariListele = function()
     {   
-        let Kodu = '002';
+        $scope.Loading = true;
+        $scope.TblLoading = false;
+        let Kodu = '';
         let Adi = '';
 
         if($scope.TxtCariAra != "")
@@ -1373,23 +1377,23 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         
         db.GetData($scope.Firma,'CariGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
-            $scope.CariListe = data;      
-            $("#TblCari").jsGrid({data : $scope.CariListe});
-        });
-    }
-    $scope.BtnSiparisKabulListele = async function()
-    {
-        let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1];
+            $scope.CariListe = data; 
 
-        await db.GetPromiseTag($scope.Firma,"SiparisKabulListele",TmpParam,function(data)
-        {
-            $scope.SiparisKabulListe = data;
-            $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+            if($scope.CariListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            }     
+            else
+            {
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            }
         });
     }
     $scope.BtnSiparisKabulListele = async function()
     {
-        let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1];
+        let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1,UserParam.Sistem.PlasiyerKodu];
 
         await db.GetPromiseTag($scope.Firma,"SiparisKabulListele",TmpParam,function(data)
         {
@@ -1440,9 +1444,9 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     {
         $scope.CariKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
 
-        let Kodu =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
+        let Kodu =  '';
         let Adi = '';
-
+        
         db.GetData($scope.Firma,'CariGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
             $scope.CariListe = data;
@@ -1475,6 +1479,8 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnStokGridGetir = function()
     {   
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI
         
         let Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA
@@ -1483,7 +1489,13 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,1],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblSiparisListe").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblSiparisListe").jsGrid({data : $scope.StokListe});
+            }
+            
         });
     }
     $scope.BtnStokGridSec = function()

@@ -1082,7 +1082,7 @@ var QuerySql =
         query : "SELECT " +
                 "(sip_miktar - sip_teslim_miktar) AS BMIKTAR, " +
                 "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod) AS ADI, " +
-                "sip_stok_kod AS KOD, " +
+                "sip_stok_kod AS KODU, " +
                 "BdnHar_BedenNo, " +
                 "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
                 "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN " +
