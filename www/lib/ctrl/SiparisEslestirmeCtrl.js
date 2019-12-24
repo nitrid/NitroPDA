@@ -548,7 +548,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 }
             }
         }
-        console.log($scope.Stok[0].BEDENPNTR);
         if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
         {   
             if($scope.Stok[0].BEDENKODU != '' || $scope.Stok[0].RENKKODU != '')
@@ -1711,7 +1710,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
 
         if($scope.SipSeri == "" && $scope.SipSira == "")
         {
-            let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,0,UserParam.Sistem.PlasiyerKodu];
+            let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,0,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele];
 
             await db.GetPromiseTag($scope.Firma,"SiparisKabulListele",TmpParam,function(data)
             {
@@ -1723,7 +1722,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         {
             let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
 
-            await db.GetPromiseTag($scope.Firma,"SiparisSeriSıraListele",TmpParam,function(data)
+            await db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
             {
                 $scope.SiparisKabulListe = data;
                 $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});

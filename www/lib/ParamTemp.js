@@ -48,7 +48,8 @@ var ParamTemp =
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"},
-			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "false"}
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "false"},
+			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""}
 			
 		},
 		"VerilenSiparis" :
@@ -67,7 +68,8 @@ var ParamTemp =
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
-			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"}
+			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"},
+			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""}
 		},
 		"DepoSevk" :
 		{
@@ -248,6 +250,7 @@ var ParamTemp =
 			"Cari Hesap Hareket" : {"Title" : "Cari Hesap Hareket","DefaultValue" : "1"},
 			"Cari Hesap Bakiye" : {"Title" : "Cari Hesap Bakiye","DefaultValue" : "1"},
 			"Stok Rapor" : {"Title" : "Stok Rapor","DefaultValue" : "1"},
-			"Cari Secimli Siparis Raporu" : {"Title" : "Cari Secimli Siparis Raporu","DefaultValue" : "1"}
+			"Cari Secimli Siparis Raporu" : {"Title" : "Cari Secimli Siparis Raporu","DefaultValue" : "1"},
+			"Cari Secimli Siparis Durum Raporu" : {"Title" : "Cari Secimli Siparis Durum Raporu","DefaultValue" : "1"}
 		}
 	}
