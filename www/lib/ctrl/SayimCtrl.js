@@ -49,6 +49,9 @@ function SayimCtrl($scope,$window,$timeout,db)
         $scope.IslemListeSelectedIndex = -1; 
         $scope.CmbEvrakTip = "10";
 
+        $scope.Loading = false;
+        $scope.TblLoading = true;
+
         
     }
     function InitIslemGrid()
@@ -395,6 +398,8 @@ function SayimCtrl($scope,$window,$timeout,db)
     {
         let Kodu = '';
         let Adi = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;
 
         if($scope.StokGridTip == "0")
         {   
@@ -408,7 +413,16 @@ function SayimCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
         });
     }
     $scope.BtnStokGridSec = function()
