@@ -1780,7 +1780,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
         
-        $scope.Barkod = $scope.StokListe[pIndex].KOD;
+        $scope.Barkod = $scope.StokListe[pIndex].KODU;
         
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
