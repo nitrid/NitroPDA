@@ -176,10 +176,10 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             heading: true,
             selecting: true,
             data : $scope.StokHarListe,
-            paging : true,
-            pageSize: 50,
-            pageButtonCount: 3,
-            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            //paging : true,
+            //pageSize: 50,
+            //pageButtonCount: 3,
+            //pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
             [{
                 name: "NO",
@@ -1393,10 +1393,12 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnSiparisKabulListele = async function()
     {
-        let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1,UserParam.Sistem.PlasiyerKodu];
-
+        let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele];
+     
+        console.log(TmpParam)
         await db.GetPromiseTag($scope.Firma,"SiparisKabulListele",TmpParam,function(data)
         {
+            console.log(data)
             $scope.SiparisKabulListe = data;
             $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
         });
@@ -1481,19 +1483,40 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     {   
         $scope.Loading = true;
         $scope.TblLoading = false;
-        let Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI
-        
-        let Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA
-        let Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD
+        let Seri = "";
+        let Sira = 0;
+        let Cari = "";
+        console.log($scope.SiparisKabulListe)
+        if($scope.SiparisKabulListe.length > 0)
+        {
+            
+            Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
+            Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
+            Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
+        }
+        else
+        {
+            $scope.Loading = true;
+            
+            Cari = $scope.CariKodu;
+        } 
 
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,1],function(StokData)
         {
             $scope.StokListe = StokData;
+            console.log($scope.StokListe)
             if($scope.StokListe.length > 0)
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblSiparisListe").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {               
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#MdlStokGetir").modal('hide');
+                alertify.alert("Sipariş içeriği boş")                
             }
             
         });
