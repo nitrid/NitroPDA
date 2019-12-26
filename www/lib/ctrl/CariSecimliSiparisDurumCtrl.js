@@ -183,6 +183,11 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         InitCariGrid();
         IslemGrid();
         IslemDetayGrid();
+
+
+        $scope.Deneme = "sa"
+
+        
     }
     $scope.BtnCariSec = function()
     {   
@@ -213,6 +218,8 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
     }
     $scope.BtnGetir = function()
     {
+        var str = '';
+
         if($scope.EvrakTip == 0)
         {
             $scope.Tip = "0";
@@ -224,11 +231,15 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
 
         if($scope.SipTip == 0)
         {
-            $scope.SiparisOnayListele = "-1";
+            str = " AND sip_miktar >= 1";
+        }
+        else if ($scope.SipTip == 1)
+        {
+            str = " AND sip_miktar - sip_teslim_miktar = 0";
         }
         else
         {
-            $scope.SiparisOnayListele = "0";
+            str = " AND sip_miktar <> sip_teslim_miktar ";
         }
 
         var TmpQuery = 
@@ -242,11 +253,11 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
                     "ROUND(SUM(sip_tutar),2) AS TUTAR " +
                     "FROM SIPARISLER " +
-                    "WHERE ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP AND sip_OnaylayanKulNo <> @ONAYLAYANKULNO " +
+                    "WHERE ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
                     "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih ORDER BY sip_belge_tarih DESC" ,
-            param:  ['KODU','ILKTARIH','SONTARIH','TIP','ONAYLAYANKULNO'], 
-            type:   ['string|25','date','date','int','int'], 
-            value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih,$scope.Tip,$scope.SiparisOnayListele]
+            param:  ['KODU','ILKTARIH','SONTARIH','TIP'], 
+            type:   ['string|25','date','date','int'], 
+            value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih,$scope.Tip]
         }
 
         db.GetDataQuery(TmpQuery,function(Data)

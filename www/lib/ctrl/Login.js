@@ -18,7 +18,9 @@ function Login ($scope,$rootScope,$window,db)
 
         $scope.DepoNo = "";
         $scope.Kullanici = localStorage.username
+        // $scope.Kullanici = "Admin"
         $scope.Password = localStorage.Password
+        // $scope.Password ="1"
 
         if (typeof localStorage.host == 'undefined')
         {

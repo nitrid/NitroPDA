@@ -536,14 +536,14 @@ var QuerySql =
                 "AND SIPARIS.sip_teslim_miktar < SIPARIS.sip_miktar INNER JOIN " +
                 "CARI_HESAPLAR ON SIPARIS.sip_musteri_kod = CARI_HESAPLAR.cari_kod " +
                 "WHERE SIPARIS.sip_teslim_tarih>=@ILKTARIH AND SIPARIS.sip_teslim_tarih<=@SONTARIH AND " +
-                "((CARI_HESAPLAR.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) AND SIPARIS.sip_OnaylayanKulNo <> @ONAYLAYANKULNO " +
+                "((CARI_HESAPLAR.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) AND SIPARIS.sip_OnaylayanKulNo <> @ONAYLAYANKULNO AND ((SIPARIS.sip_musteri_kod = @CARIKODU) OR (@CARIKODU = '')) " +
                 "AND SIPARIS.sip_depono=@DEPONO AND SIPARIS.sip_tip=@TIP " +
                 "GROUP BY SIPARIS.sip_teslim_tarih,SIPARIS.sip_evrakno_seri,SIPARIS.sip_evrakno_sira,SIPARIS.sip_depono, " +
                 "SIPARIS.sip_adresno,CARI_HESAPLAR.cari_kod,CARI_HESAPLAR.cari_unvan1,SIPARIS.sip_aciklama,SIPARIS.sip_doviz_cinsi " +
                 "HAVING SUM(SIPARIS.sip_miktar - SIPARIS.sip_teslim_miktar) > 0 " +
                 "ORDER BY sip_teslim_tarih",
-        param : ['ILKTARIH','SONTARIH','DEPONO','TIP','PLASIYERKODU','ONAYLAYANKULNO'],
-        type : ['date','date','int','int','string|25','int']
+        param : ['ILKTARIH','SONTARIH','DEPONO','TIP','PLASIYERKODU','ONAYLAYANKULNO','CARIKODU'],
+        type : ['date','date','int','int','string|25','int','string|25']
     }, 
     SiparisSeriSiraListele : 
     {
@@ -1088,7 +1088,7 @@ var QuerySql =
                 "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
                 "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN " +
                 "FROM SIPARISLER LEFT OUTER JOIN BEDEN_HAREKETLERI ON sip_Guid = BdnHar_Har_uid " +
-                "WHERE sip_depono =@sip_depono AND sip_musteri_kod =@sip_musteri_kod AND sip_evrakno_seri =@sip_evrakno_seri AND sip_evrakno_sira =@sip_evrakno_sira AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
+                "WHERE sip_depono =@sip_depono AND sip_musteri_kod =@sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
         param : ['sip_depono','sip_musteri_kod','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
         type : ['string|15','string|25','string|10','int','int']       
     },
