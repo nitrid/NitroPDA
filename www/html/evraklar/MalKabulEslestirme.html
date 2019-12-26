@@ -114,8 +114,11 @@
                             <button class="btn btn-block btn-primary" ng-click="BtnSiparisKabulListele()">Listele</button>
                         </div>
                     </div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
                     <div class="row py-1 px-1">
-                        <div id="TblSiparisKabulListe"></div>
+                        <div id="TblSiparisKabulListe" ng-show="TblLoading"></div>
                     </div>
                 </div>
                 <div id="TbBelgeBilgisi" class="tab-pane">
