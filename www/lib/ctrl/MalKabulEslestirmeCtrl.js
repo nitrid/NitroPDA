@@ -536,7 +536,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                 })
             }
             else
-            {   
+            {
                 alertify.alert("Siparişte Olmayan BarkodKabul Parametreniz Kapalı !");
                 console.log("Siparişte Olmayan BarkodKabul Parametreniz Kapalı !");
                 pCallback([],'');
@@ -1393,13 +1393,24 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnSiparisKabulListele = async function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
 
         let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele,$scope.CariKodu];
      
         await db.GetPromiseTag($scope.Firma,"SiparisKabulListele",TmpParam,function(data)
         {
             $scope.SiparisKabulListe = data;
-            $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+            if($scope.SiparisKabulListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+            }
+            else
+            {
+                $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+            }
         });
     }
     $scope.BtnTemizle = function()

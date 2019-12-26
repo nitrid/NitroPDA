@@ -116,7 +116,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.MiktarEdit = 0;
         $scope.FiyatEdit = 0;
 
-        $scope.Loading = false;
         $scope.TblLoading = true;
     }
     function InitCariGrid()
@@ -1558,6 +1557,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
             $scope.CariListe = data;   
+
             if ($scope.CariListe.length > 0)   
             {
                 $scope.Loading = false;
@@ -1719,9 +1719,16 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             {
                 $scope.SiparisKabulListe = data;
                 if($scope.SiparisKabulListe.length > 0)
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-                $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+                {
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+                }
+                else
+                {
+                    $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+                }
+                
             });
         }
         else
@@ -2031,8 +2038,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.DepoChange = function()
     {
-        $scope.Loading = true;
-        $scope.TblLoading = false;
         $scope.DepoListe.forEach(function(item) 
         {
             if(item.KODU == $scope.DepoNo)
