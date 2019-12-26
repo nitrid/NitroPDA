@@ -134,10 +134,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             heading: true,
             selecting: true,
             data : $scope.CariListe,
-            paging : true,
-            pageSize: 50,
-            pageButtonCount: 3,
-            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+           // paging : true,
+           // pageSize: 50,
+           // pageButtonCount: 3,
+           // pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields:
             [
                 {
@@ -485,7 +485,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {   
         var InsertData = 
         [
-            
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FIRMA NO
@@ -517,6 +516,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.OdemeNo,
             '', //AÇIKLAMA
             $scope.DepoNo,
+            $scope.SipOnayKulNo,
             $scope.Sorumluluk,
             $scope.Sorumluluk,
             $scope.CariDovizCinsi,
@@ -541,7 +541,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.CariFiyatListe,
             0, //REZERVASYON MİKTARI
             0  //REZERVASYON TESLİM MİKTARI
-           
         ];
 
         db.ExecuteTag($scope.Firma,'SiparisInsert',InsertData,function(InsertResult)
@@ -1143,8 +1142,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     $scope.DepoAdi = item.ADI;
             });          
         });
-
-       db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
+        
+        db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
        {
            $scope.SorumlulukListe = data; 
            $scope.Sorumluluk = UserParam[ParamName].Sorumluluk;
@@ -1164,14 +1163,22 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                   $scope.PersonelAdi == item.ADI;
             });
         });           
-        
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
 
         await db.MaxSira($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
         {
             $scope.Sira = data
-        });                     
+        });
+
+        if(UserParam.AlinanSiparis.SiparisOnay == "0")
+        {
+            $scope.SipOnayKulNo = 0;
+        }
+        else
+        {
+           $scope.SipOnayKulNo = UserParam.MikroId
+        }
 
         BarkodFocus();
     }

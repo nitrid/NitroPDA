@@ -17,6 +17,10 @@ function Login ($scope,$rootScope,$window,db)
         });
 
         $scope.DepoNo = "";
+        $scope.Kullanici = localStorage.username
+        // $scope.Kullanici = "Admin"
+        $scope.Password = localStorage.Password
+        // $scope.Password ="1"
 
         if (typeof localStorage.host == 'undefined')
         {
@@ -97,11 +101,17 @@ function Login ($scope,$rootScope,$window,db)
             {
                 if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
                 {
+                    
                     console.log("Kullanıcı adı ve şifre doğru");
                     
                     $window.sessionStorage.setItem('Firma', $scope.Firm);
                     $window.sessionStorage.setItem('User', i);
                     
+                    if(document.getElementById("BeniHatirla").checked == true)
+                    {
+                        localStorage.username = $scope.Kullanici
+                        localStorage.Password = $scope.Password
+                    }
                     var url = "main.html";
                     $window.location.href = url;
                     return;

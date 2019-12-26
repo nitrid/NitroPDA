@@ -62,6 +62,9 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
         $scope.IslemListeSelectedIndex = -1;
         $scope.NakliyeListeSelectedIndex = 0;
         $scope.MiktarEdit = 0;
+
+        $scope.Loading = false;
+        $scope.TblLoading = true;
         
     }
     function InitIslemGrid()
@@ -381,6 +384,8 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnStokGridGetir = function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -396,7 +401,16 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
         });
     }
     $scope.BtnStokGridSec = function()
@@ -415,11 +429,18 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnNakliyeListele = async function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let TmpParam = [$scope.NakTarih1,$scope.NakTarih2,17];
 
         await db.GetPromiseTag($scope.Firma,"NakliyeListele",TmpParam,function(data)
         {
             $scope.NakliyeListe = data;
+            if($scope.NakliyeListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+            }
             $("#TblNakliyeListe").jsGrid({data : $scope.NakliyeListe});
         });
     }

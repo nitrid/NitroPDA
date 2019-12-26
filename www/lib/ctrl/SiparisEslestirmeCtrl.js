@@ -268,6 +268,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             heading: true,
             selecting: true,
             data : $scope.StokListe,
+
             fields: [
                 {
                     name: "ADI",
@@ -548,7 +549,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 }
             }
         }
-        console.log($scope.Stok[0].BEDENPNTR);
         if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
         {   
             if($scope.Stok[0].BEDENKODU != '' || $scope.Stok[0].RENKKODU != '')
@@ -1706,16 +1706,21 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnSiparisKabulListele = async function()
     { 
-       $scope.SipSeri = $scope.SipSeriSira.split("-",1).pop(1);
-       $scope.SipSira = $scope.SipSeriSira.split("-",2).pop(1);
+        $scope.Loading = true;
+        $scope.TblLoading = false;
+        $scope.SipSeri = $scope.SipSeriSira.split("-",1).pop(1);
+        $scope.SipSira = $scope.SipSeriSira.split("-",2).pop(1);
 
         if($scope.SipSeri == "" && $scope.SipSira == "")
         {
-            let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,0,UserParam.Sistem.PlasiyerKodu];
+            let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,0,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele,$scope.CariKodu];
 
             await db.GetPromiseTag($scope.Firma,"SiparisKabulListele",TmpParam,function(data)
             {
                 $scope.SiparisKabulListe = data;
+                if($scope.SiparisKabulListe.length > 0)
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
             });
         }
@@ -1723,10 +1728,16 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         {
             let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
 
-            await db.GetPromiseTag($scope.Firma,"SiparisSeriSıraListele",TmpParam,function(data)
+            await db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
             {
                 $scope.SiparisKabulListe = data;
-                $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+                if($scope.SiparisKabulListe.length > 0)
+                {
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+                }
+                
             });
         }
     }
@@ -1751,21 +1762,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
         $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;  
-    }
-    $scope.CariListeRowClick = function(pIndex,pItem,pObj)
-    {
-        if ( CariSelectedRow ) { CariSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
-        var $row = pObj.rowByItem(pItem);
-        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
-        CariSelectedRow = $row;
-        
-        $scope.CariKodu = $scope.CariListe[pIndex].KODU;
-        $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
-        $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
-        $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
-        $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
-        $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;  
-    }
+    }    
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
         if ( IslemSelectedRow ) { IslemSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
@@ -1781,7 +1778,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
         
-        $scope.Barkod = $scope.StokListe[pIndex].KOD;
+        $scope.Barkod = $scope.StokListe[pIndex].KODU;
         
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
@@ -2046,19 +2043,42 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     {
         $scope.Loading = true;
         $scope.TblLoading = false;
-        let Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI
-        let Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA
-        let Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD
+        
+        let Seri = "";
+        let Sira = 0;
+        let Cari = "";
+        console.log($scope.SiparisKabulListe)
+        if($scope.SiparisKabulListe.length > 0)
+        {
+            
+            Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
+            Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
+            Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
+        }
+        else
+        {
+            $scope.Loading = true;
+            
+            Cari = $scope.CariKodu;
+        }        
 
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,0],function(StokData)
         {
             $scope.StokListe = StokData;
+            console.log($scope.StokListe)
             if($scope.StokListe.length > 0)
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblSiparisListe").jsGrid({data : $scope.StokListe});
-            }   
+            } 
+            else
+            {                
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#MdlStokGetir").modal('hide');
+                alertify.alert("Sipariş içeriği boş")                
+            }  
         });
     }
     $scope.BtnStokGridSec = function()

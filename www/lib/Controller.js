@@ -25,4 +25,5 @@ angular.module('app.controller', [])
 .controller('CariHesapBakiyeCtrl',['$scope','$window','db',CariHesapBakiyeCtrl])
 .controller('StokRaporCtrl',['$scope','$window','db',StokRaporCtrl])
 .controller('CariSecimliSiparisCtrl',['$scope','$window','db',CariSecimliSiparisCtrl])
+.controller('CariSecimliSiparisDurumCtrl',['$scope','$window','db',CariSecimliSiparisDurumCtrl])
 
