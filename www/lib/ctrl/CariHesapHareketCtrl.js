@@ -160,10 +160,10 @@ function CariHesapHareketCtrl($scope,$window,db)
     {   
         $scope.Firma = $window.sessionStorage.getItem('Firma');
         UserParam = Param[$window.sessionStorage.getItem('User')];
-
+        
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = "";
-        $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.IlkTarih = moment("01.01." + new Date().getFullYear()).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
 
         $scope.CariListe = [];
