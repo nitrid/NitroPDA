@@ -1393,12 +1393,11 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnSiparisKabulListele = async function()
     {
-        let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele];
+
+        let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele,$scope.CariKodu];
      
-        console.log(TmpParam)
         await db.GetPromiseTag($scope.Firma,"SiparisKabulListele",TmpParam,function(data)
         {
-            console.log(data)
             $scope.SiparisKabulListe = data;
             $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
         });
@@ -2154,20 +2153,6 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
         $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;  
     }
-    $scope.CariListeRowClick = function(pIndex,pItem,pObj)
-    {
-        if ( CariSelectedRow ) { CariSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
-        var $row = pObj.rowByItem(pItem);
-        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
-        CariSelectedRow = $row;
-        
-        $scope.CariKodu = $scope.CariListe[pIndex].KODU;
-        $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
-        $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
-        $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
-        $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
-        $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;  
-    }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
         if ( IslemSelectedRow ) { IslemSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
@@ -2247,7 +2232,6 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             db.DepoGetir($scope.Firma,EvrakParam.DepoListe,function(data)
             {
                 $scope.DepoListe = data; 
-                $scope.DepoNo = "2"
                 $scope.DepoListe.forEach(function(item) 
                 {
                     if(item.KODU == $scope.DepoNo)

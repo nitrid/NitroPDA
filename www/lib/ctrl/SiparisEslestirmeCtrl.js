@@ -1708,12 +1708,12 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     { 
         $scope.Loading = true;
         $scope.TblLoading = false;
-       $scope.SipSeri = $scope.SipSeriSira.split("-",1).pop(1);
-       $scope.SipSira = $scope.SipSeriSira.split("-",2).pop(1);
+        $scope.SipSeri = $scope.SipSeriSira.split("-",1).pop(1);
+        $scope.SipSira = $scope.SipSeriSira.split("-",2).pop(1);
 
         if($scope.SipSeri == "" && $scope.SipSira == "")
         {
-            let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,0,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele];
+            let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,0,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele,$scope.CariKodu];
 
             await db.GetPromiseTag($scope.Firma,"SiparisKabulListele",TmpParam,function(data)
             {
