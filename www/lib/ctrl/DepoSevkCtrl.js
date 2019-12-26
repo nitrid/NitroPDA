@@ -51,7 +51,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.PlasiyerKodu = 0; 
         $scope.SatirNo = "";
-
+        $scope.CmbEvrakTip = "0";
+        
         $scope.CDepoListe = [];
         $scope.GDepoListe = [];
         $scope.SorumlulukListe = [];
@@ -914,6 +915,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                 $scope.Tarih = new Date(data[0].sth_tarih).toLocaleDateString();
                 $scope.BelgeTarih = new Date(data[0].sth_belge_tarih).toLocaleDateString();
                 $scope.Barkod = "";
+                $scope.CmbEvrakTip = "0";
+
                 $scope.Stok = 
                 [
                     {
