@@ -22,6 +22,7 @@
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak()">Yeni Evrak</button>
                                 <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Barkod Detay</a>
                                 <button class="dropdown-item" data-target="#MdlFiyatDegisikligi" data-toggle="modal" role="menu-item">Fiyat Değişikliği</a>
+                                <button class="dropdown-item" data-target="#MdlReyonDegisikligi" data-toggle="modal" role="menu-item">Reyon Değişikliği</a>
                             </div>
                         </div>
                     </div>
@@ -278,6 +279,39 @@
                             <div class="col-6">
                                 <button class="btn btn-block btn-primary" ng-click="BtnTopluEtiketBas()">Toplu Etiket Bas</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Reyon Degisikligi -->
+    <div class="modal fade" id="MdlReyonDegisikligi" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Reyon Değişikliği</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="text-center">Mevcut Reyon : {{Stok[0].REYON}}</h4>                      
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 text-info"><div class="col-form-label float-right"><b>Reyon :</b></div></div>
+                        <div class="col-8">
+                            <div class="input-group input-group-icon">
+                                <input type="text" class="form-control" ng-model="Reyon">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block h-40" ng-click="BtnReyonUpdate()">Kaydet</button>        
                         </div>
                     </div>
                 </div>
