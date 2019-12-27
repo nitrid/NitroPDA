@@ -594,22 +594,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             }
         }
     }
-    function KalanMiktar()
-    {
-        var TmpQuery = 
-        {
-            db : '{M}.' + $scope.Firma,
-            query : "SELECT (sip_miktar - sip_teslim_miktar) FROM SIPARISLER WHERE sip_Guid = @sip_Guid ",
-            param : ['sip_Guid'],
-            tyoe : ['string'],
-            value : [$scope.Stok[0].RECNO]
-        }
-        db.GetDataQuery(TmpQuery,function(Data)
-        {
-            $scope.Kalan = Data
-            console.log($scope.Kalan)
-        });
-    }
     function BarkodGetir(pBarkod)
     {
         if(pBarkod != '')
@@ -938,7 +922,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     InsertAfterRefresh(IrsaliyeData);       
                     $scope.InsertLock = false  
                     $scope.MiktarLock = false 
-                    KalanMiktar()           
                 });
             }
             else
