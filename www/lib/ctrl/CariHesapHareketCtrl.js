@@ -212,12 +212,12 @@ function CariHesapHareketCtrl($scope,$window,db)
                     "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
                     "msg_S_0099 AS VADEGUN, " +
                     "msg_S_0100 AS BA, " +
-                    "[msg_S_0101\\T] AS ANADOVIZBORC, " +
-                    "[msg_S_0102\\T] AS ANADOVIZALACAK, " +
-                    "[msg_S_1706] AS ANADOVIZBORCBAKIYE, " +
-                    "[msg_S_1707] AS ANADOVIZALACAKBAKIYE, " +
-                    "[msg_S_1710] AS ORJINALDOVIZBORCBAKIYE, " +
-                    "[msg_S_1711] AS ORJINALDOVIZALACAKBAKİYE, " +
+                    "ROUND([msg_S_0101\\T],2) AS ANADOVIZBORC, " +
+                    "ROUND([msg_S_0102\\T],2) AS ANADOVIZALACAK, " +
+                    "ROUND([msg_S_1706],2) AS ANADOVIZBORCBAKIYE, " +
+                    "ROUND([msg_S_1707],2) AS ANADOVIZALACAKBAKIYE, " +
+                    "ROUND([msg_S_1710],2) AS ORJINALDOVIZBORCBAKIYE, " +
+                    "ROUND([msg_S_1711],2) AS ORJINALDOVIZALACAKBAKİYE, " +
                     "[msg_S_0112] AS ORJINALDOVIZ " +
                     "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
             param:  ['KODU','ILKTARIH','SONTARIH'],

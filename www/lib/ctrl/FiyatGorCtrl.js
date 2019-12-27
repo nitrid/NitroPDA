@@ -29,6 +29,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
         $scope.Marka = "";
+        $scope.Reyon = "";
 
         $scope.BasimTipi = 0;
         $scope.BasimAdet = 1;
@@ -626,7 +627,10 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         BarkodFocus();
         InitStokGrid();
         
-        $scope.SpecialListe = UserParam.Etiket.Etiket
+        if(typeof UserParam.Etiket != 'undefined')
+        {
+            $scope.SpecialListe = UserParam.Etiket.Etiket
+        }
 
         if($scope.DepoNo > 0)
         {
@@ -668,4 +672,23 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             }
         );
     }
+    $scope.BtnReyonUpdate = function()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "UPDATE STOKLAR SET sto_reyon_kodu = @sto_reyon_kodu WHERE sto_kod = @sto_kod ",
+            param:  ['sto_reyon_kodu','sto_kod'],
+            type:   ['string|25','string|25'],
+            value:  [$scope.Reyon,$scope.Stok[0].KODU]
+        }
+
+        db.ExecuteQuery(TmpQuery,function(data)
+        {   
+           console.log(data);
+           $scope.Stok[0].REYON = $scope.Reyon;
+           $scope.Reyon = "";
+           $("#MdlReyonDegisikligi").modal('hide');
+        });
+    }  
 }

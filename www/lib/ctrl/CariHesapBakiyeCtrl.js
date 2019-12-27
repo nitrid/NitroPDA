@@ -41,44 +41,6 @@ function CariHesapBakiyeCtrl($scope,$window,db)
             }
         });
     }
-    function InitIslemGrid()
-    {   
-        $("#TblCariFoy").jsGrid
-        ({
-            width: "100%",
-            height: "300px",
-            updateOnResize: true,
-            heading: true,
-            selecting: true,
-            data : $scope.CariFoyListe,
-            fields: 
-            [
-                {
-                    name: "msg_S_0200",
-                    title: "CARİ KODU",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                    
-                },
-                {
-                    name: "msg_S_1033",
-                    title: "CARİ ADI",
-                    type: "text",
-                    align: "center",
-                    width: 150
-                    
-                },
-                {
-                    name: "msg_S_0957",
-                    title: "ANA DÖVİZ BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                },
-            ],
-        });
-    }
     $scope.Init = function()
     {   
         $scope.Firma = $window.sessionStorage.getItem('Firma');
@@ -91,10 +53,9 @@ function CariHesapBakiyeCtrl($scope,$window,db)
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
 
         $scope.CariListe = [];
-        $scope.CariFoyListe = [];
+        $scope.CariFoyListe = [{BORC: 0,ALACAK: 0,BAKIYE: 0}];
 
         InitCariGrid();
-        InitIslemGrid();
     }
     $scope.BtnCariSec = function()
     {   
@@ -125,32 +86,19 @@ function CariHesapBakiyeCtrl($scope,$window,db)
     }
     $scope.BtnGetir = function()
     {
+
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "exec dbo.msp_CARI_BAKIYE_ANALIZ_FOYU N'0',0,0,@KODU ,@KODU,@KODU,N'0,1,2',null,null,1,0,N'',0,N'',0,N'',0,0,0,0,0,0,1 ",
-
+            query:  "SELECT SUM([msg_S_0101\\T]) AS BORC,SUM([msg_S_0102\\T]) AS ALACAK,SUM([#msg_S_0103\\T]) AS BAKIYE FROM [dbo].[fn_CariFoy] ('',0,@KODU,0,CONVERT(nvarchar,YEAR(GETDATE()) - 1) + '1231',CONVERT(nvarchar,YEAR(GETDATE())) + '0101',GETDATE(),0,'')",
             param:  ['KODU'],
             type:   ['string|25'],
             value:  [$scope.CariKodu]
         }
-
+        
         db.GetDataQuery(TmpQuery,function(Data)
         {
-            for(i=0; i < Data.length; i++)
-            {
-                if(Data[i].msg_S_0957 < 0)
-                {
-                    $scope.Deneme ="Borç"
-                }
-                else
-                {
-                    console.log("Alacak")
-                }
-            }
-
             $scope.CariFoyListe = Data;
-            $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
         });
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
@@ -162,8 +110,7 @@ function CariHesapBakiyeCtrl($scope,$window,db)
             $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
             CariSelectedRow = $row;
             
-            $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
-            $scope.Carikodu =$scope.CariListe[pIndex].KODU;
+            $scope.CariKodu =$scope.CariListe[pIndex].KODU;
         }
     }
 }
