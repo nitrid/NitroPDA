@@ -249,7 +249,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                 {          
                            
                     $scope.Stok = BarkodData;
-                    console.log($scope.Stok)
+                    
                     $scope.Barkod = $scope.Stok[0].BARKOD;
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.BarkodLock = true;
@@ -685,7 +685,6 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
 
         db.ExecuteQuery(TmpQuery,function(data)
         {   
-           console.log(data);
            $scope.Stok[0].REYON = $scope.Reyon;
            $scope.Reyon = "";
            $("#MdlReyonDegisikligi").modal('hide');
