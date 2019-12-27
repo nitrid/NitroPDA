@@ -604,8 +604,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             //SİPARİŞE BAĞLI VEYA NORMAL STOK OLARAK GETİRME FONKSİYONU
             EslestirmeStokGetir(pBarkod,async function(pData,pTip)
             {
-                $scope.Stok = pData 
-                console.log($scope.Stok[0])                   
+                $scope.Stok = pData          
                 //FONKSİYONDA $scope.Stok İÇERİĞİ BOŞ GELİRSE TÜM İŞLEMLER İPTAL EDİLİYOR. ALI KEMAL KARACA 18.09.2019
                 if($scope.Stok.length == 0)
                 {
@@ -911,9 +910,10 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 {
                     db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].RECNO,Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR)]);
                 }
-                
+                console.log(new Date,"1.")
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.StokEvrakTip],function(IrsaliyeData)
                 {    
+                    console.log(new Date,"2.")
                     $scope.StokHarListe = IrsaliyeData;
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
@@ -2333,7 +2333,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                                 //ToplamMiktarHesapla();
                             }
                             else
-                            {   
+                            {  
                                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.StokEvrakTip],function(data)
                                 {
                                    db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,11],function(BedenData)
