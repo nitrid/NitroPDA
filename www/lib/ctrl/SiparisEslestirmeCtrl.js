@@ -165,11 +165,14 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "280px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokHarListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
         
             fields: 
             [{
@@ -259,14 +262,18 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     function InitSiparisListeGrid()
     {
-        $("#TblSiparisListe").jsGrid
-        ({
+        $("#TblSiparisListe").jsGrid({
+            responsive : true,
             width: "100%",
-            height: "350px",
+            height: "350px",            
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
+            paging : true,
+            pageSize: 5,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
 
             fields: [
                 {
@@ -384,14 +391,17 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     function InitSiparisKabulListeGrid()
     {
-        $("#TblSiparisKabulListe").jsGrid
-        (   {
+        $("#TblSiparisKabulListe").jsGrid({
             width: "100%",
             height: "300px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.SiparisKabulListe,
+            paging : true,
+            pageSize: 5,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "TESLIMTARIH",
@@ -496,7 +506,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             if(BarkodData.length > 0)
             {
                 pCallback(BarkodData,'Siparis');
-                console.log(BarkodData)
                 $scope.OkutulanSayı()
             }
             else if(UserParam.Sistem.SiparisOlmayanBarkodKabul == 1)
@@ -1726,7 +1735,10 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 }
                 else
                 {
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
                     $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+                    alertify.alert("İstenilen tarihte sipariş bulunamadı")
                 }
                 
             });
@@ -1868,7 +1880,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'EslestirmeOtukmaSayı',[$scope.Seri,$scope.Sira,$scope.Stok[0].KODU],function(data)
         {
             $scope.Okutulan = data;
-            console.log($scope.Okutulan[0].OKUTULAN)
         });
     }
     $scope.SiparisKabulListeRowClick = function(pIndex,pItem,pObj)
@@ -2052,7 +2063,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         let Seri = "";
         let Sira = 0;
         let Cari = "";
-        console.log($scope.SiparisKabulListe)
         if($scope.SiparisKabulListe.length > 0)
         {
             
@@ -2070,7 +2080,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,0],function(StokData)
         {
             $scope.StokListe = StokData;
-            console.log($scope.StokListe)
             if($scope.StokListe.length > 0)
             {
                 $scope.Loading = false;

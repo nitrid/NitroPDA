@@ -121,7 +121,8 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         // DÜZENLE MODAL
         $scope.MiktarEdit = 0;
         $scope.FiyatEdit = 0;
-
+        
+        $scope.Loading = false;
         $scope.TblLoading = true;
     }
     function InitCariGrid()
@@ -1409,7 +1410,10 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             }
             else
             {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+                alertify.alert("İstenilen tarihte sipariş bulunamadı")
             }
         });
     }
@@ -1496,10 +1500,8 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         let Seri = "";
         let Sira = 0;
         let Cari = "";
-        console.log($scope.SiparisKabulListe)
         if($scope.SiparisKabulListe.length > 0)
         {
-            
             Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
             Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
             Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
@@ -1507,14 +1509,13 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         else
         {
             $scope.Loading = true;
-            
             Cari = $scope.CariKodu;
         } 
-
+        
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,1],function(StokData)
         {
             $scope.StokListe = StokData;
-            console.log($scope.StokListe)
+
             if($scope.StokListe.length > 0)
             {
                 $scope.Loading = false;
