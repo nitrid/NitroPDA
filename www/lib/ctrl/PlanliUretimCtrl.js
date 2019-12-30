@@ -5,13 +5,12 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
         $("#TblBarkTab").jsGrid({
             responsive: true,
             width: "100%",
-            height: "283px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokHarListe,
             paging : true,
-            pageSize: 50,
+            pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
@@ -85,11 +84,14 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
         $("#TblEmir").jsGrid({
             responsive: true,
             width: "100%",
-            height: "283px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokHarListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
      
             fields: 
             [{
