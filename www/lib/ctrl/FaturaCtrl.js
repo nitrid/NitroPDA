@@ -42,6 +42,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         $scope.DepoNo;
         $scope.DepoAdi = "";
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.Saat = moment(new Date()).format("LTS");
         $scope.Sorumluluk = "";
         $scope.SorumlulukAdi = "";
         $scope.Personel = "";
@@ -835,6 +836,8 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                     {
                         pCallback(true);
                     }
+
+                    FisData(Data)
                 });
             }
             else
@@ -926,6 +929,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                             console.log(data.result.err)
                         }
                     });
+                    FisData(FaturaData);
                 });
             }
         });
@@ -957,6 +961,36 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         {
             $scope.ToplamSatir += 1 ;
         });
+    }
+    function FisData(pData)
+    {
+        let FisData = "";
+
+        $scope.Saat = moment(new Date()).format("LTS");
+
+        for(let i=0; i < pData.length; i++)
+        {
+            FisData = FisData +  SpaceLength(pData[i].ADI,25) + SpaceLength(pData[i].MIKTAR,7) + SpaceLength(parseFloat(pData[i].FIYAT,2),9) + SpaceLength(parseFloat(pData[i].sth_tutar,2),6) + "\n";
+        }
+        document.getElementById("FisData").innerText = "URUN ADI              "+ " MIKTAR "+ "  FIYAT  " + "  TUTAR" + "\n"+ FisData + "\n";
+    }
+    function SpaceLength(pData,pLength)
+    {
+        let x = pLength - pData.toString().length;
+
+        if(pData.toString().length > pLength)
+        {
+            pData = pData.substring(0,25);
+        }
+
+        Space = "";
+
+        for(let i=0; i < x; i++)
+        {
+            Space = Space + " ";
+        }
+
+        return pData + Space
     }
     $scope.BtnPartiLotGetir = function()
     {   
@@ -1418,6 +1452,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                     alertify.alert("<a style='color:#3e8ef7''>" + $scope.ToplamSatir + " " + "Satır Kayıt Başarıyla Getirildi.. !" + "</a>" );
 
                     BarkodFocus();
+                    FisData(data)
                 }
                 else
                 {
@@ -2069,5 +2104,37 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
               orientation : "portrait"
             }
         );
+    }
+    $scope.BtnFisYazdir = function()
+    {
+        $scope.FisAdres = "";
+
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT " +
+                    "ISNULL(cari_unvan1,'') AS CARIADI, " +
+                    "ISNULL(cari_kod,'') AS CARIKODU, " +
+                    "ISNULL((SELECT adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = @CARIKODU),'') + ' ' + " +
+                    "ISNULL((SELECT adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = @CARIKODU),'') + ' ' + " +
+                    "ISNULL((SELECT adr_ilce FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = @CARIKODU),'') + ' ' + " +
+                    "ISNULL((SELECT adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = @CARIKODU),'') AS ADRES " +
+                    "FROM CARI_HESAPLAR WHERE cari_kod = @CARIKODU " ,
+            param:  ['CARIKODU'], 
+            type:   ['string|25'], 
+            value:  [$scope.CariKodu]
+        }
+
+        db.GetDataQuery(TmpQuery,function(Data)
+        {
+            $scope.FisAdres = Data[0].ADRES;
+        });
+
+        document.getElementById('FisYazdir').innerText = document.getElementById('FisYazdir').innerText.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+       
+        var S = "#Intent;scheme=rawbt;";
+        var P =  "package=ru.a402d.rawbtprinter;end;";
+        var textEncoded = encodeURI(document.getElementById('FisYazdir').innerText);
+        window.location.href="intent:"+textEncoded+S+P;
     }
 }

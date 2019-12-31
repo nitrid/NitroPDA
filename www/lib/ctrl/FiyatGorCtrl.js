@@ -668,4 +668,5 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             }
         );
     }
+    
 }
