@@ -642,10 +642,27 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         {
             $scope.EvrakLock = true;
         }
-
+        db.DepoGetir($scope.Firma,UserParam.FiyatGor.DepoListe,function(data)
+        {
+            $scope.DepoListe = data; 
+            $scope.Depo = UserParam.FiyatGor.Depo;
+            $scope.DepoListe.forEach(function(item) 
+            {
+                if(item.KODU == $scope.Depo)
+                    $scope.DepoAdi = item.ADI;
+            });          
+        });
         
         db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(data){$scope.DepoListe = data; $scope.DepoNo = UserParam.FiyatGor.DepoNo});
         db.MaxSira($scope.Firma,'MaxEtiketSira',[$scope.Seri],function(data){$scope.Sira = data});
+    }
+    $scope.DepoChange = function()
+    {
+        $scope.DepoListe.forEach(function(item) 
+        {
+            if(item.KODU == $scope.DepoNo)
+                $scope.DepoAdi = item.ADI;
+        }); 
     }
     $scope.StokListeRowClick = function(pIndex,pItem,pObj)
     {

@@ -1144,7 +1144,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             {
                 if(item.KODU == $scope.DepoNo)
                     $scope.DepoAdi = item.ADI;
-            });          
+            });
         });
         
         db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)

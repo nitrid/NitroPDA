@@ -19,9 +19,9 @@ var Param = [
 			"KiloCarpan": "1",
 			"Titresim": "1",
 			"AktarimDepoNo": "2",
-			"PlasiyerKodu" : "",
-			"FiyatDegistir" : "1",
-			"SiparisOnayListele" : "-1",
+			"PlasiyerKodu": "",
+			"FiyatDegistir": "1",
+			"SiparisOnayListele": "-1"
 		},
 		"Sayim": {
 			"EvrakNo": "50",
@@ -48,7 +48,7 @@ var Param = [
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": false,
-			"SiparisOnay" : "0"
+			"SiparisOnay": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -66,7 +66,7 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"SiparisOnay" : "1"
+			"SiparisOnay": "1"
 		},
 		"DepoSevk": {
 			"EvrakTip": "2",
@@ -159,6 +159,7 @@ var Param = [
 		"FiyatGor": {
 			"Seri": "FGE",
 			"DepoNo": "1",
+			"DepoListe": "1",
 			"FiyatListe": "1",
 			"EtiketTipi": "1",
 			"BasimTipi": "1",
@@ -225,11 +226,11 @@ var Param = [
 			"Planlı Üretim": "1",
 			"Aktarim": "1",
 			"Cari Hesap Bakiye": "1",
-			"Cari Hesap Hareket" : "1",
+			"Cari Hesap Hareket": "1",
 			"Stok Rapor": "0",
 			"EvrakGonder": "1",
-			"Cari Secimli Siparis Raporu" : "1",
-			"Cari Secimli Siparis Durum Raporu" : "1"
+			"Cari Secimli Siparis Raporu": "1",
+			"Cari Secimli Siparis Durum Raporu": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "1",
@@ -283,7 +284,7 @@ var Param = [
 			"KiloBaslangic": "7",
 			"KiloUzunluk": "5",
 			"KiloCarpan": "1",
-			"PlasiyerKodu" : "",
+			"PlasiyerKodu": ""
 		},
 		"Sayim": {
 			"EvrakNo": "1",

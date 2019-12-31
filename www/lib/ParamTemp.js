@@ -204,6 +204,7 @@ var ParamTemp =
 		{
 			"Seri" : {"Title" : "Seri","DefaultValue" : "FGE"},
 			"DepoNo" : {"Title" : "Depo No","DefaultValue" : "1"},
+			"DepoListe" : {"Title" : "Depo Liste","DefaultValue" : ""},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "1"},
 			"EtiketTipi" : {"Title" : "Etiket Tipi","DefaultValue" : "1"},
 			"BasimTipi" : {"Title" : "Basım Tipi","DefaultValue" : "1"},
