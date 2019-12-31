@@ -329,6 +329,7 @@
                                 <button class="dropdown-item" ng-click="BtnIskontoEkran(1)" data-toggle="modal"  role="menu-item">Satır İskonto</button>
                                 <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button>
                                 <button class="dropdown-item"  ng-click="BtnOnlineYazdir()"  role="menu-item">Online Yazdır</button>
+                                <button class="dropdown-item"  ng-click="BtnFisYazdir()"  role="menu-item">Fiş Yazdır</button>
                             </div> 
                         </div>
                     </div>
@@ -604,7 +605,23 @@
             </div>
         </div>
     </div>
-</div>
+<!-- Dizayn -->
+<pre id="FisYazdir" style="display: none;">
+ {{CariKodu}}                              {{Seri}} - {{Sira}}
+
+ {{CariAdi}}                             {{Tarih}}
+
+ {{FisAdres}}                             {{Saat}}
+---------------------------------------------
+<div id ="FisData"></div>
+----------------------------------------------
+
+                      Ara Toplam :{{AraToplam | number:2}}
+                  Toplam Indirim :{{ToplamIndirim | number:2}}
+                      Net Toplam :{{NetToplam | number:2}}
+                      Toplam Kdv :{{ToplamKdv | number:2}}
+                    Genel Toplam :{{GenelToplam | number:2}}
+</pre>
 <script>
     $("#BTarih").datepicker({
     language: "tr"
