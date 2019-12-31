@@ -121,7 +121,8 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         // DÜZENLE MODAL
         $scope.MiktarEdit = 0;
         $scope.FiyatEdit = 0;
-
+        
+        $scope.Loading = false;
         $scope.TblLoading = true;
     }
     function InitCariGrid()
@@ -129,11 +130,14 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "300px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.CariListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
             [
                 {
@@ -171,15 +175,14 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "283px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokHarListe,
-            //paging : true,
-            //pageSize: 50,
-            //pageButtonCount: 3,
-            //pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
             [{
                 name: "NO",
@@ -271,11 +274,14 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblSiparisListe").jsGrid
         ({
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "ADI",
@@ -334,13 +340,12 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblPartiLot").jsGrid
         ({
             width: "100%",
-            height: "200px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.PartiLotListe,
             paging : true,
-            pageSize: 50,
+            pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -399,11 +404,14 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblSiparisKabulListe").jsGrid
         (   {
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.SiparisKabulListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "TESLIMTARIH",
@@ -1409,7 +1417,10 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             }
             else
             {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+                alertify.alert("İstenilen tarihte sipariş bulunamadı")
             }
         });
     }
@@ -1495,10 +1506,8 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         let Seri = "";
         let Sira = 0;
         let Cari = "";
-        console.log($scope.SiparisKabulListe)
         if($scope.SiparisKabulListe.length > 0)
         {
-            
             Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
             Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
             Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
@@ -1506,14 +1515,13 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         else
         {
             $scope.Loading = true;
-            
             Cari = $scope.CariKodu;
         } 
-
+        
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,1],function(StokData)
         {
             $scope.StokListe = StokData;
-            console.log($scope.StokListe)
+
             if($scope.StokListe.length > 0)
             {
                 $scope.Loading = false;

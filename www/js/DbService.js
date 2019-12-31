@@ -721,10 +721,8 @@ angular.module('app.db', []).service('db',function($rootScope)
     }
     this.KiloBarkod = function(pBarkod,pParam)
     {
-        console.log(pBarkod)
         // KİLO BARKODU KONTROLÜ - RECEP KARACA 10.09.2019
         let Kilo = pBarkod;
-        console.log(Kilo);
         let KiloFlag = pParam.Sistem.KiloFlag;
         let FlagDizi = KiloFlag.split(',')
         let Flag = Kilo.toString().slice(0,2);

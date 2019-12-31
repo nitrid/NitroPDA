@@ -129,15 +129,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "300px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.CariListe,
-           // paging : true,
-           // pageSize: 50,
-           // pageButtonCount: 3,
-           // pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields:
             [
                 {
@@ -171,11 +170,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "250px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.SiparisListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
            
             fields: 
             [
@@ -277,13 +279,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblStok").jsGrid
         ({
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
             paging : true,
-            pageSize: 50,
+            pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -336,11 +337,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblPartiLot").jsGrid
         ({
             width: "100%",
-            height: "200px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.PartiLotListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "PARTI",

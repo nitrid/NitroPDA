@@ -95,11 +95,14 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.DepoSevkListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
                     
             fields: 
             [
@@ -144,11 +147,14 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         $("#TblStok").jsGrid
         ({
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "KODU",
@@ -199,11 +205,14 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         $("#TblPartiLot").jsGrid
         ({
             width: "100%",
-            height: "200px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.PartiLotListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "PARTI",

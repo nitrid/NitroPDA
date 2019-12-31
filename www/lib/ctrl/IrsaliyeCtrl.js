@@ -129,11 +129,14 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "300px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.CariListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
             [
                 {
@@ -168,11 +171,14 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "285px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.IrsaliyeListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             
             fields: 
             [{
@@ -266,11 +272,14 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TblStok").jsGrid
         (   {
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "KODU",
@@ -320,12 +329,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         $("#TblPartiLot").jsGrid
         ({
-            width: "100%",
-            height: "280px",
+            width: "100%",         
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.PartiLotListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "PARTI",

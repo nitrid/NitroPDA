@@ -29,6 +29,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
         $scope.Marka = "";
+        $scope.Reyon = "";
 
         $scope.BasimTipi = 0;
         $scope.BasimAdet = 1;
@@ -150,11 +151,14 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "400px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.Stok,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             
             fields: 
             [{
@@ -199,11 +203,14 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $("#TblStok").jsGrid
         (   {
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "KODU",
@@ -248,7 +255,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                 {          
                            
                     $scope.Stok = BarkodData;
-                    console.log($scope.Stok)
+                    
                     $scope.Barkod = $scope.Stok[0].BARKOD;
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.BarkodLock = true;
@@ -626,7 +633,10 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         BarkodFocus();
         InitStokGrid();
         
-        $scope.SpecialListe = UserParam.Etiket.Etiket
+        if(typeof UserParam.Etiket != 'undefined')
+        {
+            $scope.SpecialListe = UserParam.Etiket.Etiket
+        }
 
         if($scope.DepoNo > 0)
         {
@@ -668,5 +678,22 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             }
         );
     }
-    
+    $scope.BtnReyonUpdate = function()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "UPDATE STOKLAR SET sto_reyon_kodu = @sto_reyon_kodu WHERE sto_kod = @sto_kod ",
+            param:  ['sto_reyon_kodu','sto_kod'],
+            type:   ['string|25','string|25'],
+            value:  [$scope.Reyon,$scope.Stok[0].KODU]
+        }
+
+        db.ExecuteQuery(TmpQuery,function(data)
+        {   
+           $scope.Stok[0].REYON = $scope.Reyon;
+           $scope.Reyon = "";
+           $("#MdlReyonDegisikligi").modal('hide');
+        });
+    }  
 }

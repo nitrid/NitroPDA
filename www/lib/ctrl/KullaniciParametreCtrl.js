@@ -159,7 +159,9 @@ function KullaniciParametreCtrl($scope,$window,db)
         function()
         {             
             db.Emit('ParamSave',[Param,File]);
-            $window.location.reload();
+            $("#Grup2").show();
+            alertify.okBtn('Tamam');
+            alertify.alert('Ayarlar kaydedildi');
         }
         ,function(){});
     }

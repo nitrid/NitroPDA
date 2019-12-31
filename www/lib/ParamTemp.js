@@ -49,8 +49,7 @@ var ParamTemp =
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "false"},
-			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""}
-			
+			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""}			
 		},
 		"VerilenSiparis" :
 		{
