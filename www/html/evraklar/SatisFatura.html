@@ -55,7 +55,7 @@
                     <div class="row py-10">
                         <div class="col-md-2 col-lg-2 col-sm-4 offset-sm-1 offset-lg-2 ">
                             <button class="btn btn-block btn-primary h-60">
-                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-print"  aria-hidden="true" ng-click="BtnFisYazdir()"></span>
                             </button>
                         </div>
                     </div>
@@ -606,21 +606,23 @@
         </div>
     </div>
 <!-- Dizayn -->
-<pre id="FisYazdir" style="display: none;">
- {{CariKodu}}                              {{Seri}} - {{Sira}}
-
- {{CariAdi}}                             {{Tarih}}
-
- {{FisAdres}}                             {{Saat}}
+<pre id="FisYazdir">
+<div id="FisDeger"></div>
 ---------------------------------------------
 <div id ="FisData"></div>
 ----------------------------------------------
 
-                      Ara Toplam :{{AraToplam | number:2}}
-                  Toplam Indirim :{{ToplamIndirim | number:2}}
-                      Net Toplam :{{NetToplam | number:2}}
-                      Toplam Kdv :{{ToplamKdv | number:2}}
-                    Genel Toplam :{{GenelToplam | number:2}}
+                     Ara Toplam : {{AraToplam | number:2}}
+                 Toplam Indirim : {{ToplamIndirim | number:2}}
+                     Net Toplam : {{NetToplam | number:2}}
+                     Toplam Kdv : {{ToplamKdv | number:2}}
+                   Genel Toplam : {{GenelToplam | number:2}}
+
+
+
+
+                   
+Onceki Bakiyeniz : {{CariBakiye}}
 </pre>
 <script>
     $("#BTarih").datepicker({

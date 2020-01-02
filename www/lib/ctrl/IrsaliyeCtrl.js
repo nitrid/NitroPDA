@@ -46,6 +46,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.Tip = 0;
         $scope.NormalIade = 0;
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.Saat = moment(new Date()).format("LTS");
         $scope.MalKabulSevkTarihi = moment(new Date()).format("DD.MM.YYYY");
         $scope.BelgeTarih = 0;
         $scope.Sorumluluk = "";
@@ -62,6 +63,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.CmbEvrakTip = '1';
         $scope.Cins = 0;
         $scope.ToplamSatir = 0;
+        $scope.CariBakiye = "";
+        $scope.Adres = "";
+        $scope.Adres1 = "";
+        $scope.Adres2 = "";
+        $scope.CariVDADI = "";
+        $scope.CariVDNO = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -584,12 +591,14 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
 
-                    InsertAfterRefresh(IrsaliyeData);    
+                    InsertAfterRefresh(IrsaliyeData);  
+                    FisData(IrsaliyeData);  
                     $scope.InsertLock = false
                     if(UserParam.Sistem.Titresim == 1)
                     {
                         Confirmation();
                     }
+                    
                 });
             }
             else
@@ -639,6 +648,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         }
                     }                        
                     InsertAfterRefresh(IrsaliyeData);
+                    FisData(IrsaliyeData);
                     $scope.InsertLock = false
                     if(UserParam.Sistem.Titresim == 1)
                     {
@@ -832,6 +842,37 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             return (parseInt(pRenk) - 1) * 40 + 1;
         }
+    }
+    function FisData(pData)
+    {
+        let FisData = "";
+        $scope.FisDeger = "";
+
+        $scope.FisDeger = SpaceLength($scope.CariKodu,35) + $scope.Seri + "-" + $scope.Sira + "\n" + SpaceLength($scope.CariAdi,35) + $scope.Tarih +"\n" + "Adres: " +SpaceLength($scope.Adres1,28) + $scope.Saat + "\n"  + "Adres2: " + SpaceLength($scope.Adres2,40) + "\n" + SpaceLength($scope.Adres,40) + "\n" +"Vergi Dairesi: "+SpaceLength($scope.CariVDADI,45) + "\n" + "Vergi No: "+ $scope.CariVDNO
+
+        for(let i=0; i < pData.length; i++)
+        {
+            FisData = FisData +  SpaceLength(pData[i].ADI,27) + " " + SpaceLength(pData[i].MIKTAR,7) + SpaceLength(parseFloat(pData[i].FIYAT,2),9) + SpaceLength(parseFloat(pData[i].sth_tutar,2),6) + "\n";
+        }
+        document.getElementById("FisData").innerText = FisDeger + "\n" + "---------------------------------------------" + "\n" +"URUN ADI                  "+ " MIKTAR "+ " FIYAT  " + " TUTAR" + "\n"+ FisData + "\n";
+    }
+    function SpaceLength(pData,pLength)
+    {
+        let x = pLength - pData.toString().length;
+
+        if(pData.toString().length > pLength)
+        {
+            pData = pData.substring(0,25);
+        }
+
+        Space = "";
+
+        for(let i=0; i < x; i++)
+        {
+            Space = Space + " ";
+        }
+
+        return pData + Space
     }
     $scope.MaxSira = async function()
     {   
@@ -1129,7 +1170,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
             $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
             $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
-            $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;  
+            $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
+            $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
+            $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
+            $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
+            $scope.Adres = $scope.CariListe[pIndex].ADRES;
+            $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
+            $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
         }
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
@@ -1893,5 +1940,24 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
               orientation : "portrait"
             }
         );
+    }
+    $scope.BtnFisYazdir = function()
+    {
+        $scope.FisDeger = $scope.FisDeger.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+       let x = "---------------------------------------------\n"
+       x = x + "KODU    ADI   MIKTAR    TUTAR   ISKONTO      \n"
+       x = x + "---------------------------------------------\n"
+
+       console.log($scope.FisDeger)
+
+        var S = "#Intent;scheme=rawbt;";
+        var P =  "package=ru.a402d.rawbtprinter;end;";
+        var textEncoded = encodeURI($scope.FisDeger);
+
+        window.location.href="intent:"+textEncoded+S+P;
+
+        alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
+
+        document.getElementById('FisYazdir').style.display = "none";
     }
 }

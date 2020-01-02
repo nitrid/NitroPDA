@@ -59,6 +59,12 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         $scope.ToplamSatir = 0;
         $scope.Meblag = 0;
         $scope.OtoEkle = false;
+        $scope.CariBakiye = "";
+        $scope.Adres = "";
+        $scope.Adres1 = "";
+        $scope.Adres2 = "";
+        $scope.CariVDADI = "";
+        $scope.CariVDNO = "";
 
         //CARİHAREKET
         $scope.ChaEvrakTip = 0;
@@ -965,14 +971,15 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
     function FisData(pData)
     {
         let FisData = "";
+        let FisDeger = "";
 
-        $scope.Saat = moment(new Date()).format("LTS");
+        FisDeger = SpaceLength($scope.CariKodu,35) + $scope.Seri + "-" + $scope.Sira + "\n" + SpaceLength($scope.CariAdi,35) + $scope.Tarih +"\n" + "Adres: " +SpaceLength($scope.Adres1,28) + $scope.Saat + "\n"  + "Adres2: " + SpaceLength($scope.Adres2,40) + "\n" + SpaceLength($scope.Adres,40) + "\n" +"Vergi Dairesi: "+SpaceLength($scope.CariVDADI,45) + "\n" + "Vergi No: "+ $scope.CariVDNO
 
         for(let i=0; i < pData.length; i++)
         {
-            FisData = FisData +  SpaceLength(pData[i].ADI,25) + SpaceLength(pData[i].MIKTAR,7) + SpaceLength(parseFloat(pData[i].FIYAT,2),9) + SpaceLength(parseFloat(pData[i].sth_tutar,2),6) + "\n";
+            FisData = FisData +  SpaceLength(pData[i].ADI,27) + " " + SpaceLength(pData[i].MIKTAR,7) + SpaceLength(parseFloat(pData[i].FIYAT,2),9) + SpaceLength(parseFloat(pData[i].sth_tutar,2),6) + "\n";
         }
-        document.getElementById("FisData").innerText = "URUN ADI              "+ " MIKTAR "+ "  FIYAT  " + "  TUTAR" + "\n"+ FisData + "\n";
+        document.getElementById("FisData").innerText = FisDeger + "\n" + "---------------------------------------------" + "\n" +"URUN ADI                  "+ " MIKTAR "+ " FIYAT  " + " TUTAR" + "\n"+ FisData + "\n";
     }
     function SpaceLength(pData,pLength)
     {
@@ -2017,7 +2024,13 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
             $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
             $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
             $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
-            $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;  
+            $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
+            $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
+            $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
+            $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
+            $scope.Adres = $scope.CariListe[pIndex].ADRES;
+            $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
+            $scope.Adres2 = $scope.CariListe[pIndex].ADRES2;
         }
     }
     $scope.StokListeRowClick = function(pIndex,pItem,pObj)
@@ -2107,34 +2120,13 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnFisYazdir = function()
     {
-        $scope.FisAdres = "";
-
-        var TmpQuery = 
-        {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT " +
-                    "ISNULL(cari_unvan1,'') AS CARIADI, " +
-                    "ISNULL(cari_kod,'') AS CARIKODU, " +
-                    "ISNULL((SELECT adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = @CARIKODU),'') + ' ' + " +
-                    "ISNULL((SELECT adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = @CARIKODU),'') + ' ' + " +
-                    "ISNULL((SELECT adr_ilce FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = @CARIKODU),'') + ' ' + " +
-                    "ISNULL((SELECT adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = @CARIKODU),'') AS ADRES " +
-                    "FROM CARI_HESAPLAR WHERE cari_kod = @CARIKODU " ,
-            param:  ['CARIKODU'], 
-            type:   ['string|25'], 
-            value:  [$scope.CariKodu]
-        }
-
-        db.GetDataQuery(TmpQuery,function(Data)
-        {
-            $scope.FisAdres = Data[0].ADRES;
-        });
-
         document.getElementById('FisYazdir').innerText = document.getElementById('FisYazdir').innerText.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
        
         var S = "#Intent;scheme=rawbt;";
         var P =  "package=ru.a402d.rawbtprinter;end;";
         var textEncoded = encodeURI(document.getElementById('FisYazdir').innerText);
         window.location.href="intent:"+textEncoded+S+P;
+
+        alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
     }
 }
