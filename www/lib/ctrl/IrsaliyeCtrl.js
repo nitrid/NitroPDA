@@ -845,16 +845,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function FisData(pData)
     {
-        let FisData = "";
         $scope.FisDeger = "";
+        $scope.FisData = "";
 
         $scope.FisDeger = SpaceLength($scope.CariKodu,35) + $scope.Seri + "-" + $scope.Sira + "\n" + SpaceLength($scope.CariAdi,35) + $scope.Tarih +"\n" + "Adres: " +SpaceLength($scope.Adres1,28) + $scope.Saat + "\n"  + "Adres2: " + SpaceLength($scope.Adres2,40) + "\n" + SpaceLength($scope.Adres,40) + "\n" +"Vergi Dairesi: "+SpaceLength($scope.CariVDADI,45) + "\n" + "Vergi No: "+ $scope.CariVDNO
 
         for(let i=0; i < pData.length; i++)
         {
-            FisData = FisData +  SpaceLength(pData[i].ADI,27) + " " + SpaceLength(pData[i].MIKTAR,7) + SpaceLength(parseFloat(pData[i].FIYAT,2),9) + SpaceLength(parseFloat(pData[i].sth_tutar,2),6) + "\n";
+            $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,27) + " " + SpaceLength(pData[i].MIKTAR,7) + SpaceLength(parseFloat(pData[i].FIYAT,2),9) + SpaceLength(parseFloat(pData[i].sth_tutar,2),6) + "\n";
         }
-        document.getElementById("FisData").innerText = FisDeger + "\n" + "---------------------------------------------" + "\n" +"URUN ADI                  "+ " MIKTAR "+ " FIYAT  " + " TUTAR" + "\n"+ FisData + "\n";
     }
     function SpaceLength(pData,pLength)
     {
@@ -1676,6 +1675,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
                 DipToplamHesapla();
                 ToplamMiktarHesapla()
+                FisData(data)
 
                 $scope.EvrakLock = true;
                 $scope.BarkodLock = false;
@@ -1943,21 +1943,18 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnFisYazdir = function()
     {
-        $scope.FisDeger = $scope.FisDeger.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-       let x = "---------------------------------------------\n"
-       x = x + "KODU    ADI   MIKTAR    TUTAR   ISKONTO      \n"
-       x = x + "---------------------------------------------\n"
+        let FisDizayn = "";
 
-       console.log($scope.FisDeger)
+        FisDizayn =  $scope.FisDeger + "\n" + "----------------------------------------------" + "\n" + "URUN ADI                  "+ " MIKTAR "+ " FIYAT  " + " TUTAR" + "\n" + $scope.FisData + "\n" + "----------------------------------------------" + "\n" + " " + "\n"
+        FisDizayn = FisDizayn + "                          Ara Toplam : " + $scope.AraToplam + "\n"  +"                      Toplam Indirim : " + $scope.ToplamIndirim + "\n" + "                          Net Toplam : " + $scope.NetToplam + "\n" + "                           ToplamKdv : " + $scope.ToplamKdv + "\n" + "                        Genel Toplam : " + $scope.GenelToplam + "\n"
+        FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         var S = "#Intent;scheme=rawbt;";
         var P =  "package=ru.a402d.rawbtprinter;end;";
-        var textEncoded = encodeURI($scope.FisDeger);
+        var textEncoded = encodeURI(FisDizayn);
 
         window.location.href="intent:"+textEncoded+S+P;
 
         alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
-
-        document.getElementById('FisYazdir').style.display = "none";
     }
 }
