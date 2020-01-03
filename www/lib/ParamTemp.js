@@ -6,6 +6,7 @@ var ParamTemp =
 		"Sistem" : 
 		{
 			"FirmaNo" : {"Title" : "Firma No","DefaultValue" : "0"},
+			"Firma" : {"Title" : "Firma","DefaultValue" : ""},
 			"SubeNo" : {"Title" : "Şube No","DefaultValue" : "0"},
 			"SatirBirlestir" : {"Title" : "Satır Birleştir","DefaultValue" : "1"},
 			"MalKabulEvrakTip" : {"Title" : "Mal Kabul Evrak Tipi","DefaultValue" : "0"},

@@ -1,6 +1,6 @@
 function Login ($scope,$rootScope,$window,db)
 {
-    let Firma = "TEST";
+    let Firma = "";
     $scope.server_adress = localStorage.host;
     $scope.server_port = localStorage.port;
     $scope.socket_port = localStorage.socketport;        
@@ -16,11 +16,13 @@ function Login ($scope,$rootScope,$window,db)
             'page_path': '/Login'
         });
 
+        UserParam = Param[$window.sessionStorage.getItem('User')]
+        $scope.Firm = UserParam.Sistem.Firma
+        Firma = UserParam.Sistem.Firma
         $scope.DepoNo = "";
         $scope.Kullanici = localStorage.username
         $scope.Password = localStorage.Password
 
-        console.log(localStorage.username)
         if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
         {
             console.log(localStorage.Password)
@@ -55,7 +57,7 @@ function Login ($scope,$rootScope,$window,db)
                             }
                             else
                             {
-                                $scope.Firm = data.result.recordset[0].FIRM;
+                                $scope.Firm = UserParam.Sistem.Firma;
                             }
                             $scope.User = "0";
                             $scope.FirmList = data.result.recordset;

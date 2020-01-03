@@ -6,6 +6,7 @@ var Param = [
 		"Sistem": {
 			"FirmaNo": "0",
 			"SubeNo": "0",
+			"Firma": "FLY",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
@@ -158,7 +159,7 @@ var Param = [
 		"FiyatGor": {
 			"Seri": "FGE",
 			"DepoNo": "1",
-			"DepoListe": "1",
+			"DepoListe": "1,2,3",
 			"FiyatListe": "1",
 			"EtiketTipi": "1",
 			"BasimTipi": "1",
