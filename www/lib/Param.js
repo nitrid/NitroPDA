@@ -6,7 +6,7 @@ var Param = [
 		"Sistem": {
 			"FirmaNo": "0",
 			"SubeNo": "0",
-			"Firma": "FLY",
+			"Firma": "TEST",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
