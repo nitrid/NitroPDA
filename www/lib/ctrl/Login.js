@@ -17,7 +17,13 @@ function Login ($scope,$rootScope,$window,db)
         });
 
         UserParam = Param[$window.sessionStorage.getItem('User')]
-        $scope.Firm = UserParam.Sistem.Firma
+        
+        console.log(UserParam.Sistem.Firma)
+        if(typeof UserParam.Sistem.Firma !== 'undefined')
+        {
+            $scope.Firm = UserParam.Sistem.Firma
+        }
+        
         Firma = UserParam.Sistem.Firma
         $scope.DepoNo = "";
         $scope.Kullanici = localStorage.username
