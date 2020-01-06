@@ -16,22 +16,23 @@ function Login ($scope,$rootScope,$window,db)
             'page_path': '/Login'
         });
 
-        UserParam = Param[$window.sessionStorage.getItem('User')]
-        
-        console.log(UserParam.Sistem.Firma)
-        if(typeof UserParam.Sistem.Firma !== 'undefined')
+        if(typeof Param[$window.sessionStorage.getItem('User')] != 'undefined')
         {
+            UserParam = Param[$window.sessionStorage.getItem('User')]
             $scope.Firm = UserParam.Sistem.Firma
+            Firma = UserParam.Sistem.Firma
+        }
+        else
+        {
+            Firma = "TEST"
         }
         
-        Firma = UserParam.Sistem.Firma
         $scope.DepoNo = "";
         $scope.Kullanici = localStorage.username
         $scope.Password = localStorage.Password
 
         if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
         {
-            console.log(localStorage.Password)
             document.getElementById("BeniHatirla").checked = true;
         }
 
