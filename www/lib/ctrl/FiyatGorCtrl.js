@@ -645,15 +645,15 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         db.DepoGetir($scope.Firma,UserParam.FiyatGor.DepoListe,function(data)
         {
             $scope.DepoListe = data; 
-            $scope.Depo = UserParam.FiyatGor.Depo;
+            $scope.DepoNo = UserParam.FiyatGor.DepoNo;
             $scope.DepoListe.forEach(function(item) 
             {
-                if(item.KODU == $scope.Depo)
+                if(item.KODU == $scope.DepoNo)
                     $scope.DepoAdi = item.ADI;
             });          
         });
         
-        db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(data){$scope.DepoListe = data; $scope.DepoNo = UserParam.FiyatGor.DepoNo});
+       // db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(data){$scope.DepoListe = data; $scope.DepoNo = UserParam.FiyatGor.DepoNo});
         db.MaxSira($scope.Firma,'MaxEtiketSira',[$scope.Seri],function(data){$scope.Sira = data});
     }
     $scope.DepoChange = function()

@@ -12,7 +12,7 @@
                 <div id="TbMain" class="tab-pane active">
                     <div class="row pb-20">
                         <div class="col-5 px-1">
-                            <select class="form-control form-control" ng-model="DepoNo" ng-disabled="EvrakLock" ng-change="DepoChange()">
+                            <select class="form-control form-control" ng-model="DepoNo" ng-change="DepoChange()">
                                 <option ng-repeat="option in DepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
