@@ -49,7 +49,8 @@ var Param = [
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": "false",
-			"SiparisOnay": ""
+			"SiparisOnay": "",
+			"IskontoMatris": "1"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -67,7 +68,8 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"SiparisOnay": ""
+			"SiparisOnay": "",
+			"IskontoMatris": "0"
 		},
 		"DepoSevk": {
 			"EvrakTip": "0",
@@ -271,8 +273,8 @@ var Param = [
 		"Sifre": "1",
 		"MikroId": "1",
 		"Sistem": {
-			"FirmaNo": "0",
-			"Firma": "SAA",
+			"FirmaNo": "1",
+			"Firma": "FLY",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
@@ -287,7 +289,9 @@ var Param = [
 			"KiloCarpan": "1000",
 			"Titresim": "0",
 			"PlasiyerKodu": "",
-			"FiyatDegistir": "1"
+			"FiyatDegistir": "1",
+			"Fiyat": "1",
+			
 		},
 		"Sayim": {
 			"EvrakNo": "1",
