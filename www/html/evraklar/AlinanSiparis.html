@@ -45,7 +45,7 @@
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Depo :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{DepoAdi}}</label></div>
                     </div>
-                    <div class="row pb-50">
+                    <div class="row pb-10">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Toplam Satır :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
@@ -204,8 +204,12 @@
                             <button class="form-group btn btn-block btn-primary my-1 h-40" ng-click="BtnCariListele()">Cari Listele</button>
                         </div>
                     </div>
-                    <div class="row py-1 px-1">
-                        <div id="TblCari"></div>
+
+                    <div class="col-1 offset-5" ng-show="Loading" >
+                            <div class="loader vertical-align-middle loader-circle"></div>
+                        </div>
+                    <div class="row py-1 px-1" ng-show="TblLoading">           
+                        <div id="TblCari"></div>                        
                     </div>
                 </div>
                 <div id="TbBarkodGiris" class="tab-pane">
@@ -283,7 +287,7 @@
                             <div class="col-form-label float-right py-1">Birim Fiyat:</div>
                         </div>
                         <div class="col-4 px-1">
-                            <input type="text" class="form-control form-control-sm" ng-model="Stok[0].FIYAT" ng-change="MiktarFiyatValid()" id="Fiyat" ng-keydown="FiyatPress($event)">
+                            <input type="text" class="form-control form-control-sm" ng-model="Stok[0].FIYAT" ng-disabled="FiyatLock" ng-change="MiktarFiyatValid()" id="Fiyat" ng-keydown="FiyatPress($event)">
                         </div>
                     </div>
                     <div class="row my-0">
@@ -299,7 +303,7 @@
                             <div class="col-form-label float-right py-1">İndirim:</div>
                         </div>
                         <div class="col-4 px-1">
-                            <input disabled type="text" class="form-control form-control-sm" ng-model="Stok[0].INDIRIM">
+                            <input disabled type="text" class="form-control form-control-sm" value="{{Stok[0].INDIRIM | number:2}}">
                         </div>
                     </div>
                     <div class="row my-0">
@@ -414,7 +418,10 @@
                             </div>
                         </div>
                     </div>
-                    <div id="TblStok" class="pt-5"></div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblStok" class="pt-5" ng-show="TblLoading"></div>         
                 </div>
             </div>
         </div>

@@ -53,6 +53,13 @@
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
                     <div class="row py-10">
+                        <div class="col-md-2 col-lg-2 col-sm-4 offset-sm-1 offset-lg-2 ">
+                            <button class="btn btn-block btn-primary h-60">
+                                <span class="glyphicon glyphicon-print"  aria-hidden="true" ng-click="BtnFisYazdir()"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row py-10">
                         <div class="col-6">
                             <button class="btn btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
                         </div>
@@ -182,6 +189,9 @@
                         <div class="col-6">
                             <button class="form-group btn btn-block btn-primary my-1 h-40" ng-click="BtnCariListele()">Cari Listele</button>
                         </div>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
                     </div>
                     <div class="row py-1 px-1">
                         <div id="TblCari"></div>
@@ -319,6 +329,7 @@
                                 <button class="dropdown-item" ng-click="BtnIskontoEkran(1)" data-toggle="modal"  role="menu-item">Satır İskonto</button>
                                 <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button>
                                 <button class="dropdown-item"  ng-click="BtnOnlineYazdir()"  role="menu-item">Online Yazdır</button>
+                                <button class="dropdown-item"  ng-click="BtnFisYazdir()"  role="menu-item">Fiş Yazdır</button>
                             </div> 
                         </div>
                     </div>
@@ -393,7 +404,10 @@
                             </div>
                         </div>
                     </div>
-                    <div id="TblStok" class="pt-5"></div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblStok" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
         </div>
@@ -591,7 +605,6 @@
             </div>
         </div>
     </div>
-</div>
 <script>
     $("#BTarih").datepicker({
     language: "tr"

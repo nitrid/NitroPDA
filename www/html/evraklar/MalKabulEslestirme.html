@@ -52,11 +52,10 @@
                         <div class="col-7 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
                     <div class="row py-10">
-                        <div class="col-6">
+                        <div class="col-6 offset-6">
                             <button class="btn btn-block btn-primary h-50" ng-click="SiparisSecimi()">Sipariş Seçim</button>
                         </div>
-                        <!-- <div class="col-6"></div> -->
-                    </div>
+                    </div>                       
                     <div class="row py-10 ">
                         <div class="col-6">
                             <button class="btn btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
@@ -114,8 +113,11 @@
                             <button class="btn btn-block btn-primary" ng-click="BtnSiparisKabulListele()">Listele</button>
                         </div>
                     </div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
                     <div class="row py-1 px-1">
-                        <div id="TblSiparisKabulListe"></div>
+                        <div id="TblSiparisKabulListe" ng-show="TblLoading"></div>
                     </div>
                 </div>
                 <div id="TbBelgeBilgisi" class="tab-pane">
@@ -245,7 +247,10 @@
                             <button class="form-group btn btn-block btn-primary my-1" ng-click="BtnCariListele()">Listele</button>
                         </div>
                     </div>
-                    <div class="row py-1 px-1">
+                    <div class="col-1 offset-5" ng-show="Loading">
+                            <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div class="row py-1 px-1" ng-show="TblLoading">
                         <div id="TblCari"></div>
                     </div>
                 </div>
@@ -535,7 +540,10 @@
                             </div>
                         </div>
                     </div>
-                    <div id="TblSiparisListe" class="pt-5"></div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblSiparisListe" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
         </div>

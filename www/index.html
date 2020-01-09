@@ -31,7 +31,7 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="theme/global/fonts/web-icons/web-icons.min.css">
     <link rel="stylesheet" href="theme/global/fonts/brand-icons/brand-icons.min.css">
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
+    <!-- <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'> -->
 
     <!--[if lt IE 9]>
     <script src="theme/global/vendor/html5shiv/html5shiv.min.js"></script>
@@ -166,6 +166,12 @@
                 <label class="floating-label">Şifre</label>
               </div>
               <div class="form-group clearfix">
+                <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
+                  <input type="checkbox" id="BeniHatirla" name="remember">
+                  <label for="inputCheckbox">Beni Hatırla</label>
+                </div>
+              </div>
+              <div class="form-group clearfix">
                 <button type="submit" class="btn btn-primary btn-block btn-lg mt-40" ng-click="BtnEntry()">Giriş</button>
                 </div>            
                 <div class="form-group">
@@ -273,7 +279,7 @@
             var body = document.getElementsByTagName('body')[0];
             var js = document.createElement("script");
             js.type = "text/javascript";
-            js.src = "../cordova.js";
+            js.src = "cordova.js";
             body.appendChild(js);
             $("#btn-appupdate").show();
         }
@@ -311,12 +317,16 @@
     <script src="lib/ctrl/AnaSayfaCtrl.js"></script>
     <script src="lib/ctrl/AktarimCtrl.js"></script>
     <script src="lib/ctrl/NakliyeOnayCtrl.js"></script>
-    <script src="lib/ctrl/CariRaporCtrl.js"></script>
-    <script src="lib/ctrl/StokRaporCtrl.js"></script>
     <script src="lib/ctrl/UrunGirisCikisCtrl.js"></script>
     <script src="lib/ctrl/PlanliUretimCtrl.js"></script>
     <script src="lib/ctrl/FasonGirisCikisCtrl.js"></script>
     <script src="lib/ctrl/EvrakGonderCtrl.js"></script>
+    <!-- RAPORLAR -->
+    <script src="lib/ctrl/CariHesapHareketCtrl.js"></script>
+    <script src="lib/ctrl/CariHesapHareketCtrl.js"></script>
+    <script src="lib/ctrl/CariHesapBakiyeCtrl.js"></script>
+    <script src="lib/ctrl/CariSecimliSiparisDurumCtrl.js"></script>
+    <script src="lib/ctrl/StokRaporCtrl.js"></script>
     
     <script src="lib/Param.js"></script>
     <script src="lib/QuerySql.js"></script>

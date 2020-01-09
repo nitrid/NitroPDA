@@ -11,10 +11,39 @@ var LicMenu = "";
 
 function dbengine(config)
 {    
-    
     this.config = config;
     io.listen(config.port);
     
+    //BELİRLİ ZAMANLARDA LİSANS DURUMU KONTROL EDİLİYOR. 
+    setInterval(function()
+    {
+        lic.LicenseCheck(function(data)
+        {
+            if(data != "")
+            {
+                if(typeof(data.result.err) == 'undefined')
+                {
+                    if(data.result.length == 0)
+                    {
+                        console.log("Lisansınız geçerli değil. lütfen ürün sorumlusuyla görüşünüz !");
+                        io.close();
+                    }
+                }
+                else
+                {
+                    console.log("Lisans server da data hatası !");
+                    io.close();
+                }
+            }
+            else
+            {
+                console.log("Lisans server'a ulaşılmıyor !");
+                io.close();
+            }
+        })
+    },3600000);
+
+    //NORMAL LİSANS KONTROL İŞLEMİ
     lic.LicenseCheck(function(data)
     {
         if(data != "")

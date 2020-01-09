@@ -1,0 +1,95 @@
+<div class="col-12" ng-controller="CariHesapHareketCtrl" ng-init="Init()">
+    <br>
+    <div class="panel my-2">
+        <div class="row">
+            <div class="col-xl-4 offset-xl-4 col-md-4 offset-md-4 col-sm-11 offset-1">
+                <h4 class="text-primary">Cari Hesap Hareket Raporu</h4>
+            </div>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-body">
+            <div class="form-group form-material" data-plugin="formMaterial">
+                <label class="form-control-label text-primary">Cari Seçim</label>
+                <input type="text" class="form-control focus" placeholder="Cari Listelemek İçin Tıklayınız..." data-target="#MdlCariGetir" data-toggle="modal" ng-model="CariAdi">
+            </div>
+            <div class="row">
+                <div class="col-sm-4 col-md-1 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
+                <div class="col-sm-8 col-md-4 px-1">
+                    <div class="input-group input-group-icon">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="icon wb-calendar" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 col-md-1 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Son Tarih:</div></div>
+                <div class="col-sm-8 col-md-4 px-1">
+                    <div class="input-group input-group-icon">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="icon wb-calendar" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" id="SonTarih" type="text" ng-model="SonTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                    </div>
+                </div>
+            </div>
+            <div class="row py-5">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnCariFoyGetir()">Getir</button>
+                </div>
+            </div>
+            <div id="TblCariFoy" class="pt-5"></div>
+        </div>
+    </div>
+    <!-- Cari Listele Modal -->
+    <div class="modal fade" id="MdlCariGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Cari Listele</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row py-5">
+                        <div class="col-4 px-1 ">
+                            <select class="form-control" ng-model="CmbCariAra" ng-disabled="EvrakLock">
+                                <option value="0">ADI</option>
+                                <option value="1">KODU</option>
+                            </select>
+                        </div>
+                        <div class="col-8 px-1">
+                            <input type="text" class="form-control" ng-model="TxtCariAra" ng-disabled="EvrakLock">
+                        </div>
+                    </div>
+                    <div class="row py-5">
+                        <div class="col-6">
+                            <button class="btn btn-block btn-primary" ng-click="BtnCariSec()">Cari Seç</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-block btn-primary" ng-click="BtnCariListele()">Cari Listele</button>
+                        </div>
+                    </div>
+                    <div id="TblCari" class="pt-5"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        $("#IlkTarih").datepicker({
+        language: "tr"
+        });
+        $("#SonTarih").datepicker({
+        language: "tr"
+        });
+</script>
+        

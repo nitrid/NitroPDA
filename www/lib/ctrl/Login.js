@@ -16,7 +16,25 @@ function Login ($scope,$rootScope,$window,db)
             'page_path': '/Login'
         });
 
+        if(typeof Param[$window.sessionStorage.getItem('User')] != 'undefined')
+        {
+            UserParam = Param[$window.sessionStorage.getItem('User')]
+            $scope.Firm = UserParam.Sistem.Firma
+            Firma = UserParam.Sistem.Firma
+        }
+        else
+        {
+            Firma = "TEST"
+        }
+        
         $scope.DepoNo = "";
+        $scope.Kullanici = localStorage.username
+        $scope.Password = localStorage.Password
+
+        if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
+        {
+            document.getElementById("BeniHatirla").checked = true;
+        }
 
         if (typeof localStorage.host == 'undefined')
         {
@@ -46,7 +64,7 @@ function Login ($scope,$rootScope,$window,db)
                             }
                             else
                             {
-                                $scope.Firm = data.result.recordset[0].FIRM;
+                                $scope.Firm = UserParam.Sistem.Firma;
                             }
                             $scope.User = "0";
                             $scope.FirmList = data.result.recordset;
@@ -90,22 +108,36 @@ function Login ($scope,$rootScope,$window,db)
         $window.location.reload();
     }
     $scope.BtnEntry = function()
-    
-    {       
+    {
         for(i = 0;i < Param.length;i++)
         {
-            if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
+            if($scope.Firm != "")
             {
-                console.log("Kullanıcı adı ve şifre doğru");
-                
-                $window.sessionStorage.setItem('Firma', $scope.Firm);
-                $window.sessionStorage.setItem('User', i);
-                
-                var url = "main.html";
-                $window.location.href = url;
-                return;
+                if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
+                {
+                    
+                    console.log("Kullanıcı adı ve şifre doğru");
+                    
+                    $window.sessionStorage.setItem('Firma', $scope.Firm);
+                    $window.sessionStorage.setItem('User', i);
+                    
+                    if(document.getElementById("BeniHatirla").checked == true)
+                    {
+                        localStorage.username = $scope.Kullanici
+                        localStorage.Password = $scope.Password
+                    }
+                    var url = "main.html";
+                    $window.location.href = url;
+                    return;
+                } 
             }
-        }
+            else
+            {
+                alertify.alert("Firmanın yüklenmesini bekleyin"); 
+                return;  
+            }   
+        }  
+        
         alertify.okBtn("Tamam");
         alertify.alert("Kullanıcı adı veya şifre yanlış");
     }

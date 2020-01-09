@@ -8,10 +8,8 @@ function LicenseCheck(callback)
 {
     if(typeof callback != 'undefined')
     {
-        LicSoc.on('connect', function () 
-        {   
-            console.log('MacId : ' + MacId.machineIdSync());
-            
+        if(LicSoc.connected)
+        {
             LicSoc.emit('licensecheck',{MacId:MacId.machineIdSync()},function(data)
             {
                 WriteLic(data);
@@ -24,16 +22,37 @@ function LicenseCheck(callback)
                 {
                     callback(data);
                 }
-            });            
-        });
-        LicSoc.on('connect_error', function (socket) 
+            });     
+        }
+        else
         {
-            ReadLic(function(data)
+            LicSoc.on('connect', function () 
+            {   
+                console.log('MacId : ' + MacId.machineIdSync());
+                LicSoc.emit('licensecheck',{MacId:MacId.machineIdSync()},function(data)
+                {
+                    WriteLic(data);
+    
+                    if(data.result.length > 0)
+                    {                    
+                        callback(data);
+                    }
+                    else
+                    {
+                        callback(data);
+                    }
+                });            
+            });
+            LicSoc.on('connect_error', function (socket) 
             {
-                LicSoc.close();
-                callback(data);
-            })
-        });
+                ReadLic(function(data)
+                {
+                    LicSoc.close();
+                    callback(data);
+                })
+            });
+        }
+        
     }
 }
 function WriteLic(pData)

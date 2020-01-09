@@ -29,6 +29,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
         $scope.Marka = "";
+        $scope.Reyon = "";
 
         $scope.BasimTipi = 0;
         $scope.BasimAdet = 1;
@@ -54,6 +55,9 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = false;
         $scope.DepoMiktar = false;
         $scope.Combo = true;
+
+        $scope.Loading = false;
+        $scope.TblLoading = true;
     }
     function InitDepoMiktarGrid()
     {
@@ -147,11 +151,14 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "400px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.Stok,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             
             fields: 
             [{
@@ -196,11 +203,14 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $("#TblStok").jsGrid
         (   {
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "KODU",
@@ -245,7 +255,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                 {          
                            
                     $scope.Stok = BarkodData;
-                    console.log($scope.Stok)
+                    
                     $scope.Barkod = $scope.Stok[0].BARKOD;
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.BarkodLock = true;
@@ -256,9 +266,9 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         db : '{M}.' + $scope.Firma,
                         query : "SELECT TOP 1 " + 
                                 "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano) " + 
                                 "ELSE " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
                                 "END AS FIYAT, " + 
                                 "sfiyat_doviz AS DOVIZ, " + 
                                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
@@ -386,6 +396,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         let Kodu = '';
         let Adi = '';
         let Marka = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;
 
         if($scope.StokGridTip == "0")
         {   
@@ -399,15 +411,24 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         {
             Marka = $scope.Marka;
         }
-      
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,Marka],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+           
         });
     }
     $scope.BtnStokGridSec = function()
-    {   
+    {
         $("#MdlStokGetir").modal('hide');
         StokBarkodGetir($scope.Barkod);
         $scope.StokListe = [];
@@ -612,16 +633,36 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         BarkodFocus();
         InitStokGrid();
         
-        $scope.SpecialListe = UserParam.Etiket.Etiket
+        if(typeof UserParam.Etiket != 'undefined')
+        {
+            $scope.SpecialListe = UserParam.Etiket.Etiket
+        }
 
         if($scope.DepoNo > 0)
         {
             $scope.EvrakLock = true;
         }
-
+        db.DepoGetir($scope.Firma,UserParam.FiyatGor.DepoListe,function(data)
+        {
+            $scope.DepoListe = data; 
+            $scope.DepoNo = UserParam.FiyatGor.DepoNo;
+            $scope.DepoListe.forEach(function(item) 
+            {
+                if(item.KODU == $scope.DepoNo)
+                    $scope.DepoAdi = item.ADI;
+            });          
+        });
         
-        db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(data){$scope.DepoListe = data; $scope.DepoNo = UserParam.FiyatGor.DepoNo});
+       // db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(data){$scope.DepoListe = data; $scope.DepoNo = UserParam.FiyatGor.DepoNo});
         db.MaxSira($scope.Firma,'MaxEtiketSira',[$scope.Seri],function(data){$scope.Sira = data});
+    }
+    $scope.DepoChange = function()
+    {
+        $scope.DepoListe.forEach(function(item) 
+        {
+            if(item.KODU == $scope.DepoNo)
+                $scope.DepoAdi = item.ADI;
+        }); 
     }
     $scope.StokListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -654,4 +695,22 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             }
         );
     }
+    $scope.BtnReyonUpdate = function()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "UPDATE STOKLAR SET sto_reyon_kodu = @sto_reyon_kodu WHERE sto_kod = @sto_kod ",
+            param:  ['sto_reyon_kodu','sto_kod'],
+            type:   ['string|25','string|25'],
+            value:  [$scope.Reyon,$scope.Stok[0].KODU]
+        }
+
+        db.ExecuteQuery(TmpQuery,function(data)
+        {   
+           $scope.Stok[0].REYON = $scope.Reyon;
+           $scope.Reyon = "";
+           $("#MdlReyonDegisikligi").modal('hide');
+        });
+    }  
 }

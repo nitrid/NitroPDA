@@ -63,6 +63,7 @@ var QuerySql =
                 "cari_bolge_kodu AS BOLGE," +
                 "cari_grup_kodu AS GRUP," +
                 "cari_temsilci_kodu AS TEMSILCI," +
+                "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI," +
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))) AS DOVIZSEMBOL," +
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))) AS DOVIZSEMBOL1," + 
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi2,0))) AS DOVIZSEMBOL2," +
@@ -75,13 +76,15 @@ var QuerySql =
                 "ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS BAKIYE," +
                 "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH," +
                 "ISNULL((SELECT adr_ilce + '-' + adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES," +
+                "ISNULL((SELECT adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES1, " +
+                "ISNULL((SELECT adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES2, " +
                 "cari_BUV_tabi_fl AS VERGISIZ," +
                 "cari_efatura_fl AS EFATURA " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE ((CARI.cari_kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((CARI.cari_unvan1 LIKE  @ADI + '%' ) OR (@ADI = '')) ORDER BY cari_kod ASC",
-            param : ['KODU','ADI'],
-            type : ['string|25','string|127']
+                "WHERE ((CARI.cari_kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((CARI.cari_unvan1 LIKE  @ADI + '%' ) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY cari_kod ASC",
+            param : ['KODU','ADI','PLASIYERKODU'],
+            type : ['string|25','string|127','string|25']
     },
     CariGetir : 
     {
@@ -100,6 +103,7 @@ var QuerySql =
                 "cari_bolge_kodu AS BOLGE," +
                 "cari_grup_kodu AS GRUP," +
                 "cari_temsilci_kodu AS TEMSILCI," +
+                "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI," +
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))) AS DOVIZSEMBOL," +
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))) AS DOVIZSEMBOL1," + 
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi2,0))) AS DOVIZSEMBOL2," +
@@ -112,13 +116,15 @@ var QuerySql =
                 "ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS BAKIYE," +
                 "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH," +
                 "ISNULL((SELECT adr_ilce + '-' + adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES," +
+                "ISNULL((SELECT adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES1, " +
+                "ISNULL((SELECT adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES2, " +
                 "cari_BUV_tabi_fl AS VERGISIZ," +
                 "cari_efatura_fl AS EFATURA " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE ((CARI.cari_kod = @KODU) OR (@KODU = '')) AND ((CARI.cari_unvan1 = @ADI) OR (@ADI = '')) ORDER BY cari_kod ASC",
-            param : ['KODU','ADI'],
-            type : ['string|25','string|127']
+                "WHERE ((CARI.cari_kod = @KODU) OR (@KODU = '')) AND ((CARI.cari_unvan1 = @ADI) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY cari_kod ASC",
+            param : ['KODU','ADI','PLASIYERKODU'],
+            type : ['string|25','string|127','string|25']
     },
     BarkodGetir:
     {
@@ -135,13 +141,13 @@ var QuerySql =
                 "sto_perakende_vergi AS PERAKENDEVERGIPNTR, " +
                 "sto_toptan_vergi AS TOPTANVERGIPNTR, " +
                 "sto_altgrup_kod AS ALTGRUP, " +
-                "ISNULL((SELECT sta_isim FROM STOK_ALT_GRUPLARI WHERE sta_kod = sto_altgrup_kod),'') AS ALTGRUPADI, " +
+                "ISNULL((SELECT TOP 1 sta_isim FROM STOK_ALT_GRUPLARI WHERE sta_kod = sto_altgrup_kod),'') AS ALTGRUPADI, " +
                 "sto_anagrup_kod AS ANAGRUP, " +
-                "ISNULL((SELECT san_isim FROM STOK_ANA_GRUPLARI WHERE san_kod = sto_anagrup_kod),'') AS ANAGRUPADI, " +
+                "ISNULL((SELECT TOP 1 san_isim FROM STOK_ANA_GRUPLARI WHERE san_kod = sto_anagrup_kod),'') AS ANAGRUPADI, " +
                 "sto_uretici_kodu AS URETICI, " +
                 "sto_sektor_kodu AS SEKTOR, " +
                 "sto_reyon_kodu AS REYON, " +
-                "ISNULL((SELECT ryn_ismi FROM STOK_REYONLARI WHERE STOK_REYONLARI.ryn_kod = sto_reyon_kodu),'') AS REYONADI, " +
+                "ISNULL((SELECT TOP 1 ryn_ismi FROM STOK_REYONLARI WHERE STOK_REYONLARI.ryn_kod = sto_reyon_kodu),'') AS REYONADI, " +
                 "sto_marka_kodu AS MARKA, " +
                 "sto_beden_kodu AS BEDENKODU, " +
                 "sto_renk_kodu AS RENKKODU, " +
@@ -190,13 +196,13 @@ var QuerySql =
                 "sto_perakende_vergi AS PERAKENDEVERGIPNTR, " +
                 "sto_toptan_vergi AS TOPTANVERGIPNTR, " +
                 "sto_altgrup_kod AS ALTGRUP, " +
-                "ISNULL((SELECT sta_isim FROM STOK_ALT_GRUPLARI WHERE sta_kod = sto_altgrup_kod),'') AS ALTGRUPADI, " +
+                "ISNULL((SELECT TOP 1 sta_isim FROM STOK_ALT_GRUPLARI WHERE sta_kod = sto_altgrup_kod),'') AS ALTGRUPADI, " +
                 "sto_anagrup_kod AS ANAGRUP, " +
-                "ISNULL((SELECT san_isim FROM STOK_ANA_GRUPLARI WHERE san_kod = sto_anagrup_kod),'') AS ANAGRUPADI, " +
+                "ISNULL((SELECT TOP 1 san_isim FROM STOK_ANA_GRUPLARI WHERE san_kod = sto_anagrup_kod),'') AS ANAGRUPADI, " +
                 "sto_uretici_kodu AS URETICI, " +
                 "sto_sektor_kodu AS SEKTOR, " +
                 "sto_reyon_kodu AS REYON, " +
-                "ISNULL((SELECT ryn_ismi FROM STOK_REYONLARI WHERE STOK_REYONLARI.ryn_kod = sto_reyon_kodu),'') AS REYONADI, " +
+                "ISNULL((SELECT TOP 1 ryn_ismi FROM STOK_REYONLARI WHERE STOK_REYONLARI.ryn_kod = sto_reyon_kodu),'') AS REYONADI, " +
                 "sto_marka_kodu AS MARKA, " +
                 "sto_beden_kodu AS BEDENKODU, " +
                 "sto_renk_kodu AS RENKKODU, " +
@@ -248,6 +254,19 @@ var QuerySql =
                 "ORDER BY sfiyat_deposirano DESC", 
         param : ['KODU','LISTENO','DEPO'],
         type : ['string|25','int','int']
+    },
+    IskontoMatrisGetir : 
+    {
+        query : "SELECT " + 
+                "isk_isk1_yuzde AS ORAN1, " + 
+                "isk_isk2_yuzde AS ORAN2, " + 
+                "isk_isk3_yuzde AS ORAN3, " + 
+                "isk_isk4_yuzde AS ORAN4, " + 
+                "isk_isk5_yuzde AS ORAN5, " + 
+                "isk_isk6_yuzde AS ORAN6 " + 
+                "FROM STOK_CARI_ISKONTO_TANIMLARI WHERE isk_stok_kod = @STOK AND isk_cari_kod = @CARI AND isk_uygulama_odeme_plani = @ODEME", 
+        param : ['STOK','CARI','ODEME'],
+        type : ['string|25','string|25','int']
     },
     SonAlisFiyatGetir : 
     {
@@ -526,22 +545,24 @@ var QuerySql =
                 "MAX(SIPARIS.sip_cari_sormerk) AS SORUMLULUK, " +
                 "MAX(SIPARIS.sip_satici_kod) AS PERSONEL, " +
                 "MAX(sip_projekodu) AS PROJE, " +
+                "MAX(CARI_HESAPLAR.cari_temsilci_kodu) AS TEMSILCIKODU, " +
                 "MAX(SIPARIS.sip_opno) AS ODEMENO, " +
                 "SIPARIS.sip_aciklama AS ACIKLAMA " +
                 "FROM SIPARISLER AS SIPARIS INNER JOIN " +
                 "BARKOD_TANIMLARI AS BARKOD ON SIPARIS.sip_stok_kod = BARKOD.bar_stokkodu " +
                 "AND SIPARIS.sip_teslim_miktar < SIPARIS.sip_miktar INNER JOIN " +
                 "CARI_HESAPLAR ON SIPARIS.sip_musteri_kod = CARI_HESAPLAR.cari_kod " +
-                "WHERE SIPARIS.sip_teslim_tarih>=@ILKTARIH AND SIPARIS.sip_teslim_tarih<=@SONTARIH " +
+                "WHERE SIPARIS.sip_teslim_tarih>=@ILKTARIH AND SIPARIS.sip_teslim_tarih<=@SONTARIH AND " +
+                "((CARI_HESAPLAR.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) AND SIPARIS.sip_OnaylayanKulNo <> @ONAYLAYANKULNO AND ((SIPARIS.sip_musteri_kod = @CARIKODU) OR (@CARIKODU = '')) " +
                 "AND SIPARIS.sip_depono=@DEPONO AND SIPARIS.sip_tip=@TIP " +
                 "GROUP BY SIPARIS.sip_teslim_tarih,SIPARIS.sip_evrakno_seri,SIPARIS.sip_evrakno_sira,SIPARIS.sip_depono, " +
                 "SIPARIS.sip_adresno,CARI_HESAPLAR.cari_kod,CARI_HESAPLAR.cari_unvan1,SIPARIS.sip_aciklama,SIPARIS.sip_doviz_cinsi " +
                 "HAVING SUM(SIPARIS.sip_miktar - SIPARIS.sip_teslim_miktar) > 0 " +
                 "ORDER BY sip_teslim_tarih",
-        param : ['ILKTARIH','SONTARIH','DEPONO','TIP'],
-        type : ['date','date','int','int']
+        param : ['ILKTARIH','SONTARIH','DEPONO','TIP','PLASIYERKODU','ONAYLAYANKULNO','CARIKODU'],
+        type : ['date','date','int','int','string|25','int','string|25']
     }, 
-    SiparisSeriSıraListele : 
+    SiparisSeriSiraListele : 
     {
         query : "SELECT " +
                 "CONVERT(VARCHAR(10),SIPARIS.sip_teslim_tarih,104) AS TESLIMTARIH, " +
@@ -612,7 +633,7 @@ var QuerySql =
                 "SIPARIS.sip_belge_tarih AS BELGETARIH, " +
                 "SIPARIS.sip_satici_kod AS SATICIKOD, " +
                 "SIPARIS.sip_musteri_kod AS CARI, " +
-                "SIPARIS.sip_b_fiyat AS FIYAT, " +
+                "ROUND(SIPARIS.sip_b_fiyat * SIPARIS.sip_doviz_kuru,2)  AS FIYAT, " +
                 "ISNULL(BEDENHAR.BdnHar_HarGor,SIPARIS.sip_miktar) AS SIPMIKTAR, " +
                 "SIPARIS.sip_birim_pntr AS BIRIMPNTR, " +
                 "ISNULL(BEDENHAR.BdnHar_TesMik,SIPARIS.sip_teslim_miktar) AS TESLIMMIKTAR, " +
@@ -929,7 +950,7 @@ var QuerySql =
                 ",@sip_aciklama				                    --<sip_aciklama, varchar(40),> \n" +
                 ",''							                --<sip_aciklama2, varchar(40),> \n" +
                 ",@sip_depono					                --<sip_depono, int,> \n" +
-                ",0							                    --<sip_OnaylayanKulNo, smallint,> \n" +
+                ",@sip_OnaylayanKulNo					        --<sip_OnaylayanKulNo, smallint,> \n" +
                 ",0							                    --<sip_vergisiz_fl, bit,> \n" +
                 ",0							                    --<sip_kapat_fl, bit,> \n" +
                 ",@sip_cari_sormerk			                    --<sip_cari_sormerk, varchar(25),> \n" +
@@ -996,7 +1017,7 @@ var QuerySql =
                  'sip_cins:int','sip_evrakno_seri:string|4','sip_evrakno_sira:int','sip_belgeno:string|15','sip_belge_tarih:date','sip_satici_kod:string|25',
                  'sip_musteri_kod:string|25','sip_stok_kod:string|25','sip_b_fiyat:float','sip_miktar:float','sip_birim_pntr:int','sip_teslim_miktar:float',
                  'sip_tutar:float','sip_iskonto_1:float','sip_iskonto_2:float','sip_iskonto_3:float','sip_iskonto_4:float','sip_iskonto_5:float',
-                 'sip_iskonto_6:float','sip_vergi_pntr:int','sip_vergi:float','sip_opno:int','sip_aciklama:string|40','sip_depono:int',
+                 'sip_iskonto_6:float','sip_vergi_pntr:int','sip_vergi:float','sip_opno:int','sip_aciklama:string|40','sip_depono:int','sip_OnaylayanKulNo:int',
                  'sip_cari_sormerk:string|25','sip_stok_sormerk:string|25','sip_doviz_cinsi:int','sip_doviz_kuru:float','sip_alt_doviz_kuru:float',
                  'sip_adresno:int','sip_iskonto1:int','sip_iskonto2:int','sip_iskonto3:int','sip_iskonto4:int','sip_iskonto5:int','sip_iskonto6:int',
                  'sip_isk1:bit','sip_isk2:bit','sip_isk3:bit','sip_isk4:bit','sip_isk5:bit','sip_isk6:bit','sip_parti_kodu:string|25','sip_lot_no:int',
@@ -1079,12 +1100,12 @@ var QuerySql =
         query : "SELECT " +
                 "(sip_miktar - sip_teslim_miktar) AS BMIKTAR, " +
                 "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod) AS ADI, " +
-                "sip_stok_kod AS KOD, " +
+                "sip_stok_kod AS KODU, " +
                 "BdnHar_BedenNo, " +
                 "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
                 "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN " +
                 "FROM SIPARISLER LEFT OUTER JOIN BEDEN_HAREKETLERI ON sip_Guid = BdnHar_Har_uid " +
-                "WHERE sip_depono =@sip_depono AND sip_musteri_kod =@sip_musteri_kod AND sip_evrakno_seri =@sip_evrakno_seri AND sip_evrakno_sira =@sip_evrakno_sira AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
+                "WHERE sip_depono =@sip_depono AND sip_musteri_kod =@sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
         param : ['sip_depono','sip_musteri_kod','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
         type : ['string|15','string|25','string|10','int','int']       
     },
@@ -1959,6 +1980,7 @@ var QuerySql =
                 ",@cha_e_islem_turu								--<cha_e_islem_turu, tinyint,> \n" + 
                 ",0												--<cha_fatura_belge_turu, tinyint,> \n" + 
                 ",''											--<cha_diger_belge_adi, nvarchar(50),> \n" + 
+                ",NEWID()											--<cha_uuid, nvarchar(40),> \n" + 
                 ",1												--<cha_adres_no, int,> \n" + 
                 ",0												--<cha_vergifon_toplam, float,> \n" + 
                 ",'18991230'									--<cha_ilk_belge_tarihi> \n" + 
@@ -2412,6 +2434,11 @@ var QuerySql =
     {
         query : "SELECT ISNULL(MAX(ssip_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri=@ssip_evrakno_seri ",
         param :['ssip_evrakno_seri:string|25']
+    },
+    //İşemirleri
+    IsEmriGetir : 
+    {
+        query : "SELECT is_Kod,is_Ismi,is_BaslangicTarihi FROM ISEMIRLERI" 
     },
     //#region "AKTARIM"
     AdresTbl : 

@@ -660,6 +660,8 @@ angular.module('app.db', []).service('db',function($rootScope)
         // FİYAT GETİR
         await _GetPromiseTag(pFirma,'FiyatGetir',FiyatParam,function(FiyatData)
         {   
+            BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
+
             if(FiyatData.length > 0)
             {   
                 BarkodData[0].FIYAT = FiyatData[0].FIYAT;
@@ -667,8 +669,25 @@ angular.module('app.db', []).service('db',function($rootScope)
             else
             {
                 BarkodData[0].FIYAT = 0;
-            }
-        });
+            }            
+        });        
+
+        // İSKONTO MATRİS
+        if(pEvrParam.IskontoMatris == "1" && pEvrParam.SonAlisFiyati == "0" && pEvrParam.AlisSarti == "0" && pEvrParam.SonSatisFiyati == "0" && pEvrParam.SatisSarti == "0")
+        {
+            await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
+            {
+                if(Data.length > 0)
+                {
+                    BarkodData[0].ISK.ORAN1 =  Data[0].ORAN1;
+                    BarkodData[0].ISK.ORAN2 =  Data[0].ORAN2;
+                    BarkodData[0].ISK.ORAN3 =  Data[0].ORAN3;
+                    BarkodData[0].ISK.ORAN4 =  Data[0].ORAN4;
+                    BarkodData[0].ISK.ORAN5 =  Data[0].ORAN5;
+                    BarkodData[0].ISK.ORAN6 =  Data[0].ORAN6;
+                }
+            });
+        }
 
         if(pFiyatParam.AlisSatis == 0)
         {
@@ -725,7 +744,7 @@ angular.module('app.db', []).service('db',function($rootScope)
         let Kilo = pBarkod;
         let KiloFlag = pParam.Sistem.KiloFlag;
         let FlagDizi = KiloFlag.split(',')
-        let Flag = Kilo.slice(0,2);
+        let Flag = Kilo.toString().slice(0,2);
         let Miktar = 1;
 
         for (i = 0; i < FlagDizi.length; i++ )

@@ -85,6 +85,9 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
 
         // DÜZENLE MODAL
         $scope.MiktarEdit = 0;
+
+        $scope.Loading = false;
+        $scope.TblLoading = true;
         
     }
     function InitIslemGrid()
@@ -92,11 +95,14 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.DepoSevkListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
                     
             fields: 
             [
@@ -141,11 +147,14 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         $("#TblStok").jsGrid
         ({
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "KODU",
@@ -196,11 +205,14 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         $("#TblPartiLot").jsGrid
         ({
             width: "100%",
-            height: "200px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.PartiLotListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "PARTI",
@@ -805,6 +817,9 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnStokGridGetir = function()
     {
+        console.log(1);
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -819,10 +834,17 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
+            console.log(2);
             $scope.StokListe = StokData;
+            if($scope.StokListe.length > 0)
+            console.log(3);
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+            }
             $("#TblStok").jsGrid({data : $scope.StokListe});
         });
-
+        
     }
     $scope.BtnStokGridSec = function()
     {

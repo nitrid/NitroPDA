@@ -348,7 +348,8 @@ var QuerySql =
     PartiLotInsert :
     {
         query : "INSERT INTO [dbo].[PARTILOT] " +
-           "([pl_DBCno] " +
+           "([pl_RECid_DBCno]  ," +
+            "[pl_RECid_RECno]  " +
             ",[pl_SpecRECno] " +
             ",[pl_iptal] " +
             ",[pl_fileid] " +
@@ -406,6 +407,7 @@ var QuerySql =
             ",[pl_kod10]) " +
             "VALUES " +
             "(0 \n" +
+            ",IDENT_CURRENT('PARTILOT')  \n" +
             ",0 \n" +
             ",0 \n" +
             ",153 \n" +
@@ -463,6 +465,20 @@ var QuerySql =
             ",''									--<pl_kod10, nvarchar(25),> \n" +
             ")",
         param : ['pl_create_user:int','pl_lastup_user:int','pl_partikodu:string|25','pl_lotno:int','pl_stokkodu:string|25','pl_son_kullanim_tar:date']
+    },
+    TumSonAlisGetir :
+    {
+        query : "SELECT sth_cari_kodu AS CARI,sth_stok_kod AS STOK, " + 
+        "ROUND((sth_tutar / sth_miktar),0)  AS SONFIYAT, " + 
+        "sth_har_doviz_cinsi AS DOVIZ, " + 
+        "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sth_har_doviz_cinsi,0))),'TL') AS DOVIZSEMBOL, " + 
+        "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sth_har_doviz_cinsi,0),2)),1) AS DOVIZKUR " + 
+        "FROM STOK_HAREKETLERI AS Hesaplama WHERE sth_evraktip IN (13,3) AND  " + 
+        "sth_RECno = (SELECT TOP 1 sth_RECno FROM STOK_HAREKETLERI AS Hesaplama1  " + 
+        "WHERE Hesaplama1.sth_evraktip IN (13,3)  AND Hesaplama1.sth_stok_kod = Hesaplama.sth_stok_kod  " + 
+        "ORDER BY sth_create_date DESC) AND Hesaplama.sth_stok_kod  = @sth_stok_kod" , 
+        param : ['sth_stok_kod'],
+        type  : ['string|25']
     },
     MaxPartiLot : 
     {
@@ -673,10 +689,10 @@ var QuerySql =
     //Sipariş
     SiparisInsert : 
     {
-        query : "DECLARE @UIDTABLE table([sip_Guid] [uniqueidentifier]) " +
-                "INSERT INTO [SIPARISLER] " +
-                "([sip_DBCno] " +
-                ",[sip_SpecRECno] " +
+        query : "INSERT INTO [SIPARISLER] " +
+                "([sip_RECid_DBCno] " + 
+                ",[sip_RECid_RECno]" +
+                ",[sip_SpecRECno] " +                
                 ",[sip_iptal] " +
                 ",[sip_fileid] " +
                 ",[sip_hidden] " +
@@ -739,7 +755,8 @@ var QuerySql =
                 ",[sip_adresno] " +
                 ",[sip_teslimturu] " +
                 ",[sip_cagrilabilir_fl] " +
-                ",[sip_prosip_uid] " +
+                ",[sip_prosiprecDbId]" +
+                ",[sip_prosiprecrecI]" +
                 ",[sip_iskonto1] " +
                 ",[sip_iskonto2] " +
                 ",[sip_iskonto3] " +
@@ -763,9 +780,11 @@ var QuerySql =
                 ",[sip_Exp_Imp_Kodu] " +
                 ",[sip_kar_orani] " +
                 ",[sip_durumu] " +
-                ",[sip_stal_uid] " +
+                ",[sip_stalRecId_DBCno] " +
+                ",[sip_stalRecId_RECno] " +
                 ",[sip_planlananmiktar] " +
-                ",[sip_teklif_uid] " +
+                ",[sip_teklifRecId_DBCno]" +
+                ",[sip_teklifRecId_RECno]" +
                 ",[sip_parti_kodu] " +
                 ",[sip_lot_no] " +
                 ",[sip_projekodu] " +
@@ -775,9 +794,11 @@ var QuerySql =
                 ",[sip_otvtutari] " +
                 ",[sip_OtvVergisiz_Fl] " +
                 ",[sip_paket_kod] " +
-                ",[sip_Rez_uid] " +
+                ",[sip_RezRecId_DBCno]" +
+                ",[sip_RezRecId_RECno]" +
                 ",[sip_harekettipi] " +
-                ",[sip_yetkili_uid] " +
+                ",[sip_yetkili_recid_dbcno]" +
+                ",[sip_yetkili_recid_recno]" +
                 ",[sip_kapatmanedenkod] " +
                 ",[sip_gecerlilik_tarihi] " +
                 ",[sip_onodeme_evrak_tip] " +
@@ -785,13 +806,10 @@ var QuerySql =
                 ",[sip_onodeme_evrak_sira] " +
                 ",[sip_rezervasyon_miktari] " +
                 ",[sip_rezerveden_teslim_edilen] " +
-                ",[sip_HareketGrupKodu1] " +
-                ",[sip_HareketGrupKodu2] " +
-                ",[sip_HareketGrupKodu3] " +
                 ") " +
-                "OUTPUT INSERTED.[sip_Guid] INTO @UIDTABLE " +
                 "VALUES ( " +
-                "0							                    --<sip_DBCno, smallint,> \n" +
+                "0							                    --<sip_RECid_DBCno, smallint,> \n" +
+                ",IDENT_CURRENT('SIPARISLER')             --<sip_RECid_RECno, int,> \n" +
                 ",0							                    --<sip_SpecRECno, int,> \n" +
                 ",0							                    --<sip_iptal, bit,> \n" +
                 ",21						                    --<sip_fileid, smallint,> \n" +
@@ -855,7 +873,8 @@ var QuerySql =
                 ",@sip_adresno							        --<sip_adresno, int,> \n" +
                 ",''							                --<sip_teslimturu, varchar(4),> \n" +
                 ",1							                    --<sip_cagrilabilir_fl, bit,> \n" +
-                ",cast(cast(0 as binary) as uniqueidentifier)	--<sip_prosip_uid> \n" +
+                ",0                                         	--<sip_prosiprecDbId> \n" +
+                ",0                                             --<sip_prosiprecrecI> \n" +
                 ",@sip_iskonto1				                    --<sip_iskonto1, tinyint,> \n" +
                 ",@sip_iskonto2				                    --<sip_iskonto2, tinyint,> \n" +
                 ",@sip_iskonto3				                    --<sip_iskonto3, tinyint,> \n" +
@@ -879,9 +898,11 @@ var QuerySql =
                 ",''							                --<sip_Exp_Imp_Kodu, varchar(25),> \n" +
                 ",0							                    --<sip_kar_orani, float,> \n" +
                 ",0							                    --<sip_durumu, tinyint,> \n" +
-                ",cast(cast(0 as binary) as uniqueidentifier)	--<sip_stal_uid> \n" +
+                ",0                                         	--<sip_stalRecId_DBCno> \n" +
+                ",0                                         	--<sip_stalRecId_RECno> \n" +
                 ",0							                    --<sip_planlananmiktar, float,> \n" +
-                ",cast(cast(0 as binary) as uniqueidentifier)	--<sip_teklif_uid> \n" +
+                ",0                                         	--<sip_teklifRecId_DBCno> \n" +
+                ",0                                         	--<sip_teklifRecId_RECno> \n" +
                 ",@sip_parti_kodu					            --<sip_parti_kodu, varchar(25),> \n" +
                 ",@sip_lot_no						            --<sip_lot_no, int,> \n" +
                 ",@sip_projekodu					            --<sip_projekodu, varchar(25),> \n" +
@@ -891,9 +912,11 @@ var QuerySql =
                 ",0							                    --<sip_otvtutari, float,> \n" +
                 ",0							                    --<sip_OtvVergisiz_Fl, tinyint,> \n" +
                 ",''							                --<sip_paket_kod, varchar(25),> \n" +
-                ",cast(cast(0 as binary) as uniqueidentifier)	--<sip_Rez_uid> \n" +
+                ",0                                            	--<sip_RezRecId_DBCno> \n" +
+                ",0                                            	--<sip_RezRecId_RECno> \n" +
                 ",0                                             --<sip_harekettipi, tinyint,> \n" +
-                ",cast(cast(0 as binary) as uniqueidentifier)	--<sip_yetkili_uid> \n" +
+                ",0                                         	--<sip_yetkili_yetkili_recid_dbcno> \n" +
+                ",0                                         	--<sip_yetkili_yetkili_recid_recno> \n" +
                 ",''							                --<sip_kapatmanedenkod> \n" +
                 ",CONVERT(VARCHAR(10),GETDATE(),112)			--<sip_gecerlilik_tarihi> \n" +
                 ",0							                    --<sip_onodeme_evrak_tip> \n" +
@@ -901,11 +924,7 @@ var QuerySql =
                 ",0							                    --<sip_onodeme_evrak_sira> \n" +
                 ",@sip_rezervasyon_miktari 				        --<sip_rezervasyon_miktari> \n" +
                 ",@sip_rezerveden_teslim_edilen			        --<sip_rezerveden_teslim_edilen> \n" +
-                ",''							                --<sip_HareketGrupKodu1> \n" +
-                ",''							                --<sip_HareketGrupKodu2> \n" +
-                ",''							                --<sip_HareketGrupKodu3> \n" +
-                ") " +
-                "SELECT [sip_Guid] FROM @UIDTABLE ",
+                ") ",
         param : ['sip_create_user:int','sip_lastup_user:int','sip_firmano:int','sip_subeno:int','sip_tarih:date','sip_teslim_tarih:date','sip_tip:int',
                  'sip_cins:int','sip_evrakno_seri:string|4','sip_evrakno_sira:int','sip_belgeno:string|15','sip_belge_tarih:date','sip_satici_kod:string|25',
                  'sip_musteri_kod:string|25','sip_stok_kod:string|25','sip_b_fiyat:float','sip_miktar:float','sip_birim_pntr:int','sip_teslim_miktar:float',
@@ -1214,8 +1233,7 @@ var QuerySql =
     },
     StokHarInsert : 
     {
-        query : "DECLARE @UIDTABLE table([sth_RECid_RECno] [int]) " +
-                "INSERT INTO [STOK_HAREKETLERI] " +
+        query : "INSERT INTO [STOK_HAREKETLERI] " +
                 "([sth_RECid_DBCno] " +
                 ",[sth_RECid_RECno] " +
                 ",[sth_SpecRECno] " +
@@ -1339,7 +1357,6 @@ var QuerySql =
                 ",[sth_taxfree_fl] " +
                 ",[sth_ilave_edilecek_kdv] " + 
                 ") " +
-                "OUTPUT INSERTED.[sth_RECid_RECno] INTO @UIDTABLE " + 
                 "VALUES " +
                 "(0					--<sth_RECid_DBCno, smallint,> \n" +
                 ",IDENT_CURRENT('STOK_HAREKETLERI') 	--<sth_RECid_RECno, int,> \n" +
@@ -1463,8 +1480,7 @@ var QuerySql =
                 ",0     		--<sth_yetkili_recid_recno, int,> \n" +
                 ",0					--<sth_taxfree_fl, bit,> \n" +
                 ",0					--<sth_ilave_edilecek_kdv,float,> \n" +
-                ") " +
-                "SELECT [sth_RECid_RECno] FROM @UIDTABLE ",
+                ") " ,
         param : ['sth_create_user:int','sth_lastup_user:int','sth_firmano:int','sth_subeno:int','sth_tarih:date','sth_tip:int','sth_cins:int',
             'sth_normal_iade:int','sth_evraktip:int','sth_evrakno_seri:string|25','sth_evrakno_sira:int','sth_belge_no:string|25','sth_belge_tarih:date',
             'sth_stok_kod:string|25','sth_isk_mas1:int','sth_isk_mas2:int','sth_isk_mas3:int','sth_isk_mas4:int','sth_isk_mas5:int','sth_isk_mas6:int','sth_isk_mas7:int',

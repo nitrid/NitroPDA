@@ -51,7 +51,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.PlasiyerKodu = 0; 
         $scope.SatirNo = "";
-
+        $scope.CmbEvrakTip = "0";
+        
         $scope.CDepoListe = [];
         $scope.GDepoListe = [];
         $scope.SorumlulukListe = [];
@@ -87,6 +88,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
 
         // DÜZENLE MODAL
         $scope.MiktarEdit = 0;
+
+        $scope.TblLoading = true;
         
     }
     function InitIslemGrid()
@@ -94,11 +97,14 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "330px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.DepoSevkListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             
             fields: 
             [
@@ -135,12 +141,11 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $("#TblStok").jsGrid
         ({
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
-            pageSize: 50,
+            pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -193,12 +198,11 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $("#TblPartiLot").jsGrid
         ({
             width: "100%",
-            height: "200px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.PartiLotListe,
-            pageSize: 50,
+            pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -762,7 +766,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                 Adi = $scope.TxtCariAra;
         }
         
-        db.CariListe($scope.Firma,'CariListeGetir',[Kodu,Adi],function(data)
+        db.CariListe($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -770,6 +774,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnStokGridGetir = function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -785,7 +791,17 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if ($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            
         });
     }
     $scope.BtnStokGridSec = function()
@@ -900,6 +916,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                 $scope.Tarih = new Date(data[0].sth_tarih).toLocaleDateString();
                 $scope.BelgeTarih = new Date(data[0].sth_belge_tarih).toLocaleDateString();
                 $scope.Barkod = "";
+                $scope.CmbEvrakTip = "0";
+
                 $scope.Stok = 
                 [
                     {

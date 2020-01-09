@@ -44,6 +44,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariDovizCinsi = 0;
         $scope.CariDovizKuru = 0;
         $scope.CariAltDovizKuru = 0;
+        $scope.CariIskontoKodu = "";        
         $scope.BelgeNo = "";
         $scope.DepoNo;
         $scope.DepoAdi;
@@ -88,7 +89,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.TxtCariAra = ""; 
         $scope.OtoEkle = false;
         $scope.EvrakLock = false;
-        $scope.BarkodLock = false;   
+        $scope.BarkodLock = false;
+        $scope.FiyatLock = UserParam.AlinanSiparis.FiyatLock;
+
         $scope.IslemListeSelectedIndex = -1;  
         $scope.PartiLotListeSelectedIndex = 0;
 
@@ -118,30 +121,30 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.IskTplTutar4 = 0;
         $scope.IskTplTutar5 = 0;
         $scope.IskTplTutar = 0;
-        
+
+        $scope.Loading = false;
+        $scope.TblLoading = true;
     }
     function InitCariGrid()
     {
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "300px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.CariListe,
             paging : true,
-            pageSize: 50,
+            pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
-            fields: 
+            fields:
             [
                 {
                     name: "KODU",
                     type: "number",
                     align: "center",
                     width: 100
-                    
                 },
                 {
                     name: "UNVAN1",
@@ -168,11 +171,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
-            height: "250px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.SiparisListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
            
             fields: 
             [
@@ -274,13 +280,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblStok").jsGrid
         ({
             width: "100%",
-            height: "350px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
             paging : true,
-            pageSize: 50,
+            pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -333,11 +338,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblPartiLot").jsGrid
         ({
             width: "100%",
-            height: "200px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.PartiLotListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
                 {
                     name: "PARTI",
@@ -482,7 +490,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {   
         var InsertData = 
         [
-            
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FIRMA NO
@@ -503,29 +510,30 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.Stok[0].BIRIMPNTR,
             0, //TESLİM MİKTARI
             $scope.Stok[0].TUTAR,
-            0, //ISKONTO TUTAR 1
-            0, //ISKONTO TUTAR 2
-            0, //ISKONTO TUTAR 3
-            0, //ISKONTO TUTAR 4
-            0, //ISKONTO TUTAR 5
-            0, //ISKONTO TUTAR 6
+            $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+            $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+            $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+            $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+            $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+            $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
             $scope.Stok[0].TOPTANVERGIPNTR,
             $scope.Stok[0].KDV,
             $scope.OdemeNo,
             '', //AÇIKLAMA
             $scope.DepoNo,
+            $scope.SipOnayKulNo,
             $scope.Sorumluluk,
             $scope.Sorumluluk,
             $scope.CariDovizCinsi,
             $scope.CariDovizKuru,
             $scope.CariAltDovizKuru,
             1, //ADRES NO
-            1, //ISKONTO TİP 1
-            1, //ISKONTO TİP 2
-            1, //ISKONTO TİP 3
-            1, //ISKONTO TİP 4
-            1, //ISKONTO TİP 5
-            1, //ISKONTO TİP 6
+            $scope.Stok[0].ISK.TIP1, //ISKONTO TİP 1
+            $scope.Stok[0].ISK.TIP2, //ISKONTO TİP 2
+            $scope.Stok[0].ISK.TIP3, //ISKONTO TİP 3
+            $scope.Stok[0].ISK.TIP4, //ISKONTO TİP 4
+            $scope.Stok[0].ISK.TIP5, //ISKONTO TİP 5
+            $scope.Stok[0].ISK.TIP6, //ISKONTO TİP 6
             0, //SATIR ISKONTO TİP 1
             0, //SATIR ISKONTO TİP 2
             0, //SATIR ISKONTO TİP 3
@@ -538,7 +546,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.CariFiyatListe,
             0, //REZERVASYON MİKTARI
             0  //REZERVASYON TESLİM MİKTARI
-           
         ];
 
         db.ExecuteTag($scope.Firma,'SiparisInsert',InsertData,function(InsertResult)
@@ -679,9 +686,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Stok[0].FIYAT = 0;
                     $scope.Stok[0].TUTAR = 0;
                     $scope.Stok[0].INDIRIM = 0;
+                    $scope.Stok[0].ISK = {ORAN1: 0,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
-
+                    
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
                         $scope.BirimListe = data; 
@@ -709,6 +717,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         CariKodu : $scope.CariKodu,
                         CariFiyatListe : $scope.CariFiyatListe,
                         CariDovizKuru : $scope.CariDovizKuru,
+                        CariIskontoKodu : $scope.CariIskontoKodu,
+                        OdemeNo : $scope.OdemeNo,
                         DepoNo : $scope.DepoNo,
                         AlisSatis : ($scope.EvrakTip === 0 ? 1 : 0)
                     };
@@ -808,6 +818,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnCariListele = function()
     {   
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -823,10 +835,21 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
         }
         
-        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi],function(data)
+        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
-            $scope.CariListe = data;      
-            $("#TblCari").jsGrid({data : $scope.CariListe});
+            $scope.CariListe = data;
+            if($scope.CariListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCari").jsGrid({data : $scope.CariListe});  
+            }
+            else
+            {
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+            }
+
+            
         });
     }
     $scope.BtnPartiLotGetir = function()
@@ -917,6 +940,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnStokGridGetir = function()
     {
+        $scope.Loading = true;
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -928,13 +953,20 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             Adi = $scope.StokGridText.replace("*","%").replace("*","%");
         }
-            
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }     
         });
-
     }
     $scope.BtnStokGridSec = function()
     {
@@ -1066,7 +1098,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         InitCariGrid();
         InitIslemGrid();
         InitStokGrid();
-
         InitPartiLotGrid();
 
         //ALINAN = 0 VERİLEN = 1
@@ -1074,6 +1105,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             ParamName = "AlinanSiparis";
         else
             ParamName = "VerilenSiparis";
+
 
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
@@ -1096,7 +1128,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         
         if($scope.CariKodu != "")
         {
-            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,''],function(data)
+            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
             {
                 $scope.CariListe = data;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -1116,10 +1148,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             {
                 if(item.KODU == $scope.DepoNo)
                     $scope.DepoAdi = item.ADI;
-            });          
+            });
         });
-
-       db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
+        
+        db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
        {
            $scope.SorumlulukListe = data; 
            $scope.Sorumluluk = UserParam[ParamName].Sorumluluk;
@@ -1139,14 +1171,22 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                   $scope.PersonelAdi == item.ADI;
             });
         });           
-        
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
 
         await db.MaxSira($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
         {
             $scope.Sira = data
-        });                     
+        });
+
+        if(UserParam.AlinanSiparis.SiparisOnay == "0")
+        {
+            $scope.SipOnayKulNo = 0;
+        }
+        else
+        {
+           $scope.SipOnayKulNo = UserParam.MikroId
+        }
 
         BarkodFocus();
     }
@@ -1177,6 +1217,31 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     $scope.MiktarFiyatValid = function()
     {
         $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
+        
+        $scope.Stok[0].ISK.TUTAR1 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100);
+        $scope.Stok[0].ISK.TIP1 = $scope.Stok[0].ISK.TUTAR1 === 0 ? 0 : 1; 
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100));       
+        
+        $scope.Stok[0].ISK.TUTAR2 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN2 / 100);
+        $scope.Stok[0].ISK.TIP2 = $scope.Stok[0].ISK.TUTAR2 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN2 / 100));
+        
+        $scope.Stok[0].ISK.TUTAR3 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN3 / 100);
+        $scope.Stok[0].ISK.TIP3 = $scope.Stok[0].ISK.TUTAR3 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN3 / 100));
+        
+        $scope.Stok[0].ISK.TUTAR4 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN4 / 100);
+        $scope.Stok[0].ISK.TIP4 = $scope.Stok[0].ISK.TUTAR4 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN4 / 100));
+        
+        $scope.Stok[0].ISK.TUTAR5 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN5 / 100);
+        $scope.Stok[0].ISK.TIP5 = $scope.Stok[0].ISK.TUTAR5 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN5 / 100));
+        
+        $scope.Stok[0].ISK.TUTAR6 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100);
+        $scope.Stok[0].ISK.TIP6 = $scope.Stok[0].ISK.TUTAR6 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100));
+
         $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
         $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
     }
@@ -1192,7 +1257,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
-        $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;  
+        $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
+        $scope.CariIskontoKodu = $scope.CariListe[pIndex].ISKONTOKOD;
+        $scope.Personel = $scope.CariListe[pIndex].TEMSILCI;
+        $scope.PersonelAdi = $scope.CariListe[pIndex].TEMSILCIADI;
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -1406,18 +1474,18 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                                 TmpMiktar,
                                 $scope.Stok[0].FIYAT * TmpMiktar,
                                 $scope.Stok[0].TOPTANVERGIPNTR,
-                                0, //ISKONTO TUTAR 1
-                                0, //ISKONTO TUTAR 2
-                                0, //ISKONTO TUTAR 3
-                                0, //ISKONTO TUTAR 4
-                                0, //ISKONTO TUTAR 5
-                                0, //ISKONTO TUTAR 6
-                                0, //SATIR ISKONTO TİP 1
-                                0, //SATIR ISKONTO TİP 2
-                                0, //SATIR ISKONTO TİP 3
-                                0, //SATIR ISKONTO TİP 4
-                                0, //SATIR ISKONTO TİP 5
-                                0, //SATIR ISKONTO TİP 6
+                                value.sip_iskonto_1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+                                value.sip_iskonto_2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+                                value.sip_iskonto_3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+                                value.sip_iskonto_4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+                                value.sip_iskonto_5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+                                value.sip_iskonto_6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
+                                $scope.Stok[0].ISK.TIP1, //SATIR ISKONTO TİP 1
+                                $scope.Stok[0].ISK.TIP2, //SATIR ISKONTO TİP 2
+                                $scope.Stok[0].ISK.TIP3, //SATIR ISKONTO TİP 3
+                                $scope.Stok[0].ISK.TIP4, //SATIR ISKONTO TİP 4
+                                $scope.Stok[0].ISK.TIP5, //SATIR ISKONTO TİP 5
+                                $scope.Stok[0].ISK.TIP6, //SATIR ISKONTO TİP 6
                                 value.sip_Guid
                             ],
                             BedenPntr : $scope.Stok[0].BEDENPNTR,
@@ -1425,7 +1493,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                             Miktar : TmpMiktar,
                             Guid : value.sip_Guid
                         };
-
+                        
                         UpdateStatus = true;
                         UpdateData(Data);
                     }                        
@@ -1491,7 +1559,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     $scope.BedenHarListe = BedenData;
                 });
                 
-                db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,''],function(data)
+                db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
                 {   
                     $scope.CariListe = data;
             

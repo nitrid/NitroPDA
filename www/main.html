@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="theme/global/fonts/web-icons/web-icons.min.css">
     <link rel="stylesheet" href="theme/global/fonts/brand-icons/brand-icons.min.css">
     <link rel="stylesheet" href="theme/global/fonts/glyphicons/glyphicons.css">
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
+    <!-- <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'> -->
     <!-- İcon -->
     <link rel="stylesheet" href="theme/base/assets/examples/css/uikit/icon.css">
     <link rel="stylesheet" href="theme/global/vendor/asrange/asRange.css">
@@ -79,11 +79,11 @@
     <!--[if lt IE 8]>
           <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
       <![endif]-->
-      <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-fixed-top navbar-inverse" role="navigation" role="navigation">
+       <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-fixed-top navbar-inverse" role="navigation" role="navigation">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
+          <!-- <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
             <span class="hamburger-bar"></span>
-          </button>
+          </button> -->
         <a href="#!"><button class="btn btn-primary pt-1  col-4 offset-4 h-50"><i class="fas fa-lg fa-home"></i></button></a> 
         <div class="navbar-container container-fluid">
           <!-- Navbar Collapse -->
@@ -104,7 +104,6 @@
           <!-- End Navbar Collapse -->
         </div>
       </nav>
-    </div>
     <!-- Navigasyon Basla -->
       <div class="site-menubar site-menubar-light">
         <div class="site-menubar-body">
@@ -154,6 +153,11 @@
                 </ul>
             </div>
           </div>
+        </div>
+        <div class="site-menubar-footer">
+          <a href="index.html" class="fold-show" data-placement="top" data-toggle="tooltip" data-original-title="Settings">
+            <span class="icon wb-power" aria-hidden="true" style="color:red"></span>
+          </a>
         </div>
       </div>
 
@@ -245,12 +249,16 @@
     <script src="lib/ctrl/FaturaCtrl.js"></script>
     <script src="lib/ctrl/AnaSayfaCtrl.js"></script>
     <script src="lib/ctrl/AktarimCtrl.js"></script>
-    <script src="lib/ctrl/CariRaporCtrl.js"></script>
-    <script src="lib/ctrl/StokRaporCtrl.js"></script>
     <script src="lib/ctrl/UrunGirisCikisCtrl.js"></script>
     <script src="lib/ctrl/PlanliUretimCtrl.js"></script>
     <script src="lib/ctrl/FasonGirisCikisCtrl.js"></script>
     <script src="lib/ctrl/EvrakGonderCtrl.js"></script>
+    <!-- RAPORLAR -->
+    <script src="lib/ctrl/CariHesapHareketCtrl.js"></script>
+    <script src="lib/ctrl/CariHesapHareketCtrl.js"></script>
+    <script src="lib/ctrl/CariHesapBakiyeCtrl.js"></script>
+    <script src="lib/ctrl/CariSecimliSiparisDurumCtrl.js"></script>
+    <script src="lib/ctrl/StokRaporCtrl.js"></script>
 
     <script src="lib/Param.js"></script>    
     <script src="lib/ParamTemp.js"></script>
@@ -272,7 +280,7 @@
           var body = document.getElementsByTagName('body')[0];
           var js = document.createElement("script");
           js.type = "text/javascript";
-          js.src = "../cordova.js";
+          js.src = "cordova.js";
           body.appendChild(js);
       }
       
