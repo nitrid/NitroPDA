@@ -458,6 +458,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         let Vergi = [0,0,0,0,0,0,0,0,0,0];
         for(let i = 0;i < Vergi.length;i++)
         {
+            console.log(10)
             Vergi[$scope.Stok[0].TOPTANVERGIPNTR - 1] = $scope.Stok[0].KDV;
         } 
 
@@ -525,11 +526,13 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
             0, //SNTCKPOZ
             0 //EISLEMTURU
         ];
-
+        console.log(11)
         db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
         {   
+            console.log(12)
             if(typeof InsertResult.result.err == 'undefined')
             {
+                console.log(13)
                 $scope.ChaGuid = InsertResult.result.recordset[0].cha_Guid;
                 $scope.InsertLock = false;
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
@@ -822,15 +825,18 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
 
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
+            console.log(4)
             if(typeof(InsertResult.result.err) == 'undefined')
             {
+                console.log(5)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Data)
                 {   
+                    console.log(6)
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
-
+                    console.log(7)
                     InsertAfterRefresh(Data);
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
@@ -1645,10 +1651,13 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
             $scope.InsertLock = true
             if(typeof $scope.CariHarListe == 'undefined' || $scope.CariHarListe.length == 0 )
             {   
+                console.log(1)
                 CariHarInsert(function(pResult)
-                {
+                {   
+                    console.log(2)
                     if(pResult)
                     {
+                        console.log(3)
                         StokHarInsert();                        
                     }
                 });
