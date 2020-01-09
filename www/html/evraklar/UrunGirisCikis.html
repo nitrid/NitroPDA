@@ -29,7 +29,7 @@
                     </div>
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Evrak No :</label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10">{{EvrakNo}}</label></div>
+                        <div class="col-8 px-0"><label class="form-control-label pl-10">{{Seri}} - {{Sira}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">İşemri İsim :</label></div>
@@ -85,7 +85,7 @@
                     <div class="row my-0 py-0 ">
                         <div class="col-4 text-info px-1"><div class="col-form-label float-right py-2">E. Seri-Sira :</div></div>
                         <div class="col-3 px-1">
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" ng-model="Seri" ng-disabled="EvrakLock">
                         </div>
                         <div class="col-5 px-1">
                             <input type="text" class="form-control" ng-model="Sira" ng-disabled="EvrakLock">
@@ -267,10 +267,10 @@
                         </div>
                         <div class="row py-1">
                             <div class="col-6">
-                                <button class="btn btn-block btn-primary h-40">İşemri Seç</button>
+                                <button class="btn btn-block btn-primary h-40" ng-click="MainClick()">İşemri Seç</button>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-block btn-primary h-40">İşemri Listele</button>
+                                <button class="btn btn-block btn-primary h-40" ng-click="IsEmriListele()">İşemri Listele</button>
                             </div>
                         </div>
                         <div class="row py-1 px-1">

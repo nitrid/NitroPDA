@@ -2436,6 +2436,11 @@ var QuerySql =
         query : "SELECT ISNULL(MAX(ssip_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri=@ssip_evrakno_seri ",
         param :['ssip_evrakno_seri:string|25']
     },
+    //İşemirleri
+    IsEmriGetir : 
+    {
+        query : "SELECT is_Kod,is_Ismi,is_BaslangicTarihi FROM ISEMIRLERI" 
+    },
     //#region "AKTARIM"
     AdresTbl : 
     {

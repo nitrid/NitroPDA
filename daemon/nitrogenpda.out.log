@@ -1,1 +1,35 @@
 MacId : 6f06847eac436ba165020031ddd2383cae8ac452e0c543682737ed94328a20bf
+Error: listen EADDRINUSE: address already in use :::8091
+    at Server.setupListenHandle [as _listen2] (net.js:1226:14)
+    at listenInCluster (net.js:1274:12)
+    at Server.listen (net.js:1362:7)
+    at Server.listen.Server.attach (C:\Projects\NitroPDA\node_modules\socket.io\lib\index.js:273:9)
+    at dbengine (C:\Projects\NitroPDA\sql\dbengine.js:15:8)
+    at Object.<anonymous> (C:\Projects\NitroPDA\server.js:4:41)
+    at Module._compile (internal/modules/cjs/loader.js:774:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:785:10)
+    at Module.load (internal/modules/cjs/loader.js:641:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:556:12)
+Error: listen EADDRINUSE: address already in use :::8082
+    at Server.setupListenHandle [as _listen2] (net.js:1226:14)
+    at listenInCluster (net.js:1274:12)
+    at Server.listen (net.js:1362:7)
+    at Function.listen (C:\Projects\NitroPDA\node_modules\express\lib\application.js:618:24)
+    at Object.<anonymous> (C:\Projects\NitroPDA\server.js:10:5)
+    at Module._compile (internal/modules/cjs/loader.js:774:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:785:10)
+    at Module.load (internal/modules/cjs/loader.js:641:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:556:12)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:837:10)
+MacId : 6f06847eac436ba165020031ddd2383cae8ac452e0c543682737ed94328a20bf
+Error: listen EADDRINUSE: address already in use :::8091
+    at Server.setupListenHandle [as _listen2] (net.js:1226:14)
+    at listenInCluster (net.js:1274:12)
+    at Server.listen (net.js:1362:7)
+    at Server.listen.Server.attach (C:\Projects\NitroPDA\node_modules\socket.io\lib\index.js:273:9)
+    at C:\Projects\NitroPDA\sql\dbengine.js:59:24
+    at Socket.<anonymous> (C:\Projects\NitroPDA\sql\license.js:38:25)
+    at Socket.onack (C:\Projects\NitroPDA\node_modules\socket.io-client\lib\socket.js:319:9)
+    at Socket.onpacket (C:\Projects\NitroPDA\node_modules\socket.io-client\lib\socket.js:244:12)
+    at Manager.<anonymous> (C:\Projects\NitroPDA\node_modules\component-bind\index.js:21:15)
+    at Manager.Emitter.emit (C:\Projects\NitroPDA\node_modules\component-emitter\index.js:133:20)

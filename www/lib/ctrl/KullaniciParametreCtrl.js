@@ -174,6 +174,9 @@ function KullaniciParametreCtrl($scope,$window,db)
     }
     $scope.BtnParamGuncelle = function()
     {
+        console.log(ParamTemp)
+        console.log(Param)
+        
         alertify.okBtn('Evet');
         alertify.cancelBtn('Hayır');
 
@@ -184,7 +187,7 @@ function KullaniciParametreCtrl($scope,$window,db)
             {
                 for(let MasterItem in ParamTemp)
                 {
-                    if(!Param[i].hasOwnProperty(MasterItem))
+                    if(!Param[i].hasOwnProperty(MasterItem))                  
                     {
                         if(typeof Object.values(Object.values(ParamTemp[MasterItem]))[0] == "object")
                         {
