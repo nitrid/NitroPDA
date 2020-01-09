@@ -5,8 +5,8 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
+			"Firma": "",
 			"SubeNo": "0",
-			"Firma": "TEST",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
@@ -20,9 +20,7 @@ var Param = [
 			"KiloCarpan": "1000",
 			"Titresim": "0",
 			"PlasiyerKodu": "",
-			"FiyatDegistir": "1",
-			"Fiyat": "1",
-			"Fiyat1": "1"
+			"FiyatDegistir": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -50,7 +48,7 @@ var Param = [
 			"PartiSec": "0",
 			"FiyatLock": "false",
 			"SiparisOnay": "",
-			"IskontoMatris": "1"
+			"IskontoMatris": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -161,7 +159,7 @@ var Param = [
 		"FiyatGor": {
 			"Seri": "FGE",
 			"DepoNo": "1",
-			"DepoListe": "1,2,3",
+			"DepoListe": "",
 			"FiyatListe": "1",
 			"EtiketTipi": "1",
 			"BasimTipi": "1",
@@ -273,7 +271,8 @@ var Param = [
 		"Sifre": "1",
 		"MikroId": "1",
 		"Sistem": {
-			"FirmaNo": "1",
+			"FirmaNo": "0",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
@@ -288,9 +287,7 @@ var Param = [
 			"KiloCarpan": "1000",
 			"Titresim": "0",
 			"PlasiyerKodu": "",
-			"FiyatDegistir": "1",
-			"Fiyat": "1",
-			"Firma": "FLY"
+			"FiyatDegistir": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -317,7 +314,8 @@ var Param = [
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": "false",
-			"SiparisOnay": ""
+			"SiparisOnay": "",
+			"IskontoMatris": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -335,7 +333,8 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"SiparisOnay": ""
+			"SiparisOnay": "",
+			"IskontoMatris": "0"
 		},
 		"DepoSevk": {
 			"EvrakTip": "0",
