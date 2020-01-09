@@ -1099,6 +1099,7 @@ var QuerySql =
     {
         query : "SELECT " +
                 "(sip_miktar - sip_teslim_miktar) AS BMIKTAR, " +
+                "sip_miktar AS SIPMIKTAR, " +
                 "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod) AS ADI, " +
                 "sip_stok_kod AS KODU, " +
                 "BdnHar_BedenNo, " +

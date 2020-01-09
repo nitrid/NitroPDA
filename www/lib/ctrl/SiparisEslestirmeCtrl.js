@@ -286,6 +286,13 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     width: 200
                 },
                 {
+                    name: "SIPMIKTAR",
+                    title: "SİP MIK.",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
                     name: "BMIKTAR",
                     title: "BEKLEYEN MIK.",
                     type: "number",
@@ -2067,6 +2074,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,0],function(StokData)
         {
             $scope.StokListe = StokData;
+            console.log($scope.StokListe)
             if($scope.StokListe.length > 0)
             {
                 $scope.Loading = false;
