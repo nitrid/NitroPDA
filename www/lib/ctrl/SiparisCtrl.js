@@ -44,6 +44,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariDovizCinsi = 0;
         $scope.CariDovizKuru = 0;
         $scope.CariAltDovizKuru = 0;
+        $scope.CariIskontoKodu = "";        
         $scope.BelgeNo = "";
         $scope.DepoNo;
         $scope.DepoAdi;
@@ -509,12 +510,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.Stok[0].BIRIMPNTR,
             0, //TESLİM MİKTARI
             $scope.Stok[0].TUTAR,
-            0, //ISKONTO TUTAR 1
-            0, //ISKONTO TUTAR 2
-            0, //ISKONTO TUTAR 3
-            0, //ISKONTO TUTAR 4
-            0, //ISKONTO TUTAR 5
-            0, //ISKONTO TUTAR 6
+            $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+            $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+            $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+            $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+            $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+            $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
             $scope.Stok[0].TOPTANVERGIPNTR,
             $scope.Stok[0].KDV,
             $scope.OdemeNo,
@@ -527,12 +528,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.CariDovizKuru,
             $scope.CariAltDovizKuru,
             1, //ADRES NO
-            1, //ISKONTO TİP 1
-            1, //ISKONTO TİP 2
-            1, //ISKONTO TİP 3
-            1, //ISKONTO TİP 4
-            1, //ISKONTO TİP 5
-            1, //ISKONTO TİP 6
+            $scope.Stok[0].ISK.TIP1, //ISKONTO TİP 1
+            $scope.Stok[0].ISK.TIP2, //ISKONTO TİP 2
+            $scope.Stok[0].ISK.TIP3, //ISKONTO TİP 3
+            $scope.Stok[0].ISK.TIP4, //ISKONTO TİP 4
+            $scope.Stok[0].ISK.TIP5, //ISKONTO TİP 5
+            $scope.Stok[0].ISK.TIP6, //ISKONTO TİP 6
             0, //SATIR ISKONTO TİP 1
             0, //SATIR ISKONTO TİP 2
             0, //SATIR ISKONTO TİP 3
@@ -685,9 +686,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Stok[0].FIYAT = 0;
                     $scope.Stok[0].TUTAR = 0;
                     $scope.Stok[0].INDIRIM = 0;
+                    $scope.Stok[0].ISK = {ORAN1: 0,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
-
+                    
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
                         $scope.BirimListe = data; 
@@ -715,6 +717,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         CariKodu : $scope.CariKodu,
                         CariFiyatListe : $scope.CariFiyatListe,
                         CariDovizKuru : $scope.CariDovizKuru,
+                        CariIskontoKodu : $scope.CariIskontoKodu,
+                        OdemeNo : $scope.OdemeNo,
                         DepoNo : $scope.DepoNo,
                         AlisSatis : ($scope.EvrakTip === 0 ? 1 : 0)
                     };
@@ -1213,6 +1217,31 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     $scope.MiktarFiyatValid = function()
     {
         $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
+        
+        $scope.Stok[0].ISK.TUTAR1 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100);
+        $scope.Stok[0].ISK.TIP1 = $scope.Stok[0].ISK.TUTAR1 === 0 ? 0 : 1; 
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100));       
+        
+        $scope.Stok[0].ISK.TUTAR2 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN2 / 100);
+        $scope.Stok[0].ISK.TIP2 = $scope.Stok[0].ISK.TUTAR2 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN2 / 100));
+        
+        $scope.Stok[0].ISK.TUTAR3 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN3 / 100);
+        $scope.Stok[0].ISK.TIP3 = $scope.Stok[0].ISK.TUTAR3 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN3 / 100));
+        
+        $scope.Stok[0].ISK.TUTAR4 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN4 / 100);
+        $scope.Stok[0].ISK.TIP4 = $scope.Stok[0].ISK.TUTAR4 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN4 / 100));
+        
+        $scope.Stok[0].ISK.TUTAR5 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN5 / 100);
+        $scope.Stok[0].ISK.TIP5 = $scope.Stok[0].ISK.TUTAR5 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN5 / 100));
+        
+        $scope.Stok[0].ISK.TUTAR6 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100);
+        $scope.Stok[0].ISK.TIP6 = $scope.Stok[0].ISK.TUTAR6 === 0 ? 0 : 1;
+        $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100));
+
         $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
         $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
     }
@@ -1229,6 +1258,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
         $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
+        $scope.CariIskontoKodu = $scope.CariListe[pIndex].ISKONTOKOD;
         $scope.Personel = $scope.CariListe[pIndex].TEMSILCI;
         $scope.PersonelAdi = $scope.CariListe[pIndex].TEMSILCIADI;
     }
@@ -1444,18 +1474,18 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                                 TmpMiktar,
                                 $scope.Stok[0].FIYAT * TmpMiktar,
                                 $scope.Stok[0].TOPTANVERGIPNTR,
-                                0, //ISKONTO TUTAR 1
-                                0, //ISKONTO TUTAR 2
-                                0, //ISKONTO TUTAR 3
-                                0, //ISKONTO TUTAR 4
-                                0, //ISKONTO TUTAR 5
-                                0, //ISKONTO TUTAR 6
-                                0, //SATIR ISKONTO TİP 1
-                                0, //SATIR ISKONTO TİP 2
-                                0, //SATIR ISKONTO TİP 3
-                                0, //SATIR ISKONTO TİP 4
-                                0, //SATIR ISKONTO TİP 5
-                                0, //SATIR ISKONTO TİP 6
+                                value.sip_iskonto_1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+                                value.sip_iskonto_2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+                                value.sip_iskonto_3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+                                value.sip_iskonto_4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+                                value.sip_iskonto_5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+                                value.sip_iskonto_6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
+                                $scope.Stok[0].ISK.TIP1, //SATIR ISKONTO TİP 1
+                                $scope.Stok[0].ISK.TIP2, //SATIR ISKONTO TİP 2
+                                $scope.Stok[0].ISK.TIP3, //SATIR ISKONTO TİP 3
+                                $scope.Stok[0].ISK.TIP4, //SATIR ISKONTO TİP 4
+                                $scope.Stok[0].ISK.TIP5, //SATIR ISKONTO TİP 5
+                                $scope.Stok[0].ISK.TIP6, //SATIR ISKONTO TİP 6
                                 value.sip_Guid
                             ],
                             BedenPntr : $scope.Stok[0].BEDENPNTR,
@@ -1463,7 +1493,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                             Miktar : TmpMiktar,
                             Guid : value.sip_Guid
                         };
-
+                        
                         UpdateStatus = true;
                         UpdateData(Data);
                     }                        

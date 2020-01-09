@@ -21,7 +21,7 @@ var ParamTemp =
 			"KiloCarpan" : {"Title" : "Kilo Carpan","DefaultValue" : "1000"},
 			"Titresim" : {"Title" : "Titreşim","DefaultValue" : "0"},
 			"PlasiyerKodu" : {"Title" : "Plasiyer Kodu","DefaultValue" : ""},
-			"FiyatDegistir" : {"Title" : "Fiyat Değiştir","DefaultValue" : "1"},
+			"FiyatDegistir" : {"Title" : "Fiyat Değiştir","DefaultValue" : "1"}
 		},
 		"Sayim" :
 		{
@@ -50,7 +50,8 @@ var ParamTemp =
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "false"},
-			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""}			
+			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},			
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
 		},
 		"VerilenSiparis" :
 		{
@@ -69,7 +70,8 @@ var ParamTemp =
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"},
-			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""}
+			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},			
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
 		},
 		"DepoSevk" :
 		{

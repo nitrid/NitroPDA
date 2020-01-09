@@ -265,7 +265,7 @@ var Param = [
 		}
 	},
 	{
-		"Kullanici": "Test1",
+		"Kullanici": "TEST",
 		"Sifre": "1",
 		"MikroId": "1",
 		"Sistem": {
@@ -354,6 +354,17 @@ var Param = [
 			"NDepo": "1",
 			"NDepoListe": "",
 			"Sorumluluk": "",
+			"EvrakSil": "0"
+		},
+		"NakliyeOnay": {
+			"Seri": "",
+			"BelgeNo": "",
+			"CDepo": "",
+			"CDepoListe": "",
+			"GDepo": "",
+			"GDepoListe": "",
+			"NDepo": "",
+			"NDepoListe": "",
 			"EvrakSil": "0"
 		},
 		"DepoSiparis": {
@@ -460,30 +471,6 @@ var Param = [
 			"DovizTipi": "-1",
 			"Special": "1"
 		},
-		"Etiket": {
-			"Etiket": [
-				{
-					"Adi": "Etiket - 1",
-					"Deger": "1"
-				},
-				{
-					"Adi": "Etiket - 2",
-					"Deger": "2"
-				},
-				{
-					"Adi": "Etiket - 3",
-					"Deger": "3"
-				},
-				{
-					"Adi": "Etiket - 4",
-					"Deger": "4"
-				},
-				{
-					"Adi": "Etiket - 5",
-					"Deger": "5"
-				}
-			]
-		},
 		"Menu": {
 			"Fiyat Gör Etiket Bas": "1",
 			"Sayım Fişi": "1",
@@ -517,17 +504,6 @@ var Param = [
 			"Stok Rapor": "1",
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1"
-		},
-		"NakliyeOnay": {
-			"Seri": "",
-			"BelgeNo": "",
-			"CDepo": "",
-			"CDepoListe": "",
-			"GDepo": "",
-			"GDepoListe": "",
-			"NDepo": "",
-			"NDepoListe": "",
-			"EvrakSil": "0"
 		}
 	}
 ]

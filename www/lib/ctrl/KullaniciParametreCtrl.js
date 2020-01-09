@@ -108,6 +108,8 @@ function KullaniciParametreCtrl($scope,$window,db)
                 $scope.CmbParamList.push({Name : Object.keys(Param[$scope.KullaniciListeSelectedIndex])[i]});
             }
         }
+
+        $scope.CmbParamChange();
     }
     $scope.CmbParamChange = function()
     {
