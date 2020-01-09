@@ -5,8 +5,8 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
+			"Firma": "TEST",
 			"SubeNo": "0",
-			"Firma": "FLY",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
@@ -17,12 +17,10 @@ var Param = [
 			"KiloFlag": "26,27,28",
 			"KiloBaslangic": "7",
 			"KiloUzunluk": "5",
-			"KiloCarpan": "1",
-			"Titresim": "1",
-			"AktarimDepoNo": "2",
+			"KiloCarpan": "1000",
+			"Titresim": "0",
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
-			"SiparisOnayListele": "-1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -48,8 +46,8 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"FiyatLock": false,
-			"SiparisOnay": "0"
+			"FiyatLock": "false",
+			"SiparisOnay": ""
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -67,7 +65,7 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"SiparisOnay": "1"
+			"SiparisOnay": ""
 		},
 		"DepoSevk": {
 			"EvrakTip": "0",
@@ -159,7 +157,7 @@ var Param = [
 		"FiyatGor": {
 			"Seri": "FGE",
 			"DepoNo": "1",
-			"DepoListe": "1,2,3",
+			"DepoListe": "",
 			"FiyatListe": "1",
 			"EtiketTipi": "1",
 			"BasimTipi": "1",
@@ -224,10 +222,10 @@ var Param = [
 			"Fason Giriş Çıkış": "1",
 			"Planlı Üretim": "1",
 			"Aktarim": "1",
-			"Cari Hesap Bakiye": "1",
-			"Cari Hesap Hareket": "1",
-			"Stok Rapor": "0",
 			"EvrakGonder": "1",
+			"Cari Hesap Hareket": "1",
+			"Cari Hesap Bakiye": "1",
+			"Stok Rapor": "1",
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1"
 		},
@@ -272,6 +270,7 @@ var Param = [
 		"MikroId": "1",
 		"Sistem": {
 			"FirmaNo": "0",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
@@ -283,8 +282,11 @@ var Param = [
 			"KiloFlag": "26,27,28",
 			"KiloBaslangic": "7",
 			"KiloUzunluk": "5",
-			"KiloCarpan": "1",
-			"PlasiyerKodu": ""
+			"KiloCarpan": "1000",
+			"Titresim": "0",
+			"PlasiyerKodu": "",
+			"FiyatDegistir": "1",
+			"FiyattDegistir": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -444,6 +446,7 @@ var Param = [
 		"FiyatGor": {
 			"Seri": "FGE",
 			"DepoNo": "1",
+			"DepoListe": "",
 			"FiyatListe": "1",
 			"EtiketTipi": "1",
 			"BasimTipi": "1",
