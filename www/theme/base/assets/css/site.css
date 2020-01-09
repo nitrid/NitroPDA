@@ -12,7 +12,7 @@
     .site-navbar .navbar-header .hamburger::before, .site-navbar .navbar-header .hamburger::after, .site-navbar .navbar-header .hamburger .hamburger-bar {
       background-color: #fff; }
     .site-navbar .navbar-header .navbar-brand {
-      font-family: "Roboto", sans-serif;
+      font-family: "Arial", sans-serif;
       color: #fff;
       cursor: pointer; }
   .site-navbar .navbar-container {
@@ -35,7 +35,7 @@
         flex: 1 1 100%; } }
 
 html, body {
-  height: 100%; 
+  height: 100%;
   }
 
 body {
@@ -47,7 +47,7 @@ body {
   z-index: 1400;
   height: 100%;
   height: calc(100% - 66.01px);
-  font-family: "Roboto", sans-serif;
+  font-family: "Arial", sans-serif;
   color: rgba(163, 175, 183, 0.9);
   background: #263238;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); }

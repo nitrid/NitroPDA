@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "TEST",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
@@ -20,7 +20,7 @@ var Param = [
 			"KiloCarpan": "1000",
 			"Titresim": "0",
 			"PlasiyerKodu": "",
-			"FiyatDegistir": "1",
+			"FiyatDegistir": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -47,7 +47,8 @@ var Param = [
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": "false",
-			"SiparisOnay": ""
+			"SiparisOnay": "",
+			"IskontoMatris": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -285,8 +286,7 @@ var Param = [
 			"KiloCarpan": "1000",
 			"Titresim": "0",
 			"PlasiyerKodu": "",
-			"FiyatDegistir": "1",
-			"FiyattDegistir": "1"
+			"FiyatDegistir": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -313,7 +313,8 @@ var Param = [
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": "false",
-			"SiparisOnay": ""
+			"SiparisOnay": "",
+			"IskontoMatris": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -331,7 +332,8 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"SiparisOnay": ""
+			"SiparisOnay": "",
+			"IskontoMatris": "0"
 		},
 		"DepoSevk": {
 			"EvrakTip": "0",
