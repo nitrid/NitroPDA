@@ -221,6 +221,19 @@ var ParamTemp =
 			"DovizTipi" : {"Title" : "Döviz Tipi","DefaultValue" : "-1"},
 			"Special" : {"Title" : "Special","DefaultValue" : "1"}
 		},
+		"UrunGirisCikis" :
+		{
+			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"Seri" : {"Title" : "Seri","DefaultValue" : "ISM"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},
+			"DepoNo" : {"Title" : "Depo No","DefaultValue" : "1"},
+			"DepoListe" : {"Title" : "Depo Liste","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
+			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+		},
 		"Menu" :
 		{
 			"Fiyat Gör Etiket Bas" : {"Title" : "Fiyat Gör Etiket Bas","DefaultValue" : "1"},

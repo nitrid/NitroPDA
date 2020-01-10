@@ -49,7 +49,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.Cins = 6;
         $scope.NormalIade = 0;
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
-        $scope.PlasiyerKodu = 0; 
+        $scope.PlasiyerKodu = 0;
         $scope.SatirNo = "";
         $scope.CmbEvrakTip = "0";
         

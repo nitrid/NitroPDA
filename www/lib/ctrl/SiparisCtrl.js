@@ -1106,7 +1106,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         else
             ParamName = "VerilenSiparis";
 
-
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
