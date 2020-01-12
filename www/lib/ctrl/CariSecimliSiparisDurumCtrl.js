@@ -8,7 +8,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "300px",
+            height: "400px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -55,23 +55,23 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             fields: 
             [
                 {
-                    name: "SERI",
-                    title: "SERİ",
+                    name: "SERI-SIRA",
+                    title: "SERİ - SIRA",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 150
                     
-                },
-                {
-                    name: "SIRA",
-                    title: "SIRA",
-                    type: "number",
-                    align: "center",
-                    width: 120
                 },
                 {
                     name: "CARIKOD",
                     title: "CARI KODU",
+                    type: "text",
+                    align: "center",
+                    width: 180
+                },
+                {
+                    name: "CARIADI",
+                    title: "CARI ADI",
                     type: "text",
                     align: "center",
                     width: 180
@@ -85,17 +85,24 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                 },
                 {
                     name: "MIKTAR",
-                    title: "MIKTAR",
+                    title: "SİPARİŞ MİKTARI",
                     type: "text",
                     align: "center",
                     width: 180
                 },
                 {
-                    name: "TUTAR",
-                    title: "TUTAR",
+                    name: "TUTARKDVHARIC",
+                    title: "TUTAR KDV HARİÇ",
                     type: "text",
                     align: "center",
-                    width: 180
+                    width: 250
+                },
+                {
+                    name: "TUTARKDVDAHIL",
+                    title: "TUTAR KDV DAHİL",
+                    type: "text",
+                    align: "center",
+                    width: 250
                 }
             ],
             rowClick: function(args)
@@ -110,7 +117,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $("#TblIslemDetay").jsGrid
         ({
             width: "100%",
-            height: "300px",
+            height: "400px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -118,19 +125,12 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             fields: 
             [
                 {
-                    name: "SERI",
-                    title: "SERİ",
+                    name: "SERI-SIRA",
+                    title: "SERİ - SIRA",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 150
                     
-                },
-                {
-                    name: "SIRA",
-                    title: "SIRA",
-                    type: "number",
-                    align: "center",
-                    width: 120
                 },
                 {
                     name: "SATIRNO",
@@ -145,6 +145,41 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     type: "text",
                     align: "center",
                     width: 180
+                },
+                {
+                    name: "STOKKODU",
+                    title: "STOK KODU",
+                    type: "text",
+                    align: "center",
+                    width: 250
+                },
+                {
+                    name: "STOKADI",
+                    title: "STOK ADI",
+                    type: "text",
+                    align: "center",
+                    width: 250
+                },
+                {
+                    name: "SIPMIKTAR",
+                    title: "SİPARİŞ MİKTARI",
+                    type: "text",
+                    align: "center",
+                    width: 250
+                },
+                {
+                    name: "TESLIMMIKTAR",
+                    title: "TESLİM MİKTARI",
+                    type: "text",
+                    align: "center",
+                    width: 250
+                },
+                {
+                    name: "TESLIMEDILMEYENMIKTAR",
+                    title: "TESLİM EDİLMEYEN MİKTAR",
+                    type: "text",
+                    align: "center",
+                    width: 250
                 },
                 {
                     name: "BFIYAT",
@@ -163,6 +198,23 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             ],
         });
     }
+    function DipToplamHesapla()
+    {
+        $scope.AraToplam = 0;
+        $scope.ToplamIndirim = 0;
+        $scope.ToplamKdv = 0;
+        $scope.NetToplam = 0;
+        $scope.GenelToplam = 0;
+
+        angular.forEach($scope.IslemDetayListe,function(value)
+        {
+            $scope.AraToplam += value.sip_tutar;
+            $scope.ToplamIndirim += (value.sip_iskonto_1 + value.sip_iskonto_2 + value.sip_iskonto_3 + value.sip_iskonto_4 + value.sip_iskonto_5 + value.sip_iskonto_6);
+            $scope.ToplamKdv +=  (value.sip_tutar - (value.sip_iskonto_1 + value.sip_iskonto_2 + value.sip_iskonto_3 + value.sip_iskonto_4 + value.sip_iskonto_5 + value.sip_iskonto_6)) * (value.TOPTANVERGI / 100);
+        });
+        $scope.NetToplam = $scope.AraToplam - $scope.ToplamIndirim;
+        $scope.GenelToplam = $scope.NetToplam + $scope.ToplamKdv;
+    }
     $scope.Init = function()
     {   
         $scope.Firma = $window.sessionStorage.getItem('Firma');
@@ -173,6 +225,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $scope.EvrakTip = "0";
         $scope.SipTip = "0";
         $scope.Carikodu = "";
+        $scope.ToplamSatir = "";
         $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
 
@@ -183,11 +236,6 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         InitCariGrid();
         IslemGrid();
         IslemDetayGrid();
-
-
-        $scope.Deneme = "sa"
-
-        
     }
     $scope.BtnCariSec = function()
     {   
@@ -197,6 +245,8 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
     {   
         let Kodu = '';
         let Adi = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;
 
         if($scope.TxtCariAra != "")
         {
@@ -212,6 +262,8 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
+            $scope.Loading = false;
+            $scope.TblLoading = true;
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
         });
@@ -246,12 +298,15 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         {
             db : '{M}.' + $scope.Firma,
             query:  "SELECT " +
-                    "sip_evrakno_seri AS SERI, " +
-                    "sip_evrakno_sira AS SIRA, " +
+                    "sip_evrakno_seri + ' - ' +CONVERT(NVARCHAR(25),sip_evrakno_sira) AS [SERI-SIRA], " +
+                    "sip_evrakno_seri AS SERI," +
+                    "sip_evrakno_sira AS SIRA," +
                     "sip_musteri_kod AS CARIKOD, " +
+                    "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sip_musteri_kod) AS CARIADI, " +
                     "SUM(sip_miktar) AS MIKTAR, " +
                     "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
-                    "ROUND(SUM(sip_tutar),2) AS TUTAR " +
+                    "ROUND(SUM(sip_tutar),2) AS TUTARKDVHARIC, " +
+                    "ROUND(SUM(sip_tutar),2) + ROUND(SUM(sip_vergi),2) AS TUTARKDVDAHIL " +
                     "FROM SIPARISLER " +
                     "WHERE ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
                     "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih ORDER BY sip_belge_tarih DESC" ,
@@ -295,15 +350,23 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             {
                 db : '{M}.' + $scope.Firma,
                 query:  "SELECT " +
+                        "sip_evrakno_seri + ' - ' +CONVERT(NVARCHAR(25),sip_evrakno_sira) AS [SERI-SIRA], " +
                         "sip_evrakno_seri AS SERI, " +
                         "sip_evrakno_sira AS SIRA, " +
                         "sip_musteri_kod AS CARIKOD, " +
+                        "sip_stok_kod AS STOKKODU, " +
+                        "ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod),'') AS STOKADI," +
+                        "ISNULL((SELECT dbo.fn_StokBirimi(sip_stok_kod,sip_birim_pntr)),'') AS BIRIM, " +
+                        "sip_miktar AS SIPMIKTAR, " +
+                        "sip_teslim_miktar AS TESLIMMIKTAR, " +
+                        "sip_miktar - sip_teslim_miktar AS TESLIMEDILMEYENMIKTAR, " +
                         "sip_miktar AS MIKTAR, " +
-                        "sip_satirno AS SATIRNO, " + 
-                        "sip_b_fiyat AS BFIYAT, " + 
+                        "sip_satirno AS SATIRNO,  " +
+                        "sip_b_fiyat AS BFIYAT, " +
                         "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
-                        "ROUND(sip_tutar,4) AS TUTAR " +
-                        "FROM SIPARISLER WHERE sip_evrakno_seri = @SERI AND sip_evrakno_sira = @SIRA ORDER BY sip_satirno ASC",
+                        "(SELECT dbo.fn_VergiYuzde (sip_vergi_pntr)) AS TOPTANVERGI, " +
+                        "ROUND(sip_tutar,4) AS TUTAR,* " +
+                        "FROM SIPARISLER  WHERE sip_evrakno_seri = @SERI AND sip_evrakno_sira = @SIRA ORDER BY sip_satirno ASC",
                 param:  ['SERI','SIRA'], 
                 type:   ['string|25','int'], 
                 value:  [$scope.Seri,$scope.Sira]
@@ -313,8 +376,11 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             {
                 $scope.IslemDetayListe = Data;
                 $("#TblIslemDetay").jsGrid({data : $scope.IslemDetayListe});
+                $scope.ToplamSatir = $scope.IslemDetayListe.length;
+                DipToplamHesapla(Data);
             });
         }
+        
         $("#MdlIslemDetay").modal('show');
     }
 }
