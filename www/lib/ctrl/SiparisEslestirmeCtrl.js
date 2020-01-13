@@ -69,7 +69,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SipTarih1 = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.SipTarih2 = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.SipSeri = "";
-        $scope.SipSira = "";
+        $scope.SipSira = 0;
         $scope.SipSeriSira = "";
         $scope.IhracKod = "";
 
@@ -500,13 +500,16 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         [
             $scope.DepoNo,
             $scope.CariKodu,
-            ($scope.SiparisKabulListe.length > 0) ? $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI : "",
-            ($scope.SiparisKabulListe.length > 0) ? $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA : 0,
+            $scope.SipSeri,
+            $scope.SipSira,
             pBarkod
         ];
 
+        console.log(TmpParam)
+
         db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(BarkodData)
         {
+            console.log(BarkodData)
             if(BarkodData.length > 0)
             {
                 pCallback(BarkodData,'Siparis');
@@ -652,6 +655,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 //RENK BEDEN ,PARTİ LOT KONTROLÜ YAPILIYOR VE POP UP EKRANLARI AÇILIYOR.
                 RenkBedenPartiLotKontrol();
 
+                console.log($scope.Stok[0])
                 if($scope.OtoEkle == true)
                 {
                     MiktarLock = true
@@ -1707,7 +1711,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SipSeri = $scope.SipSeriSira.split("-",1).pop(1);
         $scope.SipSira = $scope.SipSeriSira.split("-",2).pop(1);
 
-        if($scope.SipSeri == "" && $scope.SipSira == "")
+        if($scope.SipSeriSira == "")
         {
             let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,0,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele,$scope.CariKodu];
 
@@ -1991,6 +1995,10 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         let PlasiyerKodu = '';
 
         $scope.CariKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
+        $scope.SipSeri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
+        $scope.SipSira = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
+
+        console.log($scope.SipSeri)
 
         if(typeof($scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].TEMSILCIKODU) != 'undefined')
         {
@@ -2055,8 +2063,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         let Sira = 0;
         let Cari = "";
         if($scope.SiparisKabulListe.length > 0)
-        {
-            
+        {      
             Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
             Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
             Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
@@ -2065,24 +2072,9 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         {
             $scope.Loading = true;
             Cari = $scope.CariKodu;
-
-            var TmpQuery = 
-            {
-                db : '{M}.' + $scope.Firma,
-                query:  "SELECT sip_evrakno_seri AS SERI,sip_evrakno_sira AS SIRA FROM SIPARISLER WHERE sip_Guid = @SIPGUID",
-                param:  ['SIPGUID'], 
-                type:   ['string|50'], 
-                value:  [$scope.SipGuid]
-            }
-
-            await db.GetPromiseQuery(TmpQuery,function(Data)
-            {
-                Seri = Data[0].SERI;
-                Sira = Data[0].SIRA;
-            });
         }       
 
-        db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,0],function(StokData)
+        db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,$scope.SipSeri,$scope.SipSira,0],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
@@ -2158,7 +2150,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.Insert();
         }
     }
-    $scope.EvrakGetir = function ()
+    $scope.EvrakGetir = function()
     {
         if($scope.CmbEvrakTip == 0)
         {
@@ -2207,6 +2199,22 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     //{
                     //    $scope.BedenHarListe = BedenData;
                     //});
+
+
+                    var TmpQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query:  "SELECT sip_evrakno_seri AS SERI,sip_evrakno_sira AS SIRA FROM SIPARISLER WHERE sip_Guid = @SIPGUID",
+                        param:  ['SIPGUID'], 
+                        type:   ['string|50'], 
+                        value:  [$scope.SipGuid]
+                    }
+        
+                    db.GetPromiseQuery(TmpQuery,function(Data)
+                    {
+                        $scope.SipSeri = Data[0].SERI;
+                        $scope.SipSira = Data[0].SIRA;
+                    });
                     
                     if($scope.CariKodu != "")
                     {
@@ -2254,24 +2262,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     alertify.okBtn("Tamam");
                     alertify.alert("Belge Bulunamadı !");
                 }
-
-
-                db.GetData($scope.Firma,'BagliSipUidGetir',[$scope.Seri,$scope.Sira,1],function(data)
-                {
-                   $scope.BagliSip = data
-                   $scope.BagliSipUid = $scope.BagliSip[0].sth_sip_uid
-
-                   db.GetData($scope.Firma,'BagliSipGetir',[$scope.BagliSip[0].sth_sip_uid],function(data)
-                   {
-                       
-                       $scope.SipSeri = data[0].sip_evrakno_seri
-                       $scope.SipSira = data[0].sip_evrakno_sira
-                       $scope.SiparisKabulListele()
-
-                   });
-                   
-
-                });
             });            
         }
     }
