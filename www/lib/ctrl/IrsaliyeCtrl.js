@@ -591,6 +591,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
 
+                    console.log(IrsaliyeData);
                     InsertAfterRefresh(IrsaliyeData);  
                     FisData(IrsaliyeData);  
                     $scope.InsertLock = false

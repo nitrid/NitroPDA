@@ -22,10 +22,10 @@ function Login ($scope,$rootScope,$window,db)
             $scope.Firm = UserParam.Sistem.Firma
             Firma = UserParam.Sistem.Firma
         }
-        /*else
+       /* else
         {
             Firma = "TEST"
-        }*/
+        } */
         
         $scope.DepoNo = "";
         $scope.Kullanici = localStorage.username
@@ -109,6 +109,7 @@ function Login ($scope,$rootScope,$window,db)
     }
     $scope.BtnEntry = function()
     {
+        console.log($scope.Firm)
         for(i = 0;i < Param.length;i++)
         {
             if($scope.Firm != "")
