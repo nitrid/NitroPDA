@@ -505,11 +505,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             pBarkod
         ];
 
-        console.log(TmpParam)
-
         db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(BarkodData)
         {
-            console.log(BarkodData)
             if(BarkodData.length > 0)
             {
                 pCallback(BarkodData,'Siparis');
@@ -1743,17 +1740,17 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     {
         let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
 
-             db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
+        db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
+        {
+            $scope.SiparisKabulListe = data;
+            if($scope.SiparisKabulListe.length > 0)
             {
-                $scope.SiparisKabulListe = data;
-                if($scope.SiparisKabulListe.length > 0)
-                {
-                    $scope.Loading = false;
-                    $scope.TblLoading = true;
-                    $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
-                }
-                
-            });
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+            }
+            
+        });
     }
     $scope.BarkodSiparisAra = function(keyEvent)
     {
@@ -1998,8 +1995,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SipSeri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
         $scope.SipSira = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
 
-        console.log($scope.SipSeri)
-
         if(typeof($scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].TEMSILCIKODU) != 'undefined')
         {
             PlasiyerKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].TEMSILCIKODU;
@@ -2054,27 +2049,13 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.DepoAdi = item.ADI;
         });
     }
-    $scope.BtnStokGridGetir = async function()
+    $scope.BtnStokGridGetir = function()
     {
         $scope.Loading = true;
         $scope.TblLoading = false;
-        
-        let Seri = "";
-        let Sira = 0;
-        let Cari = "";
-        if($scope.SiparisKabulListe.length > 0)
-        {      
-            Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
-            Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
-            Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
-        }
-        else
-        {
-            $scope.Loading = true;
-            Cari = $scope.CariKodu;
-        }       
+        $scope.CariKodu;
 
-        db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,$scope.SipSeri,$scope.SipSira,0],function(StokData)
+        db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,$scope.CariKodu,$scope.SipSeri,$scope.SipSira,0],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
