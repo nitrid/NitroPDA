@@ -1881,6 +1881,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         SiparisKabulListeSelectedRow = $row;
         $scope.SiparisKabulListeSelectedIndex = pIndex;
+        
     }
     $scope.BtnTemizle = function()
     {
