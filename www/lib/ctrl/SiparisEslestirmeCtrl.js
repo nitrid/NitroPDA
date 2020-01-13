@@ -1732,9 +1732,14 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         }
         else
         {
-            let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
+            $scope.SiparisKabulListele()
+        }
+    }
+    $scope.SiparisKabulListele = function()
+    {
+        let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
 
-            await db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
+             db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
             {
                 $scope.SiparisKabulListe = data;
                 if($scope.SiparisKabulListe.length > 0)
@@ -1745,7 +1750,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 }
                 
             });
-        }
     }
     $scope.BarkodSiparisAra = function(keyEvent)
     {
@@ -2234,6 +2238,24 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     alertify.okBtn("Tamam");
                     alertify.alert("Belge Bulunamadı !");
                 }
+
+
+                db.GetData($scope.Firma,'BagliSipUidGetir',[$scope.Seri,$scope.Sira,1],function(data)
+                {
+                   $scope.BagliSip = data
+                   $scope.BagliSipUid = $scope.BagliSip[0].sth_sip_uid
+
+                   db.GetData($scope.Firma,'BagliSipGetir',[$scope.BagliSip[0].sth_sip_uid],function(data)
+                   {
+                       
+                       $scope.SipSeri = data[0].sip_evrakno_seri
+                       $scope.SipSira = data[0].sip_evrakno_sira
+                       $scope.SiparisKabulListele()
+
+                   });
+                   
+
+                });
             });            
         }
     }
