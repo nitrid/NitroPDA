@@ -49,6 +49,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.DepoNo;
         $scope.DepoAdi;
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.Saat = moment(new Date()).format("LTS");
         $scope.TeslimTarihi = moment(new Date()).format("DD.MM.YYYY");
         $scope.Sorumluluk = "";
         $scope.SorumlulukAdi = "";
@@ -61,6 +62,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
         $scope.ToplamSatir = 0;
+        $scope.CariBakiye = "";
+        $scope.Adres = "";
+        $scope.Adres1 = "";
+        $scope.Adres2 = "";
+        $scope.CariVDADI = "";
+        $scope.CariVDNO = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -558,7 +565,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     {
                         BedenHarInsert(InsertResult.result.recordset[0].sip_Guid);
                     } 
-                    InsertAfterRefresh(SiparisData);    
+                    InsertAfterRefresh(SiparisData);
+                    FisData(SiparisData);  
                     $scope.InsertLock = false  
                     if(UserParam.Sistem.Titresim == 1)
                     {
@@ -627,6 +635,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         }
                     }                        
                     InsertAfterRefresh(SiparisData);
+                    FisData(SiparisData);
                     if(UserParam.Sistem.Titresim == 1)
                     {
                         Confirmation();
@@ -815,6 +824,36 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             $scope.ToplamSatir += 1 ;
         });
+    }
+    function FisData(pData)
+    {
+        $scope.FisDeger = "";
+        $scope.FisData = "";
+
+        $scope.FisDeger = SpaceLength($scope.CariKodu,35) + $scope.Seri + "-" + $scope.Sira + "\n" + SpaceLength($scope.CariAdi,35) + $scope.Tarih +"\n" + "Adres: " +SpaceLength($scope.Adres1,28) + $scope.Saat + "\n"  + "Adres2: " + SpaceLength($scope.Adres2,40) + "\n" + SpaceLength($scope.Adres,40) + "\n" +"Vergi Dairesi: "+SpaceLength($scope.CariVDADI,45) + "\n" + "Vergi No: "+ $scope.CariVDNO
+
+        for(let i=0; i < pData.length; i++)
+        {
+            $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,26) + " " + SpaceLength(pData[i].BIRIM,4) + SpaceLength(pData[i].BIRIMADI,6) + SpaceLength(parseFloat(pData[i].FIYAT,2),6) + SpaceLength(parseFloat(pData[i].sip_tutar,2),5) + "\n";
+        }
+    }
+    function SpaceLength(pData,pLength)
+    {
+        let x = pLength - pData.toString().length;
+
+        if(pData.toString().length > pLength)
+        {
+            pData = pData.substring(0,25);
+        }
+
+        Space = "";
+
+        for(let i=0; i < x; i++)
+        {
+            Space = Space + " ";
+        }
+
+        return pData + Space
     }
     $scope.BtnCariListele = function()
     {   
@@ -1253,13 +1292,16 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
-        $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;
+        $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
         $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
-        $scope.CariIskontoKodu = $scope.CariListe[pIndex].ISKONTOKOD;
-        $scope.Personel = $scope.CariListe[pIndex].TEMSILCI;
-        $scope.PersonelAdi = $scope.CariListe[pIndex].TEMSILCIADI;
+        $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
+        $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
+        $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
+        $scope.Adres = $scope.CariListe[pIndex].ADRES;
+        $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
+        $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -1561,7 +1603,13 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
                 {   
                     $scope.CariListe = data;
-            
+                    $scope.Adres = $scope.CariListe[0].ADRES;
+                    $scope.Adres1 = $scope.CariListe[0].ADRES1;
+                    $scope.Adres2 = $scope.CariListe[0].ADRES2;
+                    $scope.CariBakiye = $scope.CariListe[0].BAKIYE;
+                    $scope.CariVDADI = $scope.CariListe[0].VDADI;
+                    $scope.CariVDNO = $scope.CariListe[0].VDNO;
+
                     $("#TblCari").jsGrid({data : $scope.CariListe});
 
                     let Obj = $("#TblCari").data("JSGrid");
@@ -1579,7 +1627,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                             $scope.DepoAdi = item.ADI;
                     });     
                 });
-    
+                
                 db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sip_stok_sormerk; $scope.SorumlulukAdi = data[0].SORUMLUMERADI});
                 db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = data[0].sip_satici_kod; $scope.PersonelAdi = data[0].PERSONELADI});    
                 db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sip_projekodu});
@@ -1597,6 +1645,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 angular.element('#MdlEvrakGetir').modal('hide');
 
                 BarkodFocus();
+                FisData(data)
 
                 alertify.alert("<a style='color:#3e8ef7''>" + $scope.ToplamSatir + " " + "Satır Kayıt Başarıyla Getirildi.. !" + "</a>" );
             }
@@ -1849,5 +1898,22 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 orientation : "portrait"
             }
         );
+    }
+    $scope.BtnFisYazdir = function()
+    {
+        let FisDizayn = "";
+
+        FisDizayn = "                BİLGİ FİŞİ" + "\n" + "\n" + $scope.FisDeger + "\n" + "----------------------------------------------" + "\n" + "URUN ADI               "+ " MIKTAR"+  " BIRIM" + " FIYAT" + " TUTAR" + "\n" + $scope.FisData + "\n" + "----------------------------------------------" + "\n" + " " + "\n"
+        FisDizayn = FisDizayn + "Toplam Miktar : "+ db.SumColumn($scope.SiparisListe,"sip_miktar") + "        Ara Toplam : " + parseFloat($scope.AraToplam.toFixed(4)) + "\n" +"                      Toplam Indirim : " + parseFloat($scope.ToplamIndirim.toFixed(4)) + "\n" + "                          Net Toplam : " + parseFloat($scope.NetToplam.toFixed(4)) + "\n" + "                           ToplamKdv : " + parseFloat($scope.ToplamKdv.toFixed(4))  + "\n" + "                        Genel Toplam : " + parseFloat($scope.GenelToplam.toFixed(4))   + "\n" + "\n" +"\n" + "Önceki Bakiye : " + parseFloat($scope.CariBakiye.toFixed(2)) + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "\n" + "----------------------------------------------" + "\n"
+        FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+
+        console.log(FisDizayn)
+        var S = "#Intent;scheme=rawbt;";
+        var P =  "package=ru.a402d.rawbtprinter;end;";
+        var textEncoded = encodeURI(FisDizayn);
+
+        window.location.href="intent:"+textEncoded+S+P;
+
+        alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
     }
 }

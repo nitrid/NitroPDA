@@ -848,13 +848,11 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.FisDeger = "";
         $scope.FisData = "";
 
-        console.log(pData)
-
         $scope.FisDeger = SpaceLength($scope.CariKodu,35) + $scope.Seri + "-" + $scope.Sira + "\n" + SpaceLength($scope.CariAdi,35) + $scope.Tarih +"\n" + "Adres: " +SpaceLength($scope.Adres1,28) + $scope.Saat + "\n"  + "Adres2: " + SpaceLength($scope.Adres2,40) + "\n" + SpaceLength($scope.Adres,40) + "\n" +"Vergi Dairesi: "+SpaceLength($scope.CariVDADI,45) + "\n" + "Vergi No: "+ $scope.CariVDNO
 
         for(let i=0; i < pData.length; i++)
         {
-            $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,27) + " " + SpaceLength(pData[i].MIKTAR,7) + SpaceLength(parseFloat(pData[i].FIYAT,2),9) + SpaceLength(parseFloat(pData[i].sth_tutar,2),6) + "\n";
+            $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,26) + " " + SpaceLength(pData[i].BIRIM,4) + SpaceLength(pData[i].BIRIMADI,6) + SpaceLength(parseFloat(pData[i].FIYAT,2),6) + SpaceLength(parseFloat(pData[i].sth_tutar,2),5) + "\n";
         }
     }
     function SpaceLength(pData,pLength)
@@ -1695,7 +1693,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
                 BarkodFocus();
                 FisData(data)
-                console.log(2)
 
                 alertify.alert("Evrak Başarıyla Getirildi.");
             }
@@ -1958,11 +1955,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     {
         let FisDizayn = "";
 
-        FisDizayn = "                BİLGİ FİŞİ" + "\n" + "\n" + $scope.FisDeger + "\n" + "----------------------------------------------" + "\n" + "URUN ADI          "+ " MIKTAR "+  " BIRIM " + " FIYAT  " + " TUTAR" + "\n" + $scope.FisData + "\n" + "----------------------------------------------" + "\n" + " " + "\n"
-        FisDizayn = FisDizayn + "Toplam Miktar : "+ db.SumColumn($scope.IrsaliyeListe,"MIKTAR") + "        Ara Toplam : " + $scope.AraToplam + "\n" +"                      Toplam Indirim : " + $scope.ToplamIndirim + "\n" + "                          Net Toplam : " + $scope.NetToplam + "\n" + "                           ToplamKdv : " + $scope.ToplamKdv + "\n" + "                        Genel Toplam : " + $scope.GenelToplam + "\n" + "\n" +"\n" + "Önceki Bakiye : " + $scope.CariBakiye + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "\n" + "----------------------------------------------" + "\n"
+        FisDizayn = "                BİLGİ FİŞİ" + "\n" + "\n" + $scope.FisDeger + "\n" + "----------------------------------------------" + "\n" + "URUN ADI               "+ " MIKTAR"+  " BIRIM" + " FIYAT" + " TUTAR" + "\n" + $scope.FisData + "\n" + "----------------------------------------------" + "\n" + " " + "\n"
+        FisDizayn = FisDizayn + "Toplam Miktar : "+ db.SumColumn($scope.IrsaliyeListe,"MIKTAR") + "      Ara Toplam : " + parseFloat($scope.AraToplam.toFixed(4)) + "\n" +"                      Toplam Indirim : " + parseFloat($scope.ToplamIndirim.toFixed(4)) + "\n" + "                          Net Toplam : " + parseFloat($scope.NetToplam.toFixed(4)) + "\n" + "                           ToplamKdv : " + parseFloat($scope.ToplamKdv.toFixed(4))  + "\n" + "                        Genel Toplam : " + parseFloat($scope.GenelToplam.toFixed(4))   + "\n" + "\n" +"\n" + "Önceki Bakiye : " + parseFloat($scope.CariBakiye.toFixed(2)) + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "\n" + "----------------------------------------------" + "\n"
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
-        console.log(FisDizayn)
         var S = "#Intent;scheme=rawbt;";
         var P =  "package=ru.a402d.rawbtprinter;end;";
         var textEncoded = encodeURI(FisDizayn);
