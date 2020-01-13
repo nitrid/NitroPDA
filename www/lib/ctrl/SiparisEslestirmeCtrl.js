@@ -69,7 +69,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SipTarih1 = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.SipTarih2 = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.SipSeri = "";
-        $scope.SipSira = "";
+        $scope.SipSira = 0;
         $scope.SipSeriSira = "";
         $scope.IhracKod = "";
 
@@ -500,8 +500,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         [
             $scope.DepoNo,
             $scope.CariKodu,
-            ($scope.SiparisKabulListe.length > 0) ? $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI : "",
-            ($scope.SiparisKabulListe.length > 0) ? $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA : 0,
+            $scope.SipSeri,
+            $scope.SipSira,
             pBarkod
         ];
 
@@ -652,6 +652,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 //RENK BEDEN ,PARTİ LOT KONTROLÜ YAPILIYOR VE POP UP EKRANLARI AÇILIYOR.
                 RenkBedenPartiLotKontrol();
 
+                console.log($scope.Stok[0])
                 if($scope.OtoEkle == true)
                 {
                     MiktarLock = true
@@ -1707,7 +1708,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SipSeri = $scope.SipSeriSira.split("-",1).pop(1);
         $scope.SipSira = $scope.SipSeriSira.split("-",2).pop(1);
 
-        if($scope.SipSeri == "" && $scope.SipSira == "")
+        if($scope.SipSeriSira == "")
         {
             let TmpParam = [$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,0,UserParam.Sistem.PlasiyerKodu,UserParam.Sistem.SiparisOnayListele,$scope.CariKodu];
 
@@ -1732,20 +1733,24 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         }
         else
         {
-            let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
-
-            await db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
-            {
-                $scope.SiparisKabulListe = data;
-                if($scope.SiparisKabulListe.length > 0)
-                {
-                    $scope.Loading = false;
-                    $scope.TblLoading = true;
-                    $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
-                }
-                
-            });
+            $scope.SiparisKabulListele()
         }
+    }
+    $scope.SiparisKabulListele = function()
+    {
+        let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
+
+        db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
+        {
+            $scope.SiparisKabulListe = data;
+            if($scope.SiparisKabulListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
+            }
+            
+        });
     }
     $scope.BarkodSiparisAra = function(keyEvent)
     {
@@ -1876,6 +1881,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         SiparisKabulListeSelectedRow = $row;
         $scope.SiparisKabulListeSelectedIndex = pIndex;
+        
     }
     $scope.BtnTemizle = function()
     {
@@ -1987,6 +1993,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         let PlasiyerKodu = '';
 
         $scope.CariKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
+        $scope.SipSeri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
+        $scope.SipSira = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
 
         if(typeof($scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].TEMSILCIKODU) != 'undefined')
         {
@@ -2046,25 +2054,9 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     {
         $scope.Loading = true;
         $scope.TblLoading = false;
-        
-        let Seri = "";
-        let Sira = 0;
-        let Cari = "";
-        if($scope.SiparisKabulListe.length > 0)
-        {
-            
-            Seri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
-            Sira =  $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
-            Cari = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
-        }
-        else
-        {
-            $scope.Loading = true;
-            
-            Cari = $scope.CariKodu;
-        }        
+        $scope.CariKodu;
 
-        db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,0],function(StokData)
+        db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,$scope.CariKodu,$scope.SipSeri,$scope.SipSira,0],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
@@ -2140,7 +2132,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.Insert();
         }
     }
-    $scope.EvrakGetir = function ()
+    $scope.EvrakGetir = function()
     {
         if($scope.CmbEvrakTip == 0)
         {
@@ -2154,6 +2146,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     
                     $scope.Seri = data[0].sth_evrakno_seri;
                     $scope.Sira = data[0].sth_evrakno_sira;
+                    $scope.SipGuid = data[0].sth_sip_uid;
+                    
                     $scope.StokEvrakTip = data[0].sth_evraktip.toString();
                     $scope.CariKodu = data[0].sth_cari_kodu;
                     $scope.CariAdi = data[0].CARIADI;
@@ -2187,6 +2181,22 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     //{
                     //    $scope.BedenHarListe = BedenData;
                     //});
+
+
+                    var TmpQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query:  "SELECT sip_evrakno_seri AS SERI,sip_evrakno_sira AS SIRA FROM SIPARISLER WHERE sip_Guid = @SIPGUID",
+                        param:  ['SIPGUID'], 
+                        type:   ['string|50'], 
+                        value:  [$scope.SipGuid]
+                    }
+        
+                    db.GetPromiseQuery(TmpQuery,function(Data)
+                    {
+                        $scope.SipSeri = Data[0].SERI;
+                        $scope.SipSira = Data[0].SIRA;
+                    });
                     
                     if($scope.CariKodu != "")
                     {

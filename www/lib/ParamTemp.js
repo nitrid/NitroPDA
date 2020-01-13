@@ -21,7 +21,8 @@ var ParamTemp =
 			"KiloCarpan" : {"Title" : "Kilo Carpan","DefaultValue" : "1000"},
 			"Titresim" : {"Title" : "Titreşim","DefaultValue" : "0"},
 			"PlasiyerKodu" : {"Title" : "Plasiyer Kodu","DefaultValue" : ""},
-			"FiyatDegistir" : {"Title" : "Fiyat Değiştir","DefaultValue" : "1"}
+			"FiyatDegistir" : {"Title" : "Fiyat Değiştir","DefaultValue" : "1"},
+			"SiparisOnayListele" : {"Title" : "Siparis Onay Listele","DefaultValue" : "-1"}
 		},
 		"Sayim" :
 		{

@@ -20,7 +20,8 @@ var Param = [
 			"KiloCarpan": "1000",
 			"Titresim": "0",
 			"PlasiyerKodu": "",
-			"FiyatDegistir": "1"
+			"FiyatDegistir": "1",
+			"SiparisOnayListele" : "-1",
 		},
 		"Sayim": {
 			"EvrakNo": "1",

@@ -94,7 +94,10 @@
                             <button class="btn btn-block btn-primary" ng-click="BtnCariListele()">Cari Listele</button>
                         </div>
                     </div>
-                    <<div id="TblCari" class="pt-5"></div>>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblCari" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
         </div>

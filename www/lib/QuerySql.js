@@ -1018,6 +1018,8 @@ var QuerySql =
                 "(SELECT som_isim FROM SORUMLULUK_MERKEZLERI WHERE som_kod = sip_stok_sormerk) AS SORUMLUMERADI ," +
                 "(SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = sip_satici_kod) AS PERSONELADI," +
                 "(SELECT dbo.fn_VergiYuzde (sip_vergi_pntr)) AS VERGIPNTR, " +
+                "(SELECT dbo.fn_StokBirimi(sip_stok_kod,sip_birim_pntr)) AS BIRIMADI, " +
+                "(SELECT dbo.fn_StokBirimHesapla(sip_stok_kod,1,sip_miktar,sip_birim_pntr)) AS BIRIM, " +
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sip_Guid AND BdnHar_Tipi = 9),0) AS RENKPNTR , " +
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sip_Guid AND BdnHar_Tipi = 9),0) AS BEDENPNTR , " +
                 "* FROM SIPARISLER WHERE sip_evrakno_seri = @sip_evrakno_seri AND " +
@@ -1313,6 +1315,8 @@ var QuerySql =
                 "(select cari_per_adi from CARI_PERSONEL_TANIMLARI where cari_per_kod=sth_plasiyer_kodu) AS PERSONELADI," +
                 "sth_miktar AS MIKTAR , " +
                 "sth_miktar2 AS MIKTAR2 , " +
+                "(SELECT dbo.fn_StokBirimi(sth_stok_kod,sth_birim_pntr)) AS BIRIMADI, " +
+                "(SELECT dbo.fn_StokBirimHesapla(sth_stok_kod,1,sth_miktar,sth_birim_pntr)) AS BIRIM," +
                 "ROW_NUMBER() OVER(ORDER BY sth_Guid) AS NO, " +
                 "(SELECT dbo.fn_VergiYuzde (sth_vergi_pntr)) AS TOPTANVERGI, " +
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0) AS RENKPNTR , " +
