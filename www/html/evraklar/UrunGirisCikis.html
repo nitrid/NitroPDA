@@ -32,8 +32,8 @@
                         <div class="col-8 px-0"><label class="form-control-label pl-10">{{Seri}} - {{Sira}}</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-4 px-0 text-info"><label class="form-control-label float-right">İşemri İsim :</label></div>
-                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10"></label></div>
+                        <div class="col-4 px-0 text-info"><label class="form-control-label float-right">İşemri Kodu :</label></div>
+                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{IsEmriKodu}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">İş Merkezi :</label></div>
@@ -263,6 +263,22 @@
                             </div>
                             <div class="col-4 offset-2 px-1">
                                 <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
+                            </div>
+                        </div>
+                        <div class="row pt-5">
+                            <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">  
+                                <label class="mb-0 h4 text-primary">{{IsEmriKodu}} - {{IsEmriAdi}}</label> 
+                            </div>
+                        </div>
+                        <div class="form-group row my-1">
+                            <div class="col-4 px-1">
+                                <select class="form-control" ng-model="CmbIsEmriAra" ng-disabled="EvrakLock">
+                                    <option value="0">ADI</option>
+                                    <option value="1">KODU</option>
+                                </select>
+                            </div>
+                            <div class="col-8 px-1">
+                                <input type="text" class="form-control" ng-model="TxtIsEmriAra" ng-disabled="EvrakLock">
                             </div>
                         </div>
                         <div class="row py-1">

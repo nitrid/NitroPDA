@@ -2046,7 +2046,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.DepoAdi = item.ADI;
         });
     }
-    $scope.BtnStokGridGetir = function()
+    $scope.BtnStokGridGetir = async function()
     {
         $scope.Loading = true;
         $scope.TblLoading = false;
@@ -2064,9 +2064,23 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         else
         {
             $scope.Loading = true;
-            
             Cari = $scope.CariKodu;
-        }        
+
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT sip_evrakno_seri AS SERI,sip_evrakno_sira AS SIRA FROM SIPARISLER WHERE sip_Guid = @SIPGUID",
+                param:  ['SIPGUID'], 
+                type:   ['string|50'], 
+                value:  [$scope.SipGuid]
+            }
+
+            await db.GetPromiseQuery(TmpQuery,function(Data)
+            {
+                Seri = Data[0].SERI;
+                Sira = Data[0].SIRA;
+            });
+        }       
 
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,0],function(StokData)
         {
@@ -2158,6 +2172,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     
                     $scope.Seri = data[0].sth_evrakno_seri;
                     $scope.Sira = data[0].sth_evrakno_sira;
+                    $scope.SipGuid = data[0].sth_sip_uid;
+                    
                     $scope.StokEvrakTip = data[0].sth_evraktip.toString();
                     $scope.CariKodu = data[0].sth_cari_kodu;
                     $scope.CariAdi = data[0].CARIADI;

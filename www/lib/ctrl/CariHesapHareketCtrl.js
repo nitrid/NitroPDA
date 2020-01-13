@@ -7,7 +7,7 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "300px",
+            height: "400px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -180,6 +180,8 @@ function CariHesapHareketCtrl($scope,$window,db)
     {   
         let Kodu = '';
         let Adi = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;  
 
         if($scope.TxtCariAra != "")
         {
@@ -195,6 +197,8 @@ function CariHesapHareketCtrl($scope,$window,db)
         
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
+            $scope.Loading = false;
+            $scope.TblLoading = true; 
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
         });

@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "",
+			"Firma": "TEST",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
@@ -262,6 +262,18 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
+			"EvrakSil": "0"
+		},
+		"UrunGirisCikis": {
+			"EvrakTip": "0",
+			"Seri": "ISM",
+			"BelgeNo": "",
+			"Cari": "",
+			"DepoNo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"Proje": "",
 			"EvrakSil": "0"
 		}
 	},

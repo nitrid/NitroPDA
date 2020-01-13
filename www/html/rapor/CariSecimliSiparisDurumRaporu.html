@@ -95,7 +95,10 @@
                             <button class="btn btn-block btn-primary" ng-click="BtnCariListele()">Cari Listele</button>
                         </div>
                     </div>
-                    <div id="TblCari" class="pt-5"></div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblCari" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
         </div>
@@ -114,6 +117,15 @@
                     <div class="row">
                         <div id="TblIslemDetay" class="pt-5 pb-5"></div>
                     </div>
+                    <div class="row pb-5">
+                        <div class="col-4 px-0 text-info"><label class="form-control-label float-left">Toplam Satır :</label></div>
+                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir}}</label></div>
+                    </div>
+                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Ara Toplam :</span> {{AraToplam | number:2}}</h5>
+                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam İndirim :</span> {{ToplamIndirim | number:2}}</h5>
+                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Net Toplam :</span> {{NetToplam | number:2}}</h5>
+                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Kdv :</span> {{ToplamKdv | number:2}}</h5>
+                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{GenelToplam | number:2}}</h5>
                 </div>
             </div>
         </div>

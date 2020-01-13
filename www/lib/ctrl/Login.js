@@ -1,6 +1,6 @@
 function Login ($scope,$rootScope,$window,db)
 {
-    let Firma = "";
+    let Firma = "TEST";
     $scope.server_adress = localStorage.host;
     $scope.server_port = localStorage.port;
     $scope.socket_port = localStorage.socketport;        
@@ -22,10 +22,10 @@ function Login ($scope,$rootScope,$window,db)
             $scope.Firm = UserParam.Sistem.Firma
             Firma = UserParam.Sistem.Firma
         }
-        else
+        /*else
         {
             Firma = "TEST"
-        }
+        }*/
         
         $scope.DepoNo = "";
         $scope.Kullanici = localStorage.username
