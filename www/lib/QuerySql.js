@@ -2430,7 +2430,7 @@ var QuerySql =
     // İş emirleri
     IsEmriGetir : 
     {
-        query : "select is_Kod as KODU,is_Ismi AS ADI,is_BaslangicTarihi AS TARIH from ISEMIRLERI"
+        query : "select is_Kod as KODU,is_Ismi AS ADI,is_BaslangicTarihi AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1'"
     }, 
     //#region "AKTARIM"
     AdresTbl : 

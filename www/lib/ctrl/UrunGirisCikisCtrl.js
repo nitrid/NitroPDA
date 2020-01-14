@@ -794,12 +794,14 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         if($scope.ToplamSatir <= 0)
         {
             alertify.alert("Gösterilecek Evrak Bulunamadı!");
-            $("#TbBarkodGiris").addClass('active');
+            $("#TbMain").addClass('active');
+            $("#TbBarkodGiris").removeClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');
+            $("#TbIsEmriSecim").removeClass('active');
         }
         else
         {
-            $("#TbIslemSatirlari").addClass('active');
-            $("#TbMain").removeClass('active');
+            $("#TbIslemSatirlari").addClass('active');  
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
             $("#TbIsEmriSecim").removeClass('active');
@@ -814,6 +816,5 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $("#TbCariSec").removeClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
-    }
-    
+    }   
 } 

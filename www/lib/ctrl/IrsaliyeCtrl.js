@@ -284,7 +284,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.StokListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 7,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -300,7 +300,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     title: "ADI",
                     type: "text",
                     align: "center",
-                    width: 200
+                    width: 300
                 }, 
                 {
                     name: "DEPOMIKTAR",

@@ -1,12 +1,13 @@
 function Login ($scope,$rootScope,$window,db)
 {
-    let Firma = "TEST";
+    let Firma = "";
     $scope.server_adress = localStorage.host;
     $scope.server_port = localStorage.port;
     $scope.socket_port = localStorage.socketport;        
     $scope.IsDbCreateWorking = false;
     $scope.TransferEventProgress = 0;    
     $scope.FirmLock = false
+    console.log(localStorage)
 
     $scope.Init = function()
     {   
@@ -15,17 +16,13 @@ function Login ($scope,$rootScope,$window,db)
             'page_title' : 'Login',
             'page_path': '/Login'
         });
-
+        
         if(typeof Param[$window.sessionStorage.getItem('User')] != 'undefined')
-        {
+        { 
             UserParam = Param[$window.sessionStorage.getItem('User')]
-            $scope.Firm = UserParam.Sistem.Firma
-            Firma = UserParam.Sistem.Firma
+            UserParam.Sistem.Firma = localStorage.Firma
+            $scope.Firm = UserParam.Sistem.Firma;
         }
-       /* else
-        {
-            Firma = "TEST"
-        } */
         
         $scope.DepoNo = "";
         $scope.Kullanici = localStorage.username
@@ -34,6 +31,7 @@ function Login ($scope,$rootScope,$window,db)
         if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
         {
             document.getElementById("BeniHatirla").checked = true;
+            //Firma = localStorage.Firma;
         }
 
         if (typeof localStorage.host == 'undefined')
@@ -126,6 +124,7 @@ function Login ($scope,$rootScope,$window,db)
                     {
                         localStorage.username = $scope.Kullanici
                         localStorage.Password = $scope.Password
+                        //localStorage.Firma = $scope.Firm
                     }
                     var url = "main.html";
                     $window.location.href = url;

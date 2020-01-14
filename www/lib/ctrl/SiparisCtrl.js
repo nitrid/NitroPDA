@@ -292,7 +292,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.StokListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 5,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
