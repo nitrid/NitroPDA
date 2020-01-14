@@ -19,7 +19,7 @@ var ParamTemp =
 			"KiloBaslangic" : {"Title" : "Kilo Başlangıç","DefaultValue" : "7"},
 			"KiloUzunluk" : {"Title" : "Kilo Uzunluk","DefaultValue" : "5"},
 			"KiloCarpan" : {"Title" : "Kilo Carpan","DefaultValue" : "1000"},
-			"Titresim" : {"Title" : "Titreşim","DefaultValue" : "0"},
+			"Titresim" : {"Title" : "Titreşim","DefaultValue" : "1"},
 			"PlasiyerKodu" : {"Title" : "Plasiyer Kodu","DefaultValue" : ""},
 			"FiyatDegistir" : {"Title" : "Fiyat Değiştir","DefaultValue" : "1"},
 			"SiparisOnayListele" : {"Title" : "Siparis Onay Listele","DefaultValue" : "-1"}
