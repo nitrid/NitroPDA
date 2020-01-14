@@ -650,7 +650,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     }                        
                     InsertAfterRefresh(IrsaliyeData);
                     FisData(IrsaliyeData);
-                    $scope.InsertLock = false
+                    $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
                     {
                         Confirmation();
@@ -859,6 +859,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function SpaceLength(pData,pLength)
     {
+        console.log(pData)
+        console.log(pLength)
         let x = pLength - pData.toString().length;
 
         if(pData.toString().length > pLength)
@@ -873,6 +875,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             Space = Space + " ";
         }
 
+        console.log(Space.length)
         return pData + Space
     }
     $scope.MaxSira = async function()
@@ -1964,8 +1967,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     {
         let FisDizayn = "";
 
-        FisDizayn = "                BİLGİ FİŞİ" + "\n" + "\n" + $scope.FisDeger + "\n" + "----------------------------------------------" + "\n" + "URUN ADI               "+ " MIKTAR"+  " BIRIM" + " FIYAT" + " TUTAR" + "\n" + $scope.FisData + "\n" + "----------------------------------------------" + "\n" + " " + "\n"
-        FisDizayn = FisDizayn + "Toplam Miktar : "+ db.SumColumn($scope.IrsaliyeListe,"MIKTAR") + "      Ara Toplam : " + parseFloat($scope.AraToplam.toFixed(4)) + "\n" +"                      Toplam Indirim : " + parseFloat($scope.ToplamIndirim.toFixed(4)) + "\n" + "                          Net Toplam : " + parseFloat($scope.NetToplam.toFixed(4)) + "\n" + "                           ToplamKdv : " + parseFloat($scope.ToplamKdv.toFixed(4))  + "\n" + "                        Genel Toplam : " + parseFloat($scope.GenelToplam.toFixed(4))   + "\n" + "\n" +"\n" + "Önceki Bakiye : " + parseFloat($scope.CariBakiye.toFixed(2)) + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "\n" + "----------------------------------------------" + "\n"
+        FisDizayn = "                BİLGİ FİŞİ" + "\n" + "\n" + $scope.FisDeger + "\n" + "                                            -" + "\n" + "URUN ADI               "+ " MIKTAR"+  " BIRIM" + " FIYAT" + " TUTAR" + "\n" + $scope.FisData + "\n" + "                                            -" + "\n" + "                                            -" + "\n"
+        FisDizayn = FisDizayn + "Toplam Miktar : "+ SpaceLength(db.SumColumn($scope.IrsaliyeListe,"MIKTAR"),5) + "      Ara Toplam : " + parseFloat($scope.AraToplam.toFixed(4)) + "\n" +"                       Toplam Indirim : " + parseFloat($scope.ToplamIndirim.toFixed(4)) + "\n" + "                           Net Toplam : " + parseFloat($scope.NetToplam.toFixed(4)) + "\n" + "                            ToplamKdv : " + parseFloat($scope.ToplamKdv.toFixed(4))  + "\n" + "                         Genel Toplam : " + parseFloat($scope.GenelToplam.toFixed(4))   + "\n" + "\n" +"\n" + "Önceki Bakiye : " + parseFloat($scope.CariBakiye.toFixed(2)) + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n"
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         var S = "#Intent;scheme=rawbt;";

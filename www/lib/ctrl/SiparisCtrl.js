@@ -636,10 +636,11 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     }                        
                     InsertAfterRefresh(SiparisData);
                     FisData(SiparisData);
+                    $scope.InsertLock = false;
+
                     if(UserParam.Sistem.Titresim == 1)
                     {
                         Confirmation();
-                        $scope.InsertLock = false;
                     }                
                 });
             }
@@ -827,33 +828,48 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     function FisData(pData)
     {
-        $scope.FisDeger = "";
-        $scope.FisData = "";
-
-        $scope.FisDeger = SpaceLength($scope.CariKodu,35) + $scope.Seri + "-" + $scope.Sira + "\n" + SpaceLength($scope.CariAdi,35) + $scope.Tarih +"\n" + "Adres: " +SpaceLength($scope.Adres1,28) + $scope.Saat + "\n"  + "Adres2: " + SpaceLength($scope.Adres2,40) + "\n" + SpaceLength($scope.Adres,40) + "\n" +"Vergi Dairesi: "+SpaceLength($scope.CariVDADI,45) + "\n" + "Vergi No: "+ $scope.CariVDNO
-
-        for(let i=0; i < pData.length; i++)
+        try 
         {
-            $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,26) + " " + SpaceLength(pData[i].BIRIM,4) + SpaceLength(pData[i].BIRIMADI,6) + SpaceLength(parseFloat(pData[i].FIYAT,2),6) + SpaceLength(parseFloat(pData[i].sip_tutar,2),5) + "\n";
+            $scope.FisDeger = "";
+            $scope.FisData = "";
+
+            $scope.FisDeger = SpaceLength($scope.CariKodu,35) + $scope.Seri + "-" + $scope.Sira + "\n" + SpaceLength($scope.CariAdi,35) + $scope.Tarih +"\n" + "Adres: " +SpaceLength($scope.Adres1,28) + $scope.Saat + "\n"  + "Adres2: " + SpaceLength($scope.Adres2,40) + "\n" + SpaceLength($scope.Adres,40) + "\n" +"Vergi Dairesi: "+SpaceLength($scope.CariVDADI,45) + "\n" + "Vergi No: "+ $scope.CariVDNO
+
+            for(let i=0; i < pData.length; i++)
+            {
+                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,26) + " " + SpaceLength(pData[i].BIRIM,4) + SpaceLength(pData[i].BIRIMADI,6) + SpaceLength(parseFloat(pData[i].FIYAT,2),6) + SpaceLength(parseFloat(pData[i].sip_tutar,2),5) + "\n";
+            } 
+        } 
+        catch (error) 
+        {
+            console.log(error)
         }
     }
     function SpaceLength(pData,pLength)
     {
-        let x = pLength - pData.toString().length;
-
-        if(pData.toString().length > pLength)
+        try 
         {
-            pData = pData.substring(0,25);
-        }
+            let x = pLength - pData.toString().length;
 
-        Space = "";
+            if(pData.toString().length > pLength)
+            {
+                pData = pData.substring(0,25);
+            }
 
-        for(let i=0; i < x; i++)
+            Space = "";
+
+            for(let i=0; i < x; i++)
+            {
+                Space = Space + " ";
+            }
+
+            return pData + Space
+            
+        } 
+        catch (error) 
         {
-            Space = Space + " ";
+            console.log(error)
         }
-
-        return pData + Space
     }
     $scope.BtnCariListele = function()
     {   
@@ -887,8 +903,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             {
                 $("#TblCari").jsGrid({data : $scope.CariListe});
             }
-
-            
         });
     }
     $scope.BtnPartiLotGetir = function()
@@ -1911,8 +1925,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {
         let FisDizayn = "";
 
-        FisDizayn = "                BİLGİ FİŞİ" + "\n" + "\n" + $scope.FisDeger + "\n" + "----------------------------------------------" + "\n" + "URUN ADI               "+ " MIKTAR"+  " BIRIM" + " FIYAT" + " TUTAR" + "\n" + $scope.FisData + "\n" + "----------------------------------------------" + "\n" + " " + "\n"
-        FisDizayn = FisDizayn + "Toplam Miktar : "+ db.SumColumn($scope.SiparisListe,"sip_miktar") + "        Ara Toplam : " + parseFloat($scope.AraToplam.toFixed(4)) + "\n" +"                      Toplam Indirim : " + parseFloat($scope.ToplamIndirim.toFixed(4)) + "\n" + "                          Net Toplam : " + parseFloat($scope.NetToplam.toFixed(4)) + "\n" + "                           ToplamKdv : " + parseFloat($scope.ToplamKdv.toFixed(4))  + "\n" + "                        Genel Toplam : " + parseFloat($scope.GenelToplam.toFixed(4))   + "\n" + "\n" +"\n" + "Önceki Bakiye : " + parseFloat($scope.CariBakiye.toFixed(2)) + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "\n" + "----------------------------------------------" + "\n"
+        FisDizayn = "                BİLGİ FİŞİ" + "\n" + "\n" + $scope.FisDeger + "\n" + "                                            -" + "\n" + "URUN ADI               "+ " MIKTAR"+  " BIRIM" + " FIYAT" + " TUTAR" + "\n" + $scope.FisData + "\n" + "                                            -" + "\n" + " " + "\n"
+        FisDizayn = FisDizayn + "Toplam Miktar : "+ SpaceLength(db.SumColumn($scope.SiparisListe,"sip_miktar"),5) + "      Ara Toplam : " + parseFloat($scope.AraToplam.toFixed(4)) + "\n" +"                       Toplam Indirim : " + parseFloat($scope.ToplamIndirim.toFixed(4)) + "\n" + "                           Net Toplam : " + parseFloat($scope.NetToplam.toFixed(4)) + "\n" + "                            ToplamKdv : " + parseFloat($scope.ToplamKdv.toFixed(4))  + "\n" + "                         Genel Toplam : " + parseFloat($scope.GenelToplam.toFixed(4))   + "\n" + "\n" +"\n" + "Önceki Bakiye : " + parseFloat($scope.CariBakiye.toFixed(2)) + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n"
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         console.log(FisDizayn) 
