@@ -7,7 +7,6 @@ function Login ($scope,$rootScope,$window,db)
     $scope.IsDbCreateWorking = false;
     $scope.TransferEventProgress = 0;    
     $scope.FirmLock = false
-    console.log(localStorage)
 
     $scope.Init = function()
     {   
@@ -16,10 +15,22 @@ function Login ($scope,$rootScope,$window,db)
             'page_title' : 'Login',
             'page_path': '/Login'
         });
+
+        UserParam = Param[$window.sessionStorage.getItem('User')];
+        
+        if(typeof Param[$window.sessionStorage.getItem('User')] != 'undefined')
+        {
+            for (let i = 0; i < Param.length; i++) 
+            {
+                if(Param[$window.sessionStorage.getItem('User')].Kullanici == Param[i].Kullanici)
+                {
+                    Firma = Param[i].Sistem.Firma
+                }
+            }
+        }
         
         if(typeof Param[$window.sessionStorage.getItem('User')] != 'undefined')
         { 
-            UserParam = Param[$window.sessionStorage.getItem('User')]
             UserParam.Sistem.Firma = localStorage.Firma
             $scope.Firm = UserParam.Sistem.Firma;
         }
@@ -60,10 +71,10 @@ function Login ($scope,$rootScope,$window,db)
                                 $scope.Firm = Firma;
                                 $scope.FirmLock = true
                             }
-                            else
+                            /*else
                             {
                                 $scope.Firm = UserParam.Sistem.Firma;
-                            }
+                            }*/
                             $scope.User = "0";
                             $scope.FirmList = data.result.recordset;
                             $scope.UserList = Param;
@@ -212,7 +223,6 @@ function Login ($scope,$rootScope,$window,db)
     }
     $scope.BtnDbCreate = function()
     {    
-
         db.Connection(function()
         {
             let MenuData = "";
