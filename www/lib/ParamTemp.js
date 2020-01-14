@@ -22,7 +22,8 @@ var ParamTemp =
 			"Titresim" : {"Title" : "Titreşim","DefaultValue" : "1"},
 			"PlasiyerKodu" : {"Title" : "Plasiyer Kodu","DefaultValue" : ""},
 			"FiyatDegistir" : {"Title" : "Fiyat Değiştir","DefaultValue" : "1"},
-			"SiparisOnayListele" : {"Title" : "Siparis Onay Listele","DefaultValue" : "-1"}
+			"SiparisOnayListele" : {"Title" : "Siparis Onay Listele","DefaultValue" : "-1"},
+			"EslestirmeEksiyeDusme" : {"Title" : "Eşleştirmede Eksiye Düşme","DefaultValue" : "0"}
 		},
 		"Sayim" :
 		{
@@ -52,7 +53,8 @@ var ParamTemp =
 			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "false"},
 			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},			
-			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
 		},
 		"VerilenSiparis" :
 		{
@@ -84,7 +86,8 @@ var ParamTemp =
 			"GDepo" : {"Title" : "Giriş Depo No","DefaultValue" : "1"},
 			"GDepoListe" : {"Title" : "Giriş Depo Liste","DefaultValue" : ""},
 			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
-			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
 		},
 		"DepoNakliye" :
 		{
@@ -156,7 +159,8 @@ var ParamTemp =
 			"SatisSarti" : {"Title" : "Satış Şartı","DefaultValue" : "0"},
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
-			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
 		},
 		"AlisFatura" :
 		{
@@ -192,7 +196,8 @@ var ParamTemp =
 			"SatisSarti" : {"Title" : "Satış Şartı","DefaultValue" : "0"},
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
-			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
 		},
 		"Fire" :
 		{

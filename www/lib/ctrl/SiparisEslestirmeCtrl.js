@@ -1592,114 +1592,122 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
     }
     $scope.Insert = function()
-    { 
-        $scope.InsertLock = true
-
-        if(typeof($scope.Stok[0].RECNO) != 'undefined')
+    { console.log($scope.Stok[0].DEPOMIKTAR)
+        if(UserParam.Sistem.EslestirmeEksiyeDusme == 1 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
         {
-            if(($scope.Miktar *  $scope.Stok[0].CARPAN) > ($scope.Stok[0].SIPMIKTAR - $scope.Stok[0].TESLIMMIKTAR))
+            alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
+        }
+        else
+        {
+            $scope.InsertLock = true
+
+            if(typeof($scope.Stok[0].RECNO) != 'undefined')
             {
-                alertify.okBtn("Tamam");
-                alertify.alert("Girdiğiniz Miktar Sipariş Miktarından Büyük !");
-                $scope.InsertLock = false;
-                return;
+                if(($scope.Miktar *  $scope.Stok[0].CARPAN) > ($scope.Stok[0].SIPMIKTAR - $scope.Stok[0].TESLIMMIKTAR))
+                {
+                    alertify.okBtn("Tamam");
+                    alertify.alert("Girdiğiniz Miktar Sipariş Miktarından Büyük !");
+                    $scope.InsertLock = false;
+                    return;
+                }
             }
-        }
-
-        if($scope.CmbEvrakTip == 0)
-        {
-            IrsInsert();
-        }
-        if($scope.CmbEvrakTip == 1)
-        {
-            
-            if(typeof($scope.Stok[0].KODU) != 'undefined')
-            {   
-                $scope.InsertLock = true
     
-                if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+            if($scope.CmbEvrakTip == 0)
+            {
+                IrsInsert();
+            }
+            if($scope.CmbEvrakTip == 1)
+            {
+                
+                if(typeof($scope.Stok[0].KODU) != 'undefined')
                 {   
-                    if($scope.CariHarListe.length > 0)
+                    $scope.InsertLock = true
+        
+                    if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     {   
-                        CariHarUpdate(function(data)
+                        if($scope.CariHarListe.length > 0)
                         {   
-                            StokHarInsert();
-                            $scope.InsertLock = false;
-                        });
+                            CariHarUpdate(function(data)
+                            {   
+                                StokHarInsert();
+                                $scope.InsertLock = false;
+                            });
+                        }
+                        else
+                        {   
+                            CariHarInsert();
+                        }
                     }
                     else
                     {   
-                        CariHarInsert();
+                        
+                        let value = db.ListEqual($scope.StokHarListe,{sth_stok_kod : $scope.Stok[0].KODU});
+                        if(value != null)
+                        {   
+                            let TmpFiyat  = value.sth_tutar / value.sth_miktar
+                            let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+                            let Data = 
+                            {
+                                Param :
+                                [
+                                    TmpMiktar,
+                                    TmpMiktar,
+                                    TmpFiyat * TmpMiktar,
+                                    $scope.Stok[0].TOPTANVERGIPNTR,
+                                    0, //ISKONTO TUTAR 1
+                                    0, //ISKONTO TUTAR 2
+                                    0, //ISKONTO TUTAR 3
+                                    0, //ISKONTO TUTAR 4
+                                    0, //ISKONTO TUTAR 5
+                                    0, //ISKONTO TUTAR 6
+                                    0, //SATIR ISKONTO TİP 1
+                                    0, //SATIR ISKONTO TİP 2
+                                    0, //SATIR ISKONTO TİP 3
+                                    0, //SATIR ISKONTO TİP 4
+                                    0, //SATIR ISKONTO TİP 5
+                                    0, //SATIR ISKONTO TİP 6
+                                    value.sth_Guid
+                                ],
+                                BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                RenkPntr : $scope.Stok[0].RENKPNTR,
+                                Miktar : TmpMiktar,
+                                Guid : value.sth_Guid
+                            };
+    
+                            UpdateDataFat(Data);
+                            $scope.InsertLock = false
+                        }
+                        else
+                        { 
+                            CariHarInsert(function(pResult)
+                            {
+                                if(pResult)
+                                {
+                                    CariHarUpdate(); 
+                                }
+                            });
+                            $scope.InsertLock = false; 
+                        }
                     }
                 }
                 else
-                {   
-                    
-                    let value = db.ListEqual($scope.StokHarListe,{sth_stok_kod : $scope.Stok[0].KODU});
-                    if(value != null)
-                    {   
-                        let TmpFiyat  = value.sth_tutar / value.sth_miktar
-                        let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-                        let Data = 
-                        {
-                            Param :
-                            [
-                                TmpMiktar,
-                                TmpMiktar,
-                                TmpFiyat * TmpMiktar,
-                                $scope.Stok[0].TOPTANVERGIPNTR,
-                                0, //ISKONTO TUTAR 1
-                                0, //ISKONTO TUTAR 2
-                                0, //ISKONTO TUTAR 3
-                                0, //ISKONTO TUTAR 4
-                                0, //ISKONTO TUTAR 5
-                                0, //ISKONTO TUTAR 6
-                                0, //SATIR ISKONTO TİP 1
-                                0, //SATIR ISKONTO TİP 2
-                                0, //SATIR ISKONTO TİP 3
-                                0, //SATIR ISKONTO TİP 4
-                                0, //SATIR ISKONTO TİP 5
-                                0, //SATIR ISKONTO TİP 6
-                                value.sth_Guid
-                            ],
-                            BedenPntr : $scope.Stok[0].BEDENPNTR,
-                            RenkPntr : $scope.Stok[0].RENKPNTR,
-                            Miktar : TmpMiktar,
-                            Guid : value.sth_Guid
-                        };
-
-                        UpdateDataFat(Data);
-                        $scope.InsertLock = false
-                    }
-                    else
-                    { 
-                        CariHarInsert(function(pResult)
-                        {
-                            if(pResult)
-                            {
-                                CariHarUpdate(); 
-                            }
-                        });
-                        $scope.InsertLock = false; 
-                    }
-                }
+                {
+                    console.log("Barkod Okutunuz!");
+                    alertify.alert("Barkod Bulunamadı.");
+                    $scope.InsertLock = false
+                }     
+                BarkodFocus();   
             }
-            else
+            if($scope.CmbEvrakTip == 2)
             {
-                console.log("Barkod Okutunuz!");
-                alertify.alert("Barkod Bulunamadı.");
-                $scope.InsertLock = false
-            }     
-            BarkodFocus();   
+                IrsInsert();
+            }
+            if($scope.CmbEvrakTip == 3)
+            {
+                IrsInsert();
+            }
         }
-        if($scope.CmbEvrakTip == 2)
-        {
-            IrsInsert();
-        }
-        if($scope.CmbEvrakTip == 3)
-        {
-            IrsInsert();
-        }
+       
     }
     $scope.BtnSiparisKabulListele = async function()
     { 

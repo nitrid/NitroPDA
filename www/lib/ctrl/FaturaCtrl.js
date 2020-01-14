@@ -1648,74 +1648,30 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
     {
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {   
-            $scope.InsertLock = true
-            if(typeof $scope.CariHarListe == 'undefined' || $scope.CariHarListe.length == 0 )
-            {   
-                console.log(1)
-                CariHarInsert(function(pResult)
-                {   
-                    console.log(2)
-                    if(pResult)
-                    {
-                        console.log(3)
-                        StokHarInsert();                        
-                    }
-                });
-                $scope.InsertLock = false;
+            if(UserParam.SatisFatura.EksiyeDusme == 1 &&  $scope.EvrakTip == 4 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
+            {
+                alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
             }
             else
-            {   
-                if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
-                {
-                    StokHarInsert(function(pResult)
-                    {
+            {
+                $scope.InsertLock = true
+                if(typeof $scope.CariHarListe == 'undefined' || $scope.CariHarListe.length == 0 )
+                {   
+                    console.log(1)
+                    CariHarInsert(function(pResult)
+                    {   
+                        console.log(2)
                         if(pResult)
                         {
-                            CariHarUpdate(); 
+                            console.log(3)
+                            StokHarInsert();                        
                         }
                     });
-                    $scope.InsertLock = false;                    
+                    $scope.InsertLock = false;
                 }
                 else
                 {   
-                    //Liste İçerisinde StokKodu Aynı Olanlar Aranıyor. 17.09.2019 - MahiR
-                    let value = db.ListEqual($scope.StokHarListe,{sth_stok_kod : $scope.Stok[0].KODU});
-                    if(value != null)
-                    {   
-                        let TmpFiyat  = value.sth_tutar / value.sth_miktar
-                        let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-                        let Data = 
-                        {
-                            Param :
-                            [
-                                TmpMiktar,
-                                TmpMiktar,
-                                TmpFiyat * TmpMiktar,
-                                $scope.Stok[0].TOPTANVERGIPNTR,
-                                0, //ISKONTO TUTAR 1
-                                0, //ISKONTO TUTAR 2
-                                0, //ISKONTO TUTAR 3
-                                0, //ISKONTO TUTAR 4
-                                0, //ISKONTO TUTAR 5
-                                0, //ISKONTO TUTAR 6
-                                0, //SATIR ISKONTO TİP 1
-                                0, //SATIR ISKONTO TİP 2
-                                0, //SATIR ISKONTO TİP 3
-                                0, //SATIR ISKONTO TİP 4
-                                0, //SATIR ISKONTO TİP 5
-                                0, //SATIR ISKONTO TİP 6
-                                value.sth_Guid
-                            ],
-                            BedenPntr : $scope.Stok[0].BEDENPNTR,
-                            RenkPntr : $scope.Stok[0].RENKPNTR,
-                            Miktar : TmpMiktar,
-                            Guid : value.sth_Guid
-                        };
-
-                        UpdateData(Data);
-                        $scope.InsertLock = false
-                    }
-                    else
+                    if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     {
                         StokHarInsert(function(pResult)
                         {
@@ -1724,7 +1680,58 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                                 CariHarUpdate(); 
                             }
                         });
-                        $scope.InsertLock = false; 
+                        $scope.InsertLock = false;                    
+                    }
+                    else
+                    {   
+                        //Liste İçerisinde StokKodu Aynı Olanlar Aranıyor. 17.09.2019 - MahiR
+                        let value = db.ListEqual($scope.StokHarListe,{sth_stok_kod : $scope.Stok[0].KODU});
+                        if(value != null)
+                        {   
+                            let TmpFiyat  = value.sth_tutar / value.sth_miktar
+                            let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+                            let Data = 
+                            {
+                                Param :
+                                [
+                                    TmpMiktar,
+                                    TmpMiktar,
+                                    TmpFiyat * TmpMiktar,
+                                    $scope.Stok[0].TOPTANVERGIPNTR,
+                                    0, //ISKONTO TUTAR 1
+                                    0, //ISKONTO TUTAR 2
+                                    0, //ISKONTO TUTAR 3
+                                    0, //ISKONTO TUTAR 4
+                                    0, //ISKONTO TUTAR 5
+                                    0, //ISKONTO TUTAR 6
+                                    0, //SATIR ISKONTO TİP 1
+                                    0, //SATIR ISKONTO TİP 2
+                                    0, //SATIR ISKONTO TİP 3
+                                    0, //SATIR ISKONTO TİP 4
+                                    0, //SATIR ISKONTO TİP 5
+                                    0, //SATIR ISKONTO TİP 6
+                                    value.sth_Guid
+                                ],
+                                BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                RenkPntr : $scope.Stok[0].RENKPNTR,
+                                Miktar : TmpMiktar,
+                                Guid : value.sth_Guid
+                            };
+    
+                            UpdateData(Data);
+                            $scope.InsertLock = false
+                        }
+                        else
+                        {
+                            StokHarInsert(function(pResult)
+                            {
+                                if(pResult)
+                                {
+                                    CariHarUpdate(); 
+                                }
+                            });
+                            $scope.InsertLock = false; 
+                        }
                     }
                 }
             }

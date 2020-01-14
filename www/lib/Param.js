@@ -21,7 +21,8 @@ var Param = [
 			"Titresim": "0",
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
-			"SiparisOnayListele" : "-1",
+			"SiparisOnayListele": "-1",
+			"EslestirmeEksiyeDusme": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -49,7 +50,8 @@ var Param = [
 			"PartiSec": "0",
 			"FiyatLock": "false",
 			"SiparisOnay": "",
-			"IskontoMatris": "0"
+			"IskontoMatris": "0",
+			"EksiyeDusme": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -78,7 +80,8 @@ var Param = [
 			"GDepo": "1",
 			"GDepoListe": "",
 			"Sorumluluk": "",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"EksiyeDusme": "1"
 		},
 		"DepoNakliye": {
 			"Seri": "DNP",
@@ -145,7 +148,8 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"EksiyeDusme": "1"
 		},
 		"Fire": {
 			"EvrakTip": "0",
@@ -263,7 +267,8 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"EksiyeDusme": "1"
 		},
 		"UrunGirisCikis": {
 			"EvrakTip": "0",
@@ -284,7 +289,7 @@ var Param = [
 		"MikroId": "1",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "TEST",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",

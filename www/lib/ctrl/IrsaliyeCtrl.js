@@ -689,6 +689,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 if(BarkodData.length > 0)
                 { 
                     $scope.Stok = BarkodData;
+                    console.log($scope.Stok[0])
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
                         for(i = 0;i < $scope.IrsaliyeListe.length;i++)
@@ -1536,59 +1537,66 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     { 
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {
-            $scope.InsertLock = true
-            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
-            {          
-                InsertData();
+            if(UserParam.SatisIrsaliye.EksiyeDusme == 1 && $scope.EvrakTip == 1 &&  ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
+            {
+                alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
             }
             else
             {
-                let UpdateStatus = false;
-
-                angular.forEach($scope.IrsaliyeListe,function(value)
-                {
-                    if(value.sth_stok_kod == $scope.Stok[0].KODU)
-                    {   
-                        let TmpFiyat  = value.sth_tutar / value.sth_miktar
-                        let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-                        let Data = 
-                        {
-                            Param :
-                            [
-                                TmpMiktar,
-                                0,
-                                TmpFiyat * TmpMiktar,
-                                $scope.Stok[0].TOPTANVERGIPNTR,
-                                0, //ISKONTO TUTAR 1
-                                0, //ISKONTO TUTAR 2
-                                0, //ISKONTO TUTAR 3
-                                0, //ISKONTO TUTAR 4
-                                0, //ISKONTO TUTAR 5
-                                0, //ISKONTO TUTAR 6
-                                0, //SATIR ISKONTO TİP 1
-                                0, //SATIR ISKONTO TİP 2
-                                0, //SATIR ISKONTO TİP 3
-                                0, //SATIR ISKONTO TİP 4
-                                0, //SATIR ISKONTO TİP 5
-                                0, //SATIR ISKONTO TİP 6
-                                value.sth_Guid,
-                                '00000000-0000-0000-0000-000000000000' //Fat Uid
-                            ],
-                            BedenPntr : $scope.Stok[0].BEDENPNTR,
-                            RenkPntr : $scope.Stok[0].RENKPNTR,
-                            Miktar : TmpMiktar,
-                            Guid : value.sth_Guid
-                        };
-
-                        UpdateStatus = true;
-                        UpdateData(Data);
-                    }                        
-                });
-
-                if(!UpdateStatus)
-                {
+                $scope.InsertLock = true
+                if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+                {          
                     InsertData();
-                }                
+                }
+                else
+                {
+                    let UpdateStatus = false;
+
+                    angular.forEach($scope.IrsaliyeListe,function(value)
+                    {
+                        if(value.sth_stok_kod == $scope.Stok[0].KODU)
+                        {   
+                            let TmpFiyat  = value.sth_tutar / value.sth_miktar
+                            let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+                            let Data = 
+                            {
+                                Param :
+                                [
+                                    TmpMiktar,
+                                    0,
+                                    TmpFiyat * TmpMiktar,
+                                    $scope.Stok[0].TOPTANVERGIPNTR,
+                                    0, //ISKONTO TUTAR 1
+                                    0, //ISKONTO TUTAR 2
+                                    0, //ISKONTO TUTAR 3
+                                    0, //ISKONTO TUTAR 4
+                                    0, //ISKONTO TUTAR 5
+                                    0, //ISKONTO TUTAR 6
+                                    0, //SATIR ISKONTO TİP 1
+                                    0, //SATIR ISKONTO TİP 2
+                                    0, //SATIR ISKONTO TİP 3
+                                    0, //SATIR ISKONTO TİP 4
+                                    0, //SATIR ISKONTO TİP 5
+                                    0, //SATIR ISKONTO TİP 6
+                                    value.sth_Guid,
+                                    '00000000-0000-0000-0000-000000000000' //Fat Uid
+                                ],
+                                BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                RenkPntr : $scope.Stok[0].RENKPNTR,
+                                Miktar : TmpMiktar,
+                                Guid : value.sth_Guid
+                            };
+
+                            UpdateStatus = true;
+                            UpdateData(Data);
+                        }                        
+                    });
+
+                    if(!UpdateStatus)
+                    {
+                        InsertData();
+                    }                
+                }
             }
         }
         else
