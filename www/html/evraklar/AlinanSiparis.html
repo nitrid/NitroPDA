@@ -350,11 +350,29 @@
                     <div class="row py-1 px-1">
                         <div id="TblIslem"></div>
                     </div>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Ara Toplam :</span> {{AraToplam | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam İndirim :</span> {{ToplamIndirim | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Net Toplam :</span> {{NetToplam | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Kdv :</span> {{ToplamKdv | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{GenelToplam | number:2}}</h5>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-block btn-primary h-60">
+                                        <span class="glyphicon glyphicon-print"  aria-hidden="true" ng-click="BtnFisYazdir()"></span>
+                                    </button>
+                                </div>
+                            </div>
+                     
+                        </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Ara Toplam :</span> {{AraToplam | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam İndirim :</span> {{ToplamIndirim | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Net Toplam :</span> {{NetToplam | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Kdv :</span> {{ToplamKdv | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{GenelToplam | number:2}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>            
         </div>
