@@ -54,7 +54,8 @@ var ParamTemp =
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "false"},
 			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},			
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
-			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}		
 		},
 		"VerilenSiparis" :
 		{
@@ -73,7 +74,8 @@ var ParamTemp =
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"},
-			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},			
+			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},	
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},		
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
 		},
 		"DepoSevk" :

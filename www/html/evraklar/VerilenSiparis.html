@@ -271,13 +271,13 @@
                             <div class="col-form-label float-right py-1">Miktar:</div>
                         </div>
                         <div class="col-4 px-1">
-                            <input disabled type="text" class="form-control form-control-sm" ng-disabled="MiktarLock" ng-model="Stok[0].CARPAN">
+                            <input disabled type="number" class="form-control form-control-sm" ng-disabled="MiktarLock" ng-model="Stok[0].CARPAN">
                         </div>
                         <div class="col-1 text-info px-1">
                             <div class="col-form-label text-center py-1">X</div>
                         </div>
                         <div class="col-4 px-1">
-                            <input type="text" class="form-control form-control-sm" ng-model="Miktar" ng-disabled="MiktarLock" ng-change="MiktarFiyatValid()" id="Miktar" ng-keydown="MiktarPress($event)">
+                            <input type="number" class="form-control form-control-sm" ng-model="Miktar" ng-disabled="MiktarLock" ng-change="MiktarFiyatValid()" id="Miktar" ng-keydown="MiktarPress($event)">
                         </div>
                     </div>
                     <div class="row my-0">

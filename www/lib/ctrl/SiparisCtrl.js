@@ -1150,6 +1150,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.EvrakTip = pAlinanVerilen;
         $scope.CariKodu = UserParam[ParamName].Cari;
+        if(UserParam[ParamName].FiyatLock == 1)
+        {
+            $scope.FiyatLock = true;
+        }
         
         $scope.Stok = 
         [

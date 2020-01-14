@@ -21,7 +21,7 @@ var Param = [
 			"Titresim": "0",
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
-			"SiparisOnayListele" : "-1",
+			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "1"
 		},
 		"Sayim": {
@@ -48,9 +48,9 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"FiyatLock": "false",
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
+			"FiyatLock": "0",
 			"EksiyeDusme": "1"
 		},
 		"VerilenSiparis": {
@@ -69,6 +69,7 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
+			"FiyatLock": "0",
 			"SiparisOnay": ""
 		},
 		"DepoSevk": {
@@ -81,7 +82,7 @@ var Param = [
 			"GDepoListe": "",
 			"Sorumluluk": "",
 			"EvrakSil": "0",
-			"EksiyeDusme": "1",
+			"EksiyeDusme": "1"
 		},
 		"DepoNakliye": {
 			"Seri": "DNP",
@@ -330,7 +331,7 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"FiyatLock": "false",
+			"FiyatLock": "0",
 			"SiparisOnay": "",
 			"IskontoMatris": "0"
 		},
@@ -351,6 +352,7 @@ var Param = [
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"SiparisOnay": "",
+			"FiyatLock": "0",
 			"IskontoMatris": "0"
 		},
 		"DepoSevk": {

@@ -1879,7 +1879,10 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.CmbEvrakTip = UserParam[ParamName].EvrakTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
-
+        if(UserParam[ParamName].FiyatLock == 1)
+        {
+            $scope.FiyatLock = true;
+        }
         if($scope.CariKodu != "")
         {
             db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
