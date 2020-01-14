@@ -1907,7 +1907,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         FisDizayn = FisDizayn + "Toplam Miktar : "+ db.SumColumn($scope.SiparisListe,"sip_miktar") + "        Ara Toplam : " + parseFloat($scope.AraToplam.toFixed(4)) + "\n" +"                      Toplam Indirim : " + parseFloat($scope.ToplamIndirim.toFixed(4)) + "\n" + "                          Net Toplam : " + parseFloat($scope.NetToplam.toFixed(4)) + "\n" + "                           ToplamKdv : " + parseFloat($scope.ToplamKdv.toFixed(4))  + "\n" + "                        Genel Toplam : " + parseFloat($scope.GenelToplam.toFixed(4))   + "\n" + "\n" +"\n" + "Önceki Bakiye : " + parseFloat($scope.CariBakiye.toFixed(2)) + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "----------------------------------------------" + "\n" + "\n" + "----------------------------------------------" + "\n"
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
-        console.log(FisDizayn)
+        console.log(FisDizayn) 
         var S = "#Intent;scheme=rawbt;";
         var P =  "package=ru.a402d.rawbtprinter;end;";
         var textEncoded = encodeURI(FisDizayn);
