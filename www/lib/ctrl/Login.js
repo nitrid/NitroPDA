@@ -109,7 +109,6 @@ function Login ($scope,$rootScope,$window,db)
     }
     $scope.BtnEntry = function()
     {
-        console.log($scope.Firm)
         for(i = 0;i < Param.length;i++)
         {
             if($scope.Firm != "")
