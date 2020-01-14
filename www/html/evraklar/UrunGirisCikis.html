@@ -41,7 +41,7 @@
                     </div>
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Personel :</label></div>
-                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10"></label></div>
+                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{PersonelAdi}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Depo :</label></div>
@@ -69,7 +69,7 @@
                             <button class="btn btn-block btn-primary h-50" ng-click="BarkodGirisClick()">Barkod Giriş</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="TbIslemSatirlariClick()">Manuel Giriş</button>
+                            <button class="btn btn-block btn-primary h-50" ng-click="IslemSatirlariClick()">Manuel Giriş</button>
                         </div>
                     </div>                
                 </div>
@@ -94,7 +94,7 @@
                     <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label float-right py-2">Belge No:</div></div>
                         <div class="col-8 px-1">
-                            <input type="text" class="form-control" ng-model="EvrakNo" ng-disabled="EvrakLock">
+                            <input type="text" class="form-control" ng-model="BelgeNo" ng-disabled="EvrakLock">
                         </div>
                     </div>
                     <div class="row my-0 py-0">
@@ -129,7 +129,7 @@
                     <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Personel:</div></div>
                         <div class="col-8 px-1">
-                            <select class="form-control" ng-model="Personel" ng-disabled="EvrakLock">
+                            <select class="form-control" ng-model="Personel" ng-disabled="EvrakLock" ng-change="PersonelChange()">
                                 <option ng-repeat="option in PersonelListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
@@ -157,7 +157,7 @@
                             <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="TbIslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="IslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
                         </div>
                         <div class="col-4 px-1">
                             <div class="checkbox-custom checkbox-info">
@@ -250,7 +250,7 @@
                         <div id="TblIslem"></div>
                     </div>
                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Satır :</span> {{ToplamSatir | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Miktar:</span> {{ToplamMiktar1 | number:2}}</h5>
+                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Miktar:</span> {{ToplamMiktar | number:2}}</h5>
                     <!-- <h5 class="text-right"><span style="color:dodgerblue;">Toplam Miktar 2:</span> {{ToplamMiktar2 | number:2}}</h5>
                     <h5 class="text-right"><span style="color:dodgerblue;">Toplam Miktar 3:</span> {{ToplamMiktar3 | number:2}}</h5>
                     <h5 class="text-right"><span style="color:dodgerblue;">Toplam Miktar 4:</span> {{ToplamMiktar4 | number:2}}</h5>
