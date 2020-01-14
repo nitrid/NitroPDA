@@ -1448,61 +1448,70 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     } 
     $scope.Insert = function()
     {
-        $scope.InsertLock = true
+       
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {   
-            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+            if(UserParam.AlinanSiparis.EksiyeDusme == 1 &&  $scope.EvrakTip == 0 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
             {
-                InsertData();
+                alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
             }
             else
             {
-                let UpdateStatus = false;
-
-                angular.forEach($scope.SiparisListe,function(value)
-                {
-                    if(value.sip_stok_kod == $scope.Stok[0].KODU)
-                    {
-                        let TmpMiktar = value.sip_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-
-                        let Data = 
-                        {
-                            Param :
-                            [
-                                $scope.Stok[0].FIYAT,
-                                TmpMiktar,
-                                $scope.Stok[0].FIYAT * TmpMiktar,
-                                $scope.Stok[0].TOPTANVERGIPNTR,
-                                value.sip_iskonto_1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
-                                value.sip_iskonto_2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
-                                value.sip_iskonto_3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
-                                value.sip_iskonto_4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
-                                value.sip_iskonto_5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
-                                value.sip_iskonto_6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
-                                $scope.Stok[0].ISK.TIP1, //SATIR ISKONTO TİP 1
-                                $scope.Stok[0].ISK.TIP2, //SATIR ISKONTO TİP 2
-                                $scope.Stok[0].ISK.TIP3, //SATIR ISKONTO TİP 3
-                                $scope.Stok[0].ISK.TIP4, //SATIR ISKONTO TİP 4
-                                $scope.Stok[0].ISK.TIP5, //SATIR ISKONTO TİP 5
-                                $scope.Stok[0].ISK.TIP6, //SATIR ISKONTO TİP 6
-                                value.sip_Guid
-                            ],
-                            BedenPntr : $scope.Stok[0].BEDENPNTR,
-                            RenkPntr : $scope.Stok[0].RENKPNTR,
-                            Miktar : TmpMiktar,
-                            Guid : value.sip_Guid
-                        };
-                        
-                        UpdateStatus = true;
-                        UpdateData(Data);
-                    }                        
-                });
-
-                if(!UpdateStatus)
+                $scope.InsertLock = true
+                if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                 {
                     InsertData();
-                }                
+                }
+                else
+                {
+                    let UpdateStatus = false;
+    
+                    angular.forEach($scope.SiparisListe,function(value)
+                    {
+                        if(value.sip_stok_kod == $scope.Stok[0].KODU)
+                        {
+                            let TmpMiktar = value.sip_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+    
+                            let Data = 
+                            {
+                                Param :
+                                [
+                                    $scope.Stok[0].FIYAT,
+                                    TmpMiktar,
+                                    $scope.Stok[0].FIYAT * TmpMiktar,
+                                    $scope.Stok[0].TOPTANVERGIPNTR,
+                                    value.sip_iskonto_1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+                                    value.sip_iskonto_2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+                                    value.sip_iskonto_3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+                                    value.sip_iskonto_4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+                                    value.sip_iskonto_5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+                                    value.sip_iskonto_6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
+                                    $scope.Stok[0].ISK.TIP1, //SATIR ISKONTO TİP 1
+                                    $scope.Stok[0].ISK.TIP2, //SATIR ISKONTO TİP 2
+                                    $scope.Stok[0].ISK.TIP3, //SATIR ISKONTO TİP 3
+                                    $scope.Stok[0].ISK.TIP4, //SATIR ISKONTO TİP 4
+                                    $scope.Stok[0].ISK.TIP5, //SATIR ISKONTO TİP 5
+                                    $scope.Stok[0].ISK.TIP6, //SATIR ISKONTO TİP 6
+                                    value.sip_Guid
+                                ],
+                                BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                RenkPntr : $scope.Stok[0].RENKPNTR,
+                                Miktar : TmpMiktar,
+                                Guid : value.sip_Guid
+                            };
+                            
+                            UpdateStatus = true;
+                            UpdateData(Data);
+                        }                        
+                    });
+    
+                    if(!UpdateStatus)
+                    {
+                        InsertData();
+                    }                
+                }
             }
+           
         }
         else
         {
