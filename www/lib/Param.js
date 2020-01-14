@@ -51,7 +51,7 @@ var Param = [
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
 			"FiyatLock": "0",
-			"EksiyeDusme": "1"
+			"EksiyeDusme": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -290,7 +290,7 @@ var Param = [
 		"MikroId": "1",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "TEST",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
