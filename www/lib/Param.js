@@ -21,7 +21,7 @@ var Param = [
 			"Titresim": "0",
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
-			"SiparisOnayListele" : "-1",
+			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "1"
 		},
 		"Sayim": {
@@ -51,7 +51,7 @@ var Param = [
 			"FiyatLock": "false",
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
-			"EksiyeDusme": "1"
+			"EksiyeDusme": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -81,7 +81,7 @@ var Param = [
 			"GDepoListe": "",
 			"Sorumluluk": "",
 			"EvrakSil": "0",
-			"EksiyeDusme": "1",
+			"EksiyeDusme": "1"
 		},
 		"DepoNakliye": {
 			"Seri": "DNP",
@@ -289,7 +289,7 @@ var Param = [
 		"MikroId": "1",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "TEST",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
