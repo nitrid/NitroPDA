@@ -859,8 +859,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function SpaceLength(pData,pLength)
     {
-        console.log(pData)
-        console.log(pLength)
         let x = pLength - pData.toString().length;
 
         if(pData.toString().length > pLength)
@@ -875,7 +873,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             Space = Space + " ";
         }
 
-        console.log(Space.length)
         return pData + Space
     }
     $scope.MaxSira = async function()
@@ -901,7 +898,11 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.CmbEvrakTip = UserParam[ParamName].EvrakTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
-
+        if(UserParam[ParamName].FiyatLock == 1)
+        {
+            $scope.FiyatLock = true;
+        }
+        
         $scope.Stok = 
         [
             {

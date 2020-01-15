@@ -1592,7 +1592,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
     }
     $scope.Insert = function()
-    { console.log($scope.Stok[0].DEPOMIKTAR)
+    { 
         if(UserParam.Sistem.EslestirmeEksiyeDusme == 1 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
         {
             alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
