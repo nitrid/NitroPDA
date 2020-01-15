@@ -898,7 +898,11 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.CmbEvrakTip = UserParam[ParamName].EvrakTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
-
+        if(UserParam[ParamName].FiyatLock == 1)
+        {
+            $scope.FiyatLock = true;
+        }
+        
         $scope.Stok = 
         [
             {

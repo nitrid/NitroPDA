@@ -1164,6 +1164,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.EvrakTip = pAlinanVerilen;
         $scope.CariKodu = UserParam[ParamName].Cari;
+        if(UserParam[ParamName].FiyatLock == 1)
+        {
+            $scope.FiyatLock = true;
+        }
         
         $scope.Stok = 
         [
@@ -1219,8 +1223,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.Personel = UserParam[ParamName].Personel;
             $scope.PersonelListe.forEach(function(item)
             {
-                if(item.KODU == $scope.Personel)
-                  $scope.PersonelAdi == item.ADI;
+                $scope.PersonelAdi == item.ADI;
             });
         });           
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});

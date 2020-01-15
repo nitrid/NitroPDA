@@ -48,9 +48,9 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"FiyatLock": "false",
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
+			"FiyatLock": "0",
 			"EksiyeDusme": "0"
 		},
 		"VerilenSiparis": {
@@ -69,6 +69,7 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
+			"FiyatLock": "0",
 			"SiparisOnay": ""
 		},
 		"DepoSevk": {
@@ -330,7 +331,7 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"FiyatLock": "false",
+			"FiyatLock": "0",
 			"SiparisOnay": "",
 			"IskontoMatris": "0"
 		},
@@ -351,6 +352,7 @@ var Param = [
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"SiparisOnay": "",
+			"FiyatLock": "0",
 			"IskontoMatris": "0"
 		},
 		"DepoSevk": {
