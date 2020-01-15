@@ -8,7 +8,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "400px",
+            height: "300px",
             updateOnResize: true,
             heading: true,
             selecting: true,

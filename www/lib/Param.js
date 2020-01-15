@@ -22,7 +22,7 @@ var Param = [
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
-			"EslestirmeEksiyeDusme": "1"
+			"EslestirmeEksiyeDusme": "0"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -149,7 +149,7 @@ var Param = [
 			"AlisSarti": "0",
 			"FiyatListe": "0",
 			"EvrakSil": "0",
-			"EksiyeDusme": "1"
+			"EksiyeDusme": "0"
 		},
 		"Fire": {
 			"EvrakTip": "0",
