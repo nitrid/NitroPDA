@@ -22,7 +22,9 @@ var Param = [
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
-			"EslestirmeEksiyeDusme": "1"
+			"EslestirmeEksiyeDusme": "1",
+			"BTYaziciTip" : "CORDOVABT",
+			"BTYaziciAdi" : "SW_C58B"
 		},
 		"Sayim": {
 			"EvrakNo": "1",

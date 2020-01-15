@@ -247,6 +247,14 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "cordova.plugins.barcodeScanner"
       ]
+    },
+    {
+      "id": "cordova-plugin-btprinter.BluetoothPrinter",
+      "file": "plugins/cordova-plugin-btprinter/www/BluetoothPrinter.js",
+      "pluginId": "cordova-plugin-btprinter",
+      "clobbers": [
+        "BTPrinter"
+      ]
     }
   ];
   module.exports.metadata = {
@@ -258,6 +266,7 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-file-md5": "0.3.3",
     "cordova-plugin-zip": "3.1.0",
     "cordova-plugin-file-downloader": "0.4.0",
-    "phonegap-plugin-barcodescanner": "8.1.0"
+    "phonegap-plugin-barcodescanner": "8.1.0",
+    "cordova-plugin-btprinter": "0.0.1-dev"
   };
 });

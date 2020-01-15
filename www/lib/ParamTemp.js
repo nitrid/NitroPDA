@@ -23,7 +23,9 @@ var ParamTemp =
 			"PlasiyerKodu" : {"Title" : "Plasiyer Kodu","DefaultValue" : ""},
 			"FiyatDegistir" : {"Title" : "Fiyat Değiştir","DefaultValue" : "1"},
 			"SiparisOnayListele" : {"Title" : "Siparis Onay Listele","DefaultValue" : "-1"},
-			"EslestirmeEksiyeDusme" : {"Title" : "Eşleştirmede Eksiye Düşme","DefaultValue" : "0"}
+			"EslestirmeEksiyeDusme" : {"Title" : "Eşleştirmede Eksiye Düşme","DefaultValue" : "0"},
+			"BTYaziciTip" : {"Title" : "BT Yazıcı Tipi","DefaultValue" : "RAWBT"},
+			"BTYaziciAdi" : {"Title" : "BT Yazıcı Adı","DefaultValue" : ""}
 		},
 		"Sayim" :
 		{
