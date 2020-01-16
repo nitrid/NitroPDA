@@ -529,7 +529,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnSiparisListeGetirSec = function()
     {
-        
+        angular.element('#MdlEvrakGetir').modal('hide');
     }
     $scope.BtnTemizle = function()
     {
