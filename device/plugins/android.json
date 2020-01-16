@@ -34,6 +34,9 @@
     "phonegap-plugin-barcodescanner": {
       "ANDROID_SUPPORT_V4_VERSION": "27.+",
       "PACKAGE_NAME": "com.tone.nitro"
+    },
+    "cordova-plugin-btprinter": {
+      "PACKAGE_NAME": "com.tone.nitro"
     }
   },
   "dependent_plugins": {}

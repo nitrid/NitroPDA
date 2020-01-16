@@ -23,6 +23,10 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/DepoSiparis.html"
     })
+    .when("/DepoMalKabul",
+    {
+        templateUrl : "html/evraklar/DepoMalKabul.html"
+    })
     .when("/AlinanSiparis",
     {
         templateUrl : "html/evraklar/AlinanSiparis.html"

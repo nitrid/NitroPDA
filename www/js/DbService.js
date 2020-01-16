@@ -761,5 +761,40 @@ angular.module('app.db', []).service('db',function($rootScope)
         let pResult = {Barkod : pBarkod,Miktar : Miktar};
         return pResult;
     }
+    this.BTYazdir = function(pData,pParam,pCallback)
+    {
+        if(pParam.BTYaziciTip == "CORDOVABT")
+        {
+            window.BTPrinter.connect(function()
+            {                
+                window.BTPrinter.printTextSizeAlign(function(data)
+                {                    
+                    console.log("Success");
+                    pCallback(true);
+                },function(err)
+                {                    
+                    console.log("Error");
+                    console.log(err);
+                    pCallback(false);
+                }, pData,'0','0')
+
+            },function(err)
+            {
+                console.log("Error");
+                console.log(err)
+                pCallback(false);
+            }, pParam.BTYaziciAdi);            
+        }
+        else if(pParam.BTYaziciTip == "RAWBT")
+        {
+            let S = "#Intent;scheme=rawbt;";
+            let P =  "package=ru.a402d.rawbtprinter;end;";
+            let textEncoded = encodeURI(pData);
+
+            window.location.href="intent:"+textEncoded+S+P;
+
+            pCallback(true);
+        }
+    }
      //#endregion "PUBLIC"
 });
