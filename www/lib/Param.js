@@ -23,8 +23,8 @@ var Param = [
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "1",
-			"BTYaziciTip" : "CORDOVABT",
-			"BTYaziciAdi" : "SW_C58B"
+			"BTYaziciTip": "CORDOVABT",
+			"BTYaziciAdi": "SW_C58B"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -71,8 +71,9 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"FiyatLock": "0",
-			"SiparisOnay": ""
+			"FiyatLock": "1",
+			"SiparisOnay": "",
+			"IskontoMatris": "0"
 		},
 		"DepoSevk": {
 			"EvrakTip": "0",

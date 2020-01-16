@@ -65,8 +65,6 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.RenkListe = [];
         $scope.BedenListe = [];
 
-        
-
         $scope.Stok = [];
         $scope.Miktar = 1;
         $scope.Miktar.length = "";

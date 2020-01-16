@@ -14,7 +14,6 @@
                         <div class="col-8 px-1">
                             <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
                                 <option value="0">Depolar Arası Sevk</option>
-                                <option value="1">Depolar Arası Nakliye</option>
                             </select>
                         </div>
                         <div class="col-4 px-1">
@@ -32,11 +31,11 @@
                     </div>
                     <div class="row">
                         <div class="col-5 px-0 text-info"><label class="form-control-label float-right">Kaynak Depo :</label></div>
-                        <div class="col-7 px-0 text-truncate"><label class="form-control-label pl-10">{{DepoAdi}}</label></div>
+                        <div class="col-7 px-0 text-truncate"><label class="form-control-label pl-10">{{CDepoAdi}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-5 px-0 text-info"><label class="form-control-label float-right">Hedef Depo :</label></div>
-                        <div class="col-7 px-0 text-truncate"><label class="form-control-label pl-10">{{DepoAdi}}</label></div>
+                        <div class="col-7 px-0 text-truncate"><label class="form-control-label pl-10">{{GDepoAdi}}</label></div>
                     </div>
                     <div class="row pb-50">
                         <div class="col-5 px-0 text-info"><label class="form-control-label float-right">Toplam Satır :</label></div>
@@ -93,7 +92,7 @@
                     </div>
                     <div class="row py-1">
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary">Seç</button>
+                            <button class="btn btn-block btn-primary" ng-click="MainClick()">Seç</button>
                         </div>
                         <div class="col-6">
                             <button class="btn btn-block btn-primary" ng-click="BtnSiparisListele()">Listele</button>
@@ -187,7 +186,7 @@
                     </div>
                     <div class="row pt-5">
                         <div class="col-5 px-1">
-                            <button type="submit" data-target="#MdlStokGetir" data-toggle="modal" class="btn btn-primary btn-block h-40">Sipariş Listesi</button>        
+                            <button type="submit" data-target="#MdlSiparisListeGetir" data-toggle="modal" class="btn btn-primary btn-block h-40">Sipariş Listesi</button>        
                         </div>
                         <div class="col-2 px-1">
                             <button type="submit" class="btn btn-primary btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
@@ -381,7 +380,7 @@
         </div>
     </div>
     <!-- Manuel Giriş Modal Başlangıç -->
-    <div class="modal fade" id="MdlStokGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+    <div class="modal fade" id="MdlSiparisListeGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-simple modal-center modal-primary">
             <div class="modal-content">
                 <div class="modal-header">
@@ -394,17 +393,17 @@
                     <div class="row">
                         <div class="form-group row col-lg-12 my-0 ml-5">
                              <div class="col-lg-6 col-sm-6 col-lg-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnStokGridSec()">Seç</button>
+                            <button class="btn btn-block btn-primary" ng-click="BtnSiparisListeGetirSec()">Seç</button>
                             </div> 
                             <div class="col-lg-6 col-sm-6 col-lg-6">
-                                <button class="btn btn-block btn-primary" ng-click="BtnStokGridGetir()">Liste Getir</button>
+                                <button class="btn btn-block btn-primary" ng-click="BtnSiparisListeGetir()">Liste Getir</button>
                             </div>
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading">
                         <div class="loader vertical-align-middle loader-circle"></div>
                     </div>
-                    <div id="TblSiparisListe" class="pt-5" ng-show="TblLoading"></div>
+                    <div id="TblSiparisGetirListe" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
         </div>
