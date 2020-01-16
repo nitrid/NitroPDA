@@ -122,6 +122,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
+        $scope.FiyatLock = false;
 
         $scope.TblLoading = true; 
        

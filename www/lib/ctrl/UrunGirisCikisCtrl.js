@@ -12,13 +12,11 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.Seri = "";
         $scope.Sira = 0;
         $scope.EvrakTip = 12;
-        $scope.Cins = 7;
-        $scope.NormalIade = 0;
-        $scope.Tip = 0;
         $scope.BelgeNo = "";
-        $scope.DepoNo;
-        $scope.DepoAdi = "";
-        $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.CDepo;
+        $scope.GDepo;
+        $scope.CDepoAdi;
+        $scope.GDepoAdi;
         $scope.Sorumluluk = "";
         $scope.SorumlulukAdi = "";
         $scope.Personel = "";
@@ -28,9 +26,16 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.IsEmriKodu = "";
         $scope.IsEmriAdi = "";
         $scope.Proje = "";
+        $scope.Tip = 0;
+        $scope.Cins = 7;
+        $scope.NormalIade = 0;
+        $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.SatirNo = "";
+        $scope.PlasiyerKodu = 0;
 
+        $scope.CDepoListe = [];
+        $scope.GDepoListe = [];
         $scope.IsEmriListe = [];
-        $scope.DepoListe = [];
         $scope.PersonelListe = [];
         $scope.StokListe = [];
         $scope.ProjeListe = [];
@@ -38,6 +43,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.Stok = [];
         $scope.Miktar = 1;
         $scope.ToplamMiktar = 0;
+        $scope.Miktar2 = 0;
         
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
@@ -195,35 +201,50 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     function StokBarkodGetir(pBarkod)
     {
+        // KİLO BARKODU KONTROLÜ - RECEP KARACA 10.09.2019
+        let Kilo = pBarkod;
+        let KiloFlag = UserParam.Sistem.KiloFlag;
+        let FlagDizi = KiloFlag.split(',')
+        let Flag = Kilo.slice(0,2);
+ 
+        for (i = 0; i < FlagDizi.length; i++ )
+        {
+        if(Flag == FlagDizi[i])
+        {
+            var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
+            var Uzunluk = Kilo.slice(UserParam.Sistem.KiloBaslangic,((UserParam.Sistem.KiloBaslangic)+(UserParam.Sistem.KiloUzunluk)));
+            pBarkod = kBarkod
+            $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
+        }
+        }
+        // ----------------------------------------------------
         if(pBarkod != '')
-        {   
-            db.StokBarkodGetir($scope.Firma,pBarkod,$scope.DepoNo,async function(BarkodData)
-            {   
-                if(BarkodData.length > 0)
-                { 
-                    $scope.Stok = BarkodData;
-                    if(UserParam.Sistem.PartiLotKontrol == 1)
-                    {
-                        for(i = 0;i < $scope.StokHarListe.length;i++)
-                        {   
-                            if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
+        {
+            db.StokBarkodGetir($scope.Firma,pBarkod,$scope.CDepo,async function(BarkodData)
+            {    
+                $scope.Stok = BarkodData;
+                if(UserParam.Sistem.PartiLotKontrol == 1)
+                {
+                    for(i = 0;i < $scope.IsEmriListe.length;i++)
+                    {   
+                        if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
+                        {
+                            if($scope.Stok[0].PARTI == $scope.IsEmriListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IsEmriListe[i].sth_lot_no)
                             {
-                                if($scope.Stok[0].PARTI == $scope.StokHarListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.StokHarListe[i].sth_lot_no)
-                                {
-                                    alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
-                                    $scope.InsertLock = false;
-                                    $scope.BtnTemizle();
-                                    return;
-                                }
+                                alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
+                                $scope.InsertLock = false;
+                                return;
                             }
                         }
                     }
+                }
 
-                    $scope.Stok[0].FIYAT = 0;
-                    $scope.Stok[0].TUTAR = 0;
-                    $scope.Stok[0].INDIRIM = 0;
-                    $scope.Stok[0].KDV = 0;
-                    $scope.Stok[0].TOPTUTAR = 0;
+                if(BarkodData.length > 0)
+                {   
+                    $scope.Stok = BarkodData
+                    $scope.Stok[0].Satir = 0;
+                    $scope.Stok[0].Miktar = 0;
+                    $scope.Stok[0].TOPMIKTAR = 1;
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
@@ -237,31 +258,15 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
                             $scope.MiktarFiyatValid();
                         }
-                        else
-                        {  //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
-                            $scope.Stok[0].BIRIMPNTR = 1;
-                            $scope.Stok[0].BIRIM = 'ADET';
-                            $scope.Stok[0].CARPAN = 1;
-                            $scope.MiktarFiyatValid();
-                        }
                     });
 
-                    //****** FİYAT GETİR */
-                    let FiyatParam = 
-                    { 
-                        CariKodu : $scope.CariKodu,
-                        CariFiyatListe : $scope.CariFiyatListe,
-                        CariDovizKuru : $scope.CariDovizKuru,
-                        DepoNo : $scope.DepoNo,
-                        AlisSatis : ($scope.EvrakTip === 3 ? 0 : 1)
-                    };
                     if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
                     {   
                         if($scope.Stok[0].BEDENKODU != '' || $scope.Stok[0].RENKKODU != '')
-                        {   
+                        {  
                             $('#MdlRenkBeden').modal("show");
                             db.GetData($scope.Firma,'RenkGetir',[$scope.Stok[0].RENKKODU],function(pRenkData)
-                            {
+                            {   
                                 $scope.RenkListe = pRenkData;
                                 $scope.Stok[0].RENKPNTR = "1";
                             });
@@ -271,6 +276,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                                 $scope.Stok[0].BEDENPNTR = "1";
                             });
                         }
+
                     } 
                     if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     {
@@ -293,6 +299,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                             PartiLotEkran();
                         }
                     }
+
                     if($scope.OtoEkle == true)
                     {
                         $scope.Insert()
@@ -304,8 +311,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     }
                 }
                 else
-                {   
-                    alertify.alert("<a style='color:#3e8ef7''>" + "Stok Bulunamamıştır !" + "</a>" );          
+                {    
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Stok Bulunamamıştır !" + "</a>" );                 
                     console.log("Stok Bulunamamıştır.");
                     Beep();
                 }
@@ -530,15 +537,26 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             }
         ];
 
-        db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(data)
+        db.DepoGetir($scope.Firma,UserParam[ParamName].CDepoListe,function(data)
         {
             console.log(data)
-            $scope.DepoListe = data; 
-            $scope.DepoNo = UserParam[ParamName].DepoNo;
-            $scope.DepoListe.forEach(function(item) 
+            $scope.CDepoListe = data; 
+            $scope.CDepo = UserParam[ParamName].CDepo;
+            $scope.CDepoListe.forEach(function(item) 
             {
-                if(item.KODU == $scope.DepoNo)
-                    $scope.DepoAdi = item.ADI;
+                if(item.KODU == $scope.CDepo)
+                $scope.CDepoAdi = item.ADI;
+            });     
+        });
+        db.DepoGetir($scope.Firma,UserParam[ParamName].GDepoListe,function(data)
+        {
+            console.log(data)
+            $scope.GDepoListe = data; 
+            $scope.GDepo = UserParam[ParamName].GDepo;
+            $scope.GDepoListe.forEach(function(item) 
+            {
+                if(item.KODU == $scope.CDepo)
+                $scope.GDepoAdi = item.ADI;
             });     
         });
         db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data)
@@ -555,7 +573,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data)
         {
             $scope.ProjeListe = data; 
-            $scope.Proje = UserParam.DepoSevk.Proje
+            $scope.Proje = UserParam.UrunGirisCikis.Proje
         });
 
         await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
@@ -692,12 +710,20 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         
         BarkodFocus();
     }
-    $scope.DepoChange = function()
+    $scope.GDepoChange = function()
     {
-        $scope.DepoListe.forEach(function(item) 
+        $scope.GDepoListe.forEach(function(item) 
         {
-            if(item.KODU == $scope.DepoNo)
-                $scope.DepoAdi = item.ADI;
+            if(item.KODU == $scope.GDepo)
+                $scope.GDepoAdi = item.ADI;
+        });
+    }
+    $scope.CDepoChange = function()
+    {
+        $scope.CDepoListe.forEach(function(item) 
+        {
+            if(item.KODU == $scope.CDepo)
+                $scope.CDepoAdi = item.ADI;
         });
     }
     $scope.PersonelChange = function()

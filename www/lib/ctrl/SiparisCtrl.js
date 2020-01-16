@@ -98,7 +98,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.OtoEkle = false;
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
-        $scope.FiyatLock = UserParam.AlinanSiparis.FiyatLock;
+        $scope.FiyatLock = false;
 
         $scope.IslemListeSelectedIndex = -1;  
         $scope.PartiLotListeSelectedIndex = 0;
@@ -1169,7 +1169,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             $scope.FiyatLock = true;
         }
-        
+               
         $scope.Stok = 
         [
             {

@@ -53,7 +53,7 @@ var ParamTemp =
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"},
-			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "false"},
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},			
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
@@ -145,6 +145,7 @@ var ParamTemp =
 			"SatisSarti" : {"Title" : "Satış Şartı","DefaultValue" : "0"},
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
 		},
 		"SatisIrsaliye" :
@@ -164,6 +165,7 @@ var ParamTemp =
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
 		},
 		"AlisFatura" :
@@ -182,6 +184,7 @@ var ParamTemp =
 			"SatisSarti" : {"Title" : "Satış Şartı","DefaultValue" : "0"},
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
 		},
 		"SatisFatura" :
@@ -201,6 +204,7 @@ var ParamTemp =
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
 		},
 		"Fire" :
@@ -237,8 +241,10 @@ var ParamTemp =
 			"Seri" : {"Title" : "Seri","DefaultValue" : "ISM"},
 			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
 			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},
-			"DepoNo" : {"Title" : "Depo No","DefaultValue" : "1"},
-			"DepoListe" : {"Title" : "Depo Liste","DefaultValue" : ""},
+			"CDepo" : {"Title" : "Çıkış Depo No","DefaultValue" : "1"},
+			"CDepoListe" : {"Title" : "Çıkış Depo Liste","DefaultValue" : ""},
+			"GDepo" : {"Title" : "Giriş Depo No","DefaultValue" : "1"},
+			"GDepoListe" : {"Title" : "Giriş Depo Liste","DefaultValue" : ""},
 			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
 			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
 			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
