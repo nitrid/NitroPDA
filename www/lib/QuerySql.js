@@ -2427,7 +2427,7 @@ var QuerySql =
         query : "SELECT ISNULL(MAX(ssip_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri=@ssip_evrakno_seri ",
         param :['ssip_evrakno_seri:string|25']
     },
-    // İş emirleri
+    //UrunGirisCikis
     IsEmriGetir : 
     {
         query : "select is_Kod as KODU,is_Ismi AS ADI,is_BaslangicTarihi AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1'"

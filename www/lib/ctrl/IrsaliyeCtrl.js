@@ -97,6 +97,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.TxtCariAra = "";
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
+        $scope.FiyatLock = false;
         $scope.IslemListeSelectedIndex = -1;
         $scope.PartiLotListeSelectedIndex = 0;
 

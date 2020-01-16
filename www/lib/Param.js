@@ -135,6 +135,7 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
+			"FiyatLock": "1",
 			"EvrakSil": "0"
 		},
 		"SatisIrsaliye": {
@@ -153,6 +154,7 @@ var Param = [
 			"AlisSarti": "0",
 			"FiyatListe": "0",
 			"EvrakSil": "0",
+			"FiyatLock": "0",
 			"EksiyeDusme": "0"
 		},
 		"Fire": {
@@ -254,6 +256,7 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
+			"FiyatLock": "1",
 			"EvrakSil": "0"
 		},
 		"SatisFatura": {
@@ -272,6 +275,7 @@ var Param = [
 			"AlisSarti": "0",
 			"FiyatListe": "0",
 			"EvrakSil": "0",
+			"FiyatLock": "0",
 			"EksiyeDusme": "1"
 		},
 		"UrunGirisCikis": {
@@ -279,8 +283,10 @@ var Param = [
 			"Seri": "ISM",
 			"BelgeNo": "",
 			"Cari": "",
-			"DepoNo": "1",
-			"DepoListe": "",
+			"CDepo": "1",
+			"CDepoListe": "",
+			"GDepo": "1",
+			"GDepoListe": "",
 			"Sorumluluk": "",
 			"Personel": "",
 			"Proje": "",

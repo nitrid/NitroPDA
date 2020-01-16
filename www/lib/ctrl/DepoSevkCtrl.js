@@ -63,7 +63,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.StokListe = [];
         $scope.PartiLotListe = [];
         $scope.RenkListe = [];
-        $scope.BedenListe = [];
+        $scope.BedenListe = [];   
 
         $scope.Stok = [];
         $scope.Miktar = 1;
@@ -844,24 +844,6 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             $scope.MiktarFiyatValid();
         }
     }
-    $scope.BtnTemizle = function()
-    {
-        $scope.Barkod = "";
-        $scope.Stok = null;
-        $scope.Stok = 
-        [
-            {
-                BIRIM : '',
-                BIRIMPNTR : 0, 
-                TOPMIKTAR :0
-            }
-        ];
-        $scope.Miktar = 1;
-        $scope.BarkodLock = false;
-        
-        $scope.BirimListe = [];
-        BarkodFocus();      
-    }
     $scope.BtnDuzenle = function ()
     {
         $scope.MiktarEdit = $scope.DepoSevkListe[$scope.IslemListeSelectedIndex].sth_miktar;
@@ -1308,7 +1290,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             [
                 $scope.MiktarEdit,
                 $scope.Miktar2,
-                0, //TURAR
+                0, //TUTAR
                 0, //VERGİ
                 0, //İSKONTO1
                 0, //İSKONTO2
