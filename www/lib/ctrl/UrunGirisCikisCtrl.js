@@ -11,11 +11,14 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
 
         $scope.Seri = "";
         $scope.Sira = 0;
-        $scope.EvrakTip = 0;
+        $scope.EvrakTip = 12;
+        $scope.Cins = 7;
+        $scope.NormalIade = 0;
+        $scope.Tip = 0;
         $scope.BelgeNo = "";
         $scope.DepoNo;
-        $scope.DepoAdi;
-        $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.DepoAdi = "";
+        $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Sorumluluk = "";
         $scope.SorumlulukAdi = "";
         $scope.Personel = "";
@@ -24,13 +27,18 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.ToplamSatir = 0;
         $scope.IsEmriKodu = "";
         $scope.IsEmriAdi = "";
-        
+        $scope.Proje = "";
 
         $scope.IsEmriListe = [];
         $scope.DepoListe = [];
         $scope.PersonelListe = [];
         $scope.StokListe = [];
+        $scope.ProjeListe = [];
 
+        $scope.Stok = [];
+        $scope.Miktar = 1;
+        $scope.ToplamMiktar = 0;
+        
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
         $scope.CmbIsEmriAra = "0";
@@ -355,7 +363,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             UserParam.MikroId,
             0, //FİRMA NO
             0, //ŞUBE NO
-            $scope.Tarih,
+            $scope.BelgeTarih,
             $scope.Tip,
             $scope.Cins,
             $scope.NormalIade,
@@ -363,12 +371,12 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $scope.Seri,
             $scope.Sira,
             $scope.BelgeNo,
-            $scope.Tarih,
+            $scope.BelgeTarih,
             $scope.Stok[0].KODU,
             0, //ISKONTO TUTAR 1
             0, //ISKONTO TUTAR 2
             0, //ISKONTO TUTAR 3
-            0, //ISKONTO TUTAR 4
+            0, //ISKONTO TUTAR 4 
             0, //ISKONTO TUTAR 5
             0, //ISKONTO TUTAR 6
             0, //ISKONTO TUTAR 7
@@ -386,17 +394,17 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 9
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
-            $scope.CariKodu,
-            $scope.Personel,
-            $scope.CariDovizCinsi, //HARDOVİZCİNSİ
-            $scope.CariDovizKuru, //HARDOVİZKURU
-            $scope.CariAltDovizKuru, //ALTDOVİZKURU
-            $scope.Stok[0].DOVIZCINSI, //STOKDOVİZCİNSİ
-            $scope.Stok[0].DOVIZCINSKURU, //STOKDOVİZKURU
+            "",
+            $scope.PlasiyerKodu,
+            0, //HARDOVİZCİNSİ
+            0, //HARDOVİZKURU
+            0, //ALTDOVİZKURU
+            0, //STOKDOVİZCİNSİ
+            0, //STOKDOVİZKURU
             $scope.Miktar * $scope.Stok[0].CARPAN,
             $scope.Miktar2,
             $scope.Stok[0].BIRIMPNTR,
-            $scope.Stok[0].TUTAR,
+            0, // TUTAR
             0, // İSKONTO 1
             0, // İSKONTO 2
             0, // İSKONTO 3
@@ -407,30 +415,30 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             0, // MASRAF 2
             0, // MASRAF 3
             0, // MASRAF 4
-            $scope.Stok[0].TOPTANVERGIPNTR, //VERİPNTR
-            $scope.Stok[0].KDV,             //VERGİ
-            0, // MASRAFVERGİPNTR,
+            0, // VERİPNTR
+            0, // VERGİ
+            0, // MASRAFVERGİPNTR
             0, // MASRAFVERGİ
-            $scope.OdemeNo,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-            '',//AÇIKLAMA
+            0, // ODEMEOP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+            '', //AÇIKLAMA
             '00000000-0000-0000-0000-000000000000', //sth_sip_uid
             '00000000-0000-0000-0000-000000000000', //sth_fat_uid,
-            $scope.DepoNo, //GİRİSDEPONO
-            $scope.DepoNo, //CİKİSDEPONO
-            $scope.Tarih, //MALKABULSEVKTARİHİ
-            '', // CARİSORUMLULUKMERKEZİ
-            $scope.Sorumluluk,
-            0,  //VERGİSİZFL
+            $scope.GDepo,
+            $scope.CDepo,
+            $scope.BelgeTarih, // MALKABULTARİH
+            $scope.Sorumluluk, // CARİSORUMLULUKMERKEZİ
+            $scope.Sorumluluk, // STOKSORUMLULUKMERKEZİ
+            0,  // VERGİSİZFL
             0,  // ADRESNO
             $scope.Stok[0].PARTI,
             $scope.Stok[0].LOT,
-            $scope.Proje,
+            '', // PROJE
             '', // EXİMKODU
             0,  // DİSTİCARETTURU
             0,  // OTVVERGİSİZFL
             0,  // OİVVERGİSİZ
-           $scope.CariFiyatListe,
-           0   //NAKLİYEDEPO
+            0,   // FİYATLİSTENO
+            0   //NAKLİYEDEPO
         ];
         
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
@@ -491,13 +499,15 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     function ToplamMiktarHesapla()
     {
+        $scope.ToplamMiktar = 0;
         $scope.ToplamSatir = 0;
 
         angular.forEach($scope.IsEmriListe,function(value)
         {
+            $scope.ToplamMiktar += value.sth_miktar;
             $scope.ToplamSatir += 1 ;
         });
-    }   
+    }
     $scope.YeniEvrak = async function()
     {
         InitEmirGrid();
@@ -509,8 +519,20 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.Seri = UserParam[ParamName].Seri;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
 
+        $scope.Stok = 
+        [
+            {
+                SATIR :0,
+                MIKTAR :0,
+                BIRIM : '',
+                BIRIMPNTR : 0, 
+                TOPMIKTAR : 0
+            }
+        ];
+
         db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(data)
         {
+            console.log(data)
             $scope.DepoListe = data; 
             $scope.DepoNo = UserParam[ParamName].DepoNo;
             $scope.DepoListe.forEach(function(item) 
@@ -521,6 +543,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         });
         db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data)
         {
+            console.log(data)
             $scope.PersonelListe = data;
             $scope.Personel = UserParam[ParamName].Personel;
             $scope.PersonelListe.forEach(function(item)
@@ -529,6 +552,11 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                   $scope.PersonelAdi == item.ADI;
             });
         });    
+        db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data)
+        {
+            $scope.ProjeListe = data; 
+            $scope.Proje = UserParam.DepoSevk.Proje
+        });
 
         await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
         {
@@ -607,7 +635,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             {
                 let UpdateStatus = false;
 
-                angular.forEach($scope.DepoSevkListe,function(value)
+                angular.forEach($scope.IsEmriListe,function(value)
                 {
                     if(value.sth_stok_kod == $scope.Stok[0].KODU)
                     {   
@@ -731,6 +759,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
         $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
         $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
+        $scope.Stok[0].TOPMIKTAR = $scope.Stok[0].CARPAN * $scope.Miktar
     }
     $scope.MiktarPress = function(keyEvent)
     {
