@@ -1517,7 +1517,6 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.Loading = true;
             Cari = $scope.CariKodu;
         } 
-        
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,1],function(StokData)
         {
             $scope.StokListe = StokData;
@@ -1535,7 +1534,6 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                 $("#MdlStokGetir").modal('hide');
                 alertify.alert("Sipariş içeriği boş")                
             }
-            
         });
     }
     $scope.BtnStokGridSec = function()
