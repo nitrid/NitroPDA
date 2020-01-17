@@ -106,6 +106,7 @@ function KullaniciParametreCtrl($scope,$window,db)
             if(typeof Object.values(Param[$scope.KullaniciListeSelectedIndex])[i] == "object")
             {
                 $scope.CmbParamList.push({Name : Object.keys(Param[$scope.KullaniciListeSelectedIndex])[i]});
+                $scope.Kullanici = $scope.KullaniciListe[$scope.KullaniciListeSelectedIndex].Kullanici;
             }
         }
 

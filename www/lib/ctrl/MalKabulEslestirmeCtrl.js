@@ -41,7 +41,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.Seri = "";
         $scope.Sira = 0;
         
-        $scope.EvrakTip =13;
+        $scope.EvrakTip = 13;
         $scope.CariKodu = "";
         $scope.CariAdi = "";
         $scope.CariFiyatListe = 0;
