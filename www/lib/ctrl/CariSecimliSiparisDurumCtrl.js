@@ -125,21 +125,6 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             fields: 
             [
                 {
-                    name: "SERI-SIRA",
-                    title: "SERİ - SIRA",
-                    type: "text",
-                    align: "center",
-                    width: 150
-                    
-                },
-                {
-                    name: "SATIRNO",
-                    title: "SATIR NO",
-                    type: "text",
-                    align: "center",
-                    width: 180
-                },
-                {
                     name: "MIKTAR",
                     title: "MIKTAR",
                     type: "text",
@@ -196,6 +181,10 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     width: 180
                 }
             ],
+            rowClass: function(item, itemIndex) 
+            {
+                return item.TESLIMEDILMEYENMIKTAR <= 0 ? 'bg-green' : 'bg-red';
+            }
         });
     }
     function DipToplamHesapla()
