@@ -255,6 +255,19 @@ var QuerySql =
         param : ['KODU','LISTENO','DEPO'],
         type : ['string|25','int','int']
     },
+    IskontoMatrisGetir : 
+    {
+        query : "SELECT " + 
+                "isk_isk1_yuzde AS ORAN1, " + 
+                "isk_isk2_yuzde AS ORAN2, " + 
+                "isk_isk3_yuzde AS ORAN3, " + 
+                "isk_isk4_yuzde AS ORAN4, " + 
+                "isk_isk5_yuzde AS ORAN5, " + 
+                "isk_isk6_yuzde AS ORAN6 " + 
+                "FROM STOK_CARI_ISKONTO_TANIMLARI WHERE isk_stok_kod = @STOK AND isk_cari_kod = @CARI AND isk_uygulama_odeme_plani = @ODEME", 
+        param : ['STOK','CARI','ODEME'],
+        type : ['string|25','string|25','int']
+    },
     SonAlisFiyatGetir : 
     {
         query : "SELECT sth_cari_kodu AS CARI,sth_stok_kod AS STOK, " + 
