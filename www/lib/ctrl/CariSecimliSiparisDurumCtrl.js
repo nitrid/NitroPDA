@@ -294,8 +294,8 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sip_musteri_kod) AS CARIADI, " +
                     "SUM(sip_miktar) AS MIKTAR, " +
                     "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
-                    "CAST(SUM(sip_tutar)  AS DECIMAL(10,2)) AS TUTARKDVHARIC, " +
-                    "ROUND(SUM(sip_tutar) + SUM(sip_vergi),2) AS TUTARKDVDAHIL " +
+                    "CONVERT(NVARCHAR,CAST(SUM(sip_tutar)  AS DECIMAL(10,2))) AS TUTARKDVHARIC, " +
+                    "CONVERT(NVARCHAR,CAST(SUM(sip_tutar) + SUM(sip_vergi) AS DECIMAL(10,2))) AS TUTARKDVDAHIL " +
                     "FROM SIPARISLER " +
                     "WHERE ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
                     "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih ORDER BY sip_belge_tarih DESC" ,
