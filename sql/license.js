@@ -3,6 +3,7 @@ var fs = require('fs');
 
 var LicIo = require('socket.io-client');
 var LicSoc = LicIo.connect('http://licence.teknoticari.com:8090',{'timeout':2000, 'connect timeout': 2000});
+//var LicSoc = LicIo.connect('http://localhost:8090',{'timeout':2000, 'connect timeout': 2000});
 
 function LicenseCheck(callback)
 {
