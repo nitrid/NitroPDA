@@ -14,8 +14,8 @@
                 <input type="text" class="form-control focus" placeholder="Cari Listelemek İçin Tıklayınız..." data-target="#MdlCariGetir" data-toggle="modal" ng-model="CariAdi">
             </div>
             <div class="row">
-                <div class="col-sm-4 col-md-1 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
-                <div class="col-sm-8 col-md-4 px-1">
+                <div class="col-sm-4 col-md-2 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
+                <div class="col-sm-8 col-md-3 px-1">
                     <div class="input-group input-group-icon">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
@@ -27,8 +27,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-4 col-md-1 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Son Tarih:</div></div>
-                <div class="col-sm-8 col-md-4 px-1">
+                <div class="col-sm-4 col-md-2 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Son Tarih:</div></div>
+                <div class="col-sm-8 col-md-3 px-1">
                     <div class="input-group input-group-icon">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
@@ -43,8 +43,9 @@
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnCariFoyGetir()">Getir</button>
                 </div>
-            </div>
+            </div>            
             <div id="TblCariFoy" class="pt-5"></div>
+            <div style="text-align: right;"><br><b>Bakiye</b> : {{Bakiye | number:2}}</div>
         </div>
     </div>
     <!-- Cari Listele Modal -->

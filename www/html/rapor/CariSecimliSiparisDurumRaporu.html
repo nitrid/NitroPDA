@@ -21,7 +21,7 @@ background-color: #90ee90 !important;
                 <label class="form-control-label text-primary">Cari Seçim</label>
                 <input type="text" class="form-control focus" placeholder="Cari Listelemek İçin Tıklayınız..." data-target="#MdlCariGetir" data-toggle="modal" ng-model="CariAdi">
             </div>
-            <div class="row my-0 py-0">
+            <!-- <div class="row my-0 py-0">
                 <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Evrak Tip:</div></div>
                 <div class="col-sm-7 col-md-9 px-1">
                     <select class="form-control" ng-model="EvrakTip">
@@ -29,13 +29,14 @@ background-color: #90ee90 !important;
                         <option  value="1">Verilen Sipariş</option>
                     </select>
                 </div>
-            </div><div class="row my-0 py-0">
+            </div> -->
+            <div class="row my-0 py-0">
                 <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Sipariş Durumu:</div></div>
                 <div class="col-sm-7 col-md-9 px-1">
                     <select class="form-control" ng-model="SipTip">
                         <option  value="0">Tüm Siparişler</option>
-                        <option  value="1">Teslim Edilen S.</option>
-                        <option  value="2">Teslim Edilmemiş S.</option>
+                        <option  value="1">Kapalı Siparişler</option>
+                        <option  value="2">Açık Siparişler</option>
                     </select>
                 </div>
             </div>

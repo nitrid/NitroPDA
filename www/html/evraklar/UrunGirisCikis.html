@@ -98,13 +98,21 @@
                         </div>
                     </div>
                     <div class="row my-0 py-0">
-                        <div class="col-4 text-info px-1 py-0 my-0"><div class="col-form-label float-right py-2">Depo</div></div>
+                        <div class="col-4 text-info px-1 py-0 my-0"><div class="col-form-label float-right py-2" ng-disabled="EvrakLock">Çıkış Depo:</div></div>
                         <div class="col-8 px-1">
-                            <select class="form-control" ng-model="DepoNo" ng-disabled="EvrakLock" ng-change="DepoChange()">
-                                <option ng-repeat="option in DepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            <select class="form-control" ng-model="CDepo" ng-disabled="EvrakLock" ng-change="CDepoChange()">
+                                <option ng-repeat="option in CDepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
-                    </div> 
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-info px-1 py-0 my-0"><div class="col-form-label float-right py-2" ng-disabled="EvrakLock">Giriş Depo:</div></div>
+                        <div class="col-8 px-1">
+                            <select class="form-control" ng-model="GDepo" ng-disabled="EvrakLock" ng-change="GDepoChange()">
+                                    <option ng-repeat="option in GDepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="row my-0 py-0 pt-5">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Tarih:</div></div>
                         <div class="col-8 px-1">
