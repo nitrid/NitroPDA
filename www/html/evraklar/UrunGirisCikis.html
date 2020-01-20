@@ -122,7 +122,7 @@
                                         <span class="icon wb-calendar" aria-hidden="true"></span>
                                     </div>
                                 </div>
-                                <input type="text" class="form-control" type="text" id="Tarih"  ng-model="Tarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                                <input type="text" class="form-control" id="BTarih" ng-model="BelgeTarih" data-provide="datepicker" ng-disabled="EvrakLock">
                             </div>
                         </div>
                     </div>
@@ -415,6 +415,9 @@
     language: "tr"
     });
     $("#ETarih").datepicker({
+    language: "tr"
+    });
+    $("#BTarih").datepicker({
     language: "tr"
     });
 </script>
