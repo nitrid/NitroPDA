@@ -1012,9 +1012,9 @@ var QuerySql =
     },
     SiparisGetir:
     {
-        query:  "SELECT ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod),'') AS ADI, " + 
-                "(sip_tutar / sip_miktar) AS FIYAT, " + 
-                "ROW_NUMBER() OVER(ORDER BY sip_Guid) AS NO, " +   
+        query:  "SELECT ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod),'') AS ADI, " +
+                "(sip_tutar / sip_miktar) AS FIYAT, " +
+                "ROW_NUMBER() OVER(ORDER BY sip_Guid) AS NO, " +
                 "(SELECT som_isim FROM SORUMLULUK_MERKEZLERI WHERE som_kod = sip_stok_sormerk) AS SORUMLUMERADI ," +
                 "(SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = sip_satici_kod) AS PERSONELADI," +
                 "(SELECT dbo.fn_VergiYuzde (sip_vergi_pntr)) AS VERGIPNTR, " +
