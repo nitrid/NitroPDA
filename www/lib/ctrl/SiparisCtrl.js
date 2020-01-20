@@ -697,6 +697,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Stok[0].FIYAT = 0;
                     $scope.Stok[0].TUTAR = 0;
                     $scope.Stok[0].INDIRIM = 0;
+                    $scope.Stok[0].ISKONTOKOD = "";
                     $scope.Stok[0].ISK = {ORAN1: 0,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
@@ -1310,7 +1311,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
-        $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
+        $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;    
+        $scope.CariIskontoKodu = $scope.CariListe[pIndex].ISKONTOKOD;
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
         $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;

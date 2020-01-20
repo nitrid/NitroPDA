@@ -155,7 +155,7 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
-			"EksiyeDusme": "0"
+			"EksiyeDusme": "1"
 		},
 		"Fire": {
 			"EvrakTip": "0",

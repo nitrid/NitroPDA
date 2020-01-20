@@ -4,3 +4,4 @@ lic.json
 log/
 www/theme/base/html/
 daemon/
+*.zip
