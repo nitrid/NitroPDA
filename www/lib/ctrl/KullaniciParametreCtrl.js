@@ -210,11 +210,12 @@ function KullaniciParametreCtrl($scope,$window,db)
                     {
                         if(typeof Object.values(Object.values(ParamTemp[MasterItem]))[0] == "object")
                         {
-                            Param[i][MasterItem] = {};
+                            //Param[i][MasterItem] = {};
                             for(let SubItem in ParamTemp[MasterItem])
-                            {
+                            {                                
                                 if(!Param[i][MasterItem].hasOwnProperty(SubItem))
                                 {
+                                    console.log(SubItem)
                                     Param[i][MasterItem][SubItem] = ParamTemp[MasterItem][SubItem].DefaultValue;
                                 }                            
                             }
