@@ -7,7 +7,7 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "300px",
+            height: "400px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -46,7 +46,7 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TblCariFoy").jsGrid
         ({
             width: "100%",
-            height: "300px",
+            height: "auto",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -54,17 +54,17 @@ function CariHesapHareketCtrl($scope,$window,db)
             fields: 
             [
                 {
-                    name: "SERI",
-                    title: "SERİ",
+                    name: "TARIH",
+                    title: "TARİH",
                     type: "text",
                     align: "center",
                     width: 120
                     
                 },
                 {
-                    name: "SIRA",
-                    title: "SIRA",
-                    type: "number",
+                    name: "SERISIRA",
+                    title: "SERİ SIRA",
+                    type: "text",
                     align: "center",
                     width: 120
                     
@@ -83,76 +83,29 @@ function CariHesapHareketCtrl($scope,$window,db)
                     align: "center",
                     width: 120
                 },
-                {
-                    name: "VADETARIH",
-                    title: "VADE TARİH",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "VADEGUN",
-                    title: "VADE GÜN",
-                    type: "number",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "BA",
-                    title: "BORÇ/ALACAK",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
+           
                 {
                     name: "ANADOVIZBORC",
-                    title: "ANA DOViZ BORÇ",
+                    title: "BORÇ",
                     type: "text",
                     align: "center",
                     width: 200
                 },
                 {
                     name: "ANADOVIZALACAK",
-                    title: "ANA DÖVİZ ALACAK",
+                    title: "ALACAK",
                     type: "text",
                     align: "center",
                     width: 200
                 },
                 {
                     name: "ANADOVIZBORCBAKIYE",
-                    title: "ANA DÖVİZ BORÇ BAKIYE",
+                    title: "BAKİYE",
                     type: "text",
                     align: "center",
                     width: 200
                 },
-                {
-                    name: "ANADOVIZALACAKBAKIYE",
-                    title: "ANA DÖVİZ ALACAK BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 220
-                },
-                {
-                    name: "ORJINALDOVIZBORCBAKIYE",
-                    title: "ORJINAL DÖVİZ BORÇ BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 250
-                },
-                {
-                    name: "ORJINALDOVIZALACAKBAKİYE",
-                    title: "ORJINAL DÖVİZ ALACAK BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 250
-                },
-                {
-                    name: "ORJINALDOVIZ",
-                    title: "ORJINAL DÖVİZ",
-                    type: "text",
-                    align: "center",
-                    width: 180
-                }
+             
             ],
         });
     }
@@ -165,7 +118,8 @@ function CariHesapHareketCtrl($scope,$window,db)
         $scope.TxtCariAra = "";
         $scope.IlkTarih = moment("01.01." + new Date().getFullYear()).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
-
+        $scope.Bakiye = 0;
+        
         $scope.CariListe = [];
         $scope.CariFoyListe = [];
 
@@ -205,23 +159,24 @@ function CariHesapHareketCtrl($scope,$window,db)
     }
     $scope.BtnCariFoyGetir = function()
     {
-        var TmpQuery = 
+        let TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
             query:  "SELECT  " +
-                    "msg_S_0090 AS SERI, " +
-                    "msg_S_0091 AS SIRA, " +
+                    "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +       
+                    "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA, " +
                     "msg_S_0094 AS EVRAKTIP, " +
                     "msg_S_0003 AS CINSI, " +
                     "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
                     "msg_S_0099 AS VADEGUN, " +
                     "msg_S_0100 AS BA, " +
-                    "ROUND([msg_S_0101\\T],2) AS ANADOVIZBORC, " +
-                    "ROUND([msg_S_0102\\T],2) AS ANADOVIZALACAK, " +
-                    "ROUND([msg_S_1706],2) AS ANADOVIZBORCBAKIYE, " +
-                    "ROUND([msg_S_1707],2) AS ANADOVIZALACAKBAKIYE, " +
-                    "ROUND([msg_S_1710],2) AS ORJINALDOVIZBORCBAKIYE, " +
-                    "ROUND([msg_S_1711],2) AS ORJINALDOVIZALACAKBAKİYE, " +
+                    "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
+                    "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
+                    "CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))) AS ANADOVIZBAKIYE, " +
+                    "CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))) AS ANADOVIZBORCBAKIYE, " +
+                    "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
+                    "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
+                    "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
                     "[msg_S_0112] AS ORJINALDOVIZ " +
                     "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
             param:  ['KODU','ILKTARIH','SONTARIH'],
@@ -233,6 +188,7 @@ function CariHesapHareketCtrl($scope,$window,db)
         {
             $scope.CariFoyListe = Data;
             $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
+            $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
         });
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)

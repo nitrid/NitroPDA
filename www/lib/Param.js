@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "TEST",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
@@ -18,7 +18,7 @@ var Param = [
 			"KiloBaslangic": "7",
 			"KiloUzunluk": "5",
 			"KiloCarpan": "1000",
-			"Titresim": "0",
+			"Titresim": "1",
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
@@ -50,9 +50,9 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
+			"FiyatLock": "0",
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
-			"FiyatLock": "0",
 			"EksiyeDusme": "0"
 		},
 		"VerilenSiparis": {
@@ -71,8 +71,8 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"FiyatLock": "1",
 			"SiparisOnay": "",
+			"FiyatLock": "0",
 			"IskontoMatris": "0"
 		},
 		"DepoSevk": {
@@ -85,7 +85,7 @@ var Param = [
 			"GDepoListe": "",
 			"Sorumluluk": "",
 			"EvrakSil": "0",
-			"EksiyeDusme": "1"
+			"EksiyeDusme": "0"
 		},
 		"DepoNakliye": {
 			"Seri": "DNP",
@@ -135,7 +135,7 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
-			"FiyatLock": "1",
+			"FiyatLock": "0",
 			"EvrakSil": "0"
 		},
 		"SatisIrsaliye": {
@@ -155,7 +155,7 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
-			"EksiyeDusme": "1"
+			"EksiyeDusme": "0"
 		},
 		"Fire": {
 			"EvrakTip": "0",
@@ -256,7 +256,7 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
-			"FiyatLock": "1",
+			"FiyatLock": "0",
 			"EvrakSil": "0"
 		},
 		"SatisFatura": {
@@ -276,7 +276,7 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
-			"EksiyeDusme": "1"
+			"EksiyeDusme": "0"
 		},
 		"UrunGirisCikis": {
 			"EvrakTip": "0",
@@ -312,9 +312,13 @@ var Param = [
 			"KiloBaslangic": "7",
 			"KiloUzunluk": "5",
 			"KiloCarpan": "1000",
-			"Titresim": "0",
+			"Titresim": "1",
 			"PlasiyerKodu": "",
-			"FiyatDegistir": "1"
+			"FiyatDegistir": "1",
+			"SiparisOnayListele": "-1",
+			"EslestirmeEksiyeDusme": "0",
+			"BTYaziciTip": "RAWBT",
+			"BTYaziciAdi": ""
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -342,7 +346,8 @@ var Param = [
 			"PartiSec": "0",
 			"FiyatLock": "0",
 			"SiparisOnay": "",
-			"IskontoMatris": "0"
+			"IskontoMatris": "0",
+			"EksiyeDusme": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -373,7 +378,8 @@ var Param = [
 			"GDepo": "1",
 			"GDepoListe": "",
 			"Sorumluluk": "",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"EksiyeDusme": "0"
 		},
 		"DepoNakliye": {
 			"Seri": "DNP",
@@ -423,6 +429,7 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
+			"FiyatLock": "0",
 			"EvrakSil": "0"
 		},
 		"SatisIrsaliye": {
@@ -440,7 +447,9 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"FiyatLock": "0",
+			"EksiyeDusme": "0"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -457,6 +466,7 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
+			"FiyatLock": "0",
 			"EvrakSil": "0"
 		},
 		"SatisFatura": {
@@ -474,7 +484,9 @@ var Param = [
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"FiyatLock": "0",
+			"EksiyeDusme": "0"
 		},
 		"Fire": {
 			"EvrakTip": "0",
@@ -535,6 +547,20 @@ var Param = [
 			"Stok Rapor": "1",
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1"
+		},
+		"UrunGirisCikis": {
+			"EvrakTip": "0",
+			"Seri": "ISM",
+			"BelgeNo": "",
+			"Cari": "",
+			"CDepo": "1",
+			"CDepoListe": "",
+			"GDepo": "1",
+			"GDepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"Proje": "",
+			"EvrakSil": "0"
 		}
 	}
 ]
