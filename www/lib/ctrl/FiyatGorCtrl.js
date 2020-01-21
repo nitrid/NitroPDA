@@ -55,6 +55,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = false;
         $scope.DepoMiktar = false;
         $scope.Combo = true;
+        $scope.FiyatGizle = true;
 
         $scope.Loading = false;
         $scope.TblLoading = true;
@@ -266,9 +267,9 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         db : '{M}.' + $scope.Firma,
                         query : "SELECT TOP 1 " + 
                                 "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano) " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
                                 "ELSE " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
                                 "END AS FIYAT, " + 
                                 "sfiyat_doviz AS DOVIZ, " + 
                                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
@@ -283,6 +284,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     }
                     db.GetDataQuery(Fiyat,function(pFiyat)
                     {  
+                        console.log(pFiyat[0].FIYAT)
                         $scope.Fiyat = pFiyat[0].FIYAT
                         $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
@@ -633,6 +635,11 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         BarkodFocus();
         InitStokGrid();
         
+        if(UserParam.FiyatGor.FiyatGizle == "1")
+        {
+            $scope.FiyatGizle = false;
+        }
+
         if(typeof UserParam.Etiket != 'undefined')
         {
             $scope.SpecialListe = UserParam.Etiket.Etiket

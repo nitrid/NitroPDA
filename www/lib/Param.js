@@ -19,7 +19,7 @@ var Param = [
 			"KiloUzunluk": "5",
 			"KiloCarpan": "1000",
 			"Titresim": "1",
-			"PlasiyerKodu": "",
+			"PlasiyerKodu": "PLS01,01",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "1",
@@ -181,7 +181,8 @@ var Param = [
 			"DepoMiktarEtiketBas": "0",
 			"SecimliFiyatListe": "0",
 			"DovizTipi": "-1",
-			"Special": "1"
+			"Special": "1",
+			"FiyatGizle" : "0"
 		},
 		"Etiket": {
 			"Etiket": [

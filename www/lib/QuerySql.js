@@ -48,41 +48,75 @@ var QuerySql =
     },
     CariListeGetir : 
     {
-        query : "SELECT cari_kod AS KODU, " +
-                "cari_cari_kilitli_flg As CKILIT," +
-                "cari_unvan1 AS UNVAN1," +
-                "cari_unvan2 AS UNVAN2," +
-                "cari_doviz_cinsi AS DOVIZCINSI," +
-                "cari_doviz_cinsi1 AS DOVIZCINSI1," +
-                "cari_doviz_cinsi2 AS DOVIZCINSI2," +
-                "cari_vdaire_adi AS VDADI," +
-                "cari_vdaire_no AS VDNO," +
-                "cari_satis_fk AS SATISFK," +
-                "cari_satis_isk_kod AS ISKONTOKOD," +
-                "cari_sektor_kodu AS SEKTOR," +
-                "cari_bolge_kodu AS BOLGE," +
-                "cari_grup_kodu AS GRUP," +
-                "cari_temsilci_kodu AS TEMSILCI," +
-                "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI," +
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))) AS DOVIZSEMBOL," +
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))) AS DOVIZSEMBOL1," + 
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi2,0))) AS DOVIZSEMBOL2," +
-                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi,0),2)) AS DOVIZKUR," +
-                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1," +
-                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2," +
-                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(1,0),2)) AS ALTDOVIZKUR," +
-                "ISNULL((SELECT sum(ct_tutari) FROM dbo.CARI_HESAP_TEMINATLARI WHERE ct_carikodu = cari_kod),0) AS RISK," +
-                "cari_odemeplan_no AS ODEMEPLANI," +
-                "ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS BAKIYE," +
-                "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH," +
-                "ISNULL((SELECT adr_ilce + '-' + adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES," +
+        query : "SELECT " +
+                "KODU, " +
+                "CKILIT, " +
+                "UNVAN1, " +
+                "UNVAN2, " +
+                "DOVIZCINSI, " +
+                "DOVIZCINSI1, " +
+                "DOVIZCINSI2, " +
+                "VDADI, " +
+                "VDNO, " +
+                "SATISFK, " +
+                "ISKONTOKOD, " +
+                "SEKTOR, " +
+                "BOLGE, " +
+                "GRUP, " +
+                "TEMSILCI, " +
+                "TEMSILCIADI, " +
+                "DOVIZSEMBOL, " +
+                "DOVIZSEMBOL1, " +
+                "DOVIZSEMBOL2, " +
+                "DOVIZKUR, " +
+                "DOVIZKUR1, " +
+                "DOVIZKUR2, " +
+                "ALTDOVIZKUR, " +
+                "RISK, " +
+                "ODEMEPLANI, " +
+                "CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))) AS BAKIYE, " +
+                "BELGETARIH, " +
+                "ADRES, " +
+                "ADRES1, " +
+                "ADRES2, " +
+                "VERGISIZ, " +
+                "EFATURA " +
+                "FROM  " +
+                "(SELECT cari_kod AS KODU, " +
+                "cari_cari_kilitli_flg As CKILIT, " +
+                "cari_unvan1 AS UNVAN1, " +
+                "cari_unvan2 AS UNVAN2, " +
+                "cari_doviz_cinsi AS DOVIZCINSI, " +
+                "cari_doviz_cinsi1 AS DOVIZCINSI1, " +
+                "cari_doviz_cinsi2 AS DOVIZCINSI2, " +
+                "cari_vdaire_adi AS VDADI, " +
+                "cari_vdaire_no AS VDNO, " +
+                "cari_satis_fk AS SATISFK, " +
+                "cari_satis_isk_kod AS ISKONTOKOD, " +
+                "cari_sektor_kodu AS SEKTOR, " +
+                "cari_bolge_kodu AS BOLGE, " +
+                "cari_grup_kodu AS GRUP, " +
+                "cari_temsilci_kodu AS TEMSILCI, " +
+                "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI, " +
+                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))) AS DOVIZSEMBOL, " +
+                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))) AS DOVIZSEMBOL1, " +
+                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi2,0))) AS DOVIZSEMBOL2, " +
+                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi,0),2)) AS DOVIZKUR, " +
+                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1, " +
+                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2, " +
+                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(1,0),2)) AS ALTDOVIZKUR, " +
+                "ISNULL((SELECT sum(ct_tutari) FROM dbo.CARI_HESAP_TEMINATLARI WHERE ct_carikodu = cari_kod),0) AS RISK, " +
+                "cari_odemeplan_no AS ODEMEPLANI, " +
+                "(SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)) AS BAKIYE, " +
+                "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH, " +
+                "ISNULL((SELECT adr_ilce + '-' + adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES, " +
                 "ISNULL((SELECT adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES1, " +
                 "ISNULL((SELECT adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES2, " +
-                "cari_BUV_tabi_fl AS VERGISIZ," +
-                "cari_efatura_fl AS EFATURA " +
+                "cari_BUV_tabi_fl AS VERGISIZ, " +
+                "cari_efatura_fl AS EFATURA  " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE ((CARI.cari_kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((CARI.cari_unvan1 LIKE  @ADI + '%' ) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY cari_kod ASC",
+                "WHERE ((CARI.cari_kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((CARI.cari_unvan1 LIKE  @ADI + '%' ) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu IN(SELECT value FROM STRING_SPLIT(@PLASIYERKODU,','))) OR (@PLASIYERKODU = ''))) AS TBL ORDER BY KODU " ,
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
     },

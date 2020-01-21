@@ -886,6 +886,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
+        
 
         if($scope.TxtCariAra != "")
         {
