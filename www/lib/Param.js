@@ -19,7 +19,7 @@ var Param = [
 			"KiloUzunluk": "5",
 			"KiloCarpan": "1000",
 			"Titresim": "1",
-			"PlasiyerKodu": "PLS01,01",
+			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "1",
@@ -291,6 +291,21 @@ var Param = [
 			"EvrakSil": "0",
 			"IsMerkezi": "",
 			"IsMerkeziListe": "1"
+		},
+		"TahsilatMakbuzu": {
+			"EvrakTip": "1",
+			"Seri": "THS",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"NakitKasa": "N01",
+			"KrediKasa": "K01",
+			"CekKasa": "C01",
+			"SenetKasa": "S01",
+			"HavaleKasa": "H01",
+			"OdemeKasa": "O01",
+			"EvrakSil": "0"
 		}
 	},
 	{
