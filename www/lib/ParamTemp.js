@@ -240,6 +240,7 @@ var ParamTemp =
 			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
 			"Seri" : {"Title" : "Seri","DefaultValue" : "ISM"},
 			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"IsMerkezi" : {"Title" : "İş Merkezi","DefaultValue" : ""},
 			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},
 			"CDepo" : {"Title" : "Çıkış Depo No","DefaultValue" : "1"},
 			"CDepoListe" : {"Title" : "Çıkış Depo Liste","DefaultValue" : ""},

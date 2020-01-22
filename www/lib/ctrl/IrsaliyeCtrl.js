@@ -1695,7 +1695,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 
                 $scope.IrsaliyeListe = data;
                 $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});  
-
+                console.log($scope.IrsaliyeListe)
                 DipToplamHesapla();
                 ToplamMiktarHesapla()
                 

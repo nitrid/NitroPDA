@@ -37,7 +37,7 @@
                     </div>
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">İş Merkezi :</label></div>
-                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10"></label></div>
+                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10" >{{IsMerkeziAdi}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Personel :</label></div>
@@ -52,16 +52,11 @@
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
                     <div class="row py-5">
-                        <div class="col-6 offset-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="IsEmriSecimClick()">İş Emri Seçim</button>                             
-                        </div>
-                    </div>
-                    <div class="row py-5">
                         <div class="col-6">
                             <button class="btn btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="IslemSatirlariClick()">İşlem Satırları</button>
+                            <button class="btn btn-block btn-primary h-50" ng-click="IsEmriSecimClick()">İş Emri Seçim</button>                             
                         </div>
                     </div>
                     <div class="row py-10">
@@ -69,7 +64,7 @@
                             <button class="btn btn-block btn-primary h-50" ng-click="BarkodGirisClick()">Barkod Giriş</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="IslemSatirlariClick()">Manuel Giriş</button>
+                            <button class="btn btn-block btn-primary h-50" ng-click="IslemSatirlariClick()">İşlem Satırları</button>
                         </div>
                     </div>                
                 </div>
@@ -100,16 +95,8 @@
                     <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1 py-0 my-0"><div class="col-form-label float-right py-2" ng-disabled="EvrakLock">Çıkış Depo:</div></div>
                         <div class="col-8 px-1">
-                            <select class="form-control" ng-model="CDepo" ng-disabled="EvrakLock" ng-change="CDepoChange()">
-                                <option ng-repeat="option in CDepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row my-0 py-0">
-                        <div class="col-4 text-info px-1 py-0 my-0"><div class="col-form-label float-right py-2" ng-disabled="EvrakLock">Giriş Depo:</div></div>
-                        <div class="col-8 px-1">
-                            <select class="form-control" ng-model="GDepo" ng-disabled="EvrakLock" ng-change="GDepoChange()">
-                                    <option ng-repeat="option in GDepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            <select class="form-control" ng-model="Depo" ng-disabled="EvrakLock" ng-change="DepoChange()">
+                                <option ng-repeat="option in DepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
                     </div>
@@ -145,8 +132,8 @@
                     <div class="form-group row my-0 py-0">
                             <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">İş Merkezi:</div></div>
                             <div class="col-8 px-1">
-                                <select class="form-control" ng-model="Proje" ng-disabled="EvrakLock">
-                                    <option ng-repeat="option in ProjeListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                                <select class="form-control" ng-model="IsMerkezi" ng-disabled="EvrakLock" ng-change="IsMerkeziChange()">
+                                    <option ng-repeat="option in IsMerkeziListe" value="{{option.KODU}}">{{option.ADI}}</option>
                                 </select>
                             </div>
                     </div>
@@ -186,7 +173,7 @@
                     </div>
                     <div class="row pt-5">
                         <div class="col-5 px-1">
-                            <button type="submit" data-target="#MdlStokGetir" data-toggle="modal" class="btn btn-primary btn-block h-40">İş Emri Listele</button>        
+                            <button type="submit" data-target="#MdlStokGetir" data-toggle="modal" class="btn btn-primary btn-block h-40">Manuel Arama</button>        
                         </div>
                         <div class="col-2 px-1">
                             <button type="submit" class="btn btn-primary btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        

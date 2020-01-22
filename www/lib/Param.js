@@ -282,15 +282,14 @@ var Param = [
 			"EvrakTip": "0",
 			"Seri": "ISM",
 			"BelgeNo": "",
-			"Cari": "",
-			"CDepo": "1",
-			"CDepoListe": "",
-			"GDepo": "1",
-			"GDepoListe": "",
+			"Depo": "1",
+			"DepoListe": "",
 			"Sorumluluk": "",
 			"Personel": "",
 			"Proje": "",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"IsMerkezi": "",
+			"IsMerkeziListe": "1"
 		}
 	},
 	{
