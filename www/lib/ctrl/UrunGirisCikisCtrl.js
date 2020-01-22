@@ -32,12 +32,14 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SatirNo = "";
         $scope.CmbEvrakTip = "2";
+        $scope.StokEvrakTip = 0;
 
         $scope.DepoListe = [];
         $scope.IsEmriListe = [];
         $scope.IsMerkeziListe = [];
         $scope.PersonelListe = [];
         $scope.StokListe = [];
+        $scope.StokHarListe = [];
         $scope.ProjeListe = [];
 
         $scope.Stok = [];
@@ -104,7 +106,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             updateOnResize: true,
             heading: true,
             selecting: true,
-            data : $scope.IsEmriListe,
+            data : $scope.StokHarListe,
             paging : true,
             pageSize: 10,
             pageButtonCount: 3,
@@ -456,32 +458,39 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         ];
         
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
-        {  console.log(10)
+        {   
             if(typeof(InsertResult.result.err) == 'undefined')
-            {  
-                console.log(11)
-                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(IsEmriData)
-                {  
-                    console.log(12)
+            {   
+                console.log(11111)
+                if(typeof($scope.Stok[0].RECNO) != 'undefined')
+                {
+                    console.log($scope.Stok[0].RECNO)
+                    console.log(2222222)
+                    db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].RECNO]);
+                }
+                console.log(333333)
+                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.StokEvrakTip],function(IsEmriData)
+                {    
+                    console.log(44444)
+                    $scope.StokHarListe = IsEmriData;
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
-                    {   
+                    {
+                        console.log(555555)
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
-
-                    InsertAfterRefresh(IsEmriData);  
-                    $scope.InsertLock = false
-                    if(UserParam.Sistem.Titresim == 1)
-                    {
-                        Confirmation();
-                    }
-                    
+                    console.log(6666666)
+                    InsertAfterRefresh(IsEmriData);       
+                    $scope.InsertLock = false  
+                    $scope.MiktarLock = false              
                 });
+                console.group(7777777)
             }
             else
             {
                 console.log(InsertResult.result.err);
+                $scope.InsertLock = false  
+                $scope.MiktarLock = false 
             }
-            
         });
     }
     function InsertAfterRefresh(pData)
@@ -518,8 +527,9 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.ToplamMiktar = 0;
         $scope.ToplamSatir = 0;
 
-        angular.forEach($scope.IsEmriListe,function(value)
+        angular.forEach($scope.StokHarListe,function(value)
         {
+            console.log(value)
             $scope.ToplamMiktar += value.sth_miktar;
             $scope.ToplamSatir += 1 ;
         });
@@ -776,7 +786,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                             console.log(data.result.err);
                         }
                         
-                        if($scope.IsEmriListe.length <= 1)
+                        if($scope.StokHarListe.length <= 1)
                         {
                             $scope.YeniEvrak();
                         }
@@ -784,13 +794,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                         {   
                             db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
                             {
-                                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Bedendata)
-                                {
-                                    $scope.BedenHarListe = Bedendata;
-                                });
-
-                                $scope.IsEmriListe = data;
-                                $("#TblIslem").jsGrid({data : $scope.IsEmriListe});    
+                                $scope.StokHarListe = data;
+                                $("#TblIslem").jsGrid({data : $scope.StokHarListe});    
                                 $scope.BtnTemizle();
                                 ToplamMiktarHesapla();
                             });
@@ -883,7 +888,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             {
                 let UpdateStatus = false;
 
-                angular.forEach($scope.IsEmriListe,function(value)
+                angular.forEach($scope.StokHarListe,function(value)
                 {
                     if(value.sth_stok_kod == $scope.Stok[0].KODU)
                     {   
@@ -921,7 +926,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                         UpdateStatus = true;
                         UpdateData(Data);
                         $scope.InsertLock = false 
-                    }                        
+                    }    
+                    console.log(Data);                    
                 });
 
                 if(!UpdateStatus)
