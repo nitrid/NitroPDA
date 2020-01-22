@@ -408,7 +408,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             0, //CARİCİNSİ
             0, //CARİKODU
             $scope.IsEmriKodu,
-            0,
+            0, //PLASİYERKODU
             0, //HARDOVİZCİNSİ
             0, //HARDOVİZKURU
             0, //ALTDOVİZKURU

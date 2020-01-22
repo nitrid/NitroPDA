@@ -861,6 +861,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
+            0, // İŞEMRİKODU
             $scope.Personel,
             0, //HARDOVİZCİNSİ
             1, //HARDOVİZKURU
