@@ -60,7 +60,7 @@
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Birim :</label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{Stok[0].BIRIM}}</label></div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-show = "FiyatGizle">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Son Alış F.: </label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{SonAlis}}</label></div>
                     </div>
@@ -68,7 +68,7 @@
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Miktar:</label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{Stok[0].DEPOMIKTAR}}</label></div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-show = "FiyatGizle">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Birim Fiyatı:</label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{Fiyat}}  {{Stok[0].DOVIZSEMBOL}}</label></div>
                     </div>

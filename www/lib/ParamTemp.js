@@ -233,7 +233,8 @@ var ParamTemp =
 			"DepoMiktarEtiketBas" : {"Title" : "Depo Miktar Etiket Bas","DefaultValue" : "0"},
 			"SecimliFiyatListe" : {"Title" : "Seçimli Fiyat Liste","DefaultValue" : "0"},
 			"DovizTipi" : {"Title" : "Döviz Tipi","DefaultValue" : "-1"},
-			"Special" : {"Title" : "Special","DefaultValue" : "1"}
+			"Special" : {"Title" : "Special","DefaultValue" : "1"},
+			"FiyatGizle" : {"Title" : "Fiyat Gizle","DefaultValue" : "1"}
 		},
 		"UrunGirisCikis" :
 		{
