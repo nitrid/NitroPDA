@@ -2530,7 +2530,7 @@ var QuerySql =
     //UrunGirisCikis
     IsEmriGetir : 
     {
-        query : "select is_Kod as KODU,is_Ismi AS ADI,is_BaslangicTarihi AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1'"
+        query : "select is_Kod as KODU,is_Ismi AS ADI,CONVERT(NVARCHAR,is_BaslangicTarihi,104) AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1'"
     }, 
     //#region "AKTARIM"
     AdresTbl : 

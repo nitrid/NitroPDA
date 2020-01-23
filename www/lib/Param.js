@@ -182,7 +182,7 @@ var Param = [
 			"SecimliFiyatListe": "0",
 			"DovizTipi": "-1",
 			"Special": "1",
-			"FiyatGizle" : "0"
+			"FiyatGizle": "0"
 		},
 		"Etiket": {
 			"Etiket": [
@@ -289,8 +289,13 @@ var Param = [
 			"Personel": "",
 			"Proje": "",
 			"EvrakSil": "0",
-			"IsMerkezi": "",
-			"IsMerkeziListe": "1"
+			"IsMerkezi": "01",
+			"IsMerkeziListe": "1",
+			"Cari": "",
+			"CDepo": "1",
+			"CDepoListe": "",
+			"GDepo": "1",
+			"GDepoListe": ""
 		},
 		"TahsilatMakbuzu": {
 			"EvrakTip": "1",

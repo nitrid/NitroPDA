@@ -154,41 +154,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 align: "center",
                 width: 100
             },
-            {
-                name: "sth_iskonto1",
-                title: "IND1",
-                type: "number",
-                align: "center",
-                width: 200
-            },
-            {
-                name: "sth_iskonto2",
-                title: "IND2",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sth_iskonto3",
-                title: "IND3",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sth_iskonto4",
-                title: "IND4",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sth_iskonto5",
-                title: "IND5",
-                type: "number",
-                align: "center",
-                width: 100
-            }
            ],
             rowClick: function(args)
             {
@@ -818,14 +783,14 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     {
         if($scope.CmbEvrakTip == 2)
         {   
-            $scope.Tip = 2;
-            $scope.Cins = 6;
+            $scope.Tip = 0;
+            $scope.Cins = 7;
             $scope.NormalIade = 0;
         }
         else if($scope.CmbEvrakTip == 15)
         {
-            $scope.Tip = 2;
-            $scope.Cins = 6;
+            $scope.Tip = 0;
+            $scope.Cins = 7;
             $scope.NormalIade = 0;
         }
         db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
