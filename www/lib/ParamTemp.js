@@ -241,6 +241,7 @@ var ParamTemp =
 			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
 			"Seri" : {"Title" : "Seri","DefaultValue" : "ISM"},
 			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"IsMerkezi" : {"Title" : "İş Merkezi","DefaultValue" : ""},
 			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},
 			"CDepo" : {"Title" : "Çıkış Depo No","DefaultValue" : "1"},
 			"CDepoListe" : {"Title" : "Çıkış Depo Liste","DefaultValue" : ""},
@@ -249,6 +250,22 @@ var ParamTemp =
 			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
 			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
 			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+		},
+		"TahsilatMakbuzu" :
+		{
+			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"Seri" : {"Title" : "Seri","DefaultValue" : "THS"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
+			"NakitKasa" : {"Title" : "Nakit Kasa Kodu","DefaultValue" : ""},
+			"KrediKasa" : {"Title" : "Kredi Kasa Kodu","DefaultValue" : ""},
+			"CekKasa" : {"Title" : "Çek Kasa Kodu","DefaultValue" : ""},
+			"SenetKasa" : {"Title" : "Senet Kasa Kodu","DefaultValue" : ""},
+			"HavaleKasa" : {"Title" : "Havale Kasa Kodu","DefaultValue" : ""},
+			"OdemeKasa" : {"Title" : "Odeme Kasa Kodu","DefaultValue" : ""},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
 		},
 		"Menu" :

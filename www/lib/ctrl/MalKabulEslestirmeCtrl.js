@@ -758,6 +758,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             0,  //KASAHIZMET
             "", //KASAHIZKOD
             0, //KARSIDGRUPNO
+            "",
             $scope.Stok[0].TOPTUTAR, //MEBLAG
             $scope.Stok[0].TUTAR,    //ARATOPLAM
             0, //VADE
@@ -1047,6 +1048,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
+            0, //ISEMRİKODU
             $scope.Personel,
             0, //HARDOVİZCİNSİ
             1, //HARDOVİZKURU
@@ -1181,6 +1183,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
+            0, // İŞEMRİKODU
             $scope.Personel,
             0, //HARDOVİZCİNSİ
             0, //HARDOVİZKURU

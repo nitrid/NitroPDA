@@ -122,6 +122,10 @@ angular.module("app",
     .when("/StokRapor",
     {
         templateUrl : "html/rapor/StokRapor.html"
+    })
+    .when("/TahsilatMakbuzu",
+    {
+        templateUrl : "html/evraklar/TahsilatMakbuzu.html"
     });
 });
 

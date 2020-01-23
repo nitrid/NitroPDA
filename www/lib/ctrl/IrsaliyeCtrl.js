@@ -542,6 +542,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
+            0, // İŞEMRİKODU
             $scope.Personel,
             $scope.CariDovizCinsi, //HARDOVİZCİNSİ
             $scope.CariDovizKuru, //HARDOVİZKURU
@@ -1702,7 +1703,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 
                 $scope.IrsaliyeListe = data;
                 $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});  
-
+                console.log($scope.IrsaliyeListe)
                 DipToplamHesapla();
                 ToplamMiktarHesapla()
                 

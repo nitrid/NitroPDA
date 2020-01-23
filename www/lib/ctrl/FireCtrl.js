@@ -213,6 +213,7 @@ function FireCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             "",
+            0, // İŞEMRİKODU
             0, //PLASİYERKODU
             0, //HARDOVİZCİNSİ
             0, //HARDOVİZKURU

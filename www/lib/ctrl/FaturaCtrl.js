@@ -495,6 +495,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
             0,  //KASAHIZMET
             "", //KASAHIZKOD
             0, //KARSIDGRUPNO
+            "",
             $scope.Stok[0].TOPTUTAR, //MEBLAG
             $scope.Stok[0].TUTAR,    //ARATOPLAM
             0, //VADE
@@ -778,6 +779,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
+            0, // İŞEMRİKODU
             $scope.Personel,
             $scope.CariDovizCinsi, //HARDOVİZCİNSİ
             $scope.CariDovizKuru, //HARDOVİZKURU
