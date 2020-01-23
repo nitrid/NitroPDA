@@ -234,7 +234,7 @@ var ParamTemp =
 			"SecimliFiyatListe" : {"Title" : "Seçimli Fiyat Liste","DefaultValue" : "0"},
 			"DovizTipi" : {"Title" : "Döviz Tipi","DefaultValue" : "-1"},
 			"Special" : {"Title" : "Special","DefaultValue" : "1"},
-			"FiyatGizle" : {"Title" : "Fiyat Gizle","DefaultValue" : "1"}
+			"FiyatGizle" : {"Title" : "Fiyat Gizle","DefaultValue" : "0"}
 		},
 		"UrunGirisCikis" :
 		{
