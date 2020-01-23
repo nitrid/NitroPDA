@@ -231,11 +231,11 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 $scope.Stok = BarkodData;
                 if(UserParam.Sistem.PartiLotKontrol == 1)
                 {
-                    for(i = 0;i < $scope.IsEmriListe.length;i++)
+                    for(i = 0;i < $scope.StokHarListe.length;i++)
                     {   
                         if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
                         {
-                            if($scope.Stok[0].PARTI == $scope.IsEmriListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IsEmriListe[i].sth_lot_no)
+                            if($scope.Stok[0].PARTI == $scope.StokHarListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.StokHarListe[i].sth_lot_no)
                             {
                                 alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
                                 $scope.InsertLock = false;
@@ -469,7 +469,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].RECNO]);
                 }
                 console.log(333333)
-                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.StokEvrakTip],function(IsEmriData)
+                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(IsEmriData)
                 {    
                     console.log(44444)
                     $scope.StokHarListe = IsEmriData;
@@ -498,8 +498,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
 
-        $scope.IsEmriListe = pData;
-        $("#TblIslem").jsGrid({data : $scope.IsEmriListe});    
+        $scope.StokHarListeS     = pData;
+        $("#TblIslem").jsGrid({data : $scope.StokHarListe});    
         DipToplamHesapla();
         ToplamMiktarHesapla();
         
@@ -701,7 +701,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         alertify.confirm('Evrağı silmek istediğinize eminmisiniz ?', 
         function()
         { 
-            if($scope.IsEmriListe.length > 0)
+            if($scope.StokHarListe.length > 0)
             {
                 if(UserParam.UrunGirisCikis.EvrakSil == 0)
                 {
@@ -709,7 +709,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     {
                         if(typeof(data.result.err) == 'undefined')
                         {
-                            angular.forEach($scope.IsEmriListe,function(value)
+                            angular.forEach($scope.StokHarListe,function(value)
                             {
                                 db.ExecuteTag($scope.Firma,'BedenHarDelete',[value.sth_Guid,11],function(data)
                                 {
@@ -1081,7 +1081,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     $scope.MiktarFiyatValid = function()
     {
         $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
-        $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
         $scope.Stok[0].TOPMIKTAR = $scope.Stok[0].CARPAN * $scope.Miktar
     }
     $scope.MiktarPress = function(keyEvent)
@@ -1162,12 +1161,18 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.IsEmriSecimClick = function()
     {
-        $("#TbIsEmriSecim").addClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbBarkodGiris").removeClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbCariSec").removeClass('active');
-        $("#TbBelgeBilgisi").removeClass('active');
-        $("#TbIslemSatirlari").removeClass('active');
+        if($scope.StokHarListe.length == 0)
+        {
+            $("#TbIsEmriSecim").addClass('active');
+            $("#TbMain").removeClass('active');
+            $("#TbBarkodGiris").removeClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');
+            $("#TbIslemSatirlari").removeClass('active');
+        }        
+        else
+        {
+            alertify.okBtn("Tamam");
+            alertify.alert("İş Emri Seçmeye yetkiniz yok");
+        }
     }   
 } 
