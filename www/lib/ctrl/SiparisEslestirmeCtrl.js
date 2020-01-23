@@ -1148,6 +1148,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0,  //KASAHIZMET
             "", //KASAHIZKOD
             0, //KARSIDGRUPNO
+            "",
             $scope.Stok[0].TOPTUTAR, //MEBLAG
             $scope.Stok[0].TUTAR,    //ARATOPLAM
             0, //VADE
