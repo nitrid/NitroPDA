@@ -298,15 +298,15 @@ var Param = [
 			"GDepoListe": ""
 		},
 		"TahsilatMakbuzu": {
-			"EvrakTip": "1",
+			"ChaEvrakTip": "1",
 			"Seri": "THS",
 			"BelgeNo": "",
 			"Cari": "",
 			"Sorumluluk": "",
 			"Personel": "",
-			"NakitKasa": "N01",
-			"KrediKasa": "K01",
-			"CekKasa": "C01",
+			"NakitKasa": "KASA1",
+			"KrediKasa": "01",
+			"CekKasa": "CK01",
 			"SenetKasa": "S01",
 			"HavaleKasa": "H01",
 			"OdemeKasa": "O01",
@@ -336,7 +336,7 @@ var Param = [
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
-			"EslestirmeEksiyeDusme": "0",
+			"EslestirmeEksiyeDusme": "1",
 			"BTYaziciTip": "RAWBT",
 			"BTYaziciAdi": ""
 		},

@@ -46,6 +46,16 @@ var QuerySql =
     {
         query : "SELECT mrk_kod AS KODU,mrk_ismi AS ADI FROM STOK_MARKALARI"
     },
+    CmbKasaGetir : 
+    {
+        query : "SELECT kas_kod AS KODU,kas_isim AS ADI FROM KASALAR WHERE kas_tip = @KASTIP" ,
+        param : ['KASTIP'],
+        type : ['int']
+    }, 
+    CmbBankaGetir : 
+    {
+        query : "SELECT ban_kod AS KODU,ban_ismi AS ADI FROM BANKALAR " ,
+    },
     CariListeGetir : 
     {
         query : "SELECT " +
@@ -1778,6 +1788,7 @@ var QuerySql =
     CariHarGetir : 
     {
         query:  "SELECT *, " +
+                "ISNULL((SELECT kas_isim FROM KASALAR WHERE kas_kod = cha_kasa_hizkod),'') AS KASAADI, " +
                 "CONVERT(VARCHAR(10),GETDATE(),112) AS cha_d_kurtar " +
                 "FROM CARI_HESAP_HAREKETLERI " +
                 "WHERE cha_evrakno_seri=@cha_evrakno_seri AND cha_evrakno_sira=@cha_evrakno_sira " +
@@ -1983,7 +1994,7 @@ var QuerySql =
                 ",0												--<cha_karsidcinsi, tinyint,> \n" + 
                 ",1												--<cha_karsid_kur, float,> \n" + 
                 ",@cha_karsidgrupno								--<cha_karsidgrupno, tinyint,> \n" + 
-                ",''											--<cha_karsisrmrkkodu, nvarchar(25),> \n" + 
+                ",@cha_karsisrmrkkodu											--<cha_karsisrmrkkodu, nvarchar(25),> \n" + 
                 ",0												--<cha_miktari, float,> \n" + 
                 ",@cha_meblag									--<cha_meblag, float,> \n" + 
                 ",@cha_aratoplam								--<cha_aratoplam, float,> \n" + 
@@ -2086,7 +2097,7 @@ var QuerySql =
         param : ['cha_create_user:int','cha_lastup_user:int','cha_firmano:int','cha_subeno:int','cha_evrak_tip:int','cha_evrakno_seri:string|25','cha_evrakno_sira:int',
                  'cha_tarihi:date','cha_tip:int','cha_cinsi:int','cha_normal_Iade:int','cha_tpoz:int','cha_ticaret_turu:int','cha_belge_no:string|25','cha_belge_tarih:date',
                  'cha_aciklama:string|40','cha_satici_kodu:string|25','cha_EXIMkodu:string|25','cha_projekodu:string|25','cha_cari_cins:int','cha_kod:string|25','cha_ciro_cari_kodu:string|25',
-                 'cha_d_cins:int','cha_d_kur:float','cha_altd_kur:float','cha_grupno:int','cha_srmrkkodu:string|25','cha_kasa_hizmet:int','cha_kasa_hizkod:string|25','cha_karsidgrupno:int',
+                 'cha_d_cins:int','cha_d_kur:float','cha_altd_kur:float','cha_grupno:int','cha_srmrkkodu:string|25','cha_kasa_hizmet:int','cha_kasa_hizkod:string|25','cha_karsidgrupno:int','cha_karsisrmrkkodu:string|25',
                  'cha_meblag:float','cha_aratoplam:float','cha_vade:int','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float','cha_ft_iskonto4:float','cha_ft_iskonto5:float',
                  'cha_ft_iskonto6:float','cha_ft_masraf1:float','cha_ft_masraf2:float','cha_ft_masraf3:float','cha_ft_masraf4:float','cha_vergipntr:int','cha_vergi1:float','cha_vergi2:float',
                  'cha_vergi3:float','cha_vergi4:float','cha_vergi5:float','cha_vergi6:float','cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_vergisiz_fl:bit',
@@ -2133,7 +2144,7 @@ var QuerySql =
     },
     MaxCariHarSira : 
     {
-        query: "SELECT ISNULL(MAX(cha_evrakno_sira),0) AS MAXEVRSIRA FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri=@cha_evrakno_seri AND cha_evrak_tip=@cha_evrak_tip" ,
+        query: "SELECT ISNULL(MAX(cha_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri=@cha_evrakno_seri AND cha_evrak_tip=@cha_evrak_tip" ,
         param : ['cha_evrakno_seri','cha_evrak_tip'],
         type : ['string|25','int']
     },
@@ -2254,7 +2265,7 @@ var QuerySql =
                 ",@sck_ilk_hareket_tarihi   --<sck_ilk_hareket_tarihi, datetime,> \n" + 
                 ",@sck_ilk_evrak_seri       --<sck_ilk_evrak_seri, [dbo].[evrakseri_str],> \n" + 
                 ",@sck_ilk_evrak_sira_no    --<sck_ilk_evrak_sira_no, int,> \n" + 
-                ",@sck_ilk_evrak_satir_no   --<sck_ilk_evrak_satir_no, int,> \n" + 
+                ",(SELECT ISNULL(MAX(sck_ilk_evrak_satir_no),-1) + 1 FROM ODEME_EMIRLERI WHERE sck_ilk_evrak_seri = @sck_ilk_evrak_seri AND sck_ilk_evrak_sira_no = @sck_ilk_evrak_sira_no)				                    --<sck_ilk_evrak_sira_no, int,> \n" +
                 ",@sck_son_hareket_tarihi   --<sck_son_hareket_tarihi, datetime,> \n" + 
                 ",@sck_doviz_kur            --<sck_doviz_kur, float,> \n" + 
                 ",@sck_sonpoz               --<sck_sonpoz, tinyint,> \n" + 
@@ -2285,7 +2296,7 @@ var QuerySql =
                 ")",
         param : ['sck_create_user:int','sck_lastup_user:int','sck_firmano:int','sck_subeno:int','sck_tip:int','sck_refno:string|25','sck_borclu:string|25',
                  'sck_vade:date','sck_tutar:float','sck_doviz:int','sck_odenen:float','sck_sahip_cari_cins:int','sck_sahip_cari_kodu:string|25','sck_sahip_cari_grupno:int','sck_nerede_cari_cins:int',
-                 'sck_nerede_cari_kodu:string|25','sck_nerede_cari_grupno:int','sck_ilk_hareket_tarihi:date','sck_ilk_evrak_seri:string|25','sck_ilk_evrak_sira_no:int','sck_ilk_evrak_satir_no:int',
+                 'sck_nerede_cari_kodu:string|25','sck_nerede_cari_grupno:int','sck_ilk_hareket_tarihi:date','sck_ilk_evrak_seri:string|25','sck_ilk_evrak_sira_no:int',
                  'sck_son_hareket_tarihi:date','sck_doviz_kur:float','sck_sonpoz:int','sck_srmmrk:string|25','sck_projekodu:string|25']
     },
     CekHarUpdate:
@@ -2298,7 +2309,11 @@ var QuerySql =
     },
     MaxCekRefNo : 
     {
-        query: "SELECT MAX(CONVERT(INT,SUBSTRING(sck_refno,17,25))) AS REFNO FROM ODEME_EMIRLERI WHERE sck_tip = @sck_tip" ,
+        query: "SELECT TIP + '-000-' + CONVERT(NVARCHAR(20),YEAR(GETDATE())) + '-' +  REPLACE(STR(CONVERT(NVARCHAR(10),ISNULL(REFNO,0)), 8), SPACE(1), '0') AS MAXREFNO " +
+                "FROM (SELECT " +
+                "CASE @sck_tip WHEN 0 THEN 'MC' WHEN 6 THEN 'MK' END AS TIP, " +
+                "MAX(CONVERT(INT,SUBSTRING(sck_refno,17,25))) + 1 AS REFNO " +
+                "FROM ODEME_EMIRLERI WHERE sck_tip = @sck_tip ) AS TBL" ,
         param : ['sck_tip'],
         type : ['int']
     },
