@@ -1788,7 +1788,8 @@ var QuerySql =
     CariHarGetir : 
     {
         query:  "SELECT *, " +
-                "ISNULL((SELECT kas_isim FROM KASALAR WHERE kas_kod = cha_kasa_hizkod),'') AS KASAADI, " +
+                "CASE cha_cinsi WHEN 19 THEN ISNULL((SELECT ban_ismi FROM BANKALAR WHERE ban_kod = cha_kasa_hizkod),'') " +
+                "ELSE ISNULL((SELECT kas_isim FROM KASALAR WHERE kas_kod = cha_kasa_hizkod),'') END AS KASAADI, " +
                 "CONVERT(VARCHAR(10),GETDATE(),112) AS cha_d_kurtar " +
                 "FROM CARI_HESAP_HAREKETLERI " +
                 "WHERE cha_evrakno_seri=@cha_evrakno_seri AND cha_evrakno_sira=@cha_evrakno_sira " +
@@ -1998,7 +1999,7 @@ var QuerySql =
                 ",0												--<cha_miktari, float,> \n" + 
                 ",@cha_meblag									--<cha_meblag, float,> \n" + 
                 ",@cha_aratoplam								--<cha_aratoplam, float,> \n" + 
-                ",@cha_vade										--<cha_vade, int,> \n" + 
+                ",(SELECT CAST(DATEPART(YYYY,@cha_vade) AS [CHAR](4)) + RIGHT('0' + CAST(DATEPART(M,@cha_vade) AS [VARCHAR](2)),2) + RIGHT('0' + CAST(DATEPART(D,@cha_vade) AS [VARCHAR](2)),2))	--<cha_vade, int,> \n" + 
                 ",0												--<cha_Vade_Farki_Yuz, float,> \n" + 
                 ",@cha_ft_iskonto1								--<cha_ft_iskonto1, float,> \n" + 
                 ",@cha_ft_iskonto2								--<cha_ft_iskonto2, float,> \n" + 
@@ -2098,7 +2099,7 @@ var QuerySql =
                  'cha_tarihi:date','cha_tip:int','cha_cinsi:int','cha_normal_Iade:int','cha_tpoz:int','cha_ticaret_turu:int','cha_belge_no:string|25','cha_belge_tarih:date',
                  'cha_aciklama:string|40','cha_satici_kodu:string|25','cha_EXIMkodu:string|25','cha_projekodu:string|25','cha_cari_cins:int','cha_kod:string|25','cha_ciro_cari_kodu:string|25',
                  'cha_d_cins:int','cha_d_kur:float','cha_altd_kur:float','cha_grupno:int','cha_srmrkkodu:string|25','cha_kasa_hizmet:int','cha_kasa_hizkod:string|25','cha_karsidgrupno:int','cha_karsisrmrkkodu:string|25',
-                 'cha_meblag:float','cha_aratoplam:float','cha_vade:int','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float','cha_ft_iskonto4:float','cha_ft_iskonto5:float',
+                 'cha_meblag:float','cha_aratoplam:float','cha_vade:string|10','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float','cha_ft_iskonto4:float','cha_ft_iskonto5:float',
                  'cha_ft_iskonto6:float','cha_ft_masraf1:float','cha_ft_masraf2:float','cha_ft_masraf3:float','cha_ft_masraf4:float','cha_vergipntr:int','cha_vergi1:float','cha_vergi2:float',
                  'cha_vergi3:float','cha_vergi4:float','cha_vergi5:float','cha_vergi6:float','cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_vergisiz_fl:bit',
                  'cha_otvtutari:float','cha_otvvergisiz_fl:bit','cha_oivergisiz_fl:bit','cha_trefno:string|25','cha_sntck_poz:int','cha_e_islem_turu:int']
@@ -2303,15 +2304,20 @@ var QuerySql =
     {
         query:  "UPDATE ODEME_EMIRLERI " +
                 "SET sck_tutar = @sck_tutar " +
-                "WHERE sck_ilk_evrak_seri = @sck_ilk_evrak_seri AND sck_ilk_evrak_sira_no = @sck_ilk_evrak_sira_no " +
-                "AND sck_ilk_evrak_satir_no = @sck_ilk_evrak_satir_no",
-        param : ['sck_tutar:float','sck_ilk_evrak_seri:string|50','sck_ilk_evrak_sira_no:int','sck_ilk_evrak_satir_no:int']
+                "WHERE sck_refno = @sck_refno " ,
+        param : ['sck_tutar:float','sck_refno:string|50']
+    },
+    CekHarDelete:
+    {
+        query:  "DELETE FROM ODEME_EMIRLERI WHERE sck_refno = @sck_refno" ,
+        param : ['sck_refno'],
+        type : ['string|50']
     },
     MaxCekRefNo : 
     {
-        query: "SELECT TIP + '-000-' + CONVERT(NVARCHAR(20),YEAR(GETDATE())) + '-' +  REPLACE(STR(CONVERT(NVARCHAR(10),ISNULL(REFNO,0)), 8), SPACE(1), '0') AS MAXREFNO " +
+        query: "SELECT TIP + '-000-000-' + CONVERT(NVARCHAR(20),YEAR(GETDATE())) + '-' +  REPLACE(STR(CONVERT(NVARCHAR(10),ISNULL(REFNO,0)), 8), SPACE(1), '0') AS MAXREFNO " +
                 "FROM (SELECT " +
-                "CASE @sck_tip WHEN 0 THEN 'MC' WHEN 6 THEN 'MK' END AS TIP, " +
+                "CASE @sck_tip WHEN 0 THEN 'MC' WHEN 1 THEN 'MS' WHEN 6 THEN 'MK' END AS TIP, " +
                 "MAX(CONVERT(INT,SUBSTRING(sck_refno,17,25))) + 1 AS REFNO " +
                 "FROM ODEME_EMIRLERI WHERE sck_tip = @sck_tip ) AS TBL" ,
         param : ['sck_tip'],
@@ -2545,7 +2551,7 @@ var QuerySql =
     //UrunGirisCikis
     IsEmriGetir : 
     {
-        query : "select is_Kod as KODU,is_Ismi AS ADI,is_BaslangicTarihi AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1'"
+        query : "select is_Kod as KODU,is_Ismi AS ADI,CONVERT(NVARCHAR,is_BaslangicTarihi,104) AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1'"
     }, 
     //#region "AKTARIM"
     AdresTbl : 
