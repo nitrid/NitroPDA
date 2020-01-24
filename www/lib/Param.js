@@ -307,7 +307,7 @@ var Param = [
 			"NakitKasa": "KASA1",
 			"KrediKasa": "01",
 			"CekKasa": "CK01",
-			"SenetKasa": "S01",
+			"SenetKasa": "SNT01",
 			"HavaleKasa": "H01",
 			"OdemeKasa": "O01",
 			"EvrakSil": "0"
