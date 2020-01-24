@@ -140,6 +140,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $("#TblStok").jsGrid
         ({
             width: "100%",
+            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,

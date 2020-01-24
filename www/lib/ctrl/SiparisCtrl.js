@@ -138,6 +138,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblCari").jsGrid
         ({
             width: "100%",
+            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -288,6 +289,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblStok").jsGrid
         ({
             width: "100%",
+            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
