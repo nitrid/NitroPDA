@@ -4,6 +4,14 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     let IslemSelectedRow = null;
     let StokSelectedRow = null;
     let ParamName = "";
+
+    $('#MdlRenkBeden').on('hide.bs.modal', function () 
+    {   
+        if($scope.Stok[0].RENK == '' ||  $scope.Stok[0].BEDEN == '')
+        {
+            $scope.BtnTemizle();
+        }
+    });
     function Init()
     {
         UserParam = Param[$window.sessionStorage.getItem('User')];
@@ -32,13 +40,13 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SatirNo = "";
         $scope.CmbEvrakTip = "2";
-        $scope.StokEvrakTip = 0;
 
         $scope.DepoListe = [];
         $scope.IsEmriListe = [];
         $scope.IsMerkeziListe = [];
         $scope.PersonelListe = [];
         $scope.StokListe = [];
+        $scope.BirimListe = [];
         $scope.StokHarListe = [];
         $scope.ProjeListe = [];
 
@@ -154,41 +162,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 align: "center",
                 width: 100
             },
-            {
-                name: "sth_iskonto1",
-                title: "IND1",
-                type: "number",
-                align: "center",
-                width: 200
-            },
-            {
-                name: "sth_iskonto2",
-                title: "IND2",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sth_iskonto3",
-                title: "IND3",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sth_iskonto4",
-                title: "IND4",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sth_iskonto5",
-                title: "IND5",
-                type: "number",
-                align: "center",
-                width: 100
-            }
            ],
             rowClick: function(args)
             {
@@ -231,11 +204,11 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 $scope.Stok = BarkodData;
                 if(UserParam.Sistem.PartiLotKontrol == 1)
                 {
-                    for(i = 0;i < $scope.IsEmriListe.length;i++)
+                    for(i = 0;i < $scope.StokHarListe.length;i++)
                     {   
                         if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
                         {
-                            if($scope.Stok[0].PARTI == $scope.IsEmriListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IsEmriListe[i].sth_lot_no)
+                            if($scope.Stok[0].PARTI == $scope.StokHarListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.StokHarListe[i].sth_lot_no)
                             {
                                 alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
                                 $scope.InsertLock = false;
@@ -252,19 +225,24 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     $scope.Stok[0].Miktar = 0;
                     $scope.Stok[0].TOPMIKTAR = 1;
 
-                    await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
-                    {   
-                        $scope.BirimListe = data; 
-                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
+                    await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[$scope.Stok[0].KODU],function(data)
+                {   
+                    $scope.BirimListe = data; 
+                    $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
 
-                        if($scope.BirimListe.length > 0)
-                        {
-                            $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
-                            $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
-                            $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
-                            $scope.MiktarFiyatValid();
-                        }
-                    });
+                    if($scope.BirimListe.length > 0)
+                    { 
+                        $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
+                        $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
+                        $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
+                    }
+                    else
+                    { //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
+                        $scope.Stok[0].BIRIMPNTR = 1;
+                        $scope.Stok[0].BIRIM = 'ADET';
+                        $scope.Stok[0].CARPAN = 1;
+                    }
+                });
 
                     if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
                     {   
@@ -498,8 +476,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
 
-        $scope.IsEmriListe = pData;
-        $("#TblIslem").jsGrid({data : $scope.IsEmriListe});    
+        $scope.StokHarListeS     = pData;
+        $("#TblIslem").jsGrid({data : $scope.StokHarListe});    
         DipToplamHesapla();
         ToplamMiktarHesapla();
         
@@ -701,7 +679,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         alertify.confirm('Evrağı silmek istediğinize eminmisiniz ?', 
         function()
         { 
-            if($scope.IsEmriListe.length > 0)
+            if($scope.StokHarListe.length > 0)
             {
                 if(UserParam.UrunGirisCikis.EvrakSil == 0)
                 {
@@ -709,7 +687,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     {
                         if(typeof(data.result.err) == 'undefined')
                         {
-                            angular.forEach($scope.IsEmriListe,function(value)
+                            angular.forEach($scope.StokHarListe,function(value)
                             {
                                 db.ExecuteTag($scope.Firma,'BedenHarDelete',[value.sth_Guid,11],function(data)
                                 {
@@ -818,17 +796,27 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     {
         if($scope.CmbEvrakTip == 2)
         {   
-            $scope.Tip = 2;
-            $scope.Cins = 6;
+            $scope.Tip = 0;
+            $scope.Cins = 7;
             $scope.NormalIade = 0;
         }
         else if($scope.CmbEvrakTip == 15)
         {
-            $scope.Tip = 2;
-            $scope.Cins = 6;
+            $scope.Tip = 0;
+            $scope.Cins = 7;
             $scope.NormalIade = 0;
         }
         db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+    }
+    $scope.BirimChange = function()
+    {
+        if($scope.BirimListe.length > 0)
+        {
+            $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
+            $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
+            $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
+            $scope.MiktarFiyatValid();
+        }
     }
     $scope.BtnDuzenle = function ()
     {
@@ -1089,7 +1077,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     $scope.MiktarFiyatValid = function()
     {
         $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
-        $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
         $scope.Stok[0].TOPMIKTAR = $scope.Stok[0].CARPAN * $scope.Miktar
     }
     $scope.MiktarPress = function(keyEvent)
@@ -1170,12 +1157,36 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.IsEmriSecimClick = function()
     {
-        $("#TbIsEmriSecim").addClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbBarkodGiris").removeClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbCariSec").removeClass('active');
-        $("#TbBelgeBilgisi").removeClass('active');
-        $("#TbIslemSatirlari").removeClass('active');
+        if($scope.StokHarListe.length == 0)
+        {
+            $("#TbIsEmriSecim").addClass('active');
+            $("#TbMain").removeClass('active');
+            $("#TbBarkodGiris").removeClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');
+            $("#TbIslemSatirlari").removeClass('active');
+        }        
+        else
+        {
+            alertify.okBtn("Tamam");
+            alertify.alert("İş Emri Seçmeye yetkiniz yok");
+        }
+    }
+    $scope.ScanBarkod = function()
+    {
+        cordova.plugins.barcodeScanner.scan(
+            function (result) 
+            {
+                $scope.Barkod = result.text;
+                StokBarkodGetir($scope.Barkod);
+            },
+            function (error) 
+            {
+                //alert("Scanning failed: " + error);
+            },
+            {
+                prompt : "Barkod Okutunuz",
+                orientation : "portrait"
+            }
+        );
     }   
 } 

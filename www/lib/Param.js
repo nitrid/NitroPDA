@@ -182,7 +182,7 @@ var Param = [
 			"SecimliFiyatListe": "0",
 			"DovizTipi": "-1",
 			"Special": "1",
-			"FiyatGizle" : "0"
+			"FiyatGizle": "0"
 		},
 		"Etiket": {
 			"Etiket": [
@@ -289,20 +289,25 @@ var Param = [
 			"Personel": "",
 			"Proje": "",
 			"EvrakSil": "0",
-			"IsMerkezi": "",
-			"IsMerkeziListe": "1"
+			"IsMerkezi": "01",
+			"IsMerkeziListe": "1",
+			"Cari": "",
+			"CDepo": "1",
+			"CDepoListe": "",
+			"GDepo": "1",
+			"GDepoListe": ""
 		},
 		"TahsilatMakbuzu": {
-			"EvrakTip": "1",
+			"ChaEvrakTip": "1",
 			"Seri": "THS",
 			"BelgeNo": "",
 			"Cari": "",
 			"Sorumluluk": "",
 			"Personel": "",
-			"NakitKasa": "N01",
-			"KrediKasa": "K01",
-			"CekKasa": "C01",
-			"SenetKasa": "S01",
+			"NakitKasa": "KASA1",
+			"KrediKasa": "01",
+			"CekKasa": "CK01",
+			"SenetKasa": "SNT01",
 			"HavaleKasa": "H01",
 			"OdemeKasa": "O01",
 			"EvrakSil": "0"
@@ -331,7 +336,7 @@ var Param = [
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
-			"EslestirmeEksiyeDusme": "0",
+			"EslestirmeEksiyeDusme": "1",
 			"BTYaziciTip": "RAWBT",
 			"BTYaziciAdi": ""
 		},

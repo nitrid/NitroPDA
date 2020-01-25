@@ -42,7 +42,6 @@ function dbengine(config)
             }
         })
     },3600000);
-
     //NORMAL LİSANS KONTROL İŞLEMİ
     lic.LicenseCheck(function(data)
     {

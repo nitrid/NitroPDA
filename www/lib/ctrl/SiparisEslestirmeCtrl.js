@@ -123,6 +123,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
+            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -1148,6 +1149,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0,  //KASAHIZMET
             "", //KASAHIZKOD
             0, //KARSIDGRUPNO
+            "",
             $scope.Stok[0].TOPTUTAR, //MEBLAG
             $scope.Stok[0].TUTAR,    //ARATOPLAM
             0, //VADE
