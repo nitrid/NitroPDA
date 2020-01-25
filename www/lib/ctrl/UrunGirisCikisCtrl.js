@@ -447,10 +447,10 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].RECNO]);
                 }
                 console.log(333333)
-                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.StokEvrakTip],function(data)
+                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(IsEmriData)
                 {    
                     console.log(44444)
-                    $scope.StokHarListe = data;
+                    $scope.StokHarListe = IsEmriData;
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
                         console.log(555555)
@@ -476,7 +476,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
 
-        $scope.StokHarListeS     = pData;
+        $scope.StokHarListe     = pData;
         $("#TblIslem").jsGrid({data : $scope.StokHarListe});    
         DipToplamHesapla();
         ToplamMiktarHesapla();
@@ -629,11 +629,11 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                         TOPMIKTAR : 0
                     }
                 ];
-                $scope.Miktar = 1;            
+                $scope.Miktar = 1;
+            
                 $scope.ToplamMiktar1 = 0;
+
                 $scope.TOPMIKTAR = 1;
-                $scope.CmbIsEmriAra = "0";
-                $scope.TxtIsEmriAra = "";
 
                 db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(data)
                 {
@@ -969,30 +969,22 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
 
         if($scope.TxtIsEmriAra != "")
         {
-            console.log(1)
             if($scope.CmbIsEmriAra == "0")
             {   
-                console.log($scope.CmbIsEmriAra)
-                console.log(2)
                 Adi = $scope.TxtIsEmriAra.replace("*","%").replace("*","%");
             }
             else
             {
-                console.log($scope.CmbIsEmriAra)
-                console.log(3)
                 Kodu = $scope.TxtIsEmriAra.replace("*","%").replace("*","%");
             }
-            console.log(4)
         }
         
         db.GetData($scope.Firma,'IsEmriGetir',[Kodu,Adi],function(data)
         {
-            
-            $scope.IsEmriListe = data;
             console.log(data)
+            $scope.IsEmriListe = data;
             if($scope.IsEmriListe.length > 0)
             {
-                
                 $("#TblEmir").jsGrid({data : $scope.IsEmriListe});  
             }
             else
