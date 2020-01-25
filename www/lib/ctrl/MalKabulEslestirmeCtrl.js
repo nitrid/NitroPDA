@@ -1387,6 +1387,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         
         db.GetData($scope.Firma,'CariGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
+            console.log(data)
             $scope.CariListe = data; 
 
             if($scope.CariListe.length > 0)
