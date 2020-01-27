@@ -123,6 +123,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
+            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -861,7 +862,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
-            0, // İŞEMRİKODU
+            '', //İŞEMRİ KODU
             $scope.Personel,
             0, //HARDOVİZCİNSİ
             1, //HARDOVİZKURU
@@ -1270,6 +1271,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
+            '', //İŞEMRİ KODU
             $scope.Personel,
             $scope.CariDovizCinsi, //HARDOVİZCİNSİ
             $scope.CariDovizKuru, //HARDOVİZKURU

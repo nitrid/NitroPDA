@@ -60,6 +60,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.CmbIsEmriAra = "0";
         $scope.TxtIsEmriAra = ""; 
 
+        $scope.OtoEkle = false;
+        $scope.EvrakLock = false;
         $scope.BarkodLock = false;
     }
     function InitEmirGrid()
@@ -224,6 +226,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     $scope.Stok[0].Satir = 0;
                     $scope.Stok[0].Miktar = 0;
                     $scope.Stok[0].TOPMIKTAR = 1;
+                    $scope.BarkodLock = true;
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[$scope.Stok[0].KODU],function(data)
                 {   
@@ -476,29 +479,18 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
 
-        $scope.StokHarListeS     = pData;
+<<<<<<< HEAD
+        $scope.StokHarListe     = pData;
         $("#TblIslem").jsGrid({data : $scope.StokHarListe});    
         DipToplamHesapla();
+=======
+        $scope.StokHarListe = pData;
+        $("#TblIslem").jsGrid({data : $scope.StokHarListe});
+        $scope.BtnTemizle(); 
+>>>>>>> feb0a00c74a87a5271df1c5782de2e9525a7a52c
         ToplamMiktarHesapla();
         
         $window.document.getElementById("Barkod").focus();
-    }
-    function DipToplamHesapla()
-    {
-        $scope.AraToplam = 0;
-        $scope.ToplamIndirim = 0;
-        $scope.ToplamKdv = 0;
-        $scope.NetToplam = 0;
-        $scope.GenelToplam = 0;
-
-        angular.forEach($scope.IsEmriListe,function(value)
-        {
-            $scope.AraToplam += value.sth_tutar;
-            $scope.ToplamIndirim += (value.sth_iskonto1 + value.sth_iskonto2 + value.sth_iskonto3 + value.sth_iskonto4 + value.sth_iskonto5 + value.sth_iskonto6);
-            $scope.ToplamKdv +=  (value.sth_tutar - (value.sth_iskonto1 + value.sth_iskonto2 + value.sth_iskonto3 + value.sth_iskonto4 + value.sth_iskonto5 + value.sth_iskonto6)) * (value.TOPTANVERGI / 100);
-        });
-        $scope.NetToplam = $scope.AraToplam - $scope.ToplamIndirim;
-        $scope.GenelToplam = $scope.NetToplam + $scope.ToplamKdv;
     }
     function ToplamMiktarHesapla()
     {
@@ -934,10 +926,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         
         BarkodFocus();
     }
-    $scope.MaxSira = async function()
-    {
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
-    }
     $scope.DepoChange = function()
     {
         $scope.DepoListe.forEach(function(item) 
@@ -963,9 +951,9 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         });
     }
     $scope.IsEmriListele = function()
-    {   
+    {
         let Kodu = '';
-        let Adi = '';
+        let Adi = '';   
 
         if($scope.TxtIsEmriAra != "")
         {
@@ -977,12 +965,21 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             {
                 Kodu = $scope.TxtIsEmriAra.replace("*","%").replace("*","%");
             }
+<<<<<<< HEAD
+=======
+            console.log($scope.TxtIsEmriAra)
+>>>>>>> feb0a00c74a87a5271df1c5782de2e9525a7a52c
         }
         
-        db.GetData($scope.Firma,'IsEmriGetir',[Kodu,Adi],function(data)
+        db.GetData($scope.Firma,'IsEmriGetir',[Kodu,Adi],function(IsEmriData)
         {
+<<<<<<< HEAD
             console.log(data)
             $scope.IsEmriListe = data;
+=======
+            $scope.IsEmriListe = IsEmriData;
+            console.log($scope.IsEmriListe)
+>>>>>>> feb0a00c74a87a5271df1c5782de2e9525a7a52c
             if($scope.IsEmriListe.length > 0)
             {
                 $("#TblEmir").jsGrid({data : $scope.IsEmriListe});  
@@ -1002,6 +999,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.IsEmriKodu = $scope.IsEmriListe[pIndex].KODU;
         $scope.IsEmriAdi = $scope.IsEmriListe[pIndex].ADI;
         console.log($scope.IsEmriListe[pIndex].KODU)
+        console.log($scope.IsEmriListe[pIndex].ADI)
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {

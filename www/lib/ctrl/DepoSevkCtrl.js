@@ -140,6 +140,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $("#TblStok").jsGrid
         ({
             width: "100%",
+            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -366,7 +367,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             "",
-            0, // İŞEMRİKODU
+            '', //İŞEMRİKODU
             $scope.PlasiyerKodu,
             0, //HARDOVİZCİNSİ
             0, //HARDOVİZKURU

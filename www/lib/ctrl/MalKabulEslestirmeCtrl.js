@@ -130,6 +130,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
+            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -1048,7 +1049,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
-            0, //ISEMRİKODU
+            '', //İŞEMRİ KODU
             $scope.Personel,
             0, //HARDOVİZCİNSİ
             1, //HARDOVİZKURU
@@ -1183,7 +1184,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
-            0, // İŞEMRİKODU
+            '', //İŞEMRİ KODU
             $scope.Personel,
             0, //HARDOVİZCİNSİ
             0, //HARDOVİZKURU
@@ -2359,6 +2360,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                         0, //SATIR ISKONTO TİP 10
                         0, //CARİCİNSİ
                         $scope.StokHarListe[i].sth_cari_kodu,
+                        '', //İŞEMRİ KODU
                         $scope.StokHarListe[i].sth_plasiyer_kodu,
                         0, //HARDOVİZCİNSİ
                         0, //HARDOVİZKURU
