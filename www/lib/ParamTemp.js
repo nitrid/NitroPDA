@@ -238,7 +238,7 @@ var ParamTemp =
 		},
 		"UrunGirisCikis" :
 		{
-			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"CmbEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
 			"Seri" : {"Title" : "Seri","DefaultValue" : "ISM"},
 			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
 			"IsMerkezi" : {"Title" : "İş Merkezi","DefaultValue" : ""},

@@ -12,7 +12,7 @@
                 <div id="TbMain" class="tab-pane active">
                     <div class="row pb-10">
                         <div class="col-8  px-1">
-                            <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()">
+                            <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
                                 <option value="0">Ürün Giriş Fişi</option>
                                 <option value="1">Üretim Çıkış Fişi</option>
                                 <option value="2">Üretim İade Giriş</option>
