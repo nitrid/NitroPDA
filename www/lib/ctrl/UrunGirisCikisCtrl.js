@@ -39,7 +39,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.NormalIade = 0;
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SatirNo = "";
-        $scope.CmbEvrakTip = "2";
+        $scope.CmbEvrakTip = "0";
 
         $scope.DepoListe = [];
         $scope.IsEmriListe = [];
@@ -63,6 +63,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.OtoEkle = false;
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
+
+        $scope.MiktarEdit = 0;
     }
     function InitEmirGrid()
     {
@@ -479,15 +481,9 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
 
-<<<<<<< HEAD
-        $scope.StokHarListe     = pData;
-        $("#TblIslem").jsGrid({data : $scope.StokHarListe});    
-        DipToplamHesapla();
-=======
         $scope.StokHarListe = pData;
         $("#TblIslem").jsGrid({data : $scope.StokHarListe});
         $scope.BtnTemizle(); 
->>>>>>> feb0a00c74a87a5271df1c5782de2e9525a7a52c
         ToplamMiktarHesapla();
         
         $window.document.getElementById("Barkod").focus();
@@ -739,11 +735,12 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             {
                 if(UserParam.UrunGirisCikis.EvrakSil == 0)
                 {
-                    db.ExecuteTag($scope.Firma,'StokHarSatirDelete',[$scope.IsEmriListe[$scope.IslemListeSelectedIndex].sth_Guid],function(data)
+                    db.ExecuteTag($scope.Firma,'StokHarSatirDelete',[$scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_Guid],function(data)
                     {
+                        console.log($scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_Guid)
                         if(typeof(data.result.err) == 'undefined')
                         {
-                            db.ExecuteTag($scope.Firma,'BedenHarDelete',[$scope.IsEmriListe[$scope.IslemListeSelectedIndex].sth_Guid,11],function(data)
+                            db.ExecuteTag($scope.Firma,'BedenHarDelete',[$scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_Guid,11],function(data)
                             {
                                 if(typeof(data.result.err) != 'undefined')
                                 {
@@ -786,13 +783,19 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.EvrakTipChange = function()
     {
-        if($scope.CmbEvrakTip == 2)
+        if($scope.CmbEvrakTip == "0")
         {   
             $scope.Tip = 0;
             $scope.Cins = 7;
             $scope.NormalIade = 0;
         }
-        else if($scope.CmbEvrakTip == 15)
+        else if($scope.CmbEvrakTip == "1")
+        {
+            $scope.Tip = 0;
+            $scope.Cins = 7;
+            $scope.NormalIade = 0;
+        }
+        else if($scope.CmbEvrakTip == "2")
         {
             $scope.Tip = 0;
             $scope.Cins = 7;
@@ -812,7 +815,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnDuzenle = function ()
     {
-        $scope.MiktarEdit = $scope.IsEmriListe[$scope.IslemListeSelectedIndex].sth_miktar;
+        $scope.MiktarEdit = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar;
         $("#MdlDuzenle").modal('show');
     }
     $scope.BtnDuzenleKaydet = function(pIndex)
@@ -842,10 +845,10 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 0, //SATISKMAS4
                 0, //SATISKMAS5
                 0, //SATISKMAS6
-                $scope.IsEmriListe[pIndex].sth_Guid
+                $scope.StokHarListe[pIndex].sth_Guid
             ],
-            BedenPntr : $scope.IsEmriListe[pIndex].BEDENPNTR,
-            RenkPntr : $scope.IsEmriListe[pIndex].RENKPNTR,
+            BedenPntr : $scope.StokHarListe[pIndex].BEDENPNTR,
+            RenkPntr : $scope.StokHarListe[pIndex].RENKPNTR,
             Miktar : $scope.MiktarEdit,
             Guid :  $scope.IsEmriListe[pIndex].sth_Guid
         };
@@ -957,29 +960,26 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
 
         if($scope.TxtIsEmriAra != "")
         {
+            console.log(1)
             if($scope.CmbIsEmriAra == "0")
             {   
+                console.log(2)
                 Adi = $scope.TxtIsEmriAra.replace("*","%").replace("*","%");
             }
             else
             {
+                console.log(3)
                 Kodu = $scope.TxtIsEmriAra.replace("*","%").replace("*","%");
+                console.log(Kodu)
             }
-<<<<<<< HEAD
-=======
-            console.log($scope.TxtIsEmriAra)
->>>>>>> feb0a00c74a87a5271df1c5782de2e9525a7a52c
+            console.log(4)
         }
+
         
-        db.GetData($scope.Firma,'IsEmriGetir',[Kodu,Adi],function(IsEmriData)
+        db.GetData($scope.Firma,'IsEmriGetir',[Kodu,Adi],function(data)
         {
-<<<<<<< HEAD
-            console.log(data)
             $scope.IsEmriListe = data;
-=======
-            $scope.IsEmriListe = IsEmriData;
-            console.log($scope.IsEmriListe)
->>>>>>> feb0a00c74a87a5271df1c5782de2e9525a7a52c
+
             if($scope.IsEmriListe.length > 0)
             {
                 $("#TblEmir").jsGrid({data : $scope.IsEmriListe});  
@@ -1066,7 +1066,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.MiktarFiyatValid = function()
     {
-        $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
         $scope.Stok[0].TOPMIKTAR = $scope.Stok[0].CARPAN * $scope.Miktar
     }
     $scope.MiktarPress = function(keyEvent)
