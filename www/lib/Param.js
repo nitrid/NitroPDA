@@ -289,12 +289,7 @@ var Param = [
 			"Proje": "",
 			"EvrakSil": "0",
 			"IsMerkezi": "01",
-			"IsMerkeziListe": "1",
-			"Cari": "",
-			"CDepo": "1",
-			"CDepoListe": "",
-			"GDepo": "1",
-			"GDepoListe": "",
+			"IsMerkeziListe": "",
 			"CmbEvrakTip": "1"
 		},
 		"TahsilatMakbuzu": {
