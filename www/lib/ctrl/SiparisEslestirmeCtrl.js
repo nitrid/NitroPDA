@@ -862,7 +862,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
-            0, // İŞEMRİKODU
+            '', //İŞEMRİ KODU
             $scope.Personel,
             0, //HARDOVİZCİNSİ
             1, //HARDOVİZKURU
@@ -1271,6 +1271,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
+            '', //İŞEMRİ KODU
             $scope.Personel,
             $scope.CariDovizCinsi, //HARDOVİZCİNSİ
             $scope.CariDovizKuru, //HARDOVİZKURU

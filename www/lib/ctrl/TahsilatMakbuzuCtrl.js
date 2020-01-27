@@ -37,6 +37,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
         $scope.Vade = moment(new Date()).format("YYYY-MM-DD");
         $scope.Aciklama = "NAKİT KASASI";
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.Saat = moment(new Date()).format("LTS");
 
         $scope.ChaCins = 0;
         $scope.ChaEvrakTip = 1;
@@ -263,6 +264,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
                     $scope.CariHarListe = CariHarGetir;
                     $scope.Tutar = 0;
                     DipToplamHesapla();
+                    FisData(CariHarGetir)
                     $("#TblIslem").jsGrid({data : $scope.CariHarListe});  
                     $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});           
                 });
@@ -321,6 +323,44 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
     {
         parseFloat($scope.Toplam = db.SumColumn($scope.CariHarListe,"cha_meblag")).toFixed(2)
     }
+    function FisData(pData)
+    {
+        try 
+        {
+            $scope.FisDeger = "";
+            $scope.FisDeger = "TARIH      : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI  : " + SpaceLength($scope.CariAdi,35) + "\n" 
+        } 
+        catch (error) 
+        {
+            console.log(error)
+        }
+    }
+    function SpaceLength(pData,pLength)
+    {
+        try 
+        {
+            let x = pLength - pData.toString().length;
+
+            if(pData.toString().length > pLength)
+            {
+                pData = pData.substring(0,25);
+            }
+
+            Space = "";
+
+            for(let i=0; i < x; i++)
+            {
+                Space = Space + " ";
+            }
+
+            return pData + Space
+            
+        } 
+        catch (error) 
+        {
+            console.log(error)
+        }
+    }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {    
         if ( CariSelectedRow ) { CariSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
@@ -334,6 +374,11 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
         $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
+        $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
+        $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
+        $scope.Adres = $scope.CariListe[pIndex].ADRES;
+        $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
+        $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -526,6 +571,8 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Aciklama = data[0].cha_aciklama;
                 $scope.Personel = data[0].cha_satici_kodu;
                 $scope.CariKodu = data[0].cha_kod;
+                $scope.CariAdi = data[0].CARIADI;
+                $scope.Tarih = new Date(data[0].cha_tarihi).toLocaleDateString();
 
                 $scope.CariHarListe = data;
                 $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});
@@ -563,6 +610,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
                 db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = data[0].cha_satici_kodu});
                 
                 DipToplamHesapla();
+                FisData(data)
                 angular.element('#MdlEvrakGetir').modal('hide');
                 alertify.alert($scope.Seri + " - " + $scope.Sira + " " +"Başarılıyla Getirildi.");
             }
@@ -676,6 +724,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
                         {
                             $scope.CariHarListe = data;
                             DipToplamHesapla();
+                            FisData(data)
                             $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});
                             $("#TblIslem").jsGrid({data : $scope.CariHarListe});
                             alertify.alert("Düzenleme İşlemi Başarıyla Gerçekleşti");
@@ -688,6 +737,23 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
                     }
                 });
             } 
+        });
+    }
+    $scope.BtnFisYazdir = function()
+    {
+        let FisDizayn = "";
+
+        FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" + $scope.FisDeger + "\n"
+        FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + $scope.CariBakiye + "\n" + "Nakit Alinan  : " + $scope.Toplam + "\n" + "Kalan Bakiye  : " + parseFloat($scope.CariBakiye - $scope.Toplam).toFixed(2) + "\n"
+        FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+
+        console.log(FisDizayn)
+        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+        {
+            if(pStatus)
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );                
+            }
         });
     }
     $scope.MainClick = function() 

@@ -1788,6 +1788,7 @@ var QuerySql =
     CariHarGetir : 
     {
         query:  "SELECT *, " +
+                "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod=cha_kod) AS CARIADI, " +
                 "CASE cha_cinsi WHEN 19 THEN ISNULL((SELECT ban_ismi FROM BANKALAR WHERE ban_kod = cha_kasa_hizkod),'') " +
                 "ELSE ISNULL((SELECT kas_isim FROM KASALAR WHERE kas_kod = cha_kasa_hizkod),'') END AS KASAADI, " +
                 "CONVERT(VARCHAR(10),GETDATE(),112) AS cha_d_kurtar " +
@@ -2551,7 +2552,10 @@ var QuerySql =
     //UrunGirisCikis
     IsEmriGetir : 
     {
-        query : "select is_Kod as KODU,is_Ismi AS ADI,CONVERT(NVARCHAR,is_BaslangicTarihi,104) AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1'"
+        query : "select is_Kod as KODU,is_Ismi AS ADI,CONVERT(NVARCHAR,is_BaslangicTarihi,104) AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1' AND " +
+        "((ISEMIRLERI.is_Kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((ISEMIRLERI.is_Ismi LIKE  @ADI + '%' ) OR (@ADI = ''))",
+        param : ['KODU','ADI'],
+        type : ['string|25','string|127']
     }, 
     //#region "AKTARIM"
     AdresTbl : 

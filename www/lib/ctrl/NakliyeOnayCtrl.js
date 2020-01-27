@@ -834,6 +834,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                     0, //SATIR ISKONTO TİP 10
                     0, //CARİCİNSİ
                     "",
+                    '', //İŞEMRİ KODU
                     0, //PLASİYER
                     0, //HARDOVİZCİNSİ
                     0, //HARDOVİZKURU
@@ -1101,7 +1102,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                             0, //SATIR ISKONTO TİP 10
                             0, //CARİCİNSİ
                             '', //CARIKOD
-                            0, // İŞEMRİKODU
+                            '', //İŞEMRİ KODU
                             $scope.NakliyeOnayListe[i].sth_plasiyer_kodu,
                             0, //HARDOVİZCİNSİ
                             0, //HARDOVİZKURU
