@@ -347,5 +347,6 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         }
         
         $("#MdlIslemDetay").modal('show');
+        $('#IlkTarih').bootstrapMaterialDatePicker({format: "DD.MM.YYYY",lang: "tr",time:false,date:true,currentDate:new Date()});
     }
 }

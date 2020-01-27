@@ -34,7 +34,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
 
         $scope.Seri = "";
         $scope.Sira = 0; 
-        $scope.EkrakTip = 2;
+        $scope.EvrakTip = 2;
         $scope.CDepo;
         $scope.GDepo;
         $scope.CDepoAdi;
@@ -1216,7 +1216,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             $scope.ProjeListe = data; 
             $scope.Proje = UserParam.DepoSevk.Proje
         });
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EkrakTip],function(data)
+        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
         {
             $scope.Sira = data
         });
