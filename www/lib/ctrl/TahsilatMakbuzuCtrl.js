@@ -797,7 +797,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
         {
             alertify.alert("Kayıtlı Evrak Olmadan İşlem Satırlarına Giremezsiniz.");
         }
-        
     }
     $scope.CariSecClick = function()
     {
