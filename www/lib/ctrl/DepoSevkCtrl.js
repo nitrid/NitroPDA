@@ -51,7 +51,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.PlasiyerKodu = 0;
         $scope.SatirNo = "";
-        $scope.CmbEvrakTip = "2";
+        $scope.CmbEvrakTip = "0";
         
         $scope.CDepoListe = [];
         $scope.GDepoListe = [];
@@ -88,7 +88,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.MiktarEdit = 0;
 
         $scope.TblLoading = true;
-        $scope.EvrakTipChange();
+       // $scope.EvrakTipChange();
         
     }
     function InitIslemGrid()
@@ -413,7 +413,6 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             0,   // FİYATLİSTENO
             0   //NAKLİYEDEPO
         ];
-
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -867,9 +866,9 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             return 'Depolar Arası Satış';
         } 
     }
-    $scope.EvrakTipChange = function()
+ /*   $scope.EvrakTipChange = function()
     {
-        if($scope.CmbEvrakTip == 2)
+        if($scope.CmbEvrakTip == 0)
         {   
             $scope.Tip = 2;
             $scope.Cins = 6;
@@ -882,7 +881,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             $scope.NormalIade = 0;
         }
         db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
-    }
+    } */
     $scope.EvrakGetir = function ()
     {   
         db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
@@ -891,7 +890,6 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             {
                 Init();
                 InitIslemGrid()
-                
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
                 $scope.EvrakTip = data[0].sth_evraktip.toString();
@@ -899,7 +897,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                 $scope.Tarih = new Date(data[0].sth_tarih).toLocaleDateString();
                 $scope.BelgeTarih = new Date(data[0].sth_belge_tarih).toLocaleDateString();
                 $scope.Barkod = "";
-                $scope.CmbEvrakTip = "2";
+                $scope.CmbEvrakTip = "0";
 
                 $scope.Stok = 
                 [
@@ -1171,7 +1169,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = false;
         $scope.Seri = UserParam.DepoSevk.Seri;
         $scope.BelgeNo = UserParam.DepoSevk.BelgeNo;
-        $scope.EvrakTip = UserParam.DepoSevk.EvrakTip;
+        $scope.CmbEvrakTip = UserParam.DepoSevk.EvrakTip;
 
         $scope.Stok = 
         [

@@ -479,7 +479,7 @@ var QuerySql =
                 "pl_son_kullanim_tar AS SKTTARIH " + 
                 "FROM PARTILOT " +
                 "WHERE pl_stokkodu = @pl_stokkodu " +
-                "AND (pl_partikodu = @pl_partikodu OR pl_partikodu = '') AND (pl_lotno = @pl_lotno OR pl_lotno = 0) " +
+                "AND ((pl_partikodu = @pl_partikodu) OR (@pl_partikodu = '')) AND ((pl_lotno = @pl_lotno) OR (@pl_lotno = 0)) " +
                 "ORDER BY pl_partikodu ASC ",
         param : ['pl_stokkodu','DepoNo','pl_partikodu','pl_lotno'],
         type : ['string|25','int','string|25','int']
