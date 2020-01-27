@@ -19,7 +19,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
 
         $scope.Seri = "";
         $scope.Sira = 0;
-        $scope.EvrakTip = 12;
         $scope.BelgeNo = "";
         $scope.Depo;
         $scope.DepoAdi;
@@ -37,6 +36,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.Tip = 0;
         $scope.Cins = 7;
         $scope.NormalIade = 0;
+        $scope.EvrakTip = 12;
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SatirNo = "";
         $scope.CmbEvrakTip = "0";
@@ -523,15 +523,18 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.YeniEvrak = async function()
     {
+        console.log(1)
+        $scope.EvrakLock = false;
         InitEmirGrid();
         InitIslemGrid();
         Init();
         InitStokGrid();
+        $scope.MainClick();
         ParamName = "UrunGirisCikis";
 
         $scope.Seri = UserParam[ParamName].Seri;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
-        $scope.EvrakTipChange();
+        $scope.CmbEvrakTip = UserParam[ParamName].CmbEvrakTip;
 
         $scope.Stok = 
         [
@@ -585,7 +588,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $scope.Sira = data
         });
 
-        $scope.EvrakLock = false;
+        $scope.EvrakTipChange();
     }
     $scope.EvrakGetir = function ()
     {   
@@ -605,8 +608,14 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 $scope.Tarih = new Date(data[0].sth_tarih).toLocaleDateString();
                 $scope.BelgeTarih = new Date(data[0].sth_belge_tarih).toLocaleDateString();
                 $scope.Barkod = "";
-                $scope.CmbEvrakTip = "2";
-
+                if($scope.NormalIade = 1)
+                {
+                    $scope.CmbEvrakTip = "2";
+                }
+                else
+                {
+                    $scope.CmbEvrakTip = "0";
+                }
                 $scope.Stok = 
                 [
                     {
@@ -737,7 +746,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 {
                     db.ExecuteTag($scope.Firma,'StokHarSatirDelete',[$scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_Guid],function(data)
                     {
-                        console.log($scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_Guid)
                         if(typeof(data.result.err) == 'undefined')
                         {
                             db.ExecuteTag($scope.Firma,'BedenHarDelete',[$scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_Guid,11],function(data)
@@ -755,6 +763,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                         
                         if($scope.StokHarListe.length <= 1)
                         {
+                            console.log($scope.StokHarListe)
+                            console.log($scope.YeniEvrak)
                             $scope.YeniEvrak();
                         }
                         else
@@ -783,23 +793,26 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.EvrakTipChange = function()
     {
-        if($scope.CmbEvrakTip == "0")
+        if($scope.CmbEvrakTip == 0)
         {   
             $scope.Tip = 0;
             $scope.Cins = 7;
             $scope.NormalIade = 0;
+            $scope.EvrakTip = 12;
         }
-        else if($scope.CmbEvrakTip == "1")
+        else if($scope.CmbEvrakTip == 1)
         {
             $scope.Tip = 0;
             $scope.Cins = 7;
             $scope.NormalIade = 0;
+            $scope.EvrakTip = 0;
         }
-        else if($scope.CmbEvrakTip == "2")
+        else if($scope.CmbEvrakTip == 2)
         {
             $scope.Tip = 0;
             $scope.Cins = 7;
-            $scope.NormalIade = 0;
+            $scope.NormalIade = 1;
+            $scope.EvrakTip = 12;
         }
         db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
@@ -1098,7 +1111,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
-        $("#TbCariSec").removeClass('active');
         $("#TbIsEmriSecim").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
@@ -1112,7 +1124,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         {
             $("#TbBarkodGiris").addClass('active');
             $("#TbMain").removeClass('active');
-            $("#TbCariSec").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
             $("#TbIsEmriSecim").removeClass('active');
