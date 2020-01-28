@@ -238,15 +238,12 @@ var ParamTemp =
 		},
 		"UrunGirisCikis" :
 		{
-			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"CmbEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
 			"Seri" : {"Title" : "Seri","DefaultValue" : "ISM"},
 			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
 			"IsMerkezi" : {"Title" : "İş Merkezi","DefaultValue" : ""},
-			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},
-			"CDepo" : {"Title" : "Çıkış Depo No","DefaultValue" : "1"},
-			"CDepoListe" : {"Title" : "Çıkış Depo Liste","DefaultValue" : ""},
-			"GDepo" : {"Title" : "Giriş Depo No","DefaultValue" : "1"},
-			"GDepoListe" : {"Title" : "Giriş Depo Liste","DefaultValue" : ""},
+			"Depo" : {"Title" : "Depo No","DefaultValue" : "1"},
+			"DepoListe" : {"Title" : "Depo Liste","DefaultValue" : ""},
 			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
 			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
 			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},

@@ -280,7 +280,6 @@ var Param = [
 			"EksiyeDusme": "0"
 		},
 		"UrunGirisCikis": {
-			"EvrakTip": "0",
 			"Seri": "ISM",
 			"BelgeNo": "",
 			"Depo": "1",
@@ -290,12 +289,8 @@ var Param = [
 			"Proje": "",
 			"EvrakSil": "0",
 			"IsMerkezi": "01",
-			"IsMerkeziListe": "1",
-			"Cari": "",
-			"CDepo": "1",
-			"CDepoListe": "",
-			"GDepo": "1",
-			"GDepoListe": ""
+			"IsMerkeziListe": "",
+			"CmbEvrakTip": "1"
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",
@@ -310,7 +305,8 @@ var Param = [
 			"SenetKasa": "SNT01",
 			"HavaleKasa": "H01",
 			"OdemeKasa": "O01",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"EvrakTip": "0"
 		}
 	},
 	{
@@ -532,7 +528,8 @@ var Param = [
 			"DepoMiktarEtiketBas": "0",
 			"SecimliFiyatListe": "0",
 			"DovizTipi": "-1",
-			"Special": "1"
+			"Special": "1",
+			"FiyatGizle": "0"
 		},
 		"Menu": {
 			"Fiyat Gör Etiket Bas": "1",
@@ -580,6 +577,23 @@ var Param = [
 			"Sorumluluk": "",
 			"Personel": "",
 			"Proje": "",
+			"EvrakSil": "0",
+			"CmbEvrakTip": "0",
+			"IsMerkezi": ""
+		},
+		"TahsilatMakbuzu": {
+			"EvrakTip": "0",
+			"Seri": "THS",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"NakitKasa": "",
+			"KrediKasa": "",
+			"CekKasa": "",
+			"SenetKasa": "",
+			"HavaleKasa": "",
+			"OdemeKasa": "",
 			"EvrakSil": "0"
 		}
 	}
