@@ -1,4 +1,4 @@
-function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
+function IrsaliyeCtrl($scope,$window,$timeout,$location,db,$filter)
 {      
     let CariSelectedRow = null;
     let IslemSelectedRow = null;
@@ -976,7 +976,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         //db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});       
         
         $scope.EvrakTipChange();
-
         BarkodFocus();
     }
     $scope.BtnCariListele = function()

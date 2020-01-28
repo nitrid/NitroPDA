@@ -1,4 +1,4 @@
-function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
+function TahsilatMakbuzuCtrl($scope,$window,$location,db)
 {
     let CariSelectedRow = null;
     let IslemSelectedRow = null;
@@ -430,6 +430,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
         InitIslemGrid();
         InitIslemDetayGrid();
         $scope.MainClick();
+
+        $scope.FatSeri = $location.$$search.FaturaId.split(",",1).pop(1);
+        $scope.FatSira = $location.$$search.FaturaId.split(",",2).pop(1);
+        $scope.FatTip = $location.$$search.FaturaId.split(",",3).pop(1);
 
         $scope.Seri = UserParam.TahsilatMakbuzu.Seri;
         $scope.BelgeNo = UserParam.TahsilatMakbuzu.BelgeNo;
