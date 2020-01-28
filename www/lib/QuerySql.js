@@ -35,9 +35,9 @@ var QuerySql =
     },
     CmbBirimGetir : 
     {
-        query : "SELECT sto_birimID AS BIRIMPNTR, " +
-                "sto_birim_ad AS BIRIM, " +
-                "CASE WHEN sto_birim_katsayi > 0 THEN sto_birim_katsayi ELSE sto_birim_katsayi * -1 END AS KATSAYI " +
+        query : "SELECT sto_birimID AS BIRIMPNTR, " + 
+                "sto_birim_ad AS BIRIM, " + 
+                "CASE WHEN sto_birim_katsayi > 0 THEN sto_birim_katsayi ELSE sto_birim_katsayi * -1 END AS KATSAYI " + 
                 "FROM STOK_BIRIM_TANIMLARI_DIKEY WHERE sto_kod = @sto_kod", 
         param : ['sto_kod'],
         type : ['string|25']

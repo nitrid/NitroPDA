@@ -529,7 +529,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnSiparisListeGetirSec = function()
     {
-        angular.element('#MdlEvrakGetir').modal('hide');
+        angular.element('#MdlEvrakGetir').modal('show');
     }
     $scope.BtnTemizle = function()
     {
@@ -604,7 +604,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         if($scope.GDepo == $scope.CDepo && $scope.SiparisListe.length <= 0)
         {
             alertify.alert("Bu Ekrana Girebilmeniz İçin Sipariş Seçimi Yapılmalı ve Giriş ve Çıkış Depoları Farklı Olmalıdır.");
-            BeepAndConfirmation();
         }
         else
         {
