@@ -43,6 +43,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         $scope.DepoAdi = "";
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Saat = moment(new Date()).format("LTS");
+        $scope.Vade = moment(new Date()).format("YYYY-MM-DD");
         $scope.Sorumluluk = "";
         $scope.SorumlulukAdi = "";
         $scope.Personel = "";
