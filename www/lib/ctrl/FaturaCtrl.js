@@ -461,7 +461,6 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         let Vergi = [0,0,0,0,0,0,0,0,0,0];
         for(let i = 0;i < Vergi.length;i++)
         {
-            console.log(10)
             Vergi[$scope.Stok[0].TOPTANVERGIPNTR - 1] = $scope.Stok[0].KDV;
         } 
 
@@ -1473,6 +1472,16 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                 angular.element('#MdlEvrakGetir').modal('hide');
 
                 alertify.alert("<a style='color:#3e8ef7''>" + $scope.ToplamSatir + " " + "Satır Kayıt Başarıyla Getirildi.. !" + "</a>" );
+
+                
+                if(typeof $location.$$search.FaturaId != 'undefined')
+                {
+                    console.log("SA")
+                    $scope.Seri = $location.$$search.FaturaId.split(",",1).pop(1);
+                    $scope.Sira = $location.$$search.FaturaId.split(",",2).pop(1);
+                    $scope.EvrakTip = $location.$$search.FaturaId.split(",",3).pop(1);
+                    $scope.EvrakGetir();
+                }
 
                 BarkodFocus();
                 FisData(data)
