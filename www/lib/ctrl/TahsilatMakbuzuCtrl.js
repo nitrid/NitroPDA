@@ -431,14 +431,14 @@ function TahsilatMakbuzuCtrl($scope,$window,$location,db)
         InitIslemDetayGrid();
         $scope.MainClick();
 
-        $scope.FatSeri = $location.$$search.FaturaId.split(",",1).pop(1);
-        $scope.FatSira = $location.$$search.FaturaId.split(",",2).pop(1);
-        $scope.FatTip = $location.$$search.FaturaId.split(",",3).pop(1);
-
         $scope.Seri = UserParam.TahsilatMakbuzu.Seri;
         $scope.BelgeNo = UserParam.TahsilatMakbuzu.BelgeNo;
         $scope.ChaEvrakTip = UserParam.TahsilatMakbuzu.ChaEvrakTip;
         $scope.CariKodu = UserParam.TahsilatMakbuzu.Cari;
+
+        console.log(JSON.parse(localStorage.FaturaParam).Seri)
+
+        
 
         await db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
         {
@@ -760,6 +760,11 @@ function TahsilatMakbuzuCtrl($scope,$window,$location,db)
             }
         });
     }
+    /*$scope.BtnFatClick = function()
+    {
+        $scope.FatSeri = localStorage.FaturaParam[0]
+        console.log($scope.FatSeri)
+    }*/
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');

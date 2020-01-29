@@ -139,7 +139,7 @@ var Param = [
 			"EvrakSil": "0"
 		},
 		"SatisIrsaliye": {
-			"EvrakTip": "0",
+			"EvrakTip": "1",
 			"Seri": "IRS",
 			"BelgeNo": "",
 			"Cari": "",
