@@ -761,14 +761,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 $scope.Tarih = new Date(data[0].sth_tarih).toLocaleDateString();
                 $scope.BelgeTarih = new Date(data[0].sth_belge_tarih).toLocaleDateString();
                 $scope.Barkod = "";
-                if($scope.NormalIade = 1)
-                {
-                    $scope.CmbEvrakTip = "2";
-                }
-                else
-                {
-                    $scope.CmbEvrakTip = "0";
-                }
                 $scope.Stok = 
                 [
                     {
@@ -1020,7 +1012,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         }
         else if($scope.CmbEvrakTip == 1)
         {
-            $scope.Tip = 0;
+            $scope.Tip = 1;
             $scope.Cins = 7;
             $scope.NormalIade = 0;
             $scope.EvrakTip = 0;
@@ -1383,7 +1375,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $("#TbBarkodGiris").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
-            $scope.IsEmriListele();
         }        
         else
         {
