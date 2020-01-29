@@ -49,58 +49,85 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
     }
     function InitCariFoy()
     {   
-        $("#TblTahsilatRapor").jsGrid
+        $("#TblCariFoy").jsGrid
         ({
             width: "100%",
-            height: "auto",
+            height: "400",
             updateOnResize: true,
             heading: true,
             selecting: true,
             sorting: true,
             paging: true,
-            data : $scope.TahsilatRapor,
+            data : $scope.CariFoyListe,
             fields: 
             [
                 {
-                    name: "KODU",
-                    title: "KODU",
+                    name: "TARIH",
+                    title: "TARİH",
                     type: "text",
                     align: "center",
                     width: 120
                     
                 },
                 {
-                    name: "ADI",
-                    title: "CARİ ADI",
+                    name: "SERISIRA",
+                    title: "SERİ SIRA",
                     type: "text",
                     align: "center",
                     width: 120
                     
                 },
                 {
-                    name: "BAKIYE",
-                    title: "BAKİYE",
+                    name: "EVRAKTIP",
+                    title: "EVRAK TİP",
                     type: "text",
                     align: "center",
                     width: 180
                 },
+                {
+                    name: "CINSI",
+                    title: "CİNSİ",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+           
+                {
+                    name: "ANADOVIZBORC",
+                    title: "BORÇ",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                },
+                {
+                    name: "ANADOVIZALACAK",
+                    title: "ALACAK",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                },
+                {
+                    name: "ANADOVIZBAKIYE",
+                    title: "BAKİYE",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                },
+             
             ],
-            rowClick: function(args)
-            {
-                $scope.IslemDetayRowClick(args.itemIndex,args.item,this);
-                $scope.$apply();
-            }
         });
     }
     $scope.Init = function()
     {   
-         $scope.Firma = $window.sessionStorage.getItem('Firma');
+        $scope.Firma = $window.sessionStorage.getItem('Firma');
         UserParam = Param[$window.sessionStorage.getItem('User')];
 
+        $scope.PlasiyerKodu = UserParam.Sistem.PlasiyerKodu;
+        $scope.ToplamBakiye = 0;
+        console.log($scope.PlasiyerKodu)
         $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
         InitTahsilatRapor();
         InitCariFoy()
-       $scope.BtnGetir();
 
 
     }
@@ -110,7 +137,11 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0) AS BAKIYE from CARI_HESAPLAR where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0",
+            query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM from CARI_HESAPLAR " +
+            " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = ''))",
+            param:  ['PLASIYERKODU'], 
+            type:   ['string|25'], 
+            value:  [$scope.PlasiyerKodu]    
         }
     
         db.GetDataQuery(TmpQuery,function(Data)
@@ -118,6 +149,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             console.log(Data)
             $scope.IslemListe = Data;
             $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
+            $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
         });
     }
     $scope.IslemDetayRowClick = function(pIndex,pItem,pObj)
@@ -151,7 +183,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
                     "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
                     "[msg_S_0112] AS ORJINALDOVIZ " +
-                    "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
+                    "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 DESC " ,
             param:  ['KODU','ILKTARIH','SONTARIH'],
             type:   ['string|25','date','date',],
             value:  [$scope.CariKodu,$scope.IlkTarih,$scope.SonTarih]
@@ -163,7 +195,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             $scope.CariFoyListe = Data;
             $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
         });
-        
+        $("#MdlIslemDetay").modal('show');
     }
    
 }
