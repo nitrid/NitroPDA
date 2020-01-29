@@ -209,7 +209,7 @@ var Param = [
 			]
 		},
 		"Menu": {
-			"Fiyat Gör Etiket Bas": "1",
+			"Stok Detay": "1",
 			"Sayım Fişi": "1",
 			"Ambar Fişi": "1",
 			"Stok Virman Fişi": "1",

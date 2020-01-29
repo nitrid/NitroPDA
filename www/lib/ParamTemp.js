@@ -267,7 +267,7 @@ var ParamTemp =
 		},
 		"Menu" :
 		{
-			"Fiyat Gör Etiket Bas" : {"Title" : "Fiyat Gör Etiket Bas","DefaultValue" : "1"},
+			"Stok Detay" : {"Title" : "Stok Detay","DefaultValue" : "1"},
 			"Sayım Fişi" : {"Title" : "Sayım Fişi","DefaultValue" : "1"},
 			"Ambar Fişi" : {"Title" : "Ambar Fişi","DefaultValue" : "1"},
 			"Stok Virman Fişi" : {"Title" : "Stok Virman Fişi","DefaultValue" : "1"},
