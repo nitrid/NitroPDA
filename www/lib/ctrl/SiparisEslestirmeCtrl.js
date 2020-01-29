@@ -45,6 +45,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.ToplamSatir = 0;
         $scope.Tarih = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.MalKabulSevkTarihi = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
+        $scope.Vade = moment(new Date()).format("YYYY-MM-DD");
         $scope.BelgeTarih = 0;
         $scope.OdemeNo = "0";
         $scope.Barkod = "";
@@ -1152,7 +1153,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             "",
             $scope.Stok[0].TOPTUTAR, //MEBLAG
             $scope.Stok[0].TUTAR,    //ARATOPLAM
-            0, //VADE
+            $scope.Vade, //VADE
             0, //FTISKONTO1
             0, //FTISKONTO2
             0, //FTISKONTO3

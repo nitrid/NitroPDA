@@ -1,4 +1,4 @@
-function FaturaCtrl($scope,$window,$timeout,db,$filter)
+function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 {
     let CariSelectedRow = null;
     let IslemSelectedRow = null;
@@ -66,6 +66,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         $scope.Adres2 = "";
         $scope.CariVDADI = "";
         $scope.CariVDNO = "";
+        $scope.TahToplam = 0;
 
         //CARİHAREKET
         $scope.ChaEvrakTip = 0;
@@ -124,9 +125,7 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
         $scope.FiyatLock = false;
-
         $scope.TblLoading = true; 
-       
     }
     function InitCariGrid()
     {   
@@ -530,13 +529,11 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
             0, //SNTCKPOZ
             0 //EISLEMTURU
         ];
-        console.log(11)
+
         db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
         {   
-            console.log(12)
             if(typeof InsertResult.result.err == 'undefined')
             {
-                console.log(13)
                 $scope.ChaGuid = InsertResult.result.recordset[0].cha_Guid;
                 $scope.InsertLock = false;
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
@@ -722,6 +719,16 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                             PartiLotEkran();
                         }
                     }
+
+                    if($scope.Stok[0].RENKPNTR != 0) // MAHİR TARAFINDAN GEÇİCİ OLARAK YAPILDI
+                    {
+                        $scope.Stok[0].BEDENPNTR = "1";
+                    }
+                    else if($scope.Stok[0].BEDENPNTR != 0)
+                    {
+                        $scope.Stok[0].RENKPNTR = "1";
+                    }
+
                     if($scope.OtoEkle == true)
                     {
                         $scope.Insert()
@@ -830,18 +837,14 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
 
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
-            console.log(4)
             if(typeof(InsertResult.result.err) == 'undefined')
             {
-                console.log(5)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Data)
                 {   
-                    console.log(6)
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
-                    console.log(7)
                     InsertAfterRefresh(Data);
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
@@ -1390,7 +1393,8 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                 Init();
                 InitCariGrid();
                 InitIslemGrid(); 
-
+                
+                console.log(1)
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
                 $scope.EvrakTip = data[0].sth_evraktip.toString();
@@ -1475,15 +1479,6 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                 alertify.alert("<a style='color:#3e8ef7''>" + $scope.ToplamSatir + " " + "Satır Kayıt Başarıyla Getirildi.. !" + "</a>" );
 
                 
-                if(typeof $location.$$search.FaturaId != 'undefined')
-                {
-                    console.log("SA")
-                    $scope.Seri = $location.$$search.FaturaId.split(",",1).pop(1);
-                    $scope.Sira = $location.$$search.FaturaId.split(",",2).pop(1);
-                    $scope.EvrakTip = $location.$$search.FaturaId.split(",",3).pop(1);
-                    $scope.EvrakGetir();
-                }
-
                 BarkodFocus();
                 FisData(data)
             }
@@ -1672,13 +1667,10 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
                 $scope.InsertLock = true
                 if(typeof $scope.CariHarListe == 'undefined' || $scope.CariHarListe.length == 0 )
                 {   
-                    console.log(1)
                     CariHarInsert(function(pResult)
                     {   
-                        console.log(2)
                         if(pResult)
                         {
-                            console.log(3)
                             StokHarInsert();                        
                         }
                     });
@@ -1953,6 +1945,16 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
             $scope.OdemeNo = '0'
         });
 
+        /*if(typeof $location.$$search.FaturaId != 'undefined') // Fatura Tahsilat Geçişi İçin Yapıldı.
+        {
+            $scope.Seri = $location.$$search.FaturaId.split(",",1).pop(1);
+            $scope.Sira = $location.$$search.FaturaId.split(",",2).pop(1);
+            $scope.EvrakTip = $location.$$search.FaturaId.split(",",3).pop(1);
+            $scope.TahToplam = $location.$$search.FaturaId.split(",",4).pop(1);
+            $scope.EvrakGetir();
+            console.log(1)
+        }*/
+        
         $scope.EvrakTipChange();
         BarkodFocus();
     }
@@ -2173,5 +2175,15 @@ function FaturaCtrl($scope,$window,$timeout,db,$filter)
         window.location.href="intent:"+textEncoded+S+P;
 
         alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
+    }
+    $scope.BtnTahClick = function()
+    {
+        let Param =
+        {
+            "Seri" : $scope.Seri,
+            "Sira" : $scope.Sira,
+            "EvrakTip" : $scope.EvrakTip
+        }
+        localStorage.FaturaParam = JSON.stringify(Param);
     }
 }
