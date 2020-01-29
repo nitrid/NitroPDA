@@ -51,6 +51,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.StokHarListe = [];
         $scope.ProjeListe = [];
         $scope.PartiLotListe = [];
+        $scope.BedenHarListe = [];
 
         $scope.Stok = [];
         $scope.Miktar = 1;
@@ -233,18 +234,20 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     $scope.BarkodLock = true;
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[$scope.Stok[0].KODU],function(data)
-                {   
+                {
                     $scope.BirimListe = data; 
                     $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
 
                     if($scope.BirimListe.length > 0)
                     { 
-                        $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
+                        console.log($scope.BirimListe)
+                        $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;  
                         $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
                         $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
                     }
                     else
                     { //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
+                        console.log(2)
                         $scope.Stok[0].BIRIMPNTR = 1;
                         $scope.Stok[0].BIRIM = 'ADET';
                         $scope.Stok[0].CARPAN = 1;
@@ -590,6 +593,86 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 console.log(InsertResult.result.err);
             }
         });
+    }   
+    function PartiLotEkran()
+    {
+        if($scope.Stok[0].PARTI == '')
+        {
+            if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+            {
+                $scope.LblPartiLotAlert = "";
+                $scope.TxtParti = "";
+                $scope.TxtLot = 0;
+                $scope.SktTarih = new Date().toLocaleDateString();
+                $scope.PartiLotListe = [];
+                $scope.$apply();
+
+                $("#LblPartiLotAlert").hide();
+                $("TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+                $('#MdlPartiLot').modal('show');
+            }
+        }
+    }
+    function BedenHarInsert(pGuid)
+    {
+        let Data =
+        [
+            UserParam.MikroId, // KULLANICI
+            UserParam.MikroId, // KULLANICI
+            9, // BEDEN TİP
+            pGuid, // GUID
+            Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR), // BEDEN NO
+            $scope.Miktar,  // MİKTAR
+            0,  // REZERVASYON MİKTAR
+            0  // REZERVASYON TESLİM MİKTAR
+        ];
+        
+        db.ExecuteTag($scope.Firma,'BedenHarInsert',Data,function(data)
+        {   
+            if(typeof(data.result.err) == 'undefined')
+            {
+                db.GetData($scope.Firma,'SipBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,9],function(BedenData)
+                {
+                    $scope.BedenHarListe = BedenData;
+                });
+            }
+            else
+            {
+                console.log(data.result.err);
+            }
+        });
+    }
+    function BedenHarUpdate(pData)
+    {
+        db.ExecuteTag($scope.Firma,'BedenHarUpdate',pData,function(data)
+        {
+            if(typeof(data.result.err) == 'undefined')
+            {
+                db.GetData($scope.Firma,'SipBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,9],function(BedenData)
+                {
+                    $scope.BedenHarListe = BedenData;
+                });
+            }
+            else
+            {
+                console.log(data.result.err);
+            }
+        });
+    }
+    function Kirilim(pBeden,pRenk)
+    {
+        if(pBeden != 0 && pRenk != 0)
+        {
+            return ((parseInt(pRenk) - 1) * 40) + parseInt(pBeden);
+        }
+        else if(pRenk == 0)
+        {
+            return pBeden;
+        }
+        else if(pBeden == 0)
+        {
+            return (parseInt(pRenk) - 1) * 40 + 1;
+        }
     }
     $scope.YeniEvrak = async function()
     {
@@ -605,7 +688,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.Seri = UserParam[ParamName].Seri;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.CmbEvrakTip = UserParam[ParamName].CmbEvrakTip;
-        $scope.IsMerkeziAdi = UserParam[ParamName].IsMerkezi;
 
         $scope.Stok = 
         [
@@ -783,25 +865,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             }
         }
         ,function(){});
-    }
-    function PartiLotEkran()
-    {
-        if($scope.Stok[0].PARTI == '')
-        {
-            if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
-            {
-                $scope.LblPartiLotAlert = "";
-                $scope.TxtParti = "";
-                $scope.TxtLot = 0;
-                $scope.SktTarih = new Date().toLocaleDateString();
-                $scope.PartiLotListe = [];
-                $scope.$apply();
-
-                $("#LblPartiLotAlert").hide();
-                $("TblPartiLot").jsGrid({data : $scope.PartiLotListe});
-                $('#MdlPartiLot').modal('show');
-            }
-        }
     }
     $scope.BtnPartiLotGetir = function()
     {   
@@ -1148,6 +1211,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             else
             {
                alertify.alert("İş Emri bulunamadı")
+               $("#TblCari").jsGrid({data : $scope.CariListe});
             }
         });
     }
@@ -1157,6 +1221,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         IsEmriSelectedRow = $row;
+        
         $scope.IsEmriKodu = $scope.IsEmriListe[pIndex].KODU;
         $scope.IsEmriAdi = $scope.IsEmriListe[pIndex].ADI;
     }
@@ -1260,6 +1325,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.MainClick = function() 
     {
+        $scope.IsEmriListe = "";
         $("#TbMain").addClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
@@ -1317,6 +1383,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $("#TbBarkodGiris").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
+            $scope.IsEmriListele();
         }        
         else
         {

@@ -126,6 +126,10 @@ angular.module("app",
     .when("/TahsilatMakbuzu",
     {
         templateUrl : "html/evraklar/TahsilatMakbuzu.html"
+    })
+    .when("/YapilacakTahsilatlar",
+    {
+        templateUrl : "html/rapor/YapilacakTahsilatlar.html"
     });
 });
 

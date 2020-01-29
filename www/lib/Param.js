@@ -290,7 +290,7 @@ var Param = [
 			"EvrakSil": "0",
 			"IsMerkezi": "01",
 			"IsMerkeziListe": "",
-			"CmbEvrakTip": "1"
+			"CmbEvrakTip": "0"
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",
