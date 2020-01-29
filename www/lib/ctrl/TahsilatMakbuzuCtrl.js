@@ -436,10 +436,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$location,db)
         $scope.ChaEvrakTip = UserParam.TahsilatMakbuzu.ChaEvrakTip;
         $scope.CariKodu = UserParam.TahsilatMakbuzu.Cari;
 
-        console.log(JSON.parse(localStorage.FaturaParam).Seri)
-
-        
-
         await db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
         {
             $scope.SorumlulukListe = data; 
@@ -760,11 +756,13 @@ function TahsilatMakbuzuCtrl($scope,$window,$location,db)
             }
         });
     }
-    /*$scope.BtnFatClick = function()
+    $scope.BtnFatClick = function()
     {
-        $scope.FatSeri = localStorage.FaturaParam[0]
-        console.log($scope.FatSeri)
-    }*/
+        JSON.parse(localStorage.FaturaParam).Seri
+
+
+        localStorage.FaturaParam = JSON.stringify(Param);
+    }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');

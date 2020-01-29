@@ -41,14 +41,7 @@
                         <div class="col-5 px-0 text-info"><label class="form-control-label float-right">Tarih :</label></div>
                         <div class="col-7 px-0 text-truncate"><label class="form-control-label pl-10">{{Tarih}}</label></div>
                     </div>
-                    <div class="row py-10">
-                        <div class="col-md-2 col-lg-2 col-sm-4 offset-sm-1 offset-lg-2 ">
-                            <a href="#!SatisFatura"><button class="btn btn-block btn-primary h-60" ng-click="BtnFatClick()">
-                                <i class="fas fa-file-invoice-dollar"></i>
-                            </button></a>
-                        </div>
-                    </div>
-                    <div class="row py-10">
+                    <div class="row pt-50">
                         <div class="col-6">
                             <button class="btn btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
                         </div>
@@ -215,7 +208,7 @@
                         <div id="TblIslemSatirlari"></div>
                     </div>
                     <div class="row pt-20">
-                        <div class="col-4">
+                        <div class="col-3 px-5">
                             <div class="row">
                                 <div class="col-12">
                                     <button class="btn btn-block btn-primary h-60">
@@ -224,7 +217,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-8">
+                        <div class="col-3 px-5">
+                            <div class="row">
+                                <div class="col-12">
+                                    <a href="#!SatisFatura"><button class="btn btn-block btn-primary h-60" ng-click="BtnFatClick()">
+                                        <b>F</b>
+                                    </button></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
                             <div class="row">
                                 <div class="col-12">
                                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam :</span> {{Toplam | number:2}}</h5>

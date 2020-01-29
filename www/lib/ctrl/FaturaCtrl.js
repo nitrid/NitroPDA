@@ -2176,7 +2176,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 
         alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
     }
-    $scope.TahClick = function()
+    $scope.BtnTahClick = function()
     {
         let Param =
         {
@@ -2185,7 +2185,5 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             "EvrakTip" : $scope.EvrakTip
         }
         localStorage.FaturaParam = JSON.stringify(Param);
-
-        console.log(JSON.parse(localStorage.FaturaParam).Seri)
     }
 }
