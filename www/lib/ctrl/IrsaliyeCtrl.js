@@ -1,4 +1,4 @@
-function IrsaliyeCtrl($scope,$window,$timeout,$location,db,$filter)
+function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 {      
     let CariSelectedRow = null;
     let IslemSelectedRow = null;
@@ -429,6 +429,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     function BedenHarInsert(pGuid)
     {
+        console.log(1)
         let Data =
         [
             UserParam.MikroId, // KULLANICI
@@ -443,6 +444,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,$location,db,$filter)
         
         db.ExecuteTag($scope.Firma,'BedenHarInsert',Data,function(data)
         {   
+            console.log(2)
             if(typeof(data.result.err) == 'undefined')
             {   
                 db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,11],function(BedenData)
@@ -764,7 +766,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,$location,db,$filter)
 
                     if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
                     {   
-                        console.log($scope.Stok[0])
                         if($scope.Stok[0].BEDENKODU != '' && $scope.Stok[0].RENKKODU != '')
                         {   
                             $('#MdlRenkBeden').modal("show");
@@ -779,7 +780,17 @@ function IrsaliyeCtrl($scope,$window,$timeout,$location,db,$filter)
                                 $scope.Stok[0].BEDENPNTR = "1";
                             });
                         }
-                    } 
+                    }
+                    
+                    if($scope.Stok[0].RENKPNTR != 0) // MAHİR TARAFINDAN GEÇİCİ OLARAK YAPILDI
+                    {
+                        $scope.Stok[0].BEDENPNTR = "1";
+                    }
+                    else if($scope.Stok[0].BEDENPNTR != 0)
+                    {
+                        $scope.Stok[0].RENKPNTR = "1";
+                    }
+
                     if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     {
                         if($scope.Stok[0].PARTI !='')
@@ -1703,7 +1714,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,$location,db,$filter)
                 
                 $scope.IrsaliyeListe = data;
                 $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});  
-                console.log($scope.IrsaliyeListe)
                 DipToplamHesapla();
                 ToplamMiktarHesapla()
                 

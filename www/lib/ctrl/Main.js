@@ -5,6 +5,7 @@
 
     function MenuOlustur(MenuData)
     {   
+        console.log(MenuData)
         let HtmlText = "<li class='site-menu-category'>" + MenuData.Menu.Name + "</li>";
         
         for(i = 0;i < MenuData.Menu.Item.length;i++)
