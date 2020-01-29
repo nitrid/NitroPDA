@@ -237,7 +237,7 @@ var Param = [
 			"Aktarim": "1",
 			"EvrakGonder": "1",
 			"Cari Hesap Hareket": "1",
-			"Cari Hesap Bakiye": "1",
+			"Yapilacak Tahsilatlar": "1",
 			"Stok Rapor": "1",
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1"

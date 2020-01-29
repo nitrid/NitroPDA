@@ -295,7 +295,7 @@ var ParamTemp =
 			"Aktarim" : {"Title" : "Aktarim","DefaultValue" : "1"},
 			"EvrakGonder" : {"Title" : "EvrakGonder","DefaultValue" : "1"},
 			"Cari Hesap Hareket" : {"Title" : "Cari Hesap Hareket","DefaultValue" : "1"},
-			"Cari Hesap Bakiye" : {"Title" : "Cari Hesap Bakiye","DefaultValue" : "1"},
+			"Yapilacak Tahsilatlar" : {"Title" : "Yapilacak Tahsilatlar","DefaultValue" : "1"},
 			"Stok Rapor" : {"Title" : "Stok Rapor","DefaultValue" : "1"},
 			"Cari Secimli Siparis Raporu" : {"Title" : "Cari Secimli Siparis Raporu","DefaultValue" : "1"},
 			"Cari Secimli Siparis Durum Raporu" : {"Title" : "Cari Secimli Siparis Durum Raporu","DefaultValue" : "1"}
