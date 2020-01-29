@@ -116,7 +116,7 @@ function CariHesapHareketCtrl($scope,$window,db)
         
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = "";
-        $scope.IlkTarih = moment("01.01." + new Date().getFullYear()).format("DD.MM.YYYY");
+        $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Bakiye = 0;
         
