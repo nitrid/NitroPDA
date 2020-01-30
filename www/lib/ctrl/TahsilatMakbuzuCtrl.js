@@ -1,4 +1,4 @@
-function TahsilatMakbuzuCtrl($scope,$window,$location,db)
+function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 {
     let CariSelectedRow = null;
     let IslemSelectedRow = null;
@@ -323,6 +323,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$location,db)
     {
         parseFloat($scope.Toplam = db.SumColumn($scope.CariHarListe,"cha_meblag")).toFixed(2)
     }
+    function BarkodFocus()
+    {
+        $timeout( function(){$window.document.getElementById("Tutar").focus();},100);  
+    }
     function FisData(pData)
     {
         try 
@@ -435,6 +439,28 @@ function TahsilatMakbuzuCtrl($scope,$window,$location,db)
         $scope.BelgeNo = UserParam.TahsilatMakbuzu.BelgeNo;
         $scope.ChaEvrakTip = UserParam.TahsilatMakbuzu.ChaEvrakTip;
         $scope.CariKodu = UserParam.TahsilatMakbuzu.Cari;
+
+        if(typeof (localStorage.FaturaParam) != 'undefined')
+        {
+            $scope.CariKodu = JSON.parse(localStorage.FaturaParam).CariKodu
+        }
+
+        if($scope.CariKodu != "")
+        {       
+            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
+            {
+                $scope.CariListe = data;
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+
+                let Obj = $("#TblCari").data("JSGrid");
+                let Item = Obj.rowByItem(data[0]);
+                
+                $scope.CariListeRowClick(0,Item,Obj);
+                
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+            });
+        }
 
         await db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
         {
@@ -758,10 +784,22 @@ function TahsilatMakbuzuCtrl($scope,$window,$location,db)
     }
     $scope.BtnFatClick = function()
     {
-        JSON.parse(localStorage.FaturaParam).Seri
+        if(typeof (localStorage.FaturaParam) != 'undefined')
+        {
+            $scope.FatSeri = JSON.parse(localStorage.FaturaParam).Seri
+            $scope.FatSira = JSON.parse(localStorage.FaturaParam).Sira
+            $scope.FatTip = JSON.parse(localStorage.FaturaParam).EvrakTip
 
+            let Param =
+            {
+                "Seri" : $scope.FatSeri,
+                "Sira" : $scope.FatSira,
+                "EvrakTip" : $scope.FatTip,
+                "Toplam" : $scope.Toplam
+            }
 
-        localStorage.FaturaParam = JSON.stringify(Param);
+            localStorage.FaturaParam = JSON.stringify(Param);
+        }
     }
     $scope.MainClick = function() 
     {
@@ -785,6 +823,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$location,db)
             $("#TbCariSec").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
+            BarkodFocus();
         }
         else
         {

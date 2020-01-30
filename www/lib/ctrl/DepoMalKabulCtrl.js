@@ -53,12 +53,14 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.GDepoListe = [];
         $scope.StokHarListe = [];
         $scope.BirimListe = [];
-        $scope.SiparisListe = [];
+        $scope.DepoSiparisListe = [];
         $scope.SiparisListeGetir = [];
         $scope.StokListe = [];
+        $scope.BedenHarListe = [];
         
         $scope.Stok = [];
         $scope.Miktar = 1;
+        $scope.ToplamMiktar = 0;
 
         $scope.MiktarLock = false;
         $scope.OtoEkle = false;
@@ -356,7 +358,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.ToplamMiktar = 0;
         $scope.ToplamSatir = 0;
 
-        angular.forEach($scope.SiparisListe,function(value)
+        angular.forEach($scope.DepoSiparisListe,function(value)
         {
             $scope.ToplamMiktar += value.ssip_miktar;
             $scope.ToplamSatir += 1 ;
@@ -473,6 +475,63 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         
         BarkodFocus();
         $scope.EvrakTipChange();
+    }
+    $scope.EvrakGetir = function()
+    {
+        db.GetData($scope.Firma,'DepoSiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
+        {
+            console.log($scope.Seri,"seri")
+            console.log($scope.Sira,"sira")
+            console.log($scope.EvrakTip,"EvrakTip")
+            console.log(data.length)
+            if(data.length > 0)
+            {
+                console.log(1)
+                Init();
+                InitIslemGrid();
+
+                $scope.Seri = data[0].ssip_evrakno_seri;
+                $scope.Sira = data[0].ssip_evrakno_sira;
+
+                $scope.Tarih = new Date(data[0].ssip_belge_tarih).toLocaleDateString();
+                $scope.Stok = 
+                [
+                    {
+                        BIRIM : '',
+                        Miktar :0,
+                        Miktar2:0,
+                        BIRIMPNTR : 0, 
+                        TOPMIKTAR : 0
+                    }
+                ];
+                $scope.Miktar = 1;
+            
+                $scope.TOPMIKTAR = 1;
+
+                
+                db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(e){$scope.CDepoListe = e; $scope.CDepo = data[0].ssip_girdepo.toString()});
+                db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(e){$scope.GDepoListe = e; $scope.GDepo = data[0].ssip_cikdepo.toString()});
+                db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].ssip_sormerkezi});
+
+                $scope.DepoSiparisListe = data;
+                $("#TblIslem").jsGrid({data : $scope.DepoSiparisListe});  
+            
+                ToplamMiktarHesapla();
+
+                $scope.EvrakLock = true;
+                $scope.BarkodLock = false;
+
+                angular.element('#MdlEvrakGetir').modal('hide');
+                alertify.alert("<a style='color:#3e8ef7''>" + $scope.ToplamSatir + " " + "- Satır Evrak Getirildi !" + "</a>" );
+                BarkodFocus();
+            }
+            else
+            {
+                angular.element('#MdlEvrakGetir').modal('hide');
+                alertify.okBtn("Tamam");
+                alertify.alert("Belge Bulunamadı !");
+            }
+        });
     }
     $scope.EvrakTipChange = async function()
     {
@@ -809,7 +868,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function() 
     {
-        if($scope.GDepo == $scope.CDepo || $scope.SiparisListe.length <= 0)
+        if($scope.GDepo == $scope.CDepo && $scope.SiparisListe.length <= 0 || $scope.GDepo != $scope.CDepo && $scope.SiparisListe.length <= 0) 
         {
             alertify.alert("Bu Ekrana Girebilmeniz İçin Sipariş Seçimi Yapılmalı ve Giriş ve Çıkış Depoları Farklı Olmalıdır.");
         }
