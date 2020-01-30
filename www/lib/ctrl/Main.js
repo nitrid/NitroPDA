@@ -68,8 +68,18 @@
         }
         return false;
     }
+    $scope.BtnMain = function()
+    {
+        var url = "main.html";
+        $window.location.href = url;
+    }
     $scope.Init = function()
     {
+        
+        if(typeof localStorage.FaturaParam != 'undefined')
+        {
+            localStorage.removeItem("FaturaParam");
+        }
         if(localStorage.mode == 'true')
         {
             db.Connection(function(data)
