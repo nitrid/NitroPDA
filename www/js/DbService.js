@@ -681,10 +681,9 @@ angular.module('app.db', []).service('db',function($rootScope)
         // FİYAT GETİR
         await _GetPromiseTag(pFirma,'FiyatGetir',FiyatParam,function(FiyatData)
         {   
-            BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
-
             if(FiyatData.length > 0)
             {   
+                BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
                 BarkodData[0].FIYAT = FiyatData[0].FIYAT;
             }
             else
@@ -694,7 +693,7 @@ angular.module('app.db', []).service('db',function($rootScope)
         });        
 
         // İSKONTO MATRİS
-        if(pEvrParam.IskontoMatris == "1" && pEvrParam.SonAlisFiyati == "0" && pEvrParam.AlisSarti == "0" && pEvrParam.SonSatisFiyati == "0" && pEvrParam.SatisSarti == "0")
+        if(pEvrParam.IskontoMatris == "1" && pEvrParam.AlisSarti == "0" && pEvrParam.SatisSarti == "0")
         {
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
             {

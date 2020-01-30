@@ -99,7 +99,7 @@ function CariHesapHareketCtrl($scope,$window,db)
                     width: 200
                 },
                 {
-                    name: "ANADOVIZBORCBAKIYE",
+                    name: "ANADOVIZBAKIYE",
                     title: "BAKİYE",
                     type: "text",
                     align: "center",
@@ -116,7 +116,7 @@ function CariHesapHareketCtrl($scope,$window,db)
         
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = "";
-        $scope.IlkTarih = moment("01.01." + new Date().getFullYear()).format("DD.MM.YYYY");
+        $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Bakiye = 0;
         
@@ -172,8 +172,8 @@ function CariHesapHareketCtrl($scope,$window,db)
                     "msg_S_0100 AS BA, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
-                    "CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))) AS ANADOVIZBAKIYE, " +
-                    "CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))) AS ANADOVIZBORCBAKIYE, " +
+                    "CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2)))  AS ANADOVIZBAKIYE, " +
+                    "ROUND(CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))),2) AS ANADOVIZBORCBAKIYE, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +

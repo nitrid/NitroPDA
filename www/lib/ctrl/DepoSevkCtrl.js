@@ -122,6 +122,20 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                 width: 100
             },
             {
+                name: "sth_parti_kodu",
+                title: "PARTI",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "sth_lot_no",
+                title: "LOT",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
                 name: "MIKTAR2",
                 title: "MIKTAR2",
                 type: "text",
@@ -423,7 +437,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                     {   
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
-                    InsertAfterRefresh(DepoSevkData);     
+                    InsertAfterRefresh(DepoSevkData);   
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
                     {

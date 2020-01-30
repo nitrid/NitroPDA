@@ -1390,13 +1390,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         if(pTip == 0)
         {
             this['IskTutar' + pIndex] = TmpTutar * (this['IskYuzde' + pIndex] / 100);
-            this['IskTutar' + pIndex] = $filter('number')(this['IskTutar' + pIndex],2);
+            this['IskTutar' + pIndex] = $filter('number')(this['IskTutar' + pIndex],4);
 
         }
         else
         {
             this['IskYuzde' + pIndex] = (100 * this['IskTutar' + pIndex]) / TmpTutar;
-            this['IskYuzde' + pIndex] = $filter('number')(this['IskYuzde' + pIndex],2);
+            this['IskYuzde' + pIndex] = $filter('number')(this['IskYuzde' + pIndex],4);
         }
 
         for(i = pIndex;i < 6;i++)
@@ -1410,7 +1410,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 this['IskTplTutar' + i] = this['IskTplTutar' + (i-1)] - this['IskTutar' + i];
             }
 
-            this['IskTplTutar' + i] = $filter('number')(this['IskTplTutar' + i],2);
+            this['IskTplTutar' + i] = $filter('number')(this['IskTplTutar' + i],4);
 
         }
     }

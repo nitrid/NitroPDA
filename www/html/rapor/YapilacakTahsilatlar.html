@@ -8,21 +8,11 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4 col-md-2 text-primary px-1"><div class="col-form-label px-1 float-left  py-2"> Tarih:</div></div>
-        <div class="col-sm-8 col-md-3 px-1">
-            <div class="input-group input-group-icon">
-                <div class="input-group-prepend">
-                    <div class="input-group-text">
-                        <span class="icon wb-calendar" aria-hidden="true"></span>
-                    </div>
-                </div>
-                <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
-            </div>
-        </div>
+        <div class="col-sm-12 col-md-12 text-primary px-1"><div class="col-form-label px-1 float-left  py-2"> Toplam Bakiye : {{ToplamBakiye}}</div></div>
     </div>
     <div class="row py-5">
         <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">Getir</button>
+            <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">RAPOR AL</button>
         </div>
     </div>
     <div id="TblTahsilatRapor" class="pt-5"></div>
@@ -34,11 +24,11 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">X</span>
                         </button>
-                        <h4 class="modal-title">Evrak Detayı</h4>
+                        <h4 class="modal-title">Cari Haraketleri</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div id="TblIslemDetay" class="pt-5 pb-5"></div>
+                            <div id="TblCariFoy" class="pt-5 pb-5"></div>
                         </div>
                     </div>
                 </div>
