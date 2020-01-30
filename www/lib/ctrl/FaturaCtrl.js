@@ -66,7 +66,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.Adres2 = "";
         $scope.CariVDADI = "";
         $scope.CariVDNO = "";
-        $scope.TahToplam = 0;
 
         //CARİHAREKET
         $scope.ChaEvrakTip = 0;
@@ -987,12 +986,20 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.FisDeger = "";
         $scope.FisData = "";
 
-        $scope.FisDeger = SpaceLength($scope.CariKodu,35) + $scope.Seri + "-" + $scope.Sira + "\n" + SpaceLength($scope.CariAdi,35) + $scope.Tarih +"\n" + "Adres: " +SpaceLength($scope.Adres1,28) + $scope.Saat + "\n"  + "Adres2: " + SpaceLength($scope.Adres2,40) + "\n" + SpaceLength($scope.Adres,40) + "\n" +"Vergi Dairesi: "+SpaceLength($scope.CariVDADI,45) + "\n" + "Vergi No: "+ $scope.CariVDNO
+       try 
+       {
+            $scope.FisDeger = "";
+            $scope.FisDeger = "TARIH      : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI  : " + SpaceLength($scope.CariAdi,35) + "\n" 
 
-        for(let i=0; i < pData.length; i++)
-        {
-            $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,27) + " " + SpaceLength(pData[i].MIKTAR,7) + SpaceLength(parseFloat(pData[i].FIYAT,2),9) + SpaceLength(parseFloat(pData[i].sth_tutar,2),6) + "\n";
-        }
+            for(let i=0; i < pData.length; i++)
+            {
+                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,25) + "       " + SpaceLength(pData[i].BIRIM,4) + SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),6) + " " + SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),8) + "\n";
+            } 
+       } 
+       catch (error) 
+       {
+           console.log(error)
+       }
     }
     function SpaceLength(pData,pLength)
     {
@@ -1394,7 +1401,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 InitCariGrid();
                 InitIslemGrid(); 
                 
-                console.log(1)
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
                 $scope.EvrakTip = data[0].sth_evraktip.toString();
@@ -1478,6 +1484,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 
                 alertify.alert("<a style='color:#3e8ef7''>" + $scope.ToplamSatir + " " + "Satır Kayıt Başarıyla Getirildi.. !" + "</a>" );
 
+                if(typeof localStorage.FaturaParam != 'undefined')
+                {
+                    localStorage.removeItem("FaturaParam");
+                }
                 
                 BarkodFocus();
                 FisData(data)
@@ -1945,15 +1955,14 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.OdemeNo = '0'
         });
 
-        /*if(typeof $location.$$search.FaturaId != 'undefined') // Fatura Tahsilat Geçişi İçin Yapıldı.
+        if(typeof (localStorage.FaturaParam) != 'undefined') // Fatura Tahsilat Geçişi İçin Yapıldı.
         {
-            $scope.Seri = $location.$$search.FaturaId.split(",",1).pop(1);
-            $scope.Sira = $location.$$search.FaturaId.split(",",2).pop(1);
-            $scope.EvrakTip = $location.$$search.FaturaId.split(",",3).pop(1);
-            $scope.TahToplam = $location.$$search.FaturaId.split(",",4).pop(1);
+            $scope.Seri = JSON.parse(localStorage.FaturaParam).Seri;
+            $scope.Sira = JSON.parse(localStorage.FaturaParam).Sira;
+            $scope.EvrakTip = JSON.parse(localStorage.FaturaParam).EvrakTip;
+            $scope.TahToplam = JSON.parse(localStorage.FaturaParam).Toplam;
             $scope.EvrakGetir();
-            console.log(1)
-        }*/
+        }
         
         $scope.EvrakTipChange();
         BarkodFocus();
@@ -2161,20 +2170,27 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     $scope.BtnFisYazdir = function()
     {
-        let FisDizayn = "";
+        if(typeof ($scope.TahToplam) == "undefined")
+        {
+            $scope.TahToplam = 0;
+        }
 
-        FisDizayn =  $scope.FisDeger + "\n" + "----------------------------------------------" + "\n" + "URUN ADI                  "+ " MIKTAR "+ " FIYAT  " + " TUTAR" + "\n" + $scope.FisData + "\n" + "----------------------------------------------" + "\n" + " " + "\n"
-        FisDizayn = FisDizayn + "                          Ara Toplam : " + $scope.AraToplam + "\n"  +"                      Toplam Indirim : " + $scope.ToplamIndirim + "\n" + "                          Net Toplam : " + $scope.NetToplam + "\n" + "                           ToplamKdv : " + $scope.ToplamKdv + "\n" + "                        Genel Toplam : " + $scope.GenelToplam + "\n"
+        let FisDizayn = "";
+        let GenelToplam = parseFloat($scope.GenelToplam + $scope.CariBakiye).toFixed(2);
+        let KalanBakiye = parseFloat(GenelToplam - $scope.TahToplam).toFixed(2);
+
+        FisDizayn = "                  BILGI FISI" + "\n" + "                                             -" + "\n" + $scope.FisDeger + "\n" + "                                             -" + "\n" + "URUN ADI                    "+ " ADET" + " FIYAT" + " TUTAR" + "\n" + $scope.FisData + "\n" + "                                            -" + "\n" + " " + "\n"
+        FisDizayn = FisDizayn + "                           ToplamKdv : " + $scope.ToplamKdv.toFixed(2) + "\n" + "                              Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  parseFloat($scope.CariBakiye).toFixed(2) + "\n" 
+        FisDizayn = FisDizayn + "                        Genel Toplam : "  + GenelToplam + "\n" + "                        Nakit Alinan : " + parseFloat($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + KalanBakiye + "\n" + "-" + "\n" + "-" + "\n" + "-" + "\n"
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
-        console.log(FisDizayn)
-        var S = "#Intent;scheme=rawbt;";
-        var P =  "package=ru.a402d.rawbtprinter;end;";
-        var textEncoded = encodeURI(FisDizayn);
-
-        window.location.href="intent:"+textEncoded+S+P;
-
-        alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
+        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+        {
+            if(pStatus)
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );                
+            }
+        });
     }
     $scope.BtnTahClick = function()
     {
@@ -2182,6 +2198,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {
             "Seri" : $scope.Seri,
             "Sira" : $scope.Sira,
+            "CariKodu" : $scope.CariKodu,
             "EvrakTip" : $scope.EvrakTip
         }
         localStorage.FaturaParam = JSON.stringify(Param);
