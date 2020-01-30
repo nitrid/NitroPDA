@@ -35,7 +35,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
                 {
                     name: "BAKIYE",
                     title: "BAKİYE",
-                    type: "text",
+                    type: "number",
                     align: "center",
                     width: 180
                 },
@@ -125,7 +125,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         $scope.PlasiyerKodu = UserParam.Sistem.PlasiyerKodu;
         $scope.ToplamBakiye = 0;
         console.log($scope.PlasiyerKodu)
-        $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
         InitTahsilatRapor();
         InitCariFoy()
 
@@ -138,7 +137,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         {
             db : '{M}.' + $scope.Firma,
             query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM from CARI_HESAPLAR " +
-            " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = ''))",
+            " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) order by ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
             param:  ['PLASIYERKODU'], 
             type:   ['string|25'], 
             value:  [$scope.PlasiyerKodu]    
@@ -161,7 +160,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         IslemSelectedRow = $row;
 
         $scope.CariKodu = $scope.IslemListe[pIndex].KODU;
-        $scope.IlkTarih = moment("01.01." + new Date().getFullYear()).format("DD.MM.YYYY");
+        $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
 
         let TmpQuery = 
@@ -177,7 +176,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
                     "msg_S_0100 AS BA, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
-                    "CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))) AS ANADOVIZBAKIYE, " +
+                    "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2) AS ANADOVIZBAKIYE, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))) AS ANADOVIZBORCBAKIYE, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
