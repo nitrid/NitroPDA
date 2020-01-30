@@ -189,7 +189,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $scope.SipTip = "2";
         $scope.Carikodu = "";
         $scope.ToplamSatir = "";
-        $scope.IlkTarih = moment("01.01." + new Date().getFullYear()).format("DD.MM.YYYY");
+        $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
 
         $scope.CariListe = [];
