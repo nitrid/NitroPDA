@@ -93,6 +93,19 @@ var ParamTemp =
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
 		},
+		"DepoMalKabul" :
+		{
+			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"Seri" : {"Title" : "Seri","DefaultValue" : "DMK"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"CDepo" : {"Title" : "Çıkış Depo No","DefaultValue" : "1"},
+			"CDepoListe" : {"Title" : "Çıkış Depo Liste","DefaultValue" : ""},
+			"GDepo" : {"Title" : "Giriş Depo No","DefaultValue" : "1"},
+			"GDepoListe" : {"Title" : "Giriş Depo Liste","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
+		},
 		"DepoNakliye" :
 		{
 			"Seri" : {"Title" : "Seri","DefaultValue" : "DNP"},

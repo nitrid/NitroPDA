@@ -427,12 +427,13 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         InitSiparisListeGrid();
         InitSiparisListeGetirGrid();
         $scope.MainClick();
+        ParamName = "DepoMalKabul";
 
         $scope.EvrakLock = false;
-        $scope.Seri = UserParam.DepoSevk.Seri;
+        $scope.Seri = UserParam.DepoMalKabul.Seri;
         
-        $scope.BelgeNo = UserParam.DepoSevk.BelgeNo;
-        $scope.EvrakTip = UserParam.DepoSevk.EvrakTip;
+        $scope.BelgeNo = UserParam.DepoMalKabul.BelgeNo;
+        $scope.EvrakTip = UserParam.DepoMalKabul.EvrakTip;
 
         $scope.Stok = 
         [
@@ -445,25 +446,29 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             }
         ];
 
-        await db.DepoGetir($scope.Firma,UserParam.DepoSevk.CDepoListe,function(data)
+        await db.DepoGetir($scope.Firma,UserParam.DepoMalKabul.CDepoListe,function(data)
         {
             $scope.CDepoListe = data; 
-            $scope.CDepo = UserParam.DepoSevk.CDepo;
+            $scope.CDepo = UserParam.DepoMalKabul.CDepo;
             $scope.CDepoListe.forEach(function(item) 
             {
                 if(item.KODU == $scope.CDepo)
                     $scope.CDepoAdi = item.ADI;
             });          
         });
-        await db.DepoGetir($scope.Firma,UserParam.DepoSevk.GDepoListe,function(data)
+        await db.DepoGetir($scope.Firma,UserParam.DepoMalKabul.GDepoListe,function(data)
         {
             $scope.GDepoListe = data; 
-            $scope.GDepo = UserParam.DepoSevk.GDepo;
+            $scope.GDepo = UserParam.DepoMalKabul.GDepo;
             $scope.GDepoListe.forEach(function(item) 
             {
                 if(item.KODU == $scope.GDepo)
                     $scope.GDepoAdi = item.ADI;
             });     
+        });
+        await db.MaxSira($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data)
+        {
+            $scope.Sira = data
         });
         
         BarkodFocus();
@@ -477,7 +482,26 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             $scope.Cins = 6;
             $scope.Tip = 2;
         }
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        await db.MaxSira($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data)
+        {
+            $scope.Sira = data
+        });
+    }
+    $scope.GDepoChange = function()
+    {
+        $scope.GDepoListe.forEach(function(item) 
+        {
+            if(item.KODU == $scope.GDepo)
+                $scope.GDepoAdi = item.ADI;
+        });
+    }
+    $scope.CDepoChange = function()
+    {
+        $scope.CDepoListe.forEach(function(item) 
+        {
+            if(item.KODU == $scope.CDepo)
+                $scope.CDepoAdi = item.ADI;
+        });
     }
     $scope.BtnSiparisListele = async function()
     {
@@ -785,7 +809,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function() 
     {
-        if($scope.GDepo == $scope.CDepo && $scope.SiparisListe.length <= 0)
+        if($scope.GDepo == $scope.CDepo || $scope.SiparisListe.length <= 0)
         {
             alertify.alert("Bu Ekrana Girebilmeniz İçin Sipariş Seçimi Yapılmalı ve Giriş ve Çıkış Depoları Farklı Olmalıdır.");
         }

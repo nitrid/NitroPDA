@@ -154,25 +154,132 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 type: "number",
                 align: "center",
                 width: 100
-            },
-            {
-                name: "FIYAT",
-                title: "FIYAT",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sth_tutar",
-                title: "TUTAR",
-                type: "number",
-                align: "center",
-                width: 100
-            },
+            }
            ],
             rowClick: function(args)
             {
                 $scope.IslemListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitStokGrid()
+    {
+        $("#TblStok").jsGrid
+        (   {
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.StokListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: [
+                {
+                    name: "KODU",
+                    title: "KODU",
+                    type: "text",
+                    align: "center",
+                    width: 125
+                }, 
+                {
+                    name: "ADI",
+                    title: "ADI",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+                {
+                    name: "DEPOMIKTAR",
+                    title: "DEPO MIKTAR",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                } 
+            ],
+            rowClick: function(args)
+            {
+                $scope.StokListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitPartiLotGrid()
+    {
+        let CustomDate = function (config) 
+        {
+            jsGrid.Field.call(this, config);
+        };
+
+        CustomDate.prototype = new jsGrid.Field(
+        {
+            itemTemplate: function (value) 
+            {
+                return new Date(value).toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
+            }
+        });
+
+        jsGrid.fields.CustomDate = CustomDate;
+
+        $("#TblPartiLot").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.PartiLotListe,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: [
+                {
+                    name: "PARTI",
+                    title: "PARTI",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+                {
+                    name: "LOT",
+                    title: "LOT",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }, 
+                {
+                    name: "STOK",
+                    title: "STOK",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+                {
+                    name: "MIKTAR",
+                    title: "MIKTAR",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }, 
+                {
+                    name: "KALAN",
+                    title: "KALAN",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }, 
+                {
+                    name: "SKTTARIH",
+                    title: "SKT TARİHİ",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                }  
+            ],
+            rowClick: function(args)
+            {
+                $scope.PartiLotListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -312,127 +419,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 }
             });
         }
-    }
-    function InitStokGrid()
-    {
-        $("#TblStok").jsGrid
-        (   {
-            width: "100%",
-            updateOnResize: true,
-            heading: true,
-            selecting: true,
-            data : $scope.StokListe,
-            paging : true,
-            pageSize: 10,
-            pageButtonCount: 3,
-            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
-            fields: [
-                {
-                    name: "KODU",
-                    title: "KODU",
-                    type: "text",
-                    align: "center",
-                    width: 125
-                }, 
-                {
-                    name: "ADI",
-                    title: "ADI",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                }, 
-                {
-                    name: "DEPOMIKTAR",
-                    title: "DEPO MIKTAR",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                } 
-            ],
-            rowClick: function(args)
-            {
-                $scope.StokListeRowClick(args.itemIndex,args.item,this);
-                $scope.$apply();
-            }
-        });
-    }
-    function InitPartiLotGrid()
-    {
-        let CustomDate = function (config) 
-        {
-            jsGrid.Field.call(this, config);
-        };
-
-        CustomDate.prototype = new jsGrid.Field(
-        {
-            itemTemplate: function (value) 
-            {
-                return new Date(value).toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
-            }
-        });
-
-        jsGrid.fields.CustomDate = CustomDate;
-
-        $("#TblPartiLot").jsGrid
-        ({
-            width: "100%",
-            updateOnResize: true,
-            heading: true,
-            selecting: true,
-            data : $scope.PartiLotListe,
-            pageSize: 10,
-            pageButtonCount: 3,
-            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
-            fields: [
-                {
-                    name: "PARTI",
-                    title: "PARTI",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                }, 
-                {
-                    name: "LOT",
-                    title: "LOT",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                }, 
-                {
-                    name: "STOK",
-                    title: "STOK",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                }, 
-                {
-                    name: "MIKTAR",
-                    title: "MIKTAR",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                }, 
-                {
-                    name: "KALAN",
-                    title: "KALAN",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                }, 
-                {
-                    name: "SKTTARIH",
-                    title: "SKT TARİHİ",
-                    type: "CustomDate",
-                    align: "center",
-                    width: 100
-                }  
-            ],
-            rowClick: function(args)
-            {
-                $scope.PartiLotListeRowClick(args.itemIndex,args.item,this);
-                $scope.$apply();
-            }
-        });
     }
     function InsertData()
     {   
@@ -603,7 +589,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 $scope.LblPartiLotAlert = "";
                 $scope.TxtParti = "";
                 $scope.TxtLot = 0;
-                $scope.SktTarih = new Date().toLocaleDateString();
+                $scope.SktTarih = moment(new Date()).format("DD.MM.YYYY");
                 $scope.PartiLotListe = [];
                 $scope.$apply();
 

@@ -307,6 +307,18 @@ var Param = [
 			"OdemeKasa": "O01",
 			"EvrakSil": "0",
 			"EvrakTip": "0"
+		},
+		"DepoMalKabul": {
+			"EvrakTip": "0",
+			"Seri": "DMK",
+			"BelgeNo": "",
+			"CDepo": "1",
+			"CDepoListe": "",
+			"GDepo": "1",
+			"GDepoListe": "",
+			"Sorumluluk": "",
+			"EvrakSil": "0",
+			"EksiyeDusme": "0"
 		}
 	},
 	{
@@ -563,7 +575,8 @@ var Param = [
 			"Cari Hesap Bakiye": "1",
 			"Stok Rapor": "1",
 			"Cari Secimli Siparis Raporu": "1",
-			"Cari Secimli Siparis Durum Raporu": "1"
+			"Cari Secimli Siparis Durum Raporu": "1",
+			"Yapilacak Tahsilatlar": "1"
 		},
 		"UrunGirisCikis": {
 			"EvrakTip": "0",
@@ -579,7 +592,9 @@ var Param = [
 			"Proje": "",
 			"EvrakSil": "0",
 			"CmbEvrakTip": "0",
-			"IsMerkezi": ""
+			"IsMerkezi": "",
+			"Depo": "1",
+			"DepoListe": ""
 		},
 		"TahsilatMakbuzu": {
 			"EvrakTip": "0",
@@ -595,6 +610,18 @@ var Param = [
 			"HavaleKasa": "",
 			"OdemeKasa": "",
 			"EvrakSil": "0"
+		},
+		"DepoMalKabul": {
+			"EvrakTip": "0",
+			"Seri": "DMK",
+			"BelgeNo": "",
+			"CDepo": "1",
+			"CDepoListe": "",
+			"GDepo": "1",
+			"GDepoListe": "",
+			"Sorumluluk": "",
+			"EvrakSil": "0",
+			"EksiyeDusme": "0"
 		}
 	}
 ]
