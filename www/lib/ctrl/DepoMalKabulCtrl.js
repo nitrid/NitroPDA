@@ -84,7 +84,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             updateOnResize: true,
             heading: true,
             selecting: true,
-            data : $scope.SiparisListe,
+            data : $scope.DepoSiparisListe,
             paging : true,
             pageSize: 10,
             pageButtonCount: 3,
@@ -102,13 +102,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             {
                 name: "MIKTAR",
                 title: "MIKTAR",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "MIKTAR2",
-                title: "MIKTAR2",
                 type: "text",
                 align: "center",
                 width: 100
@@ -170,7 +163,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             updateOnResize: true,
             heading: true,
             selecting: true,
-            data : $scope.SiparisListe,
+            data : $scope.DepoSiparisListe,
             paging : true,
             pageSize: 10,
             pageButtonCount: 3,
@@ -346,8 +339,8 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
 
-        $scope.SiparisListe = pData;
-        $("#TblIslem").jsGrid({data : $scope.SiparisListe});    
+        $scope.DepoSiparisListe = pData;
+        $("#TblIslem").jsGrid({data : $scope.DepoSiparisListe});    
         $scope.BtnTemizle();
         ToplamMiktarHesapla();
         
@@ -594,12 +587,12 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         }
         await db.GetDataQuery(TmpQuery,function(Data)
         {
-            $scope.SiparisListe = Data;
-            if($scope.SiparisListe.length > 0)
+            $scope.DepoSiparisListe = Data;
+            if($scope.DepoSiparisListe.length > 0)
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
-                $("#TblSiparisListe").jsGrid({data : $scope.SiparisListe});
+                $("#TblSiparisListe").jsGrid({data : $scope.DepoSiparisListe});
             }
             else
             {
@@ -709,6 +702,11 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         
         $scope.BirimListe = [];
         BarkodFocus();      
+    }
+    $scope.BtnDuzenle = function()
+    {
+        $scope.MiktarEdit = $scope.DepoSiparisListe[$scope.IslemListeSelectedIndex].sth_miktar
+        $("#MdlDuzenle").modal('show');
     }
     $scope.Insert = function()
     {
@@ -834,12 +832,12 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         SiparisSelectedRow = $row;
         
-        $scope.SipSeri = $scope.SiparisListe[pIndex].SERI;
-        $scope.SipSira = $scope.SiparisListe[pIndex].SIRA;
-        $scope.CDepo = $scope.SiparisListe[pIndex].CIKISDEPO.toString();
-        $scope.GDepo = $scope.SiparisListe[pIndex].GIRISDEPO.toString();
-        $scope.CDepoAdi = $scope.SiparisListe[pIndex].CIKISDEPOADI;
-        $scope.GDepoAdi = $scope.SiparisListe[pIndex].GIRISDEPOADI;
+        $scope.SipSeri = $scope.DepoSiparisListe[pIndex].SERI;
+        $scope.SipSira = $scope.DepoSiparisListe[pIndex].SIRA;
+        $scope.CDepo = $scope.DepoSiparisListe[pIndex].CIKISDEPO.toString();
+        $scope.GDepo = $scope.DepoSiparisListe[pIndex].GIRISDEPO.toString();
+        $scope.CDepoAdi = $scope.DepoSiparisListe[pIndex].CIKISDEPOADI;
+        $scope.GDepoAdi = $scope.DepoSiparisListe[pIndex].GIRISDEPOADI;
     }
     $scope.SiparisListeGetirRowClick = function(pIndex,pItem,pObj)
     {
@@ -868,7 +866,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function() 
     {
-        if($scope.GDepo == $scope.CDepo && $scope.SiparisListe.length <= 0 || $scope.GDepo != $scope.CDepo && $scope.SiparisListe.length <= 0) 
+        if($scope.GDepo == $scope.CDepo <= 0 && $scope.DepoSiparisListe.length < 1 || $scope.GDepo != $scope.CDepo <= 0 && $scope.DepoSiparisListe.length < 1) 
         {
             alertify.alert("Bu Ekrana Girebilmeniz İçin Sipariş Seçimi Yapılmalı ve Giriş ve Çıkış Depoları Farklı Olmalıdır.");
         }

@@ -327,7 +327,7 @@ var QuerySql =
                 "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
                 "LEFT JOIN BARKOD_TANIMLARI AS BARKOD WITH (NOLOCK,INDEX=NDX_BARKOD_TANIMLARI_02) ON " +
                 "STOK.sto_kod = BARKOD.bar_stokkodu " +
-                "WHERE ((sto_kod LIKE   @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE  @ADI + '%' ) OR (@ADI = '')) " +
+                "WHERE ((sto_kod LIKE   @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE '%' + @ADI + '%' ) OR (@ADI = '')) " +
                 "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
                 ") AS TMP " +
                 "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI ORDER BY KODU" ,
@@ -1754,7 +1754,7 @@ var QuerySql =
         'sth_iskonto4:float','sth_iskonto5:float','sth_iskonto6:float','sth_sat_iskmas1:bit','sth_sat_iskmas2:bit','sth_sat_iskmas3:bit','sth_sat_iskmas4:bit',
         'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:string|50','sth_fat_uid:string|50']
     },
-    MaxStokHarSira : 
+    MaxStokHarSira :
     {
         query: "SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI " +
                 "WHERE sth_evrakno_seri = @sth_evrakno_seri AND sth_evraktip = @sth_evraktip " ,
