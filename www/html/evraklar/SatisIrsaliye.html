@@ -345,6 +345,7 @@
                                 <button class="dropdown-item" ng-click="BtnIskontoEkran(0)" data-toggle="modal"  role="menu-item">Evrak İskonto</button>
                                 <button class="dropdown-item" ng-click="BtnIskontoEkran(1)" data-toggle="modal"  role="menu-item">Satır İskonto</button>
                                 <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button>
+                                <button class="dropdown-item"  ng-click="BtnVergiDuzenle()" data-toggle="modal" role="menu-item">Vergi Düzenle</button>
                                 <button class="dropdown-item"  ng-click="BtnOnlineYazdir()"  role="menu-item">Online Yazdır</button>
                             </div> 
                         </div>
@@ -624,6 +625,28 @@
                     </div>
                     <div class="row px-10">
                         <button type="submit" class="btn btn-primary btn-block col-12" ng-click="BtnDuzenleKaydet(this.IslemListeSelectedIndex)">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Vergi Düzenle MODAL-->
+    <div class="modal fade" id="MdlVergiDuzenle" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Vergi Düzenle</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row my-5">
+                        <label class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>Vergi Tutar :</b></span></div></label>
+                        <input type="text" class="form-control col-8" ng-model="VergiEdit">
+                    </div>
+                    <div class="row px-10">
+                        <button type="submit" class="btn btn-primary btn-block col-12" ng-click="BtnVergiDuzenleKaydet()">Kaydet ulan</button>
                     </div>
                 </div>
             </div>
