@@ -1282,33 +1282,27 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnVergiDuzenleKaydet = function()
     {
-
         for(i = 0;i < $scope.IrsaliyeListe.length;i++)
         {
             $scope.IrsaliyeListe[i].sth_vergi = ($scope.VergiEdit / $scope.ToplamKdv) *  $scope.IrsaliyeListe[i].sth_vergi
 
-            $scope.VergiUpdate(i);
+            let sth_vergi = $scope.IrsaliyeListe[i].sth_vergi
+            let sth_Guid = $scope.IrsaliyeListe[i].sth_Guid
+            let TmpQuery = 
+            {
+                db :'{M}.' + $scope.Firma,
+                query:  "UPDATE STOK_HAREKETLERI SET sth_vergi = @sth_vergi WHERE sth_Guid = @sth_Guid",
+                param : ['sth_vergi','sth_Guid'],
+                type : ['float','string|50'],
+                value : [sth_vergi,sth_Guid]
+            }
+            db.GetDataQuery(TmpQuery,function(Data)
+            {
+                DipToplamHesapla() 
+            });
         }
-        angular.element('#MdlVergiDuzenle').modal('hide');
-    }
-    $scope.VergiUpdate = function(pIndex)
-    {
-        let sth_vergi = $scope.IrsaliyeListe[pIndex].sth_vergi
-        let sth_Guid = $scope.IrsaliyeListe[pIndex].sth_Guid
-        let TmpQuery = 
-                                {
-                                    db :'{M}.' + $scope.Firma,
-                                    query:  "UPDATE STOK_HAREKETLERI SET sth_vergi = @sth_vergi WHERE sth_Guid = @sth_Guid",
-                                    param : ['sth_vergi','sth_Guid'],
-                                    type : ['float','string|50'],
-                                    value : [sth_vergi,sth_Guid]
-                                }
-                                db.GetDataQuery(TmpQuery,function(Data)
-                                {
-                                    console.log('CREATED BY RECEP KARACA ;)')  
-                                    DipToplamHesapla() 
 
-                                });
+        angular.element('#MdlVergiDuzenle').modal('hide');
     }
     $scope.MiktarPress = function(keyEvent)
     {
