@@ -52,7 +52,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         $("#TblCariFoy").jsGrid
         ({
             width: "100%",
-            height: "400",
             updateOnResize: true,
             heading: true,
             selecting: true,
