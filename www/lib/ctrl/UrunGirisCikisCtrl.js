@@ -726,7 +726,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         {
             $scope.Sira = data
         });
-
         $scope.EvrakTipChange();
     }
     $scope.EvrakGetir = function ()
