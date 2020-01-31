@@ -69,6 +69,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.Adres2 = "";
         $scope.CariVDADI = "";
         $scope.CariVDNO = "";
+        $scope.VergiEdit = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -417,7 +418,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             $scope.AraToplam += value.sth_tutar;
             $scope.ToplamIndirim += (value.sth_iskonto1 + value.sth_iskonto2 + value.sth_iskonto3 + value.sth_iskonto4 + value.sth_iskonto5 + value.sth_iskonto6);
-            $scope.ToplamKdv +=  (value.sth_tutar - (value.sth_iskonto1 + value.sth_iskonto2 + value.sth_iskonto3 + value.sth_iskonto4 + value.sth_iskonto5 + value.sth_iskonto6)) * (value.TOPTANVERGI / 100);
+            $scope.ToplamKdv +=  value.sth_vergi //(value.sth_tutar - (value.sth_iskonto1 + value.sth_iskonto2 + value.sth_iskonto3 + value.sth_iskonto4 + value.sth_iskonto5 + value.sth_iskonto6)) * (value.TOPTANVERGI / 100);
         });
         $scope.NetToplam = $scope.AraToplam - $scope.ToplamIndirim;
         $scope.GenelToplam = $scope.NetToplam + $scope.ToplamKdv;
@@ -1257,6 +1258,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         $("#MdlDuzenle").modal('show');
     }
+    $scope.BtnVergiDuzenle = function()
+    {
+        $("#MdlVergiDuzenle").modal('show');
+    }
     $scope.BtnDuzenleKaydet = function(pIndex)
     {   
         let TmpTutar = $scope.FiyatEdit * $scope.MiktarEdit;
@@ -1274,6 +1279,30 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.Update(pIndex);
         angular.element('#MdlDuzenle').modal('hide');
+    }
+    $scope.BtnVergiDuzenleKaydet = function()
+    {
+        for(i = 0;i < $scope.IrsaliyeListe.length;i++)
+        {
+            $scope.IrsaliyeListe[i].sth_vergi = ($scope.VergiEdit / $scope.ToplamKdv) *  $scope.IrsaliyeListe[i].sth_vergi
+
+            let sth_vergi = $scope.IrsaliyeListe[i].sth_vergi
+            let sth_Guid = $scope.IrsaliyeListe[i].sth_Guid
+            let TmpQuery = 
+            {
+                db :'{M}.' + $scope.Firma,
+                query:  "UPDATE STOK_HAREKETLERI SET sth_vergi = @sth_vergi WHERE sth_Guid = @sth_Guid",
+                param : ['sth_vergi','sth_Guid'],
+                type : ['float','string|50'],
+                value : [sth_vergi,sth_Guid]
+            }
+            db.GetDataQuery(TmpQuery,function(Data)
+            {
+                DipToplamHesapla() 
+            });
+        }
+
+        angular.element('#MdlVergiDuzenle').modal('hide');
     }
     $scope.MiktarPress = function(keyEvent)
     {
