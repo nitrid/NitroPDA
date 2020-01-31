@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "",
+			"Firma": "TEST",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
@@ -23,7 +23,7 @@ var Param = [
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "1",
-			"BTYaziciTip": "CORDOVABT",
+			"BTYaziciTip": "RAWBT",
 			"BTYaziciAdi": "SW_C58B"
 		},
 		"Sayim": {

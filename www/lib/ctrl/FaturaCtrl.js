@@ -2173,16 +2173,23 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {
             $scope.TahToplam = 0;
         }
-
+        console.log($scope.CariBakiye)
+        console.log($scope.GenelToplam)
         let FisDizayn = "";
         let GenelToplam = parseFloat($scope.GenelToplam + $scope.CariBakiye).toFixed(2);
         let KalanBakiye = parseFloat(GenelToplam - $scope.TahToplam).toFixed(2);
 
+        if($scope.TahToplam != 0)
+        {
+            $scope.CariBakiye = ($scope.CariBakiye - $scope.GenelToplam) + $scope.TahToplam
+        }
+
         FisDizayn = "                  BILGI FISI" + "\n" + "                                             -" + "\n" + $scope.FisDeger + "\n" + "                                             -" + "\n" + "URUN ADI                    "+ " ADET" + " FIYAT" + " TUTAR" + "\n" + $scope.FisData + "\n" + "                                            -" + "\n" + " " + "\n"
-        FisDizayn = FisDizayn + "                           ToplamKdv : " + $scope.ToplamKdv.toFixed(2) + "\n" + "                              Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  parseFloat($scope.CariBakiye).toFixed(2) + "\n" 
+        FisDizayn = FisDizayn + "                              Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  $scope.CariBakiye + "\n" 
         FisDizayn = FisDizayn + "                        Genel Toplam : "  + GenelToplam + "\n" + "                        Nakit Alinan : " + parseFloat($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + KalanBakiye + "\n" + "-" + "\n" + "-" + "\n" + "-" + "\n"
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
+        console.log(FisDizayn)
         db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
         {
             if(pStatus)
