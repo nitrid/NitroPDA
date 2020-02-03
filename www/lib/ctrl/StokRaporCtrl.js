@@ -1,17 +1,18 @@
 function StokRaporCtrl($scope,$window,db)
 {   
-    let CariSelectedRow = null;
+    let StokSelectedRow = null;
 
-    function InitCariGrid()
+    function InitStokGrid()
     {   
-        $("#TblCari").jsGrid
+        console.log(1)
+        $("#TblStok").jsGrid
         ({
             width: "100%",
             height: "300px",
             updateOnResize: true,
             heading: true,
             selecting: true,
-            data : $scope.CariListe,
+            data : $scope.StokListe,
             fields: 
             [
                 {
@@ -27,16 +28,10 @@ function StokRaporCtrl($scope,$window,db)
                     align: "center",
                     width: 300
                 },
-                {
-                    name: "BAKIYE",
-                    type: "number",
-                    align: "center",
-                    width: 75
-                } 
             ],
             rowClick: function(args)
             {
-                $scope.CariListeRowClick(args.itemIndex,args.item,this);
+                $scope.StokListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -161,15 +156,15 @@ function StokRaporCtrl($scope,$window,db)
         $scope.Firma = $window.sessionStorage.getItem('Firma');
         UserParam = Param[$window.sessionStorage.getItem('User')];
 
-        $scope.CmbCariAra = "0";
-        $scope.TxtCariAra = "";
+        $scope.CmbStokAra = "0";
+        $scope.TxtStokAra = "";
         $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
 
-        $scope.CariListe = [];
+        $scope.StokListe = [];
         $scope.CariFoyListe = [];
 
-        InitCariGrid();
+        InitStokGrid();
         InitCariFoyGrid();
     }
     $scope.BtnGetir = function()
@@ -204,31 +199,33 @@ function StokRaporCtrl($scope,$window,db)
             $scope.GenelToplam = db.SumColumn($scope.IslemListe,"TUTAR","EVRAKTIP = 0") - db.SumColumn($scope.IslemListe,"TUTAR","EVRAKTIP = 1");
         });
     }
-    $scope.BtnCariSec = function()
+    $scope.BtnStokSec = function()
     {   
-        $('#MdlCariGetir').modal('hide');
+        $('#MdlStokGetir').modal('hide');
     }
-    $scope.BtnCariListele = function()
+    $scope.BtnStokListele = function()
     {   
+        console.log(1)
         let Kodu = '';
         let Adi = '';
 
-        if($scope.TxtCariAra != "")
+        if($scope.TxtStokAra != "")
         {
-            if($scope.CmbCariAra == "0")
+            if($scope.CmbStokAra == "0")
             {   
-                Adi = $scope.TxtCariAra.replace("*","%").replace("*","%");
+                Adi = $scope.TxtStokAra.replace("*","%").replace("*","%");
             }
             else
             {
-                Kodu = $scope.TxtCariAra.replace("*","%").replace("*","%");
+                Kodu = $scope.TxtStokAra.replace("*","%").replace("*","%");
             }
         }
         
-        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi],function(data)
+        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
-            $scope.CariListe = data;      
-            $("#TblCari").jsGrid({data : $scope.CariListe});
+            console.log(2)
+            $scope.StokListe = data;      
+            $("#TblStok").jsGrid({data : $scope.StokListe});
         });
     }
     $scope.BtnCariFoyGetir = function()
@@ -263,17 +260,17 @@ function StokRaporCtrl($scope,$window,db)
             $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
         });
     }
-    $scope.CariListeRowClick = function(pIndex,pItem,pObj)
+    $scope.StokListeRowClick = function(pIndex,pItem,pObj)
     {
         if(!$scope.EvrakLock)
         {
-            if ( CariSelectedRow ) { CariSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+            if ( StokSelectedRow ) { StokSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
             var $row = pObj.rowByItem(pItem);
             $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
-            CariSelectedRow = $row;
+            StokSelectedRow = $row;
             
-            $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
-            $scope.Carikodu =$scope.CariListe[pIndex].KODU;
+            $scope.StokAdi = $scope.StokListe[pIndex].UNVAN1;
+            $scope.StokKodu =$scope.StokListe[pIndex].KODU;
         }
     }
 }
