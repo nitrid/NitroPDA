@@ -264,7 +264,7 @@ var ParamTemp =
 		},
 		"TahsilatMakbuzu" :
 		{
-			"ChaEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"ChaEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "1"},
 			"Seri" : {"Title" : "Seri","DefaultValue" : "THS"},
 			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
 			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},

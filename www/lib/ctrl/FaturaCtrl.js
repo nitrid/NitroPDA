@@ -2176,11 +2176,13 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         let FisDizayn = "";
 
         let GenelToplam = parseInt($scope.GenelToplam) + parseInt($scope.CariBakiye);
-        let KalanBakiye = parseFloat(GenelToplam - $scope.TahToplam).toFixed(2);
+        let KalanBakiye = parseInt(GenelToplam) - parseInt($scope.TahToplam);
 
         if($scope.TahToplam != 0)
         {
             $scope.CariBakiye = ($scope.CariBakiye - $scope.GenelToplam) + $scope.TahToplam
+            GenelToplam = (GenelToplam - $scope.GenelToplam) + $scope.TahToplam
+            KalanBakiye = (KalanBakiye - $scope.GenelToplam) + $scope.TahToplam
         }
 
         FisDizayn = "                  BILGI FISI" + "\n" +
@@ -2190,8 +2192,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     "URUN ADI                    "+ " ADET" + " FIYAT" + " TUTAR" + "\n" + 
                     $scope.FisData + "\n" +  //İÇERİK
                     "                                            -" + "\n" 
-        FisDizayn = FisDizayn + "                              Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  $scope.CariBakiye + "\n" 
-        FisDizayn = FisDizayn + "                        Genel Toplam : "  + parseFloat(GenelToplam).toFixed(2) + "\n" + "                        Nakit Alinan : " + parseFloat($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + KalanBakiye + "\n" + "-" + "\n" + "-" + "\n" 
+        FisDizayn = FisDizayn + "                              Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  parseFloat($scope.CariBakiye).toFixed(2) + "\n" 
+        FisDizayn = FisDizayn + "                        Genel Toplam : "  + parseFloat(GenelToplam).toFixed(2) + "\n" + "                        Nakit Alinan : " + parseFloat($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "-" + "\n" + "-" + "\n" 
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         console.log(FisDizayn)
