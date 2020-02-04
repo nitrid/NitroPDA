@@ -1,11 +1,45 @@
 function StokRaporCtrl($scope,$window,db)
 {   
-    let StokSelectedRow = null;
+    let DepoSelectedRow = null;
 
-    function InitStokGrid()
+    function InitDepoGrid()
     {   
-        console.log(1)
-        $("#TblStok").jsGrid
+        console.log($scope.DepoListe)
+        $("#TblDepo").jsGrid
+        ({
+            width: "100%",
+            height: "300px",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.DepoListe,
+            fields: 
+            [
+                {
+                    name: "ADI",
+                    title: "DEPO ADI",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "KODU",
+                    title: "DEPO KODU",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+            ],
+            rowClick: function(args)
+            {
+                $scope.DepoListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitStokRaporGrid()
+    {   
+        $("#TblStokListe").jsGrid
         ({
             width: "100%",
             height: "300px",
@@ -16,135 +50,39 @@ function StokRaporCtrl($scope,$window,db)
             fields: 
             [
                 {
-                    name: "KODU",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                    
-                },
-                {
-                    name: "UNVAN1",
-                    type: "text",
-                    align: "center",
-                    width: 300
-                },
-            ],
-            rowClick: function(args)
-            {
-                $scope.StokListeRowClick(args.itemIndex,args.item,this);
-                $scope.$apply();
-            }
-        });
-    }
-    function InitCariFoyGrid()
-    {   
-        $("#TblCariFoy").jsGrid
-        ({
-            width: "100%",
-            height: "300px",
-            updateOnResize: true,
-            heading: true,
-            selecting: true,
-            data : $scope.CariFoyListe,
-            fields: 
-            [
-                {
-                    name: "SERI",
-                    title: "SERİ",
+                    name: "STOKKODU",
+                    title: "STOK KODU",
                     type: "text",
                     align: "center",
                     width: 120
                     
                 },
                 {
-                    name: "SIRA",
-                    title: "SIRA",
+                    name: "STOKADI",
+                    title: "STOK ADI",
                     type: "number",
                     align: "center",
                     width: 120
                     
                 },
                 {
-                    name: "EVRAKTIP",
-                    title: "EVRAK TİP",
+                    name: "RENK",
+                    title: "RENK",
                     type: "text",
                     align: "center",
                     width: 120
                 },
                 {
-                    name: "CINSI",
-                    title: "CİNSİ",
+                    name: "BEDEN",
+                    title: "BEDEN",
                     type: "text",
                     align: "center",
                     width: 120
                 },
                 {
-                    name: "VADETARIH",
-                    title: "VADE TARİH",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "VADEGUN",
-                    title: "VADE GÜN",
+                    name: "DEPOMIKTAR",
+                    title: "DEPO MİKTARI",
                     type: "number",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "BA",
-                    title: "BORÇ/ALACAK",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "ANADOVIZBORC",
-                    title: "A.D BORC",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "ANADOVIZALACAK",
-                    title: "A.D ALACAK",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "ANADOVIZBORCBAKIYE",
-                    title: "A.D BORÇ BAKIYE",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "ANADOVIZALACAKBAKIYE",
-                    title: "A.D ALACAK BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "ORJINALDOVIZBORCBAKIYE",
-                    title: "O.D.B BORÇ BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "ORJINALDOVIZALACAKBAKİYE",
-                    title: "O.D ALACAK BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "ORJINALDOVIZ",
-                    title: "ORJINAL DÖVİZ",
-                    type: "text",
                     align: "center",
                     width: 120
                 }
@@ -158,54 +96,62 @@ function StokRaporCtrl($scope,$window,db)
 
         $scope.CmbStokAra = "0";
         $scope.TxtStokAra = "";
+        $scope.DepoAdi = "";
+        $scope.DepoNo;
+        $scope.StokAdi = "";
+        $scope.StokKodu = "";
         $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
 
+        $scope.DepoListe = [];
         $scope.StokListe = [];
-        $scope.CariFoyListe = [];
 
-        InitStokGrid();
-        InitCariFoyGrid();
+        $scope.Loading = false;
+        $scope.TblLoading = true;
+
+        InitDepoGrid();
+        InitStokRaporGrid();
     }
     $scope.BtnGetir = function()
     {
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "SELECT " +
-                    "CASE WHEN EVRAKTIP = 0 THEN 'ÖDEME' WHEN EVRAKTIP = 1 THEN 'TEDİYE' END AS TIPADI, " +
-                    "EVRAKTIP AS EVRAKTIP, " +
-                    "MKODU AS KODU, " +
-                    "ISNULL((SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MKODU),'') AS CARIADI, " +
-                    "CASE WHEN TIP = 0 THEN " +
-                    "'NAKİT' " +
-                    "WHEN TIP = 1 THEN " +
-                    "'KREDİ KARTI' " +
-                    "WHEN TIP = 2 THEN " +
-                    "'AÇIK HESAP' " +
-                    "END AS TIP, " +
-                    "CAST(SUM(TUTAR) AS decimal(10,2)) AS TUTAR " +
-                    "FROM TERP_POS_TAHSILAT WHERE SUBE = @SUBE AND TARIH >= @ILKTARIH AND TARIH <= @SONTARIH " +
-                    "GROUP BY MKODU,TIP,EVRAKTIP",
-            param:  ['SUBE','ILKTARIH','SONTARIH'],
-            type:   ['int','date','date'],
-            value:  [$scope.Sube,$scope.IlkTarih,$scope.SonTarih]
+            query: 
+            "SELECT sto_kod AS STOKKODU,"+ 
+            "sto_isim AS STOKADI,"+
+            "sto_renk_kodu AS RENK,"+
+            "sto_beden_kodu AS BEDEN,"+
+            "ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR" +
+            " FROM STOKLAR",
+            param:  ['STOKKODU','STOKADI','DEPONO'],
+            type:   ['string','string','int'],
+            value:  [$scope.StokKod,$scope.StokAdi,$scope.DepoNo]
         }
-
         db.GetDataQuery(TmpQuery,function(Data)
         {
-            $scope.IslemListe = Data;
-            $("#TblIslem").jsGrid({data : $scope.IslemListe});
-            $scope.GenelToplam = db.SumColumn($scope.IslemListe,"TUTAR","EVRAKTIP = 0") - db.SumColumn($scope.IslemListe,"TUTAR","EVRAKTIP = 1");
+            if($scope.DepoNo > 0)
+            {
+            $scope.StokListe = Data;
+            console.log(Data)
+            $("#TblStokListe").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                alertify.alert("Depo Seçiniz")
+            }
         });
     }
-    $scope.BtnStokSec = function()
+    $scope.BtnDepoSec = function()
     {   
-        $('#MdlStokGetir').modal('hide');
+        $('#MdlDepoGetir').modal('hide');
+        $scope.BtnGetir();
     }
-    $scope.BtnStokListele = function()
+    $scope.BtnDepoListele = function()
     {   
-        console.log(1)
+        $scope.Loading = true;
+        $scope.TblLoading = false;
+
         let Kodu = '';
         let Adi = '';
 
@@ -221,56 +167,25 @@ function StokRaporCtrl($scope,$window,db)
             }
         }
         
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
+        db.GetData($scope.Firma,'CmbDepoGetir',[Kodu,Adi,$scope.DepoNo,''],function(data)
         {
-            console.log(2)
-            $scope.StokListe = data;      
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            $scope.Loading = false;
+            $scope.TblLoading = true;
+            $scope.DepoListe = data;   
+            $("#TblDepo").jsGrid({data : $scope.DepoListe});
         });
     }
-    $scope.BtnCariFoyGetir = function()
-    {
-        var TmpQuery = 
-        {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT  " +
-                    "msg_S_0090 AS SERI, " +
-                    "msg_S_0091 AS SIRA, " +
-                    "msg_S_0094 AS EVRAKTIP, " +
-                    "msg_S_0090 AS CINSI, " +
-                    "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
-                    "msg_S_0099 AS VADEGUN, " +
-                    "msg_S_0100 AS BA, " +
-                    "[msg_S_0101\\T] AS ANADOVIZBORC, " +
-                    "[msg_S_0102\\T] AS ANADOVIZALACAK, " +
-                    "[msg_S_1706] AS ANADOVIZBORCBAKIYE, " +
-                    "[msg_S_1707] AS ANADOVIZALACAKBAKIYE, " +
-                    "[msg_S_1710] AS ORJINALDOVIZBORCBAKIYE, " +
-                    "[msg_S_1711] AS ORJINALDOVIZALACAKBAKİYE, " +
-                    "[msg_S_0112] AS ORJINALDOVIZ " +
-                    "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
-            param:  ['KODU','ILKTARIH','SONTARIH'],
-            type:   ['string|25','date','date',],
-            value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
-        }
-
-        db.GetDataQuery(TmpQuery,function(Data)
-        {
-            $scope.CariFoyListe = Data;
-            $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
-        });
-    }
-    $scope.StokListeRowClick = function(pIndex,pItem,pObj)
+    $scope.DepoListeRowClick = function(pIndex,pItem,pObj)
     {
         if(!$scope.EvrakLock)
         {
-            if ( StokSelectedRow ) { StokSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+            if ( DepoSelectedRow ) { DepoSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
             var $row = pObj.rowByItem(pItem);
             $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
-            StokSelectedRow = $row;
-            
-            $scope.StokAdi = $scope.StokListe[pIndex].UNVAN1;
-            $scope.StokKodu =$scope.StokListe[pIndex].KODU;
+            DepoSelectedRow = $row;
+
+            $scope.DepoAdi = $scope.DepoListe[pIndex].ADI;
+            $scope.DepoNo =$scope.DepoListe[pIndex].KODU;
         }
     }
 }
