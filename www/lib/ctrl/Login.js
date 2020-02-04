@@ -151,6 +151,10 @@ function Login ($scope,$rootScope,$window,db)
         alertify.okBtn("Tamam");
         alertify.alert("Kullanıcı adı veya şifre yanlış");
     }
+    $scope.BtnExit = function()
+    {
+        navigator.app.exitApp();
+    }
     $scope.BtnTryConnect = function()
     {
         db.SetHost($scope.server_adress,$scope.socket_port);
