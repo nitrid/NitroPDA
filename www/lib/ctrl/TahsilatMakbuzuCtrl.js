@@ -1,4 +1,4 @@
-function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
+function TahsilatMakbuzuCtrl($scope,$window,$timeout,db,$filter)
 {
     let CariSelectedRow = null;
     let IslemSelectedRow = null;
@@ -32,12 +32,9 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.KasaHizmet = 4;
         $scope.KarsiGrupNo = 0;
         $scope.CariAltDovizKuru = 1;
-        $scope.Toplam = 0;
-        $scope.Meblag = 0;
         $scope.Vade = moment(new Date()).format("YYYY-MM-DD");
         $scope.Aciklama = "NAKİT KASASI";
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
-        $scope.Saat = moment(new Date()).format("LTS");
 
         $scope.ChaCins = 0;
         $scope.ChaEvrakTip = 1;
@@ -137,12 +134,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
            ],
             rowClick: function(args)
             {
-                //$scope.IslemListeRowClick(args.itemIndex,args.item,this);
+                $scope.IslemListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
     }
-    function InitIslemDetayGrid()
+    function InitIslemSatirlariGrid()
     {
         $("#TblIslemSatirlari").jsGrid({
             responsive: true,
@@ -263,8 +260,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 {
                     $scope.CariHarListe = CariHarGetir;
                     $scope.Tutar = 0;
-                    DipToplamHesapla();
-                    FisData(CariHarGetir)
                     $("#TblIslem").jsGrid({data : $scope.CariHarListe});  
                     $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});           
                 });
@@ -319,52 +314,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             alertify.alert("Çek Kayıt İşleminde Hata.");
         }
     }
-    function DipToplamHesapla()
-    {
-        parseFloat($scope.Toplam = db.SumColumn($scope.CariHarListe,"cha_meblag")).toFixed(2)
-    }
-    function BarkodFocus()
-    {
-        $timeout( function(){$window.document.getElementById("Tutar").focus();},100);  
-    }
-    function FisData(pData)
-    {
-        try 
-        {
-            $scope.FisDeger = "";
-            $scope.FisDeger = "TARIH      : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI  : " + SpaceLength($scope.CariAdi,35) + "\n" 
-        } 
-        catch (error) 
-        {
-            console.log(error)
-        }
-    }
-    function SpaceLength(pData,pLength)
-    {
-        try 
-        {
-            let x = pLength - pData.toString().length;
-
-            if(pData.toString().length > pLength)
-            {
-                pData = pData.substring(0,25);
-            }
-
-            Space = "";
-
-            for(let i=0; i < x; i++)
-            {
-                Space = Space + " ";
-            }
-
-            return pData + Space
-            
-        } 
-        catch (error) 
-        {
-            console.log(error)
-        }
-    }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {    
         if ( CariSelectedRow ) { CariSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
@@ -374,15 +323,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
-        parseFloat($scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE).toFixed(2);
+        $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
         $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
-        $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
-        $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
-        $scope.Adres = $scope.CariListe[pIndex].ADRES;
-        $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
-        $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -390,7 +334,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         IslemSelectedRow = $row;
-        $scope.IslemListeSelectedItem = pItem;
         $scope.IslemListeSelectedIndex = pIndex;
     }
     $scope.BtnCariListele = function()
@@ -432,35 +375,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         Init();
         InitCariGrid();
         InitIslemGrid();
-        InitIslemDetayGrid();
-        $scope.MainClick();
+        InitIslemSatirlariGrid();
 
         $scope.Seri = UserParam.TahsilatMakbuzu.Seri;
         $scope.BelgeNo = UserParam.TahsilatMakbuzu.BelgeNo;
         $scope.ChaEvrakTip = UserParam.TahsilatMakbuzu.ChaEvrakTip;
         $scope.CariKodu = UserParam.TahsilatMakbuzu.Cari;
-
-        if(typeof (localStorage.FaturaParam) != 'undefined')
-        {
-            $scope.CariKodu = JSON.parse(localStorage.FaturaParam).CariKodu
-        }
-
-        if($scope.CariKodu != "")
-        {       
-            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
-            {
-                $scope.CariListe = data;
-                $("#TblCari").jsGrid({data : $scope.CariListe});
-
-                let Obj = $("#TblCari").data("JSGrid");
-                let Item = Obj.rowByItem(data[0]);
-                
-                $scope.CariListeRowClick(0,Item,Obj);
-                
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-            });
-        }
 
         await db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
         {
@@ -526,27 +446,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.KasaBanka = UserParam.TahsilatMakbuzu.CekKasa;
             });  
         }
-        else if($scope.TahsilatCinsi == "2")  //Senet
-        {
-            $scope.KasTip = 3; //KASA GETİRMEK İÇİN KULLANILAN PARAMETRE
-            $scope.ChaCins = 2;
-            $scope.SntckPoz = 0;
-            $scope.KasaHizmet = 4;
-            $scope.KarsiGrupNo = 0;
-            $scope.SckTip = 1; //ODEME EMİRLERİ TABLOSU
-            $scope.Aciklama = "ÇEK KASASI";
-
-            await db.GetPromiseTag($scope.Firma,'MaxCekRefNo',[$scope.SckTip],function(data)
-            {
-                $scope.TrefNo = data[0].MAXREFNO
-            });  
-            await db.GetPromiseTag($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
-            {
-                $scope.KasaBankaListe = data;
-                $scope.KasaBanka = UserParam.TahsilatMakbuzu.SenetKasa;
-            });  
-        }
-        else if($scope.TahsilatCinsi == "3") //Kredi Kartı
+        else if($scope.TahsilatCinsi == "2") //Kredi Kartı
         {
             $scope.KasaBankaListe = $scope.BankaListe;
             $scope.KasaBanka = UserParam.TahsilatMakbuzu.KrediKasa;
@@ -586,59 +486,13 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             {
                 Init();
                 InitIslemGrid(); 
-                InitIslemDetayGrid();
+                InitIslemSatirlariGrid();
 
                 $scope.Seri = data[0].cha_evrakno_seri;
                 $scope.Sira = data[0].cha_evrakno_sira;
                 $scope.ChaEvrakTip = data[0].cha_evrak_tip;
-                $scope.Sorumluluk = data[0].cha_srmrkkodu;
-                $scope.ChaCins = data[0].cha_cinsi;
-                $scope.BelgeNo = data[0].cha_belge_no;
-                $scope.Aciklama = data[0].cha_aciklama;
-                $scope.Personel = data[0].cha_satici_kodu;
                 $scope.CariKodu = data[0].cha_kod;
-                $scope.CariAdi = data[0].CARIADI;
-                $scope.Tarih = new Date(data[0].cha_tarihi).toLocaleDateString();
-
-                $scope.CariHarListe = data;
-                $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});
-                $("#TblIslem").jsGrid({data : $scope.CariHarListe});
-
-                db.GetData($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
-                {
-                    $scope.KasaListe = data;
-                    $scope.KasaBankaListe = $scope.KasaListe;
-                    $scope.KasaBanka = UserParam.TahsilatMakbuzu.NakitKasa;
-                });  
-                db.FillCmbDocInfo($scope.Firma,'CmbBankaGetir',function(data)
-                {
-                    $scope.BankaListe = data;
-                });
-                
-                if($scope.CariKodu != "")
-                {
-                    db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
-                    {
-                        $scope.CariListe = data;
-                        $("#TblCari").jsGrid({data : $scope.CariListe});
-
-                        let Obj = $("#TblCari").data("JSGrid");
-                        let Item = Obj.rowByItem(data[0]);
-                        
-                        $scope.CariListeRowClick(0,Item,Obj);
-                        
-                        $scope.Loading = false;
-                        $scope.TblLoading = true;
-                    });
-                }
-
-                db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].cha_srmrkkodu});
-                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = data[0].cha_satici_kodu});
-                
-                DipToplamHesapla();
-                FisData(data)
-                angular.element('#MdlEvrakGetir').modal('hide');
-                alertify.alert($scope.Seri + " - " + $scope.Sira + " " +"Başarılıyla Getirildi.");
+                $scope.Sorumluluk = data[0].cha_srmrkkodu;
             }
             else
             {
@@ -646,160 +500,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 alertify.alert("Evrak Bulunamadı !");
             }
         });
-    }
-    $scope.SatirSil = function()
-    {
-        if(UserParam.TahsilatMakbuzu.EvrakSil == 0)
-        {
-            alertify.okBtn('Evet');
-            alertify.cancelBtn('Hayır');
-
-            alertify.confirm('Seçilen Satırı Silmek İstediğinize Eminmisiniz ?', 
-            function()
-            { 
-                if($scope.IslemListeSelectedIndex > -1)
-                {
-                    db.ExecuteTag($scope.Firma,'CekHarDelete',[$scope.IslemListeSelectedItem.cha_trefno],function(data)
-                    {
-                        if(typeof(data.result.err) == 'undefined')
-                        {
-                            db.ExecuteTag($scope.Firma,'CariHarSatirDelete',[$scope.IslemListeSelectedItem.cha_Guid],function(data)
-                            {
-                                if(typeof(data.result.err) == 'undefined')
-                                {
-                                    alertify.alert("Satır Silme İşlemi Başarıyla Gerçekleşti");
-
-                                    db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
-                                    {
-                                        if(data.length > 0)
-                                        {
-                                            $scope.CariHarListe = data;
-                                            DipToplamHesapla();
-                                            $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});
-                                            $("#TblIslem").jsGrid({data : $scope.CariHarListe});
-                                        }
-                                        else
-                                        {
-                                            $scope.YeniEvrak();
-                                        }
-                                    });
-                                }
-                                else
-                                {
-                                    alertify.alert("Cari Hesap Hareketleri Silme İşleminde Hata");
-                                }
-                            });
-                        }
-                        else
-                        {
-                            alertify.alert("Ödeme Emirleri Silme İşleminde Hata");
-                        }
-                    });
-                }
-                else
-                {
-                    alertify.alert("Lütfen Silmek İstediğiniz Satırı Seçin");
-                }
-            },
-            function(){});
-        }
-        else
-        {
-            alertify.alert("Evrak Silmeye Yetkiniz Yok");
-        }
-    }
-    $scope.BtnDuzenle = function()
-    {
-        $('#MdlDuzenle').modal('show');
-        $scope.Meblag = $scope.IslemListeSelectedItem.cha_meblag;
-    }
-    $scope.BtnDuzenleKaydet = function()
-    {
-        let Param =
-        [
-            $scope.Meblag,
-            $scope.Meblag,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            $scope.IslemListeSelectedItem.cha_Guid
-        ]
-        db.ExecuteTag($scope.Firma,'CariHarUpdate',Param,function(InsertResult)
-        {   
-            if(typeof(InsertResult.result.err) == 'undefined')
-            {
-                db.ExecuteTag($scope.Firma,'CekHarUpdate',[$scope.Meblag,$scope.IslemListeSelectedItem.cha_trefno],function(InsertResult)
-                {
-                    if(typeof(InsertResult.result.err) == 'undefined')
-                    {
-                        db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
-                        {
-                            $scope.CariHarListe = data;
-                            DipToplamHesapla();
-                            FisData(data)
-                            $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});
-                            $("#TblIslem").jsGrid({data : $scope.CariHarListe});
-                            alertify.alert("Düzenleme İşlemi Başarıyla Gerçekleşti");
-                            $('#MdlDuzenle').modal('hide');
-                        });
-                    }
-                    else
-                    {
-                        alertify.alert("Düzenleme İşleminde Hata");
-                    }
-                });
-            } 
-        });
-    }
-    $scope.BtnFisYazdir = function()
-    {
-        let FisDizayn = "";
-
-        FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" + $scope.FisDeger + "\n"
-        FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + $scope.CariBakiye + "\n" + "Nakit Alinan  : " + $scope.Toplam + "\n" + "Kalan Bakiye  : " + parseFloat($scope.CariBakiye - $scope.Toplam).toFixed(2) + "\n"
-        FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-
-        console.log(FisDizayn)
-        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
-        {
-            if(pStatus)
-            {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );                
-            }
-        });
-    }
-    $scope.BtnFatClick = function()
-    {
-        if(typeof (localStorage.FaturaParam) != 'undefined')
-        {
-            $scope.FatSeri = JSON.parse(localStorage.FaturaParam).Seri
-            $scope.FatSira = JSON.parse(localStorage.FaturaParam).Sira
-            $scope.FatTip = JSON.parse(localStorage.FaturaParam).EvrakTip
-
-            let Param =
-            {
-                "Seri" : $scope.FatSeri,
-                "Sira" : $scope.FatSira,
-                "EvrakTip" : $scope.FatTip,
-                "Toplam" : $scope.Toplam
-            }
-
-            localStorage.FaturaParam = JSON.stringify(Param);
-        }
     }
     $scope.MainClick = function() 
     {
@@ -816,14 +516,13 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.MeblaGirisClick = function() 
     {   
-        if($scope.CariKodu.length > 0)
+        if($scope.CariListe.length > 0)
         {
             $("#TbMeblagGiris").addClass('active');
             $("#TbMain").removeClass('active');
             $("#TbCariSec").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
-            BarkodFocus();
         }
         else
         {
@@ -832,17 +531,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.IslemSatirlariClick = function()
     {   
-        if($scope.CariHarListe.length > 0)
-        {
-            $("#TbIslemSatirlari").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbMeblagGiris").removeClass('active');
-        }
-        else
-        {
-            alertify.alert("Kayıtlı Evrak Olmadan İşlem Satırlarına Giremezsiniz.");
-        }
+        $("#TbIslemSatirlari").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbMeblagGiris").removeClass('active');
     }
     $scope.CariSecClick = function()
     {

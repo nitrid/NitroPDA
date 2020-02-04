@@ -225,6 +225,7 @@ var Param = [
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
 			"Satış Faturası": "1",
+			"Alış Faturası": "1",
 			"Tahsilat Makbuzu": "1",
 			"Sipariş Eşleştirme": "1",
 			"Verilen Sipariş": "1",
