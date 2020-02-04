@@ -1398,7 +1398,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             {
                 Init();
                 InitCariGrid();
-                InitIslemGrid(); 
+                InitIslemGrid();
+                $scope.EvrakTipChange();
                 
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
@@ -1425,6 +1426,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(Data)
                 {
                     $scope.CariHarListe = Data;
+                    console.log($scope.CariHarListe)
                 });
 
                 $scope.AraToplam = 0;
