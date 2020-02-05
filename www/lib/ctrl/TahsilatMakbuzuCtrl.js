@@ -420,10 +420,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});  
+                $("#TblCari").jsGrid({pageIndex: true})
             }
             else
             {
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             }
         });
     }

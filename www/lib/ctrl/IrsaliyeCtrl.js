@@ -140,7 +140,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -1063,10 +1062,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             } 
             else
             {
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             }     
             
         });
@@ -1186,6 +1187,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#MdlStokGetir").modal('hide');
         StokBarkodGetir($scope.Barkod);
         //$scope.BtnStokGridGetir();
+        $("#TblStok").jsGrid({pageIndex: true})
     }
     $scope.BtnBarkodGetirClick = function()
     {
