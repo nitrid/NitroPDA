@@ -60,7 +60,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.ToplamSatir = 0;
         $scope.Meblag = 0;
         $scope.OtoEkle = false;
-        $scope.CariBakiye = 0;
+        $scope.CariBakiye = "";
         $scope.Adres = "";
         $scope.Adres1 = "";
         $scope.Adres2 = "";
@@ -621,7 +621,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 if(BarkodData.length > 0)
                 { 
                     $scope.Stok = BarkodData;
-                    console.log($scope.Stok)
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
@@ -645,7 +644,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     $scope.Stok[0].INDIRIM = 0;
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
-                    /*// Fiyat Getir (Stok Detay)
+                    // Fiyat Getir (Stok Detay)
                     var Fiyat = 
                     {
                         db : '{M}.' + $scope.Firma,
@@ -688,12 +687,11 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     {   
                         $scope.DepoMiktarListe = pDepoMiktar
                         $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
-                    });*/
+                    });
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
                         $scope.BirimListe = data; 
-                        console.log(JSON.stringify($scope.Stok[0].BIRIMPNTR))
                         $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
 
                         if($scope.BirimListe.length > 0)
@@ -1535,7 +1533,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 if(typeof localStorage.FaturaParam != 'undefined')
                 {
                     localStorage.removeItem("FaturaParam");
-                    console.log(1)
                 }
                 
                 BarkodFocus();
@@ -2016,8 +2013,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         
         $scope.EvrakTipChange();
         BarkodFocus();
-
-        console.log($scope.TahToplam)
     }
     $scope.SorumlulukChange = function()
     {
@@ -2261,16 +2256,17 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         console.log(FisDizayn)
-        if($scope.TahToplam > 0)
-        {
-            $scope.TahToplam = 0;
-        }
+     
         
         db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
         {
             if(pStatus)
             {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );                    
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                if($scope.TahToplam > 0)
+                {
+                    $scope.TahToplam = 0;
+                }  
             }
         });
 
