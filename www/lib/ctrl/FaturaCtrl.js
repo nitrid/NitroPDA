@@ -66,9 +66,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.Adres2 = "";
         $scope.CariVDADI = "";
         $scope.CariVDNO = "";
-        $scope.FisGenelToplam = 0;
-        $scope.FisKalanBakiye = 0;
-        //$scope.TahToplam = 0;
 
         //CARİHAREKET
         $scope.ChaEvrakTip = 0;
@@ -2226,39 +2223,32 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     $scope.BtnFisYazdir = async function()
     {
         let FisDizayn = "";
-        let FisGenelToplam = 0;
-        let FisKalanBakiye = 0;
-
-        var TmpQuery = 
-        {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT " +
-                    "(SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)) AS BAKIYE " +
-                    "FROM CARI_HESAPLAR WHERE CARI_HESAPLAR.cari_kod = @CARIKODU ",
-            param:  ['CARIKODU'], 
-            type:   ['string|25'], 
-            value:  [$scope.CariKodu]    
-        }
-        await db.GetPromiseQuery(TmpQuery,function(Data)
-        {
-            $scope.CariBakiye = Data[0].BAKIYE;
-        });
-        
-        console.log($scope.CariBakiye)
+        let FisGenelToplam = "";
 
         if(typeof ($scope.TahToplam) == 'undefined')
         {
             $scope.TahToplam = 0;
         }
-        console.log($scope.GenelToplam)
 
-        $scope.CariBakiye = ($scope.CariBakiye - $scope.GenelToplam) + $scope.TahToplam;
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
+                    "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
+            param:  ['CARIKODU'], 
+            type:   ['string|25'], 
+            value:  [$scope.CariKodu]    
+        }
+    
+        await db.GetPromiseQuery(TmpQuery,function(Data)
+        {
+            $scope.CariBakiye = Data[0].BAKIYE
+        });
 
-        FisGenelToplam = parseInt($scope.GenelToplam) + parseInt($scope.CariBakiye);
-        FisKalanBakiye = parseInt(FisGenelToplam) - parseInt($scope.TahToplam);
+        $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
+        FisGenelToplam = $scope.GenelToplam + $scope.CariBakiye
+        FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
 
-        console.log($scope.TahToplam)
-        
         FisDizayn = "                  BILGI FISI" + "\n" +
                     "                                             -" + "\n" + 
                     $scope.FisDeger + "\n" + 
@@ -2266,17 +2256,16 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     "URUN ADI                    "+ " ADET" + " FIYAT" + " TUTAR" + "\n" + 
                     $scope.FisData + "\n" +  //İÇERİK
                     "                                            -" + "\n" 
-        FisDizayn = FisDizayn + "                              Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  parseFloat($scope.CariBakiye).toFixed(2) + "\n" 
-        FisDizayn = FisDizayn + "                        Genel Toplam : "  + parseFloat(FisGenelToplam).toFixed(2) + "\n" + "                        Nakit Alinan : " + parseFloat($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + parseFloat(FisKalanBakiye).toFixed(2) + "\n" + "-" + "\n" + "-" + "\n" 
+        FisDizayn = FisDizayn + "                              Toplam : " + parseInt($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  parseInt($scope.CariBakiye).toFixed(2) + "\n" 
+        FisDizayn = FisDizayn + "                        Genel Toplam : "  + parseInt(FisGenelToplam).toFixed(2) + "\n" + "                        Nakit Alinan : " + parseInt($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + parseInt(FisKalanBakiye).toFixed(2) + "\n" + "-" + "\n" + "-" + "\n" 
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         console.log(FisDizayn)
         if($scope.TahToplam > 0)
         {
-            localStorage.removeItem("FaturaParam");
-            console.log("sa")
             $scope.TahToplam = 0;
         }
+        
         db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
         {
             if(pStatus)
@@ -2284,7 +2273,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );                    
             }
         });
-      
+
+        
     }
     $scope.BtnTahClick = function()
     {
