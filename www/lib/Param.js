@@ -23,7 +23,7 @@ var Param = [
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "1",
-			"BTYaziciTip": "RAWBT",
+			"BTYaziciTip": "CORDOVABT",
 			"BTYaziciAdi": "SW_C58B"
 		},
 		"Sayim": {
