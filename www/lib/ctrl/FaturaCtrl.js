@@ -2252,11 +2252,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     $scope.FisData + "\n" +  //İÇERİK
                     "                                            -" + "\n" 
         FisDizayn = FisDizayn + "                              Toplam : " + parseInt($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  parseInt($scope.CariBakiye).toFixed(2) + "\n" 
-        FisDizayn = FisDizayn + "                        Genel Toplam : "  + parseInt(FisGenelToplam).toFixed(2) + "\n" + "                        Nakit Alinan : " + parseInt($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + parseInt(FisKalanBakiye).toFixed(2) + "\n" + "-" + "\n" + "-" + "\n" 
+        FisDizayn = FisDizayn + "                        Genel Toplam : "  + parseInt(FisGenelToplam).toFixed(2) + "\n" + "                        Nakit Alinan : " + parseInt($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + parseInt(FisKalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n"
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         console.log(FisDizayn)
-     
         
         db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
         {
@@ -2269,8 +2268,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 }  
             }
         });
-
-        
     }
     $scope.BtnTahClick = function()
     {
