@@ -96,6 +96,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.StokListe = [];
         $scope.StokHarListe = [];
         $scope.CariHarListe = [];
+        DepoMiktarListe = [];
 
         $scope.IslemListeSelectedIndex = -1;
 
@@ -620,6 +621,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 if(BarkodData.length > 0)
                 { 
                     $scope.Stok = BarkodData;
+                    $scope.StokKodu = $scope.Stok[0].KODU;
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
                         for(i = 0;i < $scope.StokHarListe.length;i++)
@@ -642,6 +644,50 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     $scope.Stok[0].INDIRIM = 0;
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
+                    // Fiyat Getir (Stok Detay)
+                    var Fiyat = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query : "SELECT TOP 1 " + 
+                                "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                                "ELSE " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                                "END AS FIYAT, " + 
+                                "sfiyat_doviz AS DOVIZ, " + 
+                                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
+                                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                                "sfiyat_iskontokod AS ISKONTOKOD " + 
+                                "FROM STOK_SATIS_FIYAT_LISTELERI " +
+                                "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
+                                "ORDER BY sfiyat_deposirano DESC", 
+                        param: ['STOKKODU','FIYATLISTE','DEPONO'],
+                        type:  ['string|50','int','int'],
+                        value: [$scope.StokKodu,$scope.FiyatListe,$scope.DepoNo]
+                    }
+                    db.GetDataQuery(Fiyat,function(pFiyat)
+                    {                         
+                        
+                        console.log(pFiyat)
+                        $scope.Fiyat = pFiyat[0].FIYAT
+                        $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
+                        $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
+                    });
+                    
+                    //Depo Miktar Getir (Stok Detay)
+                    var DepoMiktar =
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
+                        param : ['STOKKODU'],
+                        type : ['string|50'],
+                        value : [$scope.StokKodu]
+                    }
+                    db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
+                    {   
+                        $scope.DepoMiktarListe = pDepoMiktar
+                        $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
+                    });
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
@@ -988,7 +1034,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
        try 
        {
             $scope.FisDeger = "";
-            $scope.FisDeger = "TARIH      : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI  : " + SpaceLength($scope.CariAdi,35) + "\n" 
+            $scope.FisDeger = "TARIH      : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI  : " + SpaceLength($scope.CariAdi,35) + "\n" + "EVRAK NO   : " + $scope.Seri + "-" + $scope.Sira + "\n"
 
             for(let i=0; i < pData.length; i++)
             {
@@ -1398,7 +1444,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             {
                 Init();
                 InitCariGrid();
-                InitIslemGrid(); 
+                InitIslemGrid();
                 
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
@@ -1475,6 +1521,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 
                 DipToplamHesapla();
                 ToplamMiktarHesapla()
+                //$scope.EvrakTipChange();
 
                 $scope.EvrakLock = true;
                 $scope.BarkodLock = false;
@@ -1890,6 +1937,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             ParamName = "SatisFatura";
         }
 
+        $scope.FiyatListe = UserParam[ParamName].FiyatListe;
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
@@ -2167,23 +2215,34 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
         );
     }
-    $scope.BtnFisYazdir = function()
+    $scope.BtnFisYazdir = async function()
     {
-        if(typeof ($scope.TahToplam) == "undefined")
+        let FisDizayn = "";
+        let FisGenelToplam = "";
+
+        if(typeof ($scope.TahToplam) == 'undefined')
         {
             $scope.TahToplam = 0;
         }
-        let FisDizayn = "";
 
-        let GenelToplam = parseInt($scope.GenelToplam) + parseInt($scope.CariBakiye);
-        let KalanBakiye = parseInt(GenelToplam) - parseInt($scope.TahToplam);
-
-        if($scope.TahToplam != 0)
+        var TmpQuery = 
         {
-            $scope.CariBakiye = ($scope.CariBakiye - $scope.GenelToplam) + $scope.TahToplam
-            GenelToplam = (GenelToplam - $scope.GenelToplam) + $scope.TahToplam
-            KalanBakiye = (KalanBakiye - $scope.GenelToplam) + $scope.TahToplam
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
+                    "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
+            param:  ['CARIKODU'], 
+            type:   ['string|25'], 
+            value:  [$scope.CariKodu]    
         }
+    
+        await db.GetPromiseQuery(TmpQuery,function(Data)
+        {
+            $scope.CariBakiye = Data[0].BAKIYE
+        });
+
+        $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
+        FisGenelToplam = $scope.GenelToplam + $scope.CariBakiye
+        FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
 
         FisDizayn = "                  BILGI FISI" + "\n" +
                     "                                             -" + "\n" + 
@@ -2192,18 +2251,26 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     "URUN ADI                    "+ " ADET" + " FIYAT" + " TUTAR" + "\n" + 
                     $scope.FisData + "\n" +  //İÇERİK
                     "                                            -" + "\n" 
-        FisDizayn = FisDizayn + "                              Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  parseFloat($scope.CariBakiye).toFixed(2) + "\n" 
-        FisDizayn = FisDizayn + "                        Genel Toplam : "  + parseFloat(GenelToplam).toFixed(2) + "\n" + "                        Nakit Alinan : " + parseFloat($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "-" + "\n" + "-" + "\n" 
+        FisDizayn = FisDizayn + "                              Toplam : " + parseInt($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  parseInt($scope.CariBakiye).toFixed(2) + "\n" 
+        FisDizayn = FisDizayn + "                        Genel Toplam : "  + parseInt(FisGenelToplam).toFixed(2) + "\n" + "                        Nakit Alinan : " + parseInt($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + parseInt(FisKalanBakiye).toFixed(2) + "\n" + "-" + "\n" + "-" + "\n" 
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         console.log(FisDizayn)
+     
+        
         db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
         {
             if(pStatus)
             {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );                
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                if($scope.TahToplam > 0)
+                {
+                    $scope.TahToplam = 0;
+                }  
             }
         });
+
+        
     }
     $scope.BtnTahClick = function()
     {

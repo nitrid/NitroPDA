@@ -84,7 +84,7 @@ var QuerySql =
                 "ALTDOVIZKUR, " +
                 "RISK, " +
                 "ODEMEPLANI, " +
-                "CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))) AS BAKIYE, " +
+                "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE, " +
                 "BELGETARIH, " +
                 "ADRES, " +
                 "ADRES1, " +

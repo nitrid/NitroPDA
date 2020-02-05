@@ -300,6 +300,7 @@ var ParamTemp =
 			"Sipariş Eşleştirme" : {"Title" : "Sipariş Eşleştirme","DefaultValue" : "1"},
 			"Verilen Sipariş" : {"Title" : "Verilen Sipariş","DefaultValue" : "1"},
 			"Alış İrsaliyesi" : {"Title" : "Alış İrsaliyesi","DefaultValue" : "1"},
+			"Alış Faturası" : {"Title" : "Alış Faturası","DefaultValue" : "1"},
 			"Tediye Makbuzu" : {"Title" : "Tediye Makbuzu","DefaultValue" : "1"},
 			"Mal Kabul Eşleştirme" : {"Title" : "Mal Kabul Eşleştirme","DefaultValue" : "1"},
 			"Ürün Giriş Çıkış" : {"Title" : "Ürün Giriş Çıkış","DefaultValue" : "1"},

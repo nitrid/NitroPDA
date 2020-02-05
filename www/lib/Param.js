@@ -47,7 +47,7 @@ var Param = [
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "0",
+			"FiyatListe": "1",
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": "0",
@@ -68,7 +68,7 @@ var Param = [
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "0",
+			"FiyatListe": "1",
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"SiparisOnay": "",
@@ -134,7 +134,7 @@ var Param = [
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "0",
+			"FiyatListe": "1",
 			"FiyatLock": "0",
 			"EvrakSil": "0"
 		},
@@ -152,7 +152,7 @@ var Param = [
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "0",
+			"FiyatListe": "1",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
 			"EksiyeDusme": "0"
@@ -225,6 +225,7 @@ var Param = [
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
 			"Satış Faturası": "1",
+			"Alış Faturası": "1",
 			"Tahsilat Makbuzu": "1",
 			"Sipariş Eşleştirme": "1",
 			"Verilen Sipariş": "1",
@@ -238,7 +239,7 @@ var Param = [
 			"EvrakGonder": "1",
 			"Cari Hesap Hareket": "1",
 			"Yapilacak Tahsilatlar": "1",
-			"Stok Rapor": "0",
+			"Stok Rapor": "1",
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1"
 		},
@@ -256,7 +257,7 @@ var Param = [
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "0",
+			"FiyatListe": "1",
 			"FiyatLock": "0",
 			"EvrakSil": "0"
 		},
@@ -274,7 +275,7 @@ var Param = [
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "0",
+			"FiyatListe": "1",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
 			"EksiyeDusme": "0"
@@ -576,7 +577,8 @@ var Param = [
 			"Stok Rapor": "1",
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1",
-			"Yapilacak Tahsilatlar": "1"
+			"Yapilacak Tahsilatlar": "1",
+			"Stok Detay": "1"
 		},
 		"UrunGirisCikis": {
 			"EvrakTip": "0",
@@ -609,7 +611,8 @@ var Param = [
 			"SenetKasa": "",
 			"HavaleKasa": "",
 			"OdemeKasa": "",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"ChaEvrakTip": "1"
 		},
 		"DepoMalKabul": {
 			"EvrakTip": "0",
