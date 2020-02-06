@@ -1869,6 +1869,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         {    
                             db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
                             {
+                                FisData(data)
                                 db.ExecuteTag($scope.Firma,'BedenHarDelete',[$scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_Guid,11],function(data)
                                 {
                                     if(typeof(data.result.err) != 'undefined')
@@ -1901,9 +1902,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                                             ParamName = "SatisFatura";
                                             $scope.YeniEvrak(1)
                                         }
-                                    });
-
-                                    
+                                    });                   
                                 }
                             });
                         }
@@ -1942,6 +1941,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {
             ParamName = "SatisFatura";
         }
+        if($scope.TahToplam > 0)
+        {
+            $scope.TahToplam = 0;
+        } 
 
         $scope.FiyatListe = UserParam[ParamName].FiyatListe;
         $scope.EvrakLock = false;
@@ -2263,15 +2266,13 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 
         console.log(FisDizayn)
         
+       
         db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
         {
             if(pStatus)
             {
                 alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
-                if($scope.TahToplam > 0)
-                {
-                    $scope.TahToplam = 0;
-                }  
+               
             }
         });
     }
