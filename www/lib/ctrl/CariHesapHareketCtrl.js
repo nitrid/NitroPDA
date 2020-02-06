@@ -7,7 +7,6 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "400px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -155,6 +154,7 @@ function CariHesapHareketCtrl($scope,$window,db)
             $scope.TblLoading = true; 
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
+            $("#TblCari").jsGrid({pageIndex: true})
         });
     }
     $scope.BtnCariFoyGetir = function()
@@ -178,7 +178,7 @@ function CariHesapHareketCtrl($scope,$window,db)
                     "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
                     "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
                     "[msg_S_0112] AS ORJINALDOVIZ " +
-                    "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
+                    "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 DESC " ,
             param:  ['KODU','ILKTARIH','SONTARIH'],
             type:   ['string|25','date','date',],
             value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]

@@ -814,6 +814,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         {
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
+            $("#TblCari").jsGrid({pageIndex: true})
         });
     }
     $scope.BtnStokGridGetir = function()
@@ -852,6 +853,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         $("#MdlStokGetir").modal('hide');
         StokBarkodGetir($scope.Barkod);
         $scope.BtnStokGridGetir();
+        $("#TblStok").jsGrid({pageIndex: true})
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {

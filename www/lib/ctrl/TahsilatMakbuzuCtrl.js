@@ -50,7 +50,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.BankaListe = [];
         $scope.CariHarListe = [];
 
-        $scope.Tutar = 0;
+        $scope.Tutar = "";
 
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = ""; 
@@ -332,7 +332,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         try 
         {
             $scope.FisDeger = "";
-            $scope.FisDeger = "TARIH      : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI  : " + SpaceLength($scope.CariAdi,35) + "\n" 
+            $scope.FisDeger = "TARIH      : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI  : " + SpaceLength($scope.CariAdi,35) + "\n" + "EVRAK NO   : " + $scope.Seri + "-" + $scope.Sira + "\n"
         } 
         catch (error) 
         {
@@ -420,10 +420,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});  
+                $("#TblCari").jsGrid({pageIndex: true})
             }
             else
             {
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             }
         });
     }
@@ -565,7 +567,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.Insert = function()
     {
-        if($scope.Tutar > 0)
+        if($scope.Tutar != "")
         {
             CariHarInsert();
             if($scope.TahsilatCinsi !=0)
@@ -578,8 +580,9 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             alertify.alert("Lütfen Tutar Giriniz.");
         }
     }
-    $scope.EvrakGetir = function()
+    $scope.EvrakGetir = function(pData)
     {
+        $scope.TahKontrol = pData;
         db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
         {
             if(data.length > 0)
@@ -768,9 +771,25 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     $scope.BtnFisYazdir = function()
     {
         let FisDizayn = "";
+        let OncekiBakiye = 0;
+        let NakitAlinan = 0;
+        let KalanBakiye = 0;
+
+        if($scope.TahKontrol == 1)
+        {
+            OncekiBakiye = $scope.CariBakiye + $scope.Toplam
+            KalanBakiye = OncekiBakiye - $scope.Toplam
+            NakitAlinan = $scope.Toplam
+        }
+        else
+        {
+            OncekiBakiye = $scope.CariBakiye
+            NakitAlinan = $scope.Toplam
+            KalanBakiye = $scope.CariBakiye - $scope.Toplam
+        }
 
         FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" + $scope.FisDeger + "\n"
-        FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + $scope.CariBakiye + "\n" + "Nakit Alinan  : " + $scope.Toplam + "\n" + "Kalan Bakiye  : " + parseFloat($scope.CariBakiye - $scope.Toplam).toFixed(2) + "\n"
+        FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Nakit Alinan  : " + parseFloat(NakitAlinan).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n"
         FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         console.log(FisDizayn)
@@ -778,7 +797,8 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             if(pStatus)
             {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );                
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );    
+                $scope.TahKontrol = 0;
             }
         });
     }

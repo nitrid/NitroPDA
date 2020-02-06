@@ -124,7 +124,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -1565,10 +1564,12 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             }
             else
             {
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             }
             
         });
@@ -2092,6 +2093,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $("#MdlStokGetir").modal('hide');
         BarkodGetir($scope.Barkod);
         //$scope.BtnStokGridGetir();
+        $("#TblStok").jsGrid({pageIndex: true})
     }
     $scope.BtnOnlineYazdir = function()
     {   

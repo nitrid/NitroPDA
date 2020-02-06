@@ -8,11 +8,14 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "400px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.CariListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
             [
                 {
@@ -229,67 +232,61 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             $scope.TblLoading = true;
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
+            $("#TblCari").jsGrid({pageIndex : true});
         });
     }
     $scope.BtnGetir = function()
     {
-        if($scope.Carikodu != '')
+        var str = '';
+
+        if($scope.EvrakTip == 0)
         {
-            var str = '';
-
-            if($scope.EvrakTip == 0)
-            {
-                $scope.Tip = "0";
-            }
-            else
-            {
-                $scope.Tip = "1";
-            }
-
-            if($scope.SipTip == 0)
-            {
-                str = " AND sip_miktar >= 1";
-            }
-            else if ($scope.SipTip == 1)
-            {
-                str = " AND sip_miktar - sip_teslim_miktar = 0";
-            }
-            else
-            {
-                str = " AND sip_miktar <> sip_teslim_miktar ";
-            }
-
-            var TmpQuery = 
-            {
-                db : '{M}.' + $scope.Firma,
-                query:  "SELECT " +
-                        "sip_evrakno_seri + ' - ' +CONVERT(NVARCHAR(25),sip_evrakno_sira) AS [SERI-SIRA], " +
-                        "sip_evrakno_seri AS SERI," +
-                        "sip_evrakno_sira AS SIRA," +
-                        "sip_musteri_kod AS CARIKOD, " +
-                        "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sip_musteri_kod) AS CARIADI, " +
-                        "SUM(sip_miktar) AS MIKTAR, " +
-                        "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
-                        "CONVERT(NVARCHAR,CAST(SUM(sip_tutar)  AS DECIMAL(10,2))) AS TUTARKDVHARIC, " +
-                        "CONVERT(NVARCHAR,CAST(SUM(sip_tutar) + SUM(sip_vergi) AS DECIMAL(10,2))) AS TUTARKDVDAHIL " +
-                        "FROM SIPARISLER " +
-                        "WHERE ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
-                        "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih ORDER BY sip_belge_tarih DESC" ,
-                param:  ['KODU','ILKTARIH','SONTARIH','TIP'], 
-                type:   ['string|25','date','date','int'], 
-                value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih,$scope.Tip]
-            }
-
-            db.GetDataQuery(TmpQuery,function(Data)
-            {
-                $scope.IslemListe = Data;
-                $("#TblCariFoy").jsGrid({data : $scope.IslemListe});
-            });
+            $scope.Tip = "0";
         }
         else
         {
-            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Cari Seçimi Yapınız" + "</a>" );    
+            $scope.Tip = "1";
         }
+
+        if($scope.SipTip == 0)
+        {
+            str = " AND sip_miktar >= 1";
+        }
+        else if ($scope.SipTip == 1)
+        {
+            str = " AND sip_miktar - sip_teslim_miktar = 0";
+        }
+        else
+        {
+            str = " AND sip_miktar <> sip_teslim_miktar ";
+        }
+
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT " +
+                    "sip_evrakno_seri + ' - ' +CONVERT(NVARCHAR(25),sip_evrakno_sira) AS [SERI-SIRA], " +
+                    "sip_evrakno_seri AS SERI," +
+                    "sip_evrakno_sira AS SIRA," +
+                    "sip_musteri_kod AS CARIKOD, " +
+                    "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sip_musteri_kod) AS CARIADI, " +
+                    "SUM(sip_miktar) AS MIKTAR, " +
+                    "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
+                    "CONVERT(NVARCHAR,CAST(SUM(sip_tutar)  AS DECIMAL(10,2))) AS TUTARKDVHARIC, " +
+                    "CONVERT(NVARCHAR,CAST(SUM(sip_tutar) + SUM(sip_vergi) AS DECIMAL(10,2))) AS TUTARKDVDAHIL " +
+                    "FROM SIPARISLER " +
+                    "WHERE ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
+                    "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih ORDER BY sip_belge_tarih DESC" ,
+            param:  ['KODU','ILKTARIH','SONTARIH','TIP'], 
+            type:   ['string|25','date','date','int'], 
+            value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih,$scope.Tip]
+        }
+
+        db.GetDataQuery(TmpQuery,function(Data)
+        {
+            $scope.IslemListe = Data;
+            $("#TblCariFoy").jsGrid({data : $scope.IslemListe});
+        });
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {

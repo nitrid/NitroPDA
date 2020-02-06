@@ -816,7 +816,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                 console.log("Error");
                 console.log(err)
                 pCallback(false);
-            }, pParam.BTYaziciAdi);            
+            }, pParam.BTYaziciAdi);      
         }
         else if(pParam.BTYaziciTip == "RAWBT")
         {

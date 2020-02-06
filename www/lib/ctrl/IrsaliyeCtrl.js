@@ -70,6 +70,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariVDADI = "";
         $scope.CariVDNO = "";
         $scope.VergiEdit = "";
+        $scope.Fiyat = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -84,6 +85,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.PartiLotListe = [];
         $scope.RenkListe = [];
         $scope.BedenListe = [];
+        DepoMiktarListe = [];
 
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -138,7 +140,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -702,6 +703,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 if(BarkodData.length > 0)
                 { 
                     $scope.Stok = BarkodData;
+                    $scope.StokKodu = $scope.Stok[0].KODU;
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
                         for(i = 0;i < $scope.IrsaliyeListe.length;i++)
@@ -723,6 +725,50 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Stok[0].INDIRIM = 0;
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
+                    // Fiyat Getir (Stok Detay)
+                    var Fiyat = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query : "SELECT TOP 1 " + 
+                                "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                                "ELSE " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                                "END AS FIYAT, " + 
+                                "sfiyat_doviz AS DOVIZ, " + 
+                                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
+                                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                                "sfiyat_iskontokod AS ISKONTOKOD " + 
+                                "FROM STOK_SATIS_FIYAT_LISTELERI " +
+                                "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
+                                "ORDER BY sfiyat_deposirano DESC", 
+                        param: ['STOKKODU','FIYATLISTE','DEPONO'],
+                        type:  ['string|50','int','int'],
+                        value: [$scope.StokKodu,$scope.FiyatListe,$scope.DepoNo]
+                    }
+                    db.GetDataQuery(Fiyat,function(pFiyat)
+                    {                         
+                        
+                        console.log(pFiyat)
+                        $scope.Fiyat = pFiyat[0].FIYAT
+                        $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
+                        $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
+                    });
+                    
+                    //Depo Miktar Getir (Stok Detay)
+                    var DepoMiktar =
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
+                        param : ['STOKKODU'],
+                        type : ['string|50'],
+                        value : [$scope.StokKodu]
+                    }
+                    db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
+                    {   
+                        $scope.DepoMiktarListe = pDepoMiktar
+                        $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
+                    });
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
@@ -913,7 +959,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             ParamName = "AlisIrsaliye";
         else
             ParamName = "SatisIrsaliye";
-
+        $scope.FiyatListe = UserParam[ParamName].FiyatListe;
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
@@ -1016,10 +1062,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             } 
             else
             {
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             }     
             
         });
@@ -1139,6 +1187,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#MdlStokGetir").modal('hide');
         StokBarkodGetir($scope.Barkod);
         //$scope.BtnStokGridGetir();
+        $("#TblStok").jsGrid({pageIndex: true})
     }
     $scope.BtnBarkodGetirClick = function()
     {

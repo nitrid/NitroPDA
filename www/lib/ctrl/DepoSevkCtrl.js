@@ -153,11 +153,13 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     {
         $("#TblStok").jsGrid
         ({
+            responsive: true,
             width: "100%",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
+            paging: true,
             pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
@@ -783,6 +785,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         {
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
+            $("#TblCari").jsGrid({pageIndex: true})
         });
     }
     $scope.BtnStokGridGetir = function()
@@ -822,6 +825,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $("#MdlStokGetir").modal('hide');
         StokBarkodGetir($scope.Barkod);
         $scope.BtnStokGridGetir();
+        $("#TblStok").jsGrid({pageIndex : true})
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {
