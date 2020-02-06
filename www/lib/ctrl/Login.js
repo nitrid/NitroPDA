@@ -15,18 +15,20 @@ function Login ($scope,$rootScope,$window,db)
             'page_title' : 'Login',
             'page_path': '/Login'
         });
-
+        $scope.Kullanici = localStorage.username
+        for(i = 0;i < Param.length;i++)
+        {
+            if(Param[i].Kullanici == $scope.Kullanici)
+            {
+                $window.sessionStorage.setItem('User', i);  
+            }
+        }
         UserParam = Param[$window.sessionStorage.getItem('User')];
         
         if(typeof Param[$window.sessionStorage.getItem('User')] != 'undefined')
         {
-            for (let i = 0; i < Param.length; i++) 
-            {
-                if(Param[$window.sessionStorage.getItem('User')].Kullanici == Param[i].Kullanici)
-                {
-                    Firma = Param[i].Sistem.Firma
-                }
-            }
+            Firma = UserParam.Sistem.Firma
+            console.log(Firma)
         }
         
         if(typeof Param[$window.sessionStorage.getItem('User')] != 'undefined')
@@ -36,7 +38,7 @@ function Login ($scope,$rootScope,$window,db)
         }
         
         $scope.DepoNo = "";
-        $scope.Kullanici = localStorage.username
+        
         $scope.Password = localStorage.Password
 
         if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
@@ -118,6 +120,7 @@ function Login ($scope,$rootScope,$window,db)
     }
     $scope.BtnEntry = function()
     {
+        console.log(Param)
         for(i = 0;i < Param.length;i++)
         {
             if($scope.Firm != "")

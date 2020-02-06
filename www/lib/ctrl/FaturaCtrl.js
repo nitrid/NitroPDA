@@ -132,7 +132,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "500px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -1200,15 +1199,20 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             
         });
     }
+    $scope.BtnManuelArama = function()
+    {
+        $("#MdlStokGetir").modal('show');
+    }
     $scope.BtnStokGridSec = function()
     {
         $("#MdlStokGetir").modal('hide');
         StokBarkodGetir($scope.Barkod);
+        $("#TblStok").jsGrid({pageIndex: true})
     }
     $scope.BtnCariListele = function()
     {   
         $scope.Loading = true;
-        $scope.TblLoading = false;    
+        $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
 
@@ -1231,10 +1235,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.Loading = false;
                 $scope.TblLoading = true;    
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex : true});
             }
             else
             {
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex : true});
             }
         });
     }

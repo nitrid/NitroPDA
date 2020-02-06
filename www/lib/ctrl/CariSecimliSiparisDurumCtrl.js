@@ -8,11 +8,14 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "400px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.CariListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
             [
                 {
@@ -229,6 +232,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             $scope.TblLoading = true;
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
+            $("#TblCari").jsGrid({pageIndex : true});
         });
     }
     $scope.BtnGetir = function()
