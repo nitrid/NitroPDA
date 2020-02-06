@@ -458,6 +458,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 let Item = Obj.rowByItem(data[0]);
                 
                 $scope.CariListeRowClick(0,Item,Obj);
+                $scope.MeblaGirisClick();
                 
                 $scope.Loading = false;
                 $scope.TblLoading = true;
