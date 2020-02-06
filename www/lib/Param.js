@@ -24,7 +24,7 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "1",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "SW_C58B"
+			"BTYaziciAdi": "nitrogen"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
