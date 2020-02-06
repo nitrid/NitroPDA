@@ -796,7 +796,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             if(pStatus)
             {
                 alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );    
-                
                 $scope.TahKontrol = 0;
             }
         });
