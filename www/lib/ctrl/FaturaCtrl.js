@@ -30,6 +30,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             'page_path': '/Fatura'
         });
 
+
         UserParam = Param[$window.sessionStorage.getItem('User')];
         $scope.Firma = $window.sessionStorage.getItem('Firma');
 
@@ -68,7 +69,15 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.CariVDNO = "";
 
         //CARİHAREKET
-        $scope.ChaEvrakTip = 0;
+        if(ParamName == "AlisFatura")
+        {
+            $scope.ChaEvrakTip = 0;
+        }
+        else
+        {
+            $scope.ChaEvrakTip = 63;
+        }
+        
         $scope.ChaTip = 1;
         $scope.ChaCins = 6;
         $scope.ChaNormalIade = 0;
@@ -1477,6 +1486,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(Data)
                 {
                     $scope.CariHarListe = Data;
+                    console.log($scope.CariHarListe[0])
                 });
 
                 $scope.AraToplam = 0;
@@ -1665,6 +1675,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     {
                         if(typeof(data.result.err) == 'undefined')
                         {
+                            console.log($scope.ChaEvrakTip)
                             angular.forEach($scope.StokHarListe,function(value)
                             {
                                 db.ExecuteTag($scope.Firma,'CariHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)

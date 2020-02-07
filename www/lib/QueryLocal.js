@@ -388,12 +388,12 @@ var QueryLocal =
                 ",@sip_cins					                   " +
                 ",'@sip_evrakno_seri'		                   " +
                 ",@sip_evrakno_sira			                   " +
-                ",(SELECT IFNULL(MAX(sip_satirno),-1) + 1 AS SATIRNO FROM SIPARISLER WHERE sip_evrakno_seri = @sip_evrakno_seri AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins)" +
+                ",(SELECT IFNULL(MAX(sip_satirno),-1) + 1 AS SATIRNO FROM SIPARIS WHERE sip_evrakno_seri = @sip_evrakno_seri AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins)" +
                 ",'@sip_belgeno'				                   " +
                 ",'@sip_belge_tarih'			                   " +
                 ",'@sip_satici_kod'				               " +
                 ",'@sip_musteri_kod'			                   " +
-                ",'@sip_stok_kod'				                   " +
+                ",'@sip_stok_kod'				               " +
                 ",@sip_b_fiyat				                   " +
                 ",@sip_miktar					               " +
                 ",@sip_birim_pntr				               " +
@@ -478,7 +478,7 @@ var QueryLocal =
                 ",''							               " +
                 ",''							               " +
                 ",'')							               " ,
-        param : ['sip_create_user','sip_lastup_user','sip_firmano','sip_subeno','sip_tarih','sip_teslim_tarih','sip_tip',
+        param : ['sip_create_user','sip_lastup_user','sip_firmano','sip_subeno','sip_tarih:date','sip_teslim_tarih:date','sip_tip',
                  'sip_cins','sip_evrakno_seri','sip_evrakno_sira','sip_belgeno','sip_belge_tarih','sip_satici_kod',
                  'sip_musteri_kod','sip_stok_kod','sip_b_fiyat','sip_miktar','sip_birim_pntr','sip_teslim_miktar',
                  'sip_tutar','sip_iskonto_1','sip_iskonto_2','sip_iskonto_3','sip_iskonto_4','sip_iskonto_5',
@@ -941,7 +941,7 @@ var QueryLocal =
     //Sipariş
     SipBedenHarGetir :
     {
-        query: "SELECT * FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid IN ((SELECT sip_Guid FROM SIPARISLER WHERE sip_evrakno_seri = ? AND sip_evrakno_sira = ? AND sip_tip = ?)) AND BdnHar_Tipi = ? "
+        query: "SELECT * FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid IN ((SELECT sip_Guid FROM SIPARIS WHERE sip_evrakno_seri = ? AND sip_evrakno_sira = ? AND sip_tip = ?)) AND BdnHar_Tipi = ? "
     },
     SiparisListeGetir :
     {
