@@ -606,6 +606,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             0, //REZERVASYON MİKTARI
             0  //REZERVASYON TESLİM MİKTARI
         ];
+        console.log(InsertData)
 
         db.ExecuteTag($scope.Firma,'SiparisInsert',InsertData,function(InsertResult)
         {          
