@@ -785,10 +785,23 @@ angular.module('app.db', []).service('db',function($rootScope)
     {
         if(pParam.BTYaziciTip == "CORDOVABT")
         {
+
             window.BTPrinter.connect(function()
             {                
                 window.BTPrinter.printTextSizeAlign(function(data)
                 {                    
+                    setTimeout(function()
+                    {
+                        BTPrinter.disconnect(function(data)
+                        {
+                            console.log("Success");
+                            console.log(data)
+                        },function(err){
+                            console.log("Error");
+                            console.log(err)
+                        }, pParam.BTYaziciAdi)
+                    }, 1500);
+
                     console.log("Success");
                     pCallback(true);
                 },function(err)
