@@ -13,7 +13,7 @@ function dbengine(config)
 {    
     this.config = config;
     io.listen(config.port);
-    
+
     //BELİRLİ ZAMANLARDA LİSANS DURUMU KONTROL EDİLİYOR. 
     setInterval(function()
     {

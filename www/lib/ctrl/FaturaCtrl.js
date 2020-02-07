@@ -1033,7 +1033,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
        try 
        {
             $scope.FisDeger = "";
-            $scope.FisDeger = "TARIH      : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI  : " + SpaceLength($scope.CariAdi,35) + "\n" + "EVRAK NO   : " + $scope.Seri + "-" + $scope.Sira + "\n"
+            $scope.FisDeger = "TARIH       : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI   : " + SpaceLength($scope.CariAdi,35) + "\n" + "EVRAK NO    : " + $scope.Seri + "-" + $scope.Sira + "\n" + "TAHSILAT NO : " + $scope.FatSeri + "-" +$scope.FatSira + "\n"
 
             for(let i=0; i < pData.length; i++)
             {
@@ -1944,6 +1944,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         if($scope.TahToplam > 0)
         {
             $scope.TahToplam = 0;
+            $scope.FatSeri = "";
+            $scope.FatSira = 0;
         } 
 
         $scope.FiyatListe = UserParam[ParamName].FiyatListe;
@@ -2017,6 +2019,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.Sira = JSON.parse(localStorage.FaturaParam).Sira;
             $scope.EvrakTip = JSON.parse(localStorage.FaturaParam).EvrakTip;
             $scope.TahToplam = JSON.parse(localStorage.FaturaParam).Toplam;
+            $scope.FatSeri = JSON.parse(localStorage.FaturaParam).TahSeri;
+            $scope.FatSira = JSON.parse(localStorage.FaturaParam).TahSira;
             $scope.EvrakGetir();
         }
         
@@ -2232,6 +2236,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         if(typeof ($scope.TahToplam) == 'undefined')
         {
             $scope.TahToplam = 0;
+            $scope.FatSeri = "";
+            $scope.FatSira = 0;
         }
 
         var TmpQuery = 

@@ -447,6 +447,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $scope.CariKodu = JSON.parse(localStorage.FaturaParam).CariKodu
         }
 
+       
         if($scope.CariKodu != "")
         {       
             db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
@@ -651,6 +652,43 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             }
         });
     }
+    $scope.EvrakDelete = function()
+    {
+        alertify.okBtn('Evet');
+        alertify.cancelBtn('Hayır');
+
+        alertify.confirm('Bu Belgeyi Silmek İstediğinize Eminmisiniz ?', 
+        function()
+        { 
+            if($scope.CariHarListe.length > 0)
+            {
+                if(UserParam.TahsilatMakbuzu.EvrakSil == 0)
+                {
+                    db.ExecuteTag($scope.Firma,'CariHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
+                    {   
+                        if(typeof(data.result.err) != 'undefined')
+                        {
+                            console.log(data.result.err);
+                        }
+                        else
+                        {
+                            $scope.YeniEvrak();
+                            alertify.alert("<a style='color:#3e8ef7''>" + "Evrak Silme İşlemi Başarıyla Gerçekleşti !" + "</a>" );
+                        }
+                    });
+                }
+                else
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Evrak Silmeye Yetkiniz Yok !" + "</a>" );
+                }
+            }
+            else
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Silinecek Belge Yok !" + "</a>" );
+            }
+        }
+        ,function(){});
+    }
     $scope.SatirSil = function()
     {
         if(UserParam.TahsilatMakbuzu.EvrakSil == 0)
@@ -815,6 +853,8 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             {
                 "Seri" : $scope.FatSeri,
                 "Sira" : $scope.FatSira,
+                "TahSeri" : $scope.Seri,
+                "TahSira" : $scope.Sira,
                 "EvrakTip" : $scope.FatTip,
                 "Toplam" : $scope.Toplam
             }
