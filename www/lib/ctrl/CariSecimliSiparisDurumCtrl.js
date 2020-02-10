@@ -72,6 +72,14 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     width: 150
                     
                 },
+                {
+                    name: "CARIADI",
+                    title: "CARİ",
+                    type: "text",
+                    align: "center",
+                    width: 150
+                    
+                },
               
                 {
                     name: "MIKTAR",
