@@ -900,7 +900,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0,  // ADRESNO
             $scope.Stok[0].PARTI,
             $scope.Stok[0].LOT,
-            $scope.Proje,
+            $scope.Stok[0].PROJE,
             $scope.IhracKod, // EXİMKODU
             $scope.DisTicaret,
             0,  // OTVVERGİSİZFL
