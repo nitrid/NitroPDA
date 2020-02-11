@@ -592,8 +592,8 @@ var QuerySql =
                 "CAST(ISNULL(NULL,0) AS FLOAT) AS MIKTAR, " +
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO  ,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
                 "(SELECT dbo.fn_StokBirimi (SIPARIS.sip_stok_kod,SIPARIS.sip_birim_pntr)) AS BIRIM, " +
-                "ISNULL(CONVERT(integer,(BEDENHAR.BdnHar_BedenNo-1)/40)+1,0) AS BEDENPNTR, " +
-                "ISNULL(BEDENHAR.BdnHar_BedenNo-(CONVERT(integer,(BEDENHAR.BdnHar_BedenNo-1)/40)+1-1)*40,0) AS RENKPNTR, " +
+                "0 AS BEDENPNTR, " +
+                "0 AS RENKPNTR, " +
                 "ISNULL((SELECT dbo.fn_StokBirimHesapla (SIPARIS.sip_stok_kod,BARKOD.bar_birimpntr,1,1)),1) AS KATSAYI, " +
                 "(SELECT dbo.fn_VergiYuzde (SIPARIS.sip_vergi_pntr)) AS TOPTANVERGI, " +
                 "STOK.sto_detay_takip AS DETAYTAKIP, " +
@@ -1412,7 +1412,7 @@ var QuerySql =
                 ",@sth_cari_cinsi 			--<sth_cari_cinsi, tinyint,> \n" +
                 ",@sth_cari_kodu 			--<sth_cari_kodu, varchar(25),> \n" +
                 ",0		 			--<sth_cari_grup_no, tinyint,> \n" +
-                ",''			 		--<sth_isemri_gider_kodu, varchar(25),> \n" +
+                ",@sth_isemri_gider_kodu			 		--<sth_isemri_gider_kodu, varchar(25),> \n" +
                 ",@sth_plasiyer_kodu 			--<sth_plasiyer_kodu, varchar(25),> \n" +
                 ",@sth_har_doviz_cinsi 		--<sth_har_doviz_cinsi, tinyint,> \n" +
                 ",@sth_har_doviz_kuru 		--<sth_har_doviz_kuru, float,> \n" +
@@ -1485,7 +1485,7 @@ var QuerySql =
             'sth_normal_iade:int','sth_evraktip:int','sth_evrakno_seri:string|25','sth_evrakno_sira:int','sth_belge_no:string|25','sth_belge_tarih:date',
             'sth_stok_kod:string|25','sth_isk_mas1:int','sth_isk_mas2:int','sth_isk_mas3:int','sth_isk_mas4:int','sth_isk_mas5:int','sth_isk_mas6:int','sth_isk_mas7:int',
             'sth_isk_mas8:int','sth_isk_mas9:int','sth_isk_mas10:int','sth_sat_iskmas1:bit','sth_sat_iskmas2:bit','sth_sat_iskmas3:bit','sth_sat_iskmas4:bit','sth_sat_iskmas5:bit',
-            'sth_sat_iskmas6:bit','sth_sat_iskmas7:bit','sth_sat_iskmas8:bit','sth_sat_iskmas9:bit','sth_sat_iskmas10:bit','sth_cari_cinsi:int','sth_cari_kodu:string|50',
+            'sth_sat_iskmas6:bit','sth_sat_iskmas7:bit','sth_sat_iskmas8:bit','sth_sat_iskmas9:bit','sth_sat_iskmas10:bit','sth_cari_cinsi:int','sth_cari_kodu:string|50','sth_isemri_gider_kodu:string|50',
             'sth_plasiyer_kodu:string|50','sth_har_doviz_cinsi:int','sth_har_doviz_kuru:float','sth_alt_doviz_kuru:float','sth_stok_doviz_cinsi:int','sth_stok_doviz_kuru:float',
             'sth_miktar:float','sth_miktar2:float','sth_birim_pntr:int','sth_tutar:float','sth_iskonto1:float','sth_iskonto2:float','sth_iskonto3:float','sth_iskonto4:float',
             'sth_iskonto5:float','sth_iskonto6:float','sth_masraf1:float','sth_masraf2:float','sth_masraf3:float','sth_masraf4:float','sth_vergi_pntr:int','sth_vergi:float','sth_masraf_vergi_pntr:int',

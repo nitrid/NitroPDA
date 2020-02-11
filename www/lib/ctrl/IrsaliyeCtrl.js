@@ -553,7 +553,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.CariDovizKuru, //HARDOVİZKURU
             $scope.CariAltDovizKuru, //ALTDOVİZKURU
             $scope.Stok[0].DOVIZCINSI, //STOKDOVİZCİNSİ
-            $scope.Stok[0].DOVIZCINSKURU, //STOKDOVİZKURU
+            1, //STOKDOVİZKURU
             $scope.Miktar * $scope.Stok[0].CARPAN,
             $scope.Miktar2,
             $scope.Stok[0].BIRIMPNTR,
@@ -594,6 +594,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
            0   //NAKLİYEDEPO
         ];
         
+        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {  
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -607,7 +608,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
                     console.log(IrsaliyeData);
                     InsertAfterRefresh(IrsaliyeData);  
-                    FisData(IrsaliyeData);  
+                    //FisData(IrsaliyeData);  
                     $scope.InsertLock = false
                     if(UserParam.Sistem.Titresim == 1)
                     {
@@ -663,7 +664,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         }
                     }                        
                     InsertAfterRefresh(IrsaliyeData);
-                    FisData(IrsaliyeData);
+                    //FisData(IrsaliyeData);
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
                     {
@@ -704,6 +705,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 { 
                     $scope.Stok = BarkodData;
                     $scope.StokKodu = $scope.Stok[0].KODU;
+                    console.log($scope.Stok[0])
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
                         for(i = 0;i < $scope.IrsaliyeListe.length;i++)
@@ -731,9 +733,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         db : '{M}.' + $scope.Firma,
                         query : "SELECT TOP 1 " + 
                                 "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano) " + 
                                 "ELSE " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
                                 "END AS FIYAT, " + 
                                 "sfiyat_doviz AS DOVIZ, " + 
                                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
@@ -1801,7 +1803,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 angular.element('#MdlEvrakGetir').modal('hide');
 
                 BarkodFocus();
-                FisData(data)
+                //FisData(data)
 
                 alertify.alert("Evrak Başarıyla Getirildi.");
             }
