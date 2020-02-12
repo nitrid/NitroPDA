@@ -978,8 +978,8 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         SiparisSelectedRow = $row;
         
-        $scope.SipSeri = $scope.DepoSiparisListe[pIndex].SIPSERI;
-        $scope.SipSira = $scope.DepoSiparisListe[pIndex].SIPSIRA;
+        $scope.SipSeri = $scope.DepoSiparisListe[pIndex].SERI;
+        $scope.SipSira = $scope.DepoSiparisListe[pIndex].SIRA;
         $scope.CDepo = $scope.DepoSiparisListe[pIndex].CIKISDEPO.toString();
         $scope.GDepo = $scope.DepoSiparisListe[pIndex].GIRISDEPO.toString();
         $scope.CDepoAdi = $scope.DepoSiparisListe[pIndex].CIKISDEPOADI;
