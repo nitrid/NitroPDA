@@ -25,6 +25,8 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.GDepoAdi;
         $scope.Seri = "";
         $scope.Sira = 0;
+        $scope.SipSeri = "";
+        $scope.SipSira = 0;
         $scope.Sorumluluk = "";
         $scope.SorumlulukAdi = "";
         $scope.DepoAdi = "";
@@ -46,8 +48,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         
         $scope.SipIlkTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SipSonTarih = moment(new Date()).format("DD.MM.YYYY");
-        $scope.SipSeri = "";
-        $scope.SipSira = 0;
 
         $scope.CDepoListe = [];
         $scope.GDepoListe = [];
@@ -78,6 +78,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     function InitIslemGrid()
     {   
+        
         $("#TblIslem").jsGrid({
             responsive: true,
             width: "100%",
@@ -100,8 +101,8 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                 width: 200
             }, 
             {
-                name: "MIKTAR",
-                title: "MIKTAR",
+                name: "SIPMIKTAR",
+                title: "SIPMIKTAR",
                 type: "text",
                 align: "center",
                 width: 100
@@ -110,6 +111,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             {
                 $scope.IslemListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
+                console.log($scope.DepoSiparisListe)
             }
         });
     }
@@ -363,6 +365,126 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     function StokBarkodGetir(pBarkod)
     {
+        // KİLO BARKODU KONTROLÜ - RECEP KARACA 10.09.2019
+        let Kilo = pBarkod;
+        let KiloFlag = UserParam.Sistem.KiloFlag;
+        let FlagDizi = KiloFlag.split(',')
+        let Flag = Kilo.slice(0,2);
+ 
+        for (i = 0; i < FlagDizi.length; i++ )
+        {
+        if(Flag == FlagDizi[i])
+        {
+            var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
+            var Uzunluk = Kilo.slice(UserParam.Sistem.KiloBaslangic,((UserParam.Sistem.KiloBaslangic)+(UserParam.Sistem.KiloUzunluk)));
+            pBarkod = kBarkod
+            $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
+        }
+        }
+        // ----------------------------------------------------
+        if(pBarkod != '')
+        {
+            db.StokBarkodGetir($scope.Firma,pBarkod,$scope.CDepo,async function(BarkodData)
+            {    
+                $scope.Stok = BarkodData;
+                if(UserParam.Sistem.PartiLotKontrol == 1)
+                {
+                    for(i = 0;i < $scope.DepoSevkListe.length;i++)
+                    {   
+                        if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
+                        {
+                            if($scope.Stok[0].PARTI == $scope.DepoSevkListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.DepoSevkListe[i].sth_lot_no)
+                            {
+                                alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
+                                $scope.InsertLock = false;
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                if(BarkodData.length > 0)
+                {   
+                    $scope.Stok = BarkodData
+                    $scope.Stok[0].Satir = 0;
+                    $scope.Stok[0].Miktar = 0;
+                    $scope.Stok[0].TOPMIKTAR = 1;
+
+                    await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
+                    {   
+                        $scope.BirimListe = data; 
+                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
+
+                        if($scope.BirimListe.length > 0)
+                        {
+                            $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
+                            $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
+                            $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
+                            $scope.MiktarFiyatValid();
+                        }
+                    });
+
+                    if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
+                    {   
+                        if($scope.Stok[0].BEDENKODU != '' || $scope.Stok[0].RENKKODU != '')
+                        {  
+                            $('#MdlRenkBeden').modal("show");
+                            db.GetData($scope.Firma,'RenkGetir',[$scope.Stok[0].RENKKODU],function(pRenkData)
+                            {   
+                                $scope.RenkListe = pRenkData;
+                                $scope.Stok[0].RENKPNTR = "1";
+                            });
+                            db.GetData($scope.Firma,'BedenGetir',[$scope.Stok[0].BEDENKODU],function(pBedenData)
+                            {  
+                                $scope.BedenListe = pBedenData;
+                                $scope.Stok[0].BEDENPNTR = "1";
+                            });
+                        }
+
+                    } 
+                    if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+                    {
+                        if($scope.Stok[0].PARTI !='')
+                        {
+                            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.Stok[0].PARTI,$scope.Stok[0].LOT],function(data)
+                            {   
+                                $scope.PartiLotListe = data;
+
+                                if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
+                                {   
+                                    $scope.Miktar = $scope.PartiLotListe[0].MIKTAR;
+                                    $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
+                                }
+                                $scope.MiktarFiyatValid();
+                            });
+                        }
+                        else
+                        {
+                            PartiLotEkran();
+                        }
+                    }
+
+                    if($scope.OtoEkle == true)
+                    {
+                        $scope.Insert()
+                    }
+                    else
+                    {
+                        $window.document.getElementById("Miktar").focus();
+                        $window.document.getElementById("Miktar").select();
+                    }
+                }
+                else
+                {    
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Stok Bulunamamıştır !" + "</a>" );                 
+                    console.log("Stok Bulunamamıştır.");
+                    Beep();
+                }
+            });
+        }
+    }
+   /* function StokBarkodGetir(pBarkod)
+    {
         if(pBarkod != '')
         {
             db.StokBarkodGetir($scope.Firma,pBarkod,$scope.CDepo,async function(BarkodData)
@@ -407,7 +529,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                 }
             });
         }
-    }
+    } */
     function BeepAndConfirmation()
     {
         navigator.vibrate([100,100,200,100,300]);
@@ -523,6 +645,28 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                 angular.element('#MdlEvrakGetir').modal('hide');
                 alertify.okBtn("Tamam");
                 alertify.alert("Belge Bulunamadı !");
+            }
+        });
+    }
+    $scope.EvrakDelete = function()
+    {
+        alertify.okBtn('Evet');
+        alertify.cancelBtn('Hayır');
+
+        alertify.confirm('Bu Belgeyi Silmek İstediğinize Eminmisiniz ?', 
+        function()
+        { 
+            if($scope.DepoSiparisListe.length > 0)
+            {
+                db.ExecuteTag($scope.Firma,'DepoSiparisEvrakDelete',[$scope.Seri,$scope.Sira],function(data)
+                {
+                    $scope.YeniEvrak();
+                });
+            }
+            else
+            {
+                alertify.okBtn("Tamam");
+                alertify.alert("Silinecek Belge Yok !");
             }
         });
     }
@@ -665,6 +809,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         await db.GetDataQuery(TmpQuery,function(Data)
         {
             $scope.SiparisListeGetir = Data;
+            console.log(Data)
             if($scope.SiparisListeGetir.length > 0)
             {
                 $scope.Loading = false;
@@ -673,6 +818,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             }
             else
             {
+                angular.element('#MdlSiparisListeGetir').modal('hide');
                 alertify.alert("Seçilen " + $scope.SipIlkTarih + " - " + $scope.SipSonTarih + " Tarih Aralığında Sipariş Bulunamamıştır.");
                 $scope.Loading = false;
                 $scope.TblLoading = true;
@@ -721,7 +867,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             {
                 let UpdateStatus = false;
 
-                angular.forEach($scope.StokHarListe,function(value)
+                angular.forEach($scope.DepoSiparisListe,function(value)
                 {
                     if(value.sth_stok_kod == $scope.Stok[0].KODU)
                     {   
@@ -832,8 +978,8 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         SiparisSelectedRow = $row;
         
-        $scope.SipSeri = $scope.DepoSiparisListe[pIndex].SERI;
-        $scope.SipSira = $scope.DepoSiparisListe[pIndex].SIRA;
+        $scope.SipSeri = $scope.DepoSiparisListe[pIndex].SIPSERI;
+        $scope.SipSira = $scope.DepoSiparisListe[pIndex].SIPSIRA;
         $scope.CDepo = $scope.DepoSiparisListe[pIndex].CIKISDEPO.toString();
         $scope.GDepo = $scope.DepoSiparisListe[pIndex].GIRISDEPO.toString();
         $scope.CDepoAdi = $scope.DepoSiparisListe[pIndex].CIKISDEPOADI;
