@@ -609,7 +609,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             //SİPARİŞE BAĞLI VEYA NORMAL STOK OLARAK GETİRME FONKSİYONU
             EslestirmeStokGetir(pBarkod,async function(pData,pTip)
             {
-                $scope.Stok = pData          
+                $scope.Stok = pData 
+                console.log($scope.Stok)         
                 //FONKSİYONDA $scope.Stok İÇERİĞİ BOŞ GELİRSE TÜM İŞLEMLER İPTAL EDİLİYOR. ALI KEMAL KARACA 18.09.2019
                 if($scope.Stok.length == 0)
                 {
@@ -891,7 +892,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             '',//AÇIKLAMA
             $scope.Stok[0].RECNO, //sth_sip_uid
             '00000000-0000-0000-0000-000000000000', //sth_fat_uid,
-            0, //GİRİSDEPO
+            $scope.DepoNo, //GİRİSDEPO
             $scope.DepoNo,             //CİKİS
             $scope.Tarih, //MALKABULSEVKTARİHİ
             $scope.Sorumluluk, // CARİSORUMLULUKMERKEZİ
