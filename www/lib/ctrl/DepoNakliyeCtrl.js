@@ -639,7 +639,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
     }
     $scope.MaxSira = function()
     {
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     }
     $scope.YeniEvrak = async function ()
     {
@@ -704,12 +704,12 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $scope.ProjeListe = data; 
             $scope.Proje = UserParam.DepoNakliye.Proje
         });
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EkrakTip],function(data)
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EkrakTip],function(data)
         {
             $scope.Sira = data
         });
         
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
         
         BarkodFocus();
 
@@ -936,7 +936,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $scope.Cins = 6;
             $scope.NormalIade = 0;
         }
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.BirimChange = function()
     {

@@ -1657,7 +1657,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.ChaTicaretTuru = 4;
             }
         }
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.EvrakDelete = function(pAlisSatis)
     {

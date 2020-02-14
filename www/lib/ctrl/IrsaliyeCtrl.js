@@ -946,7 +946,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.MaxSira = async function()
     {   
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     }
     $scope.YeniEvrak = function (pAlisSatis)
     {
@@ -1627,7 +1627,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
            
         }
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.BirimChange = function()
     {

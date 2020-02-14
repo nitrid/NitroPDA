@@ -1334,7 +1334,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
 
-        await db.MaxSira($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
         {
             $scope.Sira = data
         });
@@ -1599,7 +1599,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.EvrakTipChange = async function()
     {
-        await db.MaxSira($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data){$scope.Sira = data});
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data){$scope.Sira = data});
     }
     $scope.BirimChange = function()
     {

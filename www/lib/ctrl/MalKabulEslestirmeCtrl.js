@@ -1932,12 +1932,12 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
 
         if($scope.CmbEvrakTip == 0)
         {
-            await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
+            await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
         }
        
        if($scope.CmbEvrakTip == 1)
        {
-            await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
+            await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
        }     
     }
     $scope.YeniEvrak = function ()
