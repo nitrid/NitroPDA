@@ -112,7 +112,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
                     align: "center",
                     width: 200
                 },
-             
             ],
         });
     }
