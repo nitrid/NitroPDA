@@ -1375,11 +1375,11 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             db.GetDataQuery(TmpQuery,function(Data)
             {
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
-                            {
-                                $scope.IrsaliyeListe = data;
-                                $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});  
-                                DipToplamHesapla();  
-                            });
+                    {
+                        $scope.IrsaliyeListe = data;
+                        $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});  
+                        DipToplamHesapla();  
+                    });
             });
             angular.element('#MdlVergiDuzenle').modal('hide');
         }
@@ -1627,7 +1627,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
            
         }
-        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.BirimChange = function()
     {
