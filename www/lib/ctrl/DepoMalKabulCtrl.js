@@ -61,6 +61,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.Stok = [];
         $scope.Miktar = 1;
         $scope.ToplamMiktar = 0;
+        $scope.Tutar = 0;
 
         $scope.MiktarLock = false;
         $scope.OtoEkle = false;
@@ -101,8 +102,8 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                 width: 200
             }, 
             {
-                name: "SIPMIKTAR",
-                title: "SIPMIKTAR",
+                name: "MIKTAR",
+                title: "MIKTAR",
                 type: "text",
                 align: "center",
                 width: 100
@@ -302,9 +303,9 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             "", // BELGENO
             $scope.Tarih, // 10
             $scope.Stok[0].KODU, // 11
-            0, // MİKTAR
+            $scope.Miktar, // MİKTAR
             0, //BFİYAT // 13
-            0, //TUTAR  // 14
+            $scope.Stok[0].TUTAR, //TUTAR  // 14
             0, //TESLIMMIKTARI //15
             $scope.GDepo, // 16
             $scope.CDepo, // 17
@@ -409,6 +410,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                     $scope.Stok[0].Satir = 0;
                     $scope.Stok[0].Miktar = 0;
                     $scope.Stok[0].TOPMIKTAR = 1;
+                    $scope.Stok[0].TUTAR = 0;
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
@@ -583,7 +585,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                     $scope.GDepoAdi = item.ADI;
             });     
         });
-        await db.MaxSira($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data)
+        await db.MaxSiraPromiseTag($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data)
         {
             $scope.Sira = data
         });
@@ -678,7 +680,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             $scope.Cins = 6;
             $scope.Tip = 2;
         }
-        await db.MaxSira($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data)
+        await db.MaxSiraPromiseTag($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data)
         {
             $scope.Sira = data
         });
@@ -962,6 +964,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     $scope.MiktarFiyatValid = function()
     {
         $scope.Stok[0].TOPMIKTAR = $scope.Stok[0].CARPAN * $scope.Miktar
+        $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {

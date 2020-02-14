@@ -328,7 +328,7 @@ function FireCtrl($scope,$window,$timeout,db)
     }
     $scope.MaxSira = function()
     {
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     }
     $scope.YeniEvrak = function()
     {
@@ -368,7 +368,7 @@ function FireCtrl($scope,$window,$timeout,db)
             $scope.SorumlulukListe = data; 
             $scope.Sorumluluk = UserParam.Fire.Sorumluluk
         });
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
         {
             $scope.Sira = data
         });
@@ -388,7 +388,7 @@ function FireCtrl($scope,$window,$timeout,db)
         $scope.Cins = 4;
         $scope.NormalIade = 0;
        
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.DepoChange = function()
     {

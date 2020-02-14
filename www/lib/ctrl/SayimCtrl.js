@@ -387,7 +387,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             });     
         }); 
         
-       await db.MaxSira($scope.Firma,'MaxSayimSira',[$scope.DepoNo,$scope.Tarih],function(data)
+       await db.MaxSiraPromiseTag($scope.Firma,'MaxSayimSira',[$scope.DepoNo,$scope.Tarih],function(data)
         {  
             $scope.EvrakNo = data
         });

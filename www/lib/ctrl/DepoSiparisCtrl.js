@@ -444,7 +444,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
                     $scope.SorumlulukAdi = item.ADI;
             });
         });
-        await db.MaxSira($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data)
+        await db.MaxSiraPromiseTag($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data)
         {
             $scope.Sira = data
         });
@@ -652,7 +652,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
             $scope.Cins = 6;
             $scope.NormalIade = 0;
         }
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.BtnTemizle = function()
     {
@@ -776,7 +776,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
     }
     $scope.MaxSira = async function()
     {
-        await db.MaxSira($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data){$scope.EvrakNo = data});
+        await db.MaxSiraPromiseTag($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data){$scope.EvrakNo = data});
     }
     $scope.Update = function(pIndex)
     {

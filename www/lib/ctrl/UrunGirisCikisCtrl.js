@@ -722,7 +722,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             });
         });
 
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
         {
             $scope.Sira = data
         });
@@ -1009,7 +1009,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $scope.NormalIade = 1;
             $scope.EvrakTip = 12;
         }
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.BirimChange = function()
     {

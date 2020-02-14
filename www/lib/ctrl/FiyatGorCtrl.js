@@ -661,7 +661,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         });
         
        // db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(data){$scope.DepoListe = data; $scope.DepoNo = UserParam.FiyatGor.DepoNo});
-        db.MaxSira($scope.Firma,'MaxEtiketSira',[$scope.Seri],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxEtiketSira',[$scope.Seri],function(data){$scope.Sira = data});
     }
     $scope.DepoChange = function()
     {

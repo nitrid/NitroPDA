@@ -1173,7 +1173,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     }
     $scope.MaxSira = async function()
     {
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     }
     $scope.YeniEvrak =  async function ()
     {
@@ -1231,7 +1231,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             $scope.ProjeListe = data; 
             $scope.Proje = UserParam.DepoSevk.Proje
         });
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
         {
             $scope.Sira = data
         });
