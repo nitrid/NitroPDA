@@ -1333,14 +1333,39 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnVergiDuzenleKaydet = function()
     {
-        for(i = 0;i < $scope.IrsaliyeListe.length;i++)
+        if($scope.ToplamKdv >= 1 )
         {
-            $scope.IrsaliyeListe[i].sth_vergi = ($scope.VergiEdit / $scope.ToplamKdv) *  $scope.IrsaliyeListe[i].sth_vergi
+            for(i = 0;i < $scope.IrsaliyeListe.length;i++)
+            {
+                $scope.IrsaliyeListe[i].sth_vergi = ($scope.VergiEdit / $scope.ToplamKdv) *  $scope.IrsaliyeListe[i].sth_vergi
+    
+                let sth_vergi = $scope.IrsaliyeListe[i].sth_vergi
+                let sth_Guid = $scope.IrsaliyeListe[i].sth_Guid
 
-            let sth_vergi = $scope.IrsaliyeListe[i].sth_vergi
-            let sth_Guid = $scope.IrsaliyeListe[i].sth_Guid
+                let TmpQuery = 
+                {
+                    db :'{M}.' + $scope.Firma,
+                    query:  "UPDATE STOK_HAREKETLERI SET sth_vergi = @sth_vergi WHERE sth_Guid = @sth_Guid",
+                    param : ['sth_vergi','sth_Guid'],
+                    type : ['float','string|50'],
+                    value : [sth_vergi,sth_Guid]
+                }
+                db.GetDataQuery(TmpQuery,function(Data)
+                {
+                    DipToplamHesapla() 
+                });
+            }
+    
+            angular.element('#MdlVergiDuzenle').modal('hide');
+        }
+        else
+        {
+            let sth_vergi = $scope.VergiEdit
+            let sth_Guid = $scope.IrsaliyeListe[0].sth_Guid
+            console.log(sth_Guid)
             let TmpQuery = 
             {
+
                 db :'{M}.' + $scope.Firma,
                 query:  "UPDATE STOK_HAREKETLERI SET sth_vergi = @sth_vergi WHERE sth_Guid = @sth_Guid",
                 param : ['sth_vergi','sth_Guid'],
@@ -1349,11 +1374,16 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
             db.GetDataQuery(TmpQuery,function(Data)
             {
-                DipToplamHesapla() 
+                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
+                            {
+                                $scope.IrsaliyeListe = data;
+                                $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});  
+                                DipToplamHesapla();  
+                            });
             });
+            angular.element('#MdlVergiDuzenle').modal('hide');
         }
-
-        angular.element('#MdlVergiDuzenle').modal('hide');
+      
     }
     $scope.MiktarPress = function(keyEvent)
     {
