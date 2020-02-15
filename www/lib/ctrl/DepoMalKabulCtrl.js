@@ -1015,17 +1015,24 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function() 
     {
-        if($scope.GDepo == $scope.CDepo <= 0 && $scope.DepoSiparisListe.length < 1 || $scope.GDepo != $scope.CDepo <= 0 && $scope.DepoSiparisListe.length < 1) 
-        {
-            alertify.alert("Bu Ekrana Girebilmeniz İçin Sipariş Seçimi Yapılmalı ve Giriş ve Çıkış Depoları Farklı Olmalıdır.");
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
         }
         else
         {
-            $("#TbBarkodGiris").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
-            $("#TbSiparisSecimi").removeClass('active');
+            if($scope.GDepo == $scope.CDepo <= 0 && $scope.DepoSiparisListe.length < 1 || $scope.GDepo != $scope.CDepo <= 0 && $scope.DepoSiparisListe.length < 1) 
+            {
+                alertify.alert("Bu Ekrana Girebilmeniz İçin Sipariş Seçimi Yapılmalı ve Giriş ve Çıkış Depoları Farklı Olmalıdır.");
+            }
+            else
+            {
+                $("#TbBarkodGiris").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                $("#TbSiparisSecimi").removeClass('active');
+            }
         }
         BarkodFocus();
     }

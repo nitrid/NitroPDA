@@ -2178,19 +2178,26 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     $scope.BarkodGirisClick = function() 
     {   
-        if($scope.CariAdi != "")
-        {
-            $("#TbBarkodGiris").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbCariSec").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
-                        
-            BarkodFocus();
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
         }
         else
         {
-            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Cari Seçiniz !" + "</a>" );
+            if($scope.CariAdi != "")
+            {
+                $("#TbBarkodGiris").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbCariSec").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                            
+                BarkodFocus();
+            }
+            else
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Cari Seçiniz !" + "</a>" );
+            }
         }
     }
     $scope.IslemSatirlariClick = function()
@@ -2210,8 +2217,15 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     $scope.CariSecClick = function()
     {
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
+        }
+        else
+        {
         $("#TbCariSec").addClass('active');
         $("#TbMain").removeClass('active');
+        }
     }
     $scope.MainClick = function() 
     {
