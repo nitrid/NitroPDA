@@ -1134,7 +1134,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {
         if(keyEvent.which === 13)
         {
-            StokBarkodGetir($scope.Barkod);    
+            StokBarkodGetir($scope.Barkod);  
         }
     }
     $scope.BtnBarkodGetirClick = function()
