@@ -1134,7 +1134,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {
         if(keyEvent.which === 13)
         {
-            StokBarkodGetir($scope.Barkod);  
+            StokBarkodGetir($scope.Barkod);    
         }
     }
     $scope.BtnBarkodGetirClick = function()
@@ -1971,24 +1971,16 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.CariSecClick = function() 
     {
-        console.log($scope.Sira)
-        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
-        {            
-            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
-        }
+        if($scope.SiparisListe.length == 0 && typeof $scope.Sira != "undefined" || $scope.Sira != 0)
+        {
+            $("#TbCariSec").addClass('active');
+            $("#TbMain").removeClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');
+            $("#TbIslemSatirlari").removeClass('active');
+        }        
         else
         {
-            if($scope.SiparisListe.length == 0)
-            {
-                $("#TbCariSec").addClass('active');
-                $("#TbMain").removeClass('active');
-                $("#TbBelgeBilgisi").removeClass('active');
-                $("#TbIslemSatirlari").removeClass('active');
-            }        
-            else
-            {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Cari Seçim Ekranına Girmeye Yetkiniz Yok !" + "</a>" );
-            }
+            alertify.alert("<a style='color:#3e8ef7''>" + "Cari Seçim Ekranına Girmeye Yetkiniz Yok !" + "</a>" );
         }
     }
     $scope.BelgeBilgisiClick = function() 
@@ -1998,26 +1990,19 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BarkodGirisClick = function() 
     {   
-        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
-        {            
-            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
+        if($scope.CariAdi != "")
+        {
+            $("#TbBarkodGiris").addClass('active');
+            $("#TbMain").removeClass('active');
+            $("#TbCariSec").removeClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');
+            $("#TbIslemSatirlari").removeClass('active');
+                        
+            BarkodFocus();
         }
         else
         {
-            if($scope.CariAdi != "")
-            {
-                $("#TbBarkodGiris").addClass('active');
-                $("#TbMain").removeClass('active');
-                $("#TbCariSec").removeClass('active');
-                $("#TbBelgeBilgisi").removeClass('active');
-                $("#TbIslemSatirlari").removeClass('active');
-                            
-                BarkodFocus();
-            }
-            else
-            {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Cari Seçiniz !" + "</a>" );
-            }
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Cari Seçiniz !" + "</a>" );
         }
     }
     $scope.TbIslemSatirlariClick = function() 

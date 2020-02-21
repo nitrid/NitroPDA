@@ -1337,24 +1337,30 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function()
     {   
-        if($scope.GDepo == $scope.CDepo)
-        {
-            alertify.alert("Giriş ve Çıkış Deposu Aynı Olamaz!");
-
-            $("#TbMain").addClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbBarkodGiris").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
         }
         else
         {
-            $("#TbBarkodGiris").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
-            BarkodFocus();
+            if($scope.GDepo == $scope.CDepo)
+            {
+                alertify.alert("Giriş ve Çıkış Deposu Aynı Olamaz!");
+
+                $("#TbMain").addClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbBarkodGiris").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+            }
+            else
+            {
+                $("#TbBarkodGiris").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                BarkodFocus();
+            }
         }
-        
     }
     $scope.IslemSatirlariClick = function()
     {   

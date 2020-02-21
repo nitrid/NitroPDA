@@ -123,7 +123,8 @@ function Login ($scope,$rootScope,$window,db)
         console.log(Param)
         for(i = 0;i < Param.length;i++)
         {
-            if($scope.Firm != "")
+            console.log($scope.Firm)
+            if( typeof $scope.Firm !=  "undefined")
             {
                 if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
                 {

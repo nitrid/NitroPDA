@@ -775,11 +775,18 @@ function SayimCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function()
     {   
-        $("#TbBarkodGiris").addClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbBelgeBilgisi").removeClass('active');
-        $("#TbIslemSatirlari").removeClass('active');
-        BarkodFocus();
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
+        }
+        else
+        {
+            $("#TbBarkodGiris").addClass('active');
+            $("#TbMain").removeClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');
+            $("#TbIslemSatirlari").removeClass('active');
+            BarkodFocus();
+        }
     }
     $scope.TbIslemSatirlariClick = function()
     {   

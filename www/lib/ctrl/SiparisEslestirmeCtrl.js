@@ -1931,15 +1931,22 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.CariSecClick = function() 
     {
-        if($scope.StokHarListe.length == 0)
-        {
-            $("#TbCariSec").addClass('active');
-            $("#TbMain").removeClass('active');
-        }        
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
+        }
         else
         {
-            alertify.okBtn("Tamam");
-            alertify.alert("Kayıtlı Evrak Olmadan Bu Menüye Giremezsiniz!");
+            if($scope.StokHarListe.length == 0)
+            {
+                $("#TbCariSec").addClass('active');
+                $("#TbMain").removeClass('active');
+            }        
+            else
+            {
+                alertify.okBtn("Tamam");
+                alertify.alert("Kayıtlı Evrak Olmadan Bu Menüye Giremezsiniz!");
+            }
         }
     }
     $scope.BelgeBilgisiClick = function() 
@@ -1950,28 +1957,35 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function() 
     {
-        if($scope.CmbEvrakTip == 3 )
-        {
-            if($scope.IhracKod == '')
-            {
-                alertify.alert("Lütfen Belge Bilgisinden İhracat Kodu Giriniz.")
-            }
-        }
-        if($scope.CariKodu != "")
-        {
-            $("#TbBarkodGiris").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbCariSec").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
-            $("#TbSiparisSecimi").removeClass('active');
-            
-            BarkodFocus();
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
         }
         else
         {
-            alertify.okBtn("Tamam");
-            alertify.alert("Lütfen Cari Seçiniz !");
+            if($scope.CmbEvrakTip == 3 )
+            {
+                if($scope.IhracKod == '')
+                {
+                    alertify.alert("Lütfen Belge Bilgisinden İhracat Kodu Giriniz.")
+                }
+            }
+            if($scope.CariKodu != "")
+            {
+                $("#TbBarkodGiris").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbCariSec").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                $("#TbSiparisSecimi").removeClass('active');
+                
+                BarkodFocus();
+            }
+            else
+            {
+                alertify.okBtn("Tamam");
+                alertify.alert("Lütfen Cari Seçiniz !");
+            }
         }
     }
     $scope.TbIslemSatirlariClick = function() 

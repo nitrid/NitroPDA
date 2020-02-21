@@ -1,4 +1,4 @@
-function YapilacakTahsilatlarCtrl($scope,$window,db)
+function YapilanTahsilatlarCtrl($scope,$window,db)
 {       
     let IslemSelectedRow = null;
     
@@ -17,27 +17,20 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             fields: 
             [
                 {
-                    name: "KODU",
-                    title: "KODU",
+                    name: "CARI",
+                    title: "CARI",
                     type: "text",
                     align: "center",
                     width: 120
                     
                 },
                 {
-                    name: "ADI",
-                    title: "CARİ ADI",
+                    name: "TUTAR",
+                    title: "TUTAR",
                     type: "text",
                     align: "center",
                     width: 120
                     
-                },
-                {
-                    name: "BAKIYE",
-                    title: "BAKİYE",
-                    type: "number",
-                    align: "center",
-                    width: 180
                 },
             ],
             rowClick: function(args)
@@ -122,6 +115,9 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
 
         $scope.PlasiyerKodu = UserParam.Sistem.PlasiyerKodu;
         $scope.ToplamBakiye = 0;
+        $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
+        $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
+        console.log(IlkTarih)
         console.log($scope.PlasiyerKodu)
         InitTahsilatRapor();
         InitCariFoy()
@@ -134,11 +130,10 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM from CARI_HESAPLAR " +
-            " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) order by ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
-            param:  ['PLASIYERKODU'], 
-            type:   ['string|25'], 
-            value:  [$scope.PlasiyerKodu]    
+            query:  "SELECT cha_evrakno_seri AS SERI,cha_evrakno_sira AS SIRA,(select cari_unvan1 from CARI_HESAPLAR where cari_kod = cha_kod ) AS CARI,cha_meblag AS TUTAR FROM CARI_HESAP_HAREKETLERI WHERE cha_evrak_tip = 1 AND cha_tarihi >= @ILKTARIH AND cha_tarihi <= @SONTARIH ",
+            param:  ['ILKTARIH','SONTARIH'], 
+            type:   ['date','date'], 
+            value:  [$scope.IlkTarih,$scope.SonTarih]    
         }
     
         db.GetDataQuery(TmpQuery,function(Data)
@@ -146,7 +141,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             console.log(Data)
             $scope.IslemListe = Data;
             $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
-            $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
+            $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TUTAR")).toFixed(2)
         });
     }
     $scope.IslemDetayRowClick = function(pIndex,pItem,pObj)

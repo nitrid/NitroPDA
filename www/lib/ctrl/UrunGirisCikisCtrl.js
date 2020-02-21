@@ -1317,20 +1317,27 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function() 
     {   
-        if($scope.IsEmriAdi != "")
-        {
-            $("#TbBarkodGiris").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
-            $("#TbIsEmriSecim").removeClass('active');
-                        
-            BarkodFocus();
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
         }
         else
         {
-            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen İş Emri Seçiniz !" + "</a>" );
-            $("#TbBarkodGiris").removeClass('active'); 
+            if($scope.IsEmriAdi != "")
+            {
+                $("#TbBarkodGiris").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                $("#TbIsEmriSecim").removeClass('active');
+                            
+                BarkodFocus();
+            }
+            else
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen İş Emri Seçiniz !" + "</a>" );
+                $("#TbBarkodGiris").removeClass('active'); 
+            }
         }
     }
     $scope.IslemSatirlariClick = function()

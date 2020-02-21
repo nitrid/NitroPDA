@@ -130,6 +130,10 @@ angular.module("app",
     .when("/YapilacakTahsilatlar",
     {
         templateUrl : "html/rapor/YapilacakTahsilatlar.html"
+    })
+    .when("/YapilanTahsilatlar",
+    {
+        templateUrl : "html/rapor/YapilanTahsilatlar.html"
     });
 });
 
