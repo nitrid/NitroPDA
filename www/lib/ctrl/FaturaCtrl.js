@@ -701,6 +701,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     {   
                         $scope.BirimListe = data; 
                         $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
+                        console.log($scope.BirimListe)
+                        console.log($scope.Birim)
 
                         if($scope.BirimListe.length > 0)
                         {
@@ -1451,9 +1453,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.DepoAdi = item.ADI;
         });
     }
-    $scope.EvrakGetir = function ()
+    $scope.EvrakGetir = async function ()
     {   
-        db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],async function(data)
+        await db.GetPromiseTag($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],async function(data)
         {
             if(data.length > 0)
             {
@@ -1468,6 +1470,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.CariAdi = data[0].CARIADI;
                 $scope.BelgeNo = data[0].sth_belge_no;
                 $scope.Tarih = new Date(data[0].sth_tarih).toLocaleDateString();
+                $scope.ChaGuid = data[0].sth_fat_uid;
                 $scope.Barkod = "";
                 $scope.Stok = 
                 [

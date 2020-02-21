@@ -7,7 +7,7 @@ var Param = [
 			"FirmaNo": "0",
 			"Firma": "",
 			"SubeNo": "0",
-			"SatirBirlestir": "1",
+			"SatirBirlestir": "0",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
