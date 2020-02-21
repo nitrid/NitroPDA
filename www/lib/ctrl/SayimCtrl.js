@@ -775,7 +775,7 @@ function SayimCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function()
     {   
-        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        if($scope.EvrakNo == 0 || typeof $scope.EvrakNo == "undefined")
         {            
             alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
         }

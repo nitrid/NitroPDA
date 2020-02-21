@@ -262,6 +262,19 @@ var ParamTemp =
 			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
 		},
+		"FasonGirisCikis" :
+		{
+			"CmbEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"Seri" : {"Title" : "Seri","DefaultValue" : "FSN"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"IsMerkezi" : {"Title" : "İş Merkezi","DefaultValue" : ""},
+			"Depo" : {"Title" : "Depo No","DefaultValue" : "1"},
+			"DepoListe" : {"Title" : "Depo Liste","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
+			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+		},
 		"TahsilatMakbuzu" :
 		{
 			"ChaEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "1"},
