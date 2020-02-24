@@ -1971,7 +1971,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.CariSecClick = function() 
     {
-        console.log($scope.Sira)
         if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
         {            
             alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
