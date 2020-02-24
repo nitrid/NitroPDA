@@ -233,7 +233,7 @@ var Param = [
 			"Tediye Makbuzu": "0",
 			"Mal Kabul Eşleştirme": "1",
 			"Ürün Giriş Çıkış": "1",
-			"Fason Giriş Çıkış": "0",
+			"Fason Giriş Çıkış": "1",
 			"Planlı Üretim": "0",
 			"Aktarim": "1",
 			"EvrakGonder": "1",
@@ -290,6 +290,19 @@ var Param = [
 			"Proje": "",
 			"EvrakSil": "0",
 			"IsMerkezi": "01",
+			"IsMerkeziListe": "",
+			"CmbEvrakTip": "0"
+		},
+		"FasonGirisCikis": {
+			"Seri": "FSN",
+			"BelgeNo": "",
+			"Depo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"Proje": "",
+			"EvrakSil": "0",
+			"IsMerkezi": "",
 			"IsMerkeziListe": "",
 			"CmbEvrakTip": "0"
 		},

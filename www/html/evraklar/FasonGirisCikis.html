@@ -28,12 +28,16 @@
                 </div>
                 <div class="row">
                     <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Evrak No :</label></div>
-                    <div class="col-8 px-0"><label class="form-control-label pl-10">{{EvrakNo}}</label></div>
+                    <div class="col-8 px-0"><label class="form-control-label pl-10">{{Seri}} - {{Sira}}</label></div>
 
                 </div>
                 <div class="row">
                     <div class="col-4 px-0 text-info"><label class="form-control-label float-right">İşemri İsim :</label></div>
                     <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10"></label></div>
+                </div>
+                <div class="row">
+                    <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Cari :</label></div>
+                    <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{CariAdi}}</label></div>
                 </div>
                 <div class="row">
                     <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Personel :</label></div>
@@ -127,6 +131,46 @@
                     </div>
                 </div>
                 
+            </div>
+            <div id="TbCariSec" class="tab-pane">
+                <div class="row py-1">
+                    <div class="col-4 px-1">
+                        <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-4 px-1">
+                        <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
+                    </div>
+                </div>
+                <div class="row pt-5">
+                    <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">  
+                        <label class="mb-0 h4 text-primary">{{CariKodu}} - {{CariAdi}}</label> 
+                    </div>
+                </div>
+                <div class="form-group row my-1">
+                    <div class="col-4 px-1">
+                        <select class="form-control" ng-model="CmbCariAra" ng-disabled="EvrakLock">
+                            <option value="0">ADI</option>
+                            <option value="1">KODU</option>
+                        </select>
+                    </div>
+                    <div class="col-8 px-1">
+                        <input type="text" class="form-control" ng-model="TxtCariAra" ng-disabled="EvrakLock">
+                    </div>
+                </div>
+                <div class="form-group row my-1">
+                    <div class="col-6">
+                        <button class="form-group btn btn-block btn-primary my-1 h-40" ng-click="MainClick()">Cari Seç</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="form-group btn btn-block btn-primary my-1 h-40" ng-click="BtnCariListele()">Cari Listele</button>
+                    </div>
+                </div>
+                <div class="col-1 offset-5" ng-show="Loading">
+                    <div class="loader vertical-align-middle loader-circle"></div>
+                </div>
+                <div class="row py-1 px-1">
+                    <div id="TblCari"></div>
+                </div>
             </div>
             <div id="TbBarkodGiris" class="tab-pane">
                 <div class="row pt-0 pb-1 pb-5">
