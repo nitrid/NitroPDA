@@ -22,6 +22,7 @@
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak(0)">Yeni Evrak</button>
                                 <button class="dropdown-item"  data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Evrak Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(0)">Evrak Sil</button>
+                                <button class="dropdown-item"  data-target="#MdlEvrakAciklama" data-toggle="modal" role="menu-item">Evrak Açıklama</a>
                             </div>
                         </div>
                     </div>
@@ -388,6 +389,64 @@
         </div>
     </div>
     <!-- MODALLAR -->
+    <!-- Evrak Açıklama Modal Başlangıç-->
+    <div class="modal fade" id="MdlEvrakAciklama" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">X</span>
+                </button>
+                <h4 class="modal-title">Evrak Açıklama</h4>
+            </div>
+                <div class="modal-body py-10">
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 1 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr1">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 2 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr2">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 3 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr3">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 4 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr4">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 5 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr5">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 6 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr6">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 7 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr7">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 8 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr8">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 9 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr9">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama 10 :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="EvrAciklama.Evr10">
+                    </div>
+                    <div class="row my-5">
+                        <button type="submit" class="btn btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnEvrAckKaydet()">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Evrak Getir Modal Başlangıç-->
     <div class="modal fade" id="MdlEvrakGetir" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-simple modal-primary modal-center px-10">

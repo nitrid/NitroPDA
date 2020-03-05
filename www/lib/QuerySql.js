@@ -1214,6 +1214,99 @@ var QuerySql =
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','BdnHar_Tipi'],
         type:   ['string|20','int','int','int']
     },
+    EvrAciklamaInsert:
+    {
+        query:   
+        "INSERT INTO [dbo].[EVRAK_ACIKLAMALARI]" +
+        "(" +
+        "[egk_Guid]" +
+        ",[egk_DBCno]" +
+        ",[egk_SpecRECno]" +
+        ",[egk_iptal]" +
+        ",[egk_fileid]" +
+        ",[egk_hidden]" +
+        ",[egk_kilitli]" +
+        ",[egk_degisti]" +
+        ",[egk_checksum]" +
+        ",[egk_create_user]" +
+        ",[egk_create_date]" +
+        ",[egk_lastup_user]" +
+        ",[egk_lastup_date]" +
+        ",[egk_special1]" +
+        ",[egk_special2]" +
+        ",[egk_special3]" +
+        ",[egk_dosyano]" +
+        ",[egk_hareket_tip]" +
+        ",[egk_evr_tip]" +
+        ",[egk_evr_seri]" +
+        ",[egk_evr_sira]" +
+        ",[egk_evr_ustkod]" +
+        ",[egk_evr_doksayisi]" +
+        ",[egk_evracik1]" +
+        ",[egk_evracik2]" +
+        ",[egk_evracik3]" +
+        ",[egk_evracik4]" +
+        ",[egk_evracik5]" +
+        ",[egk_evracik6]" +
+        ",[egk_evracik7]" +
+        ",[egk_evracik8]" +
+        ",[egk_evracik9]" +
+        ",[egk_evracik10]" +
+        ",[egk_sipgenkarorani]" +
+        ",[egk_kargokodu]" +
+        ",[egk_kargono]" +
+        ",[egk_tesaltarihi]" +
+        ",[egk_tesalkisi]" +
+        ",[egk_prevwiewsayisi]" +
+        ",[egk_emailsayisi]" +
+        ",[egk_Evrakopno_verildi_fl] " +
+        ")" +
+        "VALUES ( " +
+        ",0                         --<egk_DBCno, smallint, \n>" +
+        ",0                         --<egk_SpecRECno, int,  \n> " +
+        ",0                         --<egk_iptal, bit,  \n> " +
+        ",66                        --<egk_fileid, smallint,  \n> " +
+        ",0                         --<egk_hidden, bit,  \n> " +
+        ",0                         --<egk_kilitli, bit,  \n> " +
+        ",0                         --<egk_degisti, bit,  \n> " +
+        ",0                         --<egk_checksum, int,  \n> " +
+        ",@egk_create_user           --<egk_create_user, smallint,  \n> " +
+        ",GETDATE()                 --<egk_create_date, datetime,  \n> " +
+        ",@egk_lastup_user           --<egk_lastup_user, smallint,  \n> " +
+        ",GETDATE()                 --<egk_lastup_date, datetime,  \n> " +
+        ",''                        --<egk_special1, nvarchar(4),  \n> " +
+        ",''                        --<egk_special2, nvarchar(4),  \n> " +
+        ",''                        --<egk_special3, nvarchar(4),  \n> " +
+        ",@egk_dosyano              --<egk_dosyano, smallint,  \n> " +
+        ",@egk_hareket_tip          --<egk_hareket_tip, tinyint,  \n> " +
+        ",@egk_evr_tip              --<egk_evr_tip, tinyint,  \n> " +
+        ",@egk_evr_seri             --<egk_evr_seri, [dbo].[evrakseri_str],  \n> " +
+        ",@egk_evr_sira             --<egk_evr_sira, int,  \n> " +
+        ",''                        --<egk_evr_ustkod, nvarchar(25),  \n> " +
+        ",0                         --<egk_evr_doksayisi, smallint,  \n> " +
+        ",@egk_evracik1             --<egk_evracik1, nvarchar(127),  \n> " +
+        ",@egk_evracik2             --<egk_evracik2, nvarchar(127),  \n> " +
+        ",@egk_evracik3             --<egk_evracik3, nvarchar(127),  \n> " +
+        ",@egk_evracik4             --<egk_evracik4, nvarchar(127),  \n> " +
+        ",@egk_evracik5             --<egk_evracik5, nvarchar(127),  \n> " +
+        ",@egk_evracik6             --<egk_evracik6, nvarchar(127),  \n> " +
+        ",@egk_evracik7             --<egk_evracik7, nvarchar(127),  \n> " +
+        ",@egk_evracik8             --<egk_evracik8, nvarchar(127),  \n> " +
+        ",@egk_evracik9             --<egk_evracik9, nvarchar(127),  \n> " +
+        ",@egk_evracik10            --<egk_evracik10, nvarchar(127),  \n> " +
+        ",0                         --<egk_sipgenkarorani, float,  \n> " +
+        ",''                        --<egk_kargokodu, nvarchar(25),  \n> " +
+        ",''                        --<egk_kargono, nvarchar(15),  \n> " +
+        ",'18991230'                --<egk_tesaltarihi, datetime,  \n> " +
+        ",''                        --<egk_tesalkisi, nvarchar(50),  \n> " +
+        ",0                         --<egk_prevwiewsayisi, smallint,  \n> " +
+        ",0                         --<egk_emailsayisi, smallint,  \n> " +
+        ",0                         --<egk_Evrakopno_verildi_fl, bit,  \n> " +
+        ")",
+        param:['egk_create_user:int','egk_lastup_user:int','egk_dosyano:int','egk_hareket_tip:int','egk_evr_tip:int','egk_evr_seri:string|25','egk_evr_sira:int',
+        'egk_evracik1:string|127','egk_evracik2:string|127','egk_evracik3:string|127','egk_evracik4:string|127','egk_evracik5:string|127','egk_evracik6:string|127',
+        'egk_evracik7:string|127','egk_evracik8:string|127','egk_evracik9:string|127','egk_evracik10:string|127']
+     },
     //Beden Hareket
     BedenHarInsert :
     {
