@@ -73,19 +73,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.AciklamaTip = 21;
         $scope.AciklamaEvrTip = 0;
         $scope.AciklamaHarTip = 0;
-        $scope.EvrAciklama = 
-        {
-            Evr1 : "",
-            Evr2 : "",
-            Evr3 : "",
-            Evr4 : "",
-            Evr5 : "",
-            Evr6 : "",
-            Evr7 : "",
-            Evr8 : "",
-            Evr9 : "",
-            Evr10 : "",
-        };
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -1155,95 +1142,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     $scope.BtnBarkodGetirClick = function()
     {
         StokBarkodGetir($scope.Barkod);
-    }
-    $scope.BtnEvrAckKaydet = function()
-    {  
-        var InsertData = 
-        [
-            UserParam.MikroId,
-            UserParam.MikroId,
-            0, //FIRMA NO
-            0, //ŞUBE NO
-            $scope.Tarih,
-            $scope.TeslimTarihi,
-            $scope.EvrakTip,
-            0, //CİNSİ
-            $scope.Seri,
-            $scope.Sira,
-            $scope.BelgeNo,
-            $scope.Tarih,
-            $scope.Personel,
-            $scope.CariKodu,
-            $scope.Stok[0].KODU,
-            $scope.Stok[0].FIYAT,
-            $scope.Miktar * $scope.Stok[0].CARPAN,
-            $scope.Stok[0].BIRIMPNTR,
-            0, //TESLİM MİKTARI
-            $scope.Stok[0].TUTAR,
-            $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
-            $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
-            $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
-            $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
-            $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
-            $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
-            $scope.Stok[0].TOPTANVERGIPNTR,
-            $scope.Stok[0].KDV,
-            $scope.OdemeNo,
-            '', //AÇIKLAMA
-            $scope.DepoNo,
-            $scope.SipOnayKulNo,
-            $scope.Sorumluluk,
-            $scope.Sorumluluk,
-            $scope.CariDovizCinsi,
-            $scope.CariDovizKuru,
-            $scope.CariAltDovizKuru,
-            1, //ADRES NO
-            $scope.Stok[0].ISK.TIP1, //ISKONTO TİP 1
-            $scope.Stok[0].ISK.TIP2, //ISKONTO TİP 2
-            $scope.Stok[0].ISK.TIP3, //ISKONTO TİP 3
-            $scope.Stok[0].ISK.TIP4, //ISKONTO TİP 4
-            $scope.Stok[0].ISK.TIP5, //ISKONTO TİP 5
-            $scope.Stok[0].ISK.TIP6, //ISKONTO TİP 6
-            0, //SATIR ISKONTO TİP 1
-            0, //SATIR ISKONTO TİP 2
-            0, //SATIR ISKONTO TİP 3
-            0, //SATIR ISKONTO TİP 4
-            0, //SATIR ISKONTO TİP 5
-            0, //SATIR ISKONTO TİP 6
-            $scope.Stok[0].PARTI,
-            $scope.Stok[0].LOT,
-            $scope.Proje,
-            $scope.CariFiyatListe,
-            0, //REZERVASYON MİKTARI
-            0  //REZERVASYON TESLİM MİKTARI
-        ];
-        console.log(InsertData)
-
-        db.ExecuteTag($scope.Firma,'EvrAciklamaInsert',InsertData,function(InsertResult)
-        {          
-            if(typeof(InsertResult.result.err) == 'undefined')
-            {                                        
-                db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(SiparisData)
-                {   
-                    if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
-                    {
-                        BedenHarInsert(InsertResult.result.recordset[0].sip_Guid);
-                    } 
-                    InsertAfterRefresh(SiparisData);
-                    FisData(SiparisData);  
-                    $scope.InsertLock = false  
-                    if(UserParam.Sistem.Titresim == 1)
-                    {
-                        Confirmation();
-                    }                 
-                });
-            }
-            else
-            {
-                console.log(InsertResult.result.err);
-                $scope.InsertLock = false;
-            }
-        });
     }
     $scope.BtnTemizle = function()
     {
