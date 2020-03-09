@@ -17,13 +17,27 @@ background-color: #90ee90 !important;
     </div>
     <div class="panel">
         <div class="panel-body">
-            <div class="form-group form-material" data-plugin="formMaterial">
-                <label class="form-control-label text-primary">Cari Seçim</label>
-                <input type="text" class="form-control focus" placeholder="Cari Listelemek İçin Tıklayınız..." data-target="#MdlCariGetir" data-toggle="modal" ng-model="CariAdi">
+            <div class="row py-1">
+                <div class="col-12 px-1">
+                    <label class="form-control-label text-primary">Cari Seçim</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control focus" placeholder="Cari Listelemek İçin Tıklayınız..." data-target="#MdlCariGetir" data-toggle="modal" ng-model="CariAdi">
+                        <span class="input-group-append">
+                            <button type="submit" class="btn btn-primary" ng-click="BtnCariTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                        </span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group form-material" data-plugin="formMaterial">
-                <label class="form-control-label text-primary">Şube Seçim</label>
-                <input type="text" class="form-control focus" placeholder="Şube Listelemek İçin Tıklayınız..." data-target="#MdlSubeGetir" data-toggle="modal" ng-model="SubeAdi">
+            <div class="row py-1">
+                <div class="col-12 px-1">
+                    <label class="form-control-label text-primary">Şube Seçim</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control focus" placeholder="Şube Listelemek İçin Tıklayınız..." data-target="#MdlSubeGetir" data-toggle="modal" ng-model="SubeAdi">
+                        <span class="input-group-append">
+                            <button type="submit" class="btn btn-primary" ng-click="BtnSubeTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                        </span>
+                    </div>
+                </div>
             </div>
             <!-- <div class="row my-0 py-0">
                 <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Evrak Tip:</div></div>
