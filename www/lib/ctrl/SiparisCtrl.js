@@ -54,8 +54,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.TeslimTarihi = moment(new Date()).format("DD.MM.YYYY");
         $scope.Sorumluluk = "";
         $scope.SorumlulukAdi = "";
-        $scope.Personel = "";
-        $scope.PersonelAdi = "";
+        $scope.Personel;
+        $scope.PersonelAdi;
         $scope.Proje = "";
         $scope.OdemeNo = "0";
         $scope.Barkod = "";
@@ -1329,10 +1329,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data)
         {
             $scope.PersonelListe = data;
+            console.log(data)
             $scope.Personel = UserParam[ParamName].Personel;
             $scope.PersonelListe.forEach(function(item)
             {
+                if(item.KODU == $scope.Personel)
                 $scope.PersonelAdi == item.ADI;
+                console.log($scope.PersonelAdi)
+                console.log($scope.Personel)
             });
         });           
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
