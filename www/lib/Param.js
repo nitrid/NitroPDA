@@ -41,7 +41,7 @@ var Param = [
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
-			"Personel": "",
+			"Personel": "01",
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
