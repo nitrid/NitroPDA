@@ -335,15 +335,15 @@ var QuerySql =
         query : "SELECT pl_partikodu AS PARTI, " + 
                 "pl_lotno AS LOT, " +
                 "pl_stokkodu AS STOK, " +
-                "ISNULL((SELECT [dbo].[fn_PartiLotMiktar] (pl_partikodu,pl_lotno,pl_stokkodu)),0) AS MIKTAR, " +
+                "ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,@DepoNo,GETDATE(),pl_partikodu,pl_lotno)),0) AS MIKTAR, " +
                 "0 AS KALAN, " +
                 "pl_son_kullanim_tar AS SKTTARIH " + 
                 "FROM PARTILOT " +
                 "WHERE pl_stokkodu = @pl_stokkodu " +
                 "AND ((pl_partikodu = @pl_partikodu) OR (@pl_partikodu = '')) AND ((pl_lotno = @pl_lotno) OR (@pl_lotno = 0)) " +
                 "ORDER BY pl_partikodu ASC ",
-        param : ['pl_stokkodu','pl_partikodu','pl_lotno'],
-        type : ['string|25','string|25','int']
+        param : ['pl_stokkodu','DepoNo','pl_partikodu','pl_lotno'],
+        type : ['string|25','int','string|25','int']
     },
     PartiLotInsert :
     {
@@ -604,8 +604,8 @@ var QuerySql =
                 "MAX(sip_projekodu) AS PROJE, " +
                 "MAX(CONVERT(NVARCHAR(50),sip_yetkili_recid_recno)) AS YETKILI, " +
                 "sip_Exp_Imp_Kodu AS EXIMKODU, " +
-                "sip_parti_kodu AS PARTI, " +
-                "sip_lot_no AS LOT " +
+                "bar_partikodu AS PARTI, " +
+                "bar_lotno AS LOT " +
                 "FROM SIPARISLER AS SIPARIS " + 
                 "LEFT OUTER JOIN BARKOD_TANIMLARI AS BARKOD ON " +
                 "BARKOD.bar_stokkodu = SIPARIS.sip_stok_kod " +
@@ -673,8 +673,8 @@ var QuerySql =
                 "STOK.sto_siparis_dursun, " +
                 "STOK.sto_malkabul_dursun, " +
                 "sip_Exp_Imp_Kodu, " +
-                "sip_parti_kodu, " +
-                "sip_lot_no, " +
+                "bar_partikodu, " +
+                "bar_lotno, " +
                 "BARKOD.bar_birimpntr, " +
                 "sto_beden_kodu, " +
                 "sto_renk_kodu, " +

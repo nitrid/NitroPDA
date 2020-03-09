@@ -1750,6 +1750,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.CariFiyatListe = data[0].sth_fiyat_liste_no;
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
+                $scope.Tip = data[0].sth_tip;
                 $scope.EvrakTip = data[0].sth_evraktip.toString();
                 $scope.CariKodu = data[0].sth_cari_kodu;
                 $scope.CariAdi = data[0].CARIADI;

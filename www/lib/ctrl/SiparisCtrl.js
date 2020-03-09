@@ -86,6 +86,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BedenListe = [];
         DepoMiktarListe = [];
 
+        $scope.AciklamaGuid = ''
+        $scope.Aciklama1 = ''
+        $scope.Aciklama2 = ''
+        $scope.Aciklama3 = ''
+        $scope.Aciklama4 = ''
+        $scope.Aciklama5 = ''
 
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -944,32 +950,32 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             console.log(error)
         }
     }
-    function SpaceLength(pData,pLength)
-    {
-        try 
-        {
-            let x = pLength - pData.toString().length;
+    // function SpaceLength(pData,pLength)
+    // {
+    //     try 
+    //     {
+    //         let x = pLength - pData.toString().length;
 
-            if(pData.toString().length > pLength)
-            {
-                pData = pData.substring(0,25);
-            }
+    //         if(pData.toString().length > pLength)
+    //         {
+    //             pData = pData.substring(0,25);
+    //         }
 
-            Space = "";
+    //         Space = "";
 
-            for(let i=0; i < x; i++)
-            {
-                Space = Space + " ";
-            }
+    //         for(let i=0; i < x; i++)
+    //         {
+    //             Space = Space + " ";
+    //         }
 
-            return pData + Space
+    //         return pData + Space
             
-        } 
-        catch (error) 
-        {
-            console.log(error)
-        }
-    }
+    //     } 
+    //     catch (error) 
+    //     {
+    //         console.log(error)
+    //     }
+    // }
     $scope.BtnCariListele = function()
     {   
         $scope.Loading = true;
@@ -1968,6 +1974,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbCariSec").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
+        $("#TblAciklama").removeClass('active');
+
     }
     $scope.CariSecClick = function() 
     {
@@ -1983,6 +1991,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbMain").removeClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TblAciklama").removeClass('active');
+
             }        
             else
             {
@@ -1994,6 +2004,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {
         $("#TbBelgeBilgisi").addClass('active');
         $("#TbMain").removeClass('active');
+        $("#TblAciklama").removeClass('active');
+
     }
     $scope.BarkodGirisClick = function() 
     {   
@@ -2010,6 +2022,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbCariSec").removeClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TblAciklama").removeClass('active');
+
                             
                 BarkodFocus();
             }
@@ -2026,6 +2040,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbCariSec").removeClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
+        $("#TblAciklama").removeClass('active');
+
     }
     $scope.ScanBarkod = function()
     {
@@ -2061,5 +2077,80 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );                
             }
         });
+    }
+    $scope.BtnAciklamaGir = function()
+    {
+        $("#TbIslemSatirlari").removeClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TblAciklama").addClass('active');
+        $scope.AciklamaGetir();
+    }
+    $scope.BtnAciklamaKaydet = function()
+    {
+        if($scope.AciklamaGuid == '')
+        {
+                var InsertData =
+            [
+                0,
+                0,
+                $scope.Seri,
+                $scope.Sira,
+                $scope.Aciklama1,
+                $scope.Aciklama2,
+                $scope.Aciklama3,
+                $scope.Aciklama4,
+                $scope.Aciklama5
+            ];
+
+            db.ExecuteTag($scope.Firma,'AciklamaInsert',InsertData,function(InsertResult)
+            {
+                if(typeof(InsertResult.result.err) == 'undefined')
+                {
+                    alertify.alert('Başarıyla Kaydedildi')
+                    console.log(InsertResult)
+                }
+            })
+        }
+        else
+        {
+            var  InsertData =  [$scope.Aciklama1,$scope.Aciklama2,$scope.Aciklama3,$scope.Aciklama4,$scope.Aciklama5,$scope.AciklamaGuid]
+            console.log($scope.AciklamaGuid)
+            
+            db.ExecuteTag($scope.Firma,'AciklamaUpdate',InsertData,function(InsertResult)
+            {
+                if(typeof(InsertResult.result.err) == 'undefined')
+                {
+                    alertify.alert('Başarıyla Kaydedildi')
+                    console.log(InsertResult)
+                }
+            })
+            
+        
+        }
+        
+
+    }
+    $scope.AciklamaGetir = function()
+    {
+        
+        db.GetData($scope.Firma,'AciklamaGetir',[0,0,$scope.Seri,$scope.Sira],function(pData)
+        {
+
+            if(pData.length > 0)
+            {
+                $scope.AciklamaSatir = pData
+                $scope.Aciklama1 = $scope.AciklamaSatir[0].egk_evracik1,
+                $scope.Aciklama2 = $scope.AciklamaSatir[0].egk_evracik2,
+                $scope.Aciklama3 = $scope.AciklamaSatir[0].egk_evracik3,
+                $scope.Aciklama4 = $scope.AciklamaSatir[0].egk_evracik4,
+                $scope.Aciklama5 = $scope.AciklamaSatir[0].egk_evracik5,
+                $scope.AciklamaGuid = $scope.AciklamaSatir[0].egk_Guid
+                console.log($scope.AciklamaGuid)
+            }
+
+        })
     }
 }
