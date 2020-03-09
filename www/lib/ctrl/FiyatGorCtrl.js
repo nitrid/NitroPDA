@@ -445,7 +445,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         {
             Marka = $scope.Marka;
         }
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,Marka],function(StokData)
+        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)

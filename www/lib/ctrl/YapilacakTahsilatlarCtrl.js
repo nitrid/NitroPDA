@@ -205,7 +205,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         {
             db : '{M}.' + $scope.Firma,
             query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM from CARI_HESAPLAR " +
-            " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) order by ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
+            " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
             param:  ['PLASIYERKODU'], 
             type:   ['string|25'], 
             value:  [$scope.PlasiyerKodu]    
