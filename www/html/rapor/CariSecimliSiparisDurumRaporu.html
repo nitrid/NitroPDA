@@ -23,7 +23,7 @@ background-color: #90ee90 !important;
             </div>
             <div class="form-group form-material" data-plugin="formMaterial">
                 <label class="form-control-label text-primary">Şube Seçim</label>
-                <input type="text" class="form-control focus" placeholder="Şube Listelemek İçin Tıklayınız..." data-target="#MdlSubeGetir" data-toggle="modal" ng-model="Subeadi">
+                <input type="text" class="form-control focus" placeholder="Şube Listelemek İçin Tıklayınız..." data-target="#MdlSubeGetir" data-toggle="modal" ng-model="SubeAdi">
             </div>
             <!-- <div class="row my-0 py-0">
                 <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Evrak Tip:</div></div>
@@ -102,16 +102,16 @@ background-color: #90ee90 !important;
                     </div>
                     <div class="row py-5">
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnDepoSec()">Şube Seç</button>
+                            <button class="btn btn-block btn-primary" ng-click="BtnSubeSec()">Şube Seç</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnDepoListele()">Şube Listele</button>
+                            <button class="btn btn-block btn-primary" ng-click="BtnSubeListele()">Şube Listele</button>
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading">
                         <div class="loader vertical-align-middle loader-circle"></div>
                     </div>
-                    <div id="TblŞube" class="pt-5" ng-show="TblLoading"></div>
+                    <div id="TblSube" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
         </div>

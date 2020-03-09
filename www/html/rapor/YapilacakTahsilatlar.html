@@ -7,6 +7,10 @@
             </div>
         </div>
     </div>
+    <div class="form-group form-material" data-plugin="formMaterial">
+        <label class="form-control-label text-primary">Temsilci Seçim</label>
+        <input type="text" class="form-control focus" placeholder="Temsilci Listelemek İçin Tıklayınız..." data-target="#MdlPersonelGetir" data-toggle="modal" ng-model="PersonelAdi">
+    </div>
     <div class="row">
         <div class="col-sm-12 col-md-12 text-primary px-1"><div class="col-form-label px-1 float-left  py-2"> Toplam Bakiye : {{ToplamBakiye}}</div></div>
     </div>
@@ -34,6 +38,44 @@
                 </div>
             </div>
         </div>
+        <!-- Temsilci Listele Modal -->
+    <div class="modal fade" id="MdlPersonelGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Temsilci Listele</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row py-5">
+                        <div class="col-4 px-1 ">
+                            <select class="form-control" ng-model="CmbPersonelAra" ng-disabled="EvrakLock">
+                                <option value="0">ADI</option>
+                                <option value="1">KODU</option>
+                            </select>
+                        </div>
+                        <div class="col-8 px-1">
+                            <input type="text" class="form-control" ng-model="TxtPersonelAra" ng-disabled="EvrakLock">
+                        </div>
+                    </div>
+                    <div class="row py-5">
+                        <div class="col-6">
+                            <button class="btn btn-block btn-primary" ng-click="BtnPersonelSec()">Temsilci Seç</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-block btn-primary" ng-click="BtnPersonelListele()">Temsilci Listele</button>
+                        </div>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblPersonel" class="pt-5" ng-show="TblLoading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>

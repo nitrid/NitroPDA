@@ -261,7 +261,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.BarkodLock = true;
 
-                    //Fiyat Getir
+                    //Maliyet Getir
                     var Fiyat = 
                     {
                         db : '{M}.' + $scope.Firma,
@@ -286,6 +286,38 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     {  
                         console.log(pFiyat[0].FIYAT)
                         $scope.Fiyat = pFiyat[0].FIYAT
+                        $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
+                        $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
+                    });
+                    //Fiyat Getir
+                    var Fiyat = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query : "SELECT TOP 1 " + 
+                                "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                                "ELSE " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                                "END AS FIYAT, " + 
+                                "sfiyat_doviz AS DOVIZ, " + 
+                                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
+                                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                                "(SELECT sto_standartmaliyet FROM STOKLAR WHERE sto_kod = sfiyat_stokkod) AS MALIYET, " +
+                                "sfiyat_iskontokod AS ISKONTOKOD " + 
+                                "FROM STOK_SATIS_FIYAT_LISTELERI " +
+                                "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
+                                "ORDER BY sfiyat_deposirano DESC", 
+                        param: ['STOKKODU','FIYATLISTE','DEPONO'],
+                        type:  ['string|50','int','int'],
+                        value: [$scope.StokKodu,$scope.FiyatListe,$scope.DepoNo]
+                    }
+                    db.GetDataQuery(Fiyat,function(pFiyat)
+                    {  
+                        console.log(pFiyat[0].FIYAT)
+                        console.log(pFiyat[0].MALIYET)
+                        
+                        $scope.Fiyat = pFiyat[0].FIYAT
+                        $scope.Maliyet = pFiyat[0].MALIYET
                         $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
                     });
@@ -413,7 +445,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         {
             Marka = $scope.Marka;
         }
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,Marka],function(StokData)
+        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
@@ -424,6 +456,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             }
             else
             {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
             }
            

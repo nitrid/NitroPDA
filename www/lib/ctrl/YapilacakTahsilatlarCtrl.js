@@ -1,5 +1,6 @@
 function YapilacakTahsilatlarCtrl($scope,$window,db)
 {       
+    let PersonelSelectedRow = null;
     let IslemSelectedRow = null;
     
     function InitTahsilatRapor()
@@ -115,6 +116,42 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             ],
         });
     }
+    function InitPersonelGrid()
+    {   
+        $("#TblPersonel").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.PersonelListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: 
+            [
+                {
+                    name: "KODU",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                    
+                },
+                {
+                    name: "ADI",
+                    type: "text",
+                    align: "center",
+                    width: 75
+                } 
+            ],
+            rowClick: function(args)
+            {
+                $scope.PersonelListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
     $scope.Init = function()
     {   
         $scope.Firma = $window.sessionStorage.getItem('Firma');
@@ -122,11 +159,44 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
 
         $scope.PlasiyerKodu = UserParam.Sistem.PlasiyerKodu;
         $scope.ToplamBakiye = 0;
+        $scope.TxtPersonelAra = "";
+        $scope.CmbPersonelAra = "";
         console.log($scope.PlasiyerKodu)
         InitTahsilatRapor();
-        InitCariFoy()
+        InitCariFoy();
+        InitPersonelGrid();
+    }
+    $scope.BtnPersonelSec = function()
+    {   
+        $('#MdlPersonelGetir').modal('hide');
+    }
+    $scope.BtnPersonelListele = function()
+    {   
+        let Kodu = '';
+        let Adi = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;
 
-
+        if($scope.TxtPersonelAra != "")
+        {
+            if($scope.CmbPersonelAra == "0")
+            {   
+                Adi = $scope.TxtPersonelAra.replace("*","%").replace("*","%");
+            }
+            else
+            {
+                Kodu = $scope.TxtPersonelAra.replace("*","%").replace("*","%");
+            }
+        }
+        
+        db.GetData($scope.Firma,'CmbPersonelGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
+        {
+            $scope.Loading = false;
+            $scope.TblLoading = true;
+            $scope.PersonelListe = data;
+            $("#TblPersonel").jsGrid({data : $scope.PersonelListe});
+            $("#TblPersonel").jsGrid({pageIndex : true});
+        });
     }
     $scope.BtnGetir = function()
     {
@@ -135,7 +205,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         {
             db : '{M}.' + $scope.Firma,
             query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM from CARI_HESAPLAR " +
-            " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) order by ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
+            " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
             param:  ['PLASIYERKODU'], 
             type:   ['string|25'], 
             value:  [$scope.PlasiyerKodu]    
@@ -193,6 +263,19 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
         });
         $("#MdlIslemDetay").modal('show');
+    }
+    $scope.PersonelListeRowClick = function(pIndex,pItem,pObj)
+    {
+        if(!$scope.EvrakLock)
+        {
+            if ( PersonelSelectedRow ) { PersonelSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+            var $row = $("#TblPersonel").jsGrid("rowByItem", pItem);
+            $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+            PersonelSelectedRow = $row;
+            
+            $scope.PersonelAdi = $scope.PersonelListe[pIndex].ADI;
+            $scope.PlasiyerKodu = $scope.PersonelListe[pIndex].KODU;
+        }
     }
    
 }
