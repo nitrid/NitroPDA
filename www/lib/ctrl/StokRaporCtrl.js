@@ -122,8 +122,8 @@ function StokRaporCtrl($scope,$window,db)
             "sto_isim AS STOKADI,"+
             "sto_renk_kodu AS RENK,"+
             "sto_beden_kodu AS BEDEN,"+
-            "ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR" +
-            " FROM STOKLAR",
+            "ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR " +
+            "FROM STOKLAR",
             param:  ['STOKKODU','STOKADI','DEPONO'],
             type:   ['string','string','int'],
             value:  [$scope.StokKod,$scope.StokAdi,$scope.DepoNo]
