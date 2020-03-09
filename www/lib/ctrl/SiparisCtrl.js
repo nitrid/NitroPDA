@@ -318,13 +318,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     width: 150
                 },
                 {
-                    name: "BIRIM",
-                    title: "BIRIM",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                },
-                {
                     name: "ADI",
                     title: "ADI",
                     type: "text",
@@ -1128,8 +1121,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
             else
             {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
-            }     
+            }   
         });
     }
     $scope.BtnStokGridSec = function()
@@ -1420,7 +1415,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         CariSelectedRow = $row;
-        
+        console.log($scope.CariListe[pIndex])
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
         $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;    

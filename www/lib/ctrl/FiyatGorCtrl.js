@@ -424,6 +424,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             }
             else
             {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
             }
            

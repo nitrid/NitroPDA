@@ -1207,6 +1207,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
             }
+            else
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
             
         });
     }
