@@ -89,7 +89,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BedenListe = [];
         DepoMiktarListe = [];
 
-<<<<<<< HEAD
         $scope.AciklamaGuid = ''
         $scope.Aciklama1 = ''
         $scope.Aciklama2 = ''
@@ -97,8 +96,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.Aciklama4 = ''
         $scope.Aciklama5 = ''
 
-=======
->>>>>>> 62f65bc27302865cf666551adbe1e23539b16319
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
         $scope.NetToplam = 0;
@@ -1120,7 +1117,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             Adi = $scope.StokGridText.replace("*","%").replace("*","%");
         }
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
