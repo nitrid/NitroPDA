@@ -1164,7 +1164,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
 
         if($scope.TxtIsEmriAra != "")
         {
-
             if($scope.CmbIsEmriAra == "0")
             {   
                 Adi = $scope.TxtIsEmriAra.replace("*","%").replace("*","%");
@@ -1175,7 +1174,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             }
 
         }
-
         
         db.GetData($scope.Firma,'IsEmriGetir',[Kodu,Adi],function(data)
         {

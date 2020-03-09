@@ -198,6 +198,11 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             $("#TblPersonel").jsGrid({pageIndex : true});
         });
     }
+    $scope.BtnTemizle = function()
+    {
+        $scope.PersonelAdi = "";
+        $scope.PlasiyerKodu = "";
+    }
     $scope.BtnGetir = function()
     {
         console.log(1)
