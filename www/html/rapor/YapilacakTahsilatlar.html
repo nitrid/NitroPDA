@@ -7,6 +7,12 @@
             </div>
         </div>
     </div>
+    <div class="col-4 px-5">
+        <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
+            <option value="0">Tahsilat</option>
+            <option value="1">Ödeme</option>
+        </select>
+    </div>
     <div class="row py-1">
         <div class="col-12 px-1">
             <label class="form-control-label text-primary">Temsilci Seçim</label>
@@ -56,7 +62,7 @@
                     <h4 class="modal-title">Temsilci Listele</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row py-5">
+                <!--    <div class="row py-5">
                         <div class="col-4 px-1 ">
                             <select class="form-control" ng-model="CmbPersonelAra" ng-disabled="EvrakLock">
                                 <option value="0">ADI</option>
@@ -67,6 +73,7 @@
                             <input type="text" class="form-control" ng-model="TxtPersonelAra" ng-disabled="EvrakLock">
                         </div>
                     </div>
+                    -->
                     <div class="row py-5">
                         <div class="col-6">
                             <button class="btn btn-block btn-primary" ng-click="BtnPersonelSec()">Temsilci Seç</button>
