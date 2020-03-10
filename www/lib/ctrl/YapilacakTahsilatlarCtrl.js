@@ -161,6 +161,8 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         $scope.ToplamBakiye = 0;
         $scope.TxtPersonelAra = "";
         $scope.CmbPersonelAra = "";
+        $scope.CmbEvrakTip = "0";
+
         console.log($scope.PlasiyerKodu)
         InitTahsilatRapor();
         InitCariFoy();
@@ -198,24 +200,53 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             $("#TblPersonel").jsGrid({pageIndex : true});
         });
     }
+    $scope.BtnTemizle = function()
+    {
+        $scope.PersonelAdi = "";
+        $scope.PlasiyerKodu = "";
+    }
     $scope.BtnGetir = function()
     {
-        var TmpQuery = 
+        if($scope.CmbEvrakTip == '0')
         {
-            db : '{M}.' + $scope.Firma,
-            query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM from CARI_HESAPLAR " +
-            " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
-            param:  ['PLASIYERKODU'], 
-            type:   ['string|25'], 
-            value:  [$scope.PlasiyerKodu]    
+            console.log(1)
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM from CARI_HESAPLAR " +
+                " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
+                param:  ['PLASIYERKODU'], 
+                type:   ['string|25'], 
+                value:  [$scope.PlasiyerKodu]    
+            }
+        
+            db.GetDataQuery(TmpQuery,function(Data)
+            {
+                console.log(Data)
+                $scope.IslemListe = Data;
+                $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
+                $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
+            });
         }
-    
-        db.GetDataQuery(TmpQuery,function(Data)
+        else if($scope.CmbEvrakTip == '1')
         {
-            $scope.IslemListe = Data;
-            $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
-            $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
-        });
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) *  (-1))  AS TOPLAM from CARI_HESAPLAR " +
+                " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) < 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
+                param:  ['PLASIYERKODU'], 
+                type:   ['string|25'], 
+                value:  [$scope.PlasiyerKodu]    
+            }
+            db.GetDataQuery(TmpQuery,function(Data)
+            {
+                console.log(Data)
+                $scope.IslemListe = Data;
+                $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
+                $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
+            });
+        }
     }
     $scope.IslemDetayRowClick = function(pIndex,pItem,pObj)
     {

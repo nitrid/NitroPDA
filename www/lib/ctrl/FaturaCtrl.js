@@ -1207,6 +1207,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
             }
+            else
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
             
         });
     }
@@ -1575,8 +1581,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                $scope.Tip = 1;
                $scope.Cins = 1;
                $scope.ChaEvrakTip = 0;
-               $scope.ChaTip = 0;
-               $scope.ChaCins = 7;
+               $scope.ChaTip = 1;
+               $scope.ChaCins = 6;
                $scope.ChaTicaretTuru = 1;
             }
             else if($scope.CmbEvrakTip == 1) //Toptan Satış Faturası

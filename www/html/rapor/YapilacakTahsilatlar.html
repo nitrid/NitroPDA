@@ -7,9 +7,22 @@
             </div>
         </div>
     </div>
-    <div class="form-group form-material" data-plugin="formMaterial">
-        <label class="form-control-label text-primary">Temsilci Seçim</label>
-        <input type="text" class="form-control focus" placeholder="Temsilci Listelemek İçin Tıklayınız..." data-target="#MdlPersonelGetir" data-toggle="modal" ng-model="PersonelAdi">
+    <div class="col-4 px-5">
+        <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
+            <option value="0">Tahsilat</option>
+            <option value="1">Ödeme</option>
+        </select>
+    </div>
+    <div class="row py-1">
+        <div class="col-12 px-1">
+            <label class="form-control-label text-primary">Temsilci Seçim</label>
+            <div class="input-group">
+                <input type="text" class="form-control focus" placeholder="Temsilci Listelemek İçin Tıklayınız..." data-target="#MdlPersonelGetir" data-toggle="modal" ng-model="PersonelAdi">
+                <span class="input-group-append">
+                <button type="submit" class="btn btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                </span>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-sm-12 col-md-12 text-primary px-1"><div class="col-form-label px-1 float-left  py-2"> Toplam Bakiye : {{ToplamBakiye}}</div></div>
@@ -49,7 +62,7 @@
                     <h4 class="modal-title">Temsilci Listele</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row py-5">
+                <!--    <div class="row py-5">
                         <div class="col-4 px-1 ">
                             <select class="form-control" ng-model="CmbPersonelAra" ng-disabled="EvrakLock">
                                 <option value="0">ADI</option>
@@ -60,6 +73,7 @@
                             <input type="text" class="form-control" ng-model="TxtPersonelAra" ng-disabled="EvrakLock">
                         </div>
                     </div>
+                    -->
                     <div class="row py-5">
                         <div class="col-6">
                             <button class="btn btn-block btn-primary" ng-click="BtnPersonelSec()">Temsilci Seç</button>

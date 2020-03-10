@@ -318,13 +318,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     width: 150
                 },
                 {
-                    name: "BIRIM",
-                    title: "BIRIM",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                },
-                {
                     name: "ADI",
                     title: "ADI",
                     type: "text",
@@ -1128,8 +1121,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
             else
             {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
-            }     
+            }   
         });
     }
     $scope.BtnStokGridSec = function()
@@ -1424,7 +1419,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         CariSelectedRow = $row;
-        
+        console.log($scope.CariListe[pIndex])
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
         $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;    
@@ -1701,41 +1696,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.EvrakGetir = function()
     {
-        var EvrakAciklama = 
-        {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT " + 
-            "egk_evr_seri AS SERI, " +
-            "egk_evr_sira AS SIRA ," +
-            "egk_dosyano AS SIPARISTIP, " + 
-            "egk_evr_tip AS EVRAKTIP, " + 
-            "egk_hareket_tip AS HAREKETTIP, " + 
-            "egk_evracik1 AS ACIKLAMA1, " + 
-            "egk_evracik2 AS ACIKLAMA2, " + 
-            "egk_evracik3 AS ACIKLAMA3, " + 
-            "egk_evracik4 AS ACIKLAMA4, " + 
-            "egk_evracik5 AS ACIKLAMA5, " + 
-            "egk_evracik6 AS ACIKLAMA6, " + 
-            "egk_evracik7 AS ACIKLAMA7, " + 
-            "egk_evracik8 AS ACIKLAMA8, " + 
-            "egk_evracik9 AS ACIKLAMA9, " + 
-            "egk_evracik10 AS ACIKLAMA10 " + 
-            "FROM EVRAK_ACIKLAMALARI WHERE egk_dosyano = @ACKTIP AND " + 
-            "egk_evr_tip = @EVRACKTIP ", 
-            param:  ['ACKTIP','EVRACKTIP','HAREKETTIP'],
-            type:   ['int','int','int'],
-            value:  [$scope.AciklamaTip,$scope.AciklamaEvrTip,$scope.AciklamaHarTip]
-        }
-        db.GetDataQuery(EvrakAciklama,function(pEvrakAciklama)
-        {  
-            console.log($scope.AciklamaTip)
-            console.log($scope.AciklamaEvrTip)
-            console.log($scope.SeriTip)
-            console.log($scope.SiraTip)
-            console.log(pEvrakAciklama)
-            $scope.EvrAciklama.Evr1 = pEvrakAciklama.ACIKLAMA1;
-            console.log($scope.EvrAciklama)
-        });
         db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(data)
         {
             if(data.length > 0)
