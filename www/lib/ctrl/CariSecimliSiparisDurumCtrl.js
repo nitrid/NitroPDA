@@ -402,9 +402,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             SubeSelectedRow = $row;
             
             $scope.SubeAdi = $scope.SubeListe[pIndex].ADI;
-            console.log($scope.SubeAdi)
             $scope.SubeKodu = $scope.SubeListe[pIndex].KODU;
-            console.log($scope.SubeKodu)
         }
     }
     $scope.IslemDetayRowClick = function(pIndex,pItem,pObj)

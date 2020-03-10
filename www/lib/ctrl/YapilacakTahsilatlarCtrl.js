@@ -200,7 +200,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
     }
     $scope.BtnGetir = function()
     {
-        console.log(1)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
@@ -213,7 +212,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
     
         db.GetDataQuery(TmpQuery,function(Data)
         {
-            console.log(Data)
             $scope.IslemListe = Data;
             $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
             $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
@@ -258,7 +256,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
 
         db.GetDataQuery(TmpQuery,function(Data)
         {
-            console.log(Data)
             $scope.CariFoyListe = Data;
             $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
         });
