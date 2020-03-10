@@ -325,6 +325,7 @@ var ParamTemp =
 			"Yapilacak Tahsilatlar" : {"Title" : "Yapilacak Tahsilatlar","DefaultValue" : "1"},
 			"Stok Rapor" : {"Title" : "Stok Rapor","DefaultValue" : "1"},
 			"Cari Secimli Siparis Raporu" : {"Title" : "Cari Secimli Siparis Raporu","DefaultValue" : "1"},
-			"Cari Secimli Siparis Durum Raporu" : {"Title" : "Cari Secimli Siparis Durum Raporu","DefaultValue" : "1"}
+			"Cari Secimli Siparis Durum Raporu" : {"Title" : "Cari Secimli Siparis Durum Raporu","DefaultValue" : "1"},
+			"Durağan Cariler Raporu" : {"Title" : "Durağan Cariler Raporu","DefaultValue" : "1"}
 		}
 	}
