@@ -30,7 +30,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             'page_path': '/Fatura'
         });
 
-
         UserParam = Param[$window.sessionStorage.getItem('User')];
         $scope.Firma = $window.sessionStorage.getItem('Firma');
 
@@ -872,7 +871,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             '00000000-0000-0000-0000-000000000000', //sth_sip_uid
             ($scope.ChaGuid != "") ? $scope.ChaGuid : '00000000-0000-0000-0000-000000000000' , //sth_fat_uid,
             $scope.DepoNo, //GİRİSDEPONO
-            0,             //CİKİSDEPONO
+            $scope.DepoNo, //CİKİSDEPONO
             $scope.Tarih, //MALKABULSEVKTARİHİ
             '', // CARİSORUMLULUKMERKEZİ
             $scope.Sorumluluk,
