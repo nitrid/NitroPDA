@@ -245,7 +245,8 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $scope.EvrakTip = "0";
         $scope.SipTip = "2";
         $scope.Carikodu = "";
-        $scope.SubeKodu = "";
+        $scope.CariAdi = "";
+        $scope.SubeKodu = '';
         $scope.SubeAdi = "";
         $scope.ToplamSatir = "";
         $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
@@ -293,6 +294,11 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             $("#TblCari").jsGrid({pageIndex : true});
         });
     }
+    $scope.BtnCariTemizle = function()
+    {
+        $scope.Carikodu = "";
+        $scope.CariAdi = "";
+    }
     $scope.BtnGetir = function()
     {
         var str = '';
@@ -334,16 +340,17 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     "CONVERT(NVARCHAR,CAST(SUM(sip_tutar) + SUM(sip_vergi) AS DECIMAL(10,2))) AS TUTARKDVDAHIL, " +
                     "(SELECT dep_adi AS ADI FROM DEPOLAR WHERE SIPARISLER.sip_depono = dep_no) AS DEPOLAR " +
                     "FROM SIPARISLER " +
-                    "WHERE sip_depono = @DEPONO AND ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
+                    "WHERE (sip_depono = @DEPONO OR @DEPONO = '') AND ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
                     "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih,sip_depono ORDER BY sip_belge_tarih DESC" ,
             param:  ['DEPONO','KODU','ILKTARIH','SONTARIH','TIP'], 
-            type:   ['int','string|25','date','date','int'], 
+            type:   ['string|25','string|25','date','date','int'], 
             value:  [$scope.SubeKodu,$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih,$scope.Tip]
         }
 
         db.GetDataQuery(TmpQuery,function(Data)
         {
             $scope.IslemListe = Data;
+            console.log(Data)
             $("#TblCariFoy").jsGrid({data : $scope.IslemListe});
         });
     }
@@ -379,6 +386,11 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             $("#TblSube").jsGrid({pageIndex : true});
         });
     }
+    $scope.BtnSubeTemizle = function()
+    {
+        $scope.SubeKodu = '';
+        $scope.SubeAdi = "";
+    }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {
         if(!$scope.EvrakLock)
@@ -402,9 +414,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             SubeSelectedRow = $row;
             
             $scope.SubeAdi = $scope.SubeListe[pIndex].ADI;
-            console.log($scope.SubeAdi)
             $scope.SubeKodu = $scope.SubeListe[pIndex].KODU;
-            console.log($scope.SubeKodu)
         }
     }
     $scope.IslemDetayRowClick = function(pIndex,pItem,pObj)

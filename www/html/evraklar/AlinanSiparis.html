@@ -355,6 +355,7 @@
                                 <button class="dropdown-item" ng-click="BtnIskontoEkran(1)" data-toggle="modal"  role="menu-item">Satır İskonto</button>
                                 <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button>
                                 <button class="dropdown-item"  ng-click="BtnOnlineYazdir()"  role="menu-item">Online Yazdır</button>
+                                <button class="dropdown-item"  ng-click="BtnAciklamaGir()"  role="menu-item">Açıklama</button>
                             </div> 
                         </div>
                     </div>
@@ -381,6 +382,61 @@
                                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{GenelToplam | number:2}}</h5>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="TblAciklama"  class="tab-pane">
+                    <div class="row">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="TbIslemSatirlariClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-form-label float-right py-1">EVRAK AÇIKLAMALARI</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8 text-info px-1">
+                            <div class="col-form-label float-right py-1">Her Satırlara En Fazla 120 Karakter İzin Verilmektedir!</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">1 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama1" onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">2 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama2"  onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">3 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama3" onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">4 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama4" onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">5 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama5"  onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 px-1">
+                            <button type="submit"  class="btn btn-primary btn-block btn-block h-40" ng-click="BtnAciklamaKaydet()">KAYDET</button>        
                         </div>
                     </div>
                 </div>
@@ -687,6 +743,18 @@
     </div>
 </div>
 <script>
+    function checkChar() 
+    {
+        var allowedChar = 120;
+        var content = document.getElementById("Aciklama");
+        var contLength = content.value.length;
+
+        if (contLength > allowedChar)
+        {
+            content.value = content.value.substring(0, allowedChar);
+            document.getElementById("report").innerHTML = "<span style='color:red;'>UYARI: En fazla " + allowedChar + " karakter girebilirsiniz</span>";
+        }
+    }
     $("#Tarih").datepicker({
     language: "tr"
     });

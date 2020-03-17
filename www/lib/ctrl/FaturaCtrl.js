@@ -1197,10 +1197,16 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
         }
             
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
@@ -1574,8 +1580,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                $scope.Tip = 1;
                $scope.Cins = 1;
                $scope.ChaEvrakTip = 0;
-               $scope.ChaTip = 0;
-               $scope.ChaCins = 7;
+               $scope.ChaTip = 1;
+               $scope.ChaCins = 6;
                $scope.ChaTicaretTuru = 1;
             }
             else if($scope.CmbEvrakTip == 1) //Toptan Satış Faturası
