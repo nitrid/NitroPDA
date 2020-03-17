@@ -231,7 +231,7 @@ var Param = [
 			"Verilen Sipariş": "0",
 			"Alış İrsaliyesi": "1",
 			"Tediye Makbuzu": "0",
-			"Mal Kabul Eşleştirme": "0",
+			"Mal Kabul Eşleştirme": "1",
 			"Ürün Giriş Çıkış": "0",
 			"Fason Giriş Çıkış": "0",
 			"Planlı Üretim": "0",
@@ -242,7 +242,7 @@ var Param = [
 			"Stok Rapor": "0",
 			"Cari Secimli Siparis Raporu": "0",
 			"Cari Secimli Siparis Durum Raporu": "0",
-			"Durağan Cariler Raporu": "1"
+			"Durağan Cariler Raporu": "0"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
