@@ -162,8 +162,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         $scope.TxtPersonelAra = "";
         $scope.CmbPersonelAra = "";
         $scope.CmbEvrakTip = "0";
-
-        console.log($scope.PlasiyerKodu)
         InitTahsilatRapor();
         InitCariFoy();
         InitPersonelGrid();
@@ -209,7 +207,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
     {
         if($scope.CmbEvrakTip == '0')
         {
-            console.log(1)
             var TmpQuery = 
             {
                 db : '{M}.' + $scope.Firma,
@@ -222,7 +219,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         
             db.GetDataQuery(TmpQuery,function(Data)
             {
-                console.log(Data)
                 $scope.IslemListe = Data;
                 $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
                 $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
@@ -241,7 +237,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             }
             db.GetDataQuery(TmpQuery,function(Data)
             {
-                console.log(Data)
                 $scope.IslemListe = Data;
                 $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
                 $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
@@ -287,7 +282,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
 
         db.GetDataQuery(TmpQuery,function(Data)
         {
-            console.log(Data)
             $scope.CariFoyListe = Data;
             $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
         });

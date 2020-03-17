@@ -284,7 +284,6 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     }
                     db.GetDataQuery(Fiyat,function(pFiyat)
                     {  
-                        console.log(pFiyat[0].FIYAT)
                         $scope.Fiyat = pFiyat[0].FIYAT
                         $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
@@ -313,8 +312,6 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     }
                     db.GetDataQuery(Fiyat,function(pFiyat)
                     {  
-                        console.log(pFiyat[0].FIYAT)
-                        console.log(pFiyat[0].MALIYET)
                         
                         $scope.Fiyat = pFiyat[0].FIYAT
                         $scope.Maliyet = pFiyat[0].MALIYET
@@ -574,7 +571,6 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     $scope.TDepoMiktar == true ? (item.DEPOMIKTAR > 0) ? item.DEPOMIKTAR : 1 : $scope.BasilacakMiktar
                 ];
                 
-                console.log(item)
                 db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
                 {        
                     console.log("kayıt işlemi gerçekleşti")
