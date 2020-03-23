@@ -588,7 +588,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 {   
                     $scope.PartiLotListe = data;
                     
-                    if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && ($scope.Stok[0].PARTI != ''))
+                    if ($scope.Stok[0].PARTI != '')
                     {  
                         $scope.Miktar = $scope.PartiLotListe[0].MIKTAR  * $scope.Stok[0].CARPAN;
                     }

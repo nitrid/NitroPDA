@@ -54,8 +54,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.TeslimTarihi = moment(new Date()).format("DD.MM.YYYY");
         $scope.Sorumluluk = "";
         $scope.SorumlulukAdi = "";
-        $scope.Personel = "";
-        $scope.PersonelAdi = "";
+        $scope.Personel;
+        $scope.PersonelAdi;
         $scope.Proje = "";
         $scope.OdemeNo = "0";
         $scope.Barkod = "";
@@ -89,7 +89,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BedenListe = [];
         DepoMiktarListe = [];
 
-<<<<<<< HEAD
         $scope.AciklamaGuid = ''
         $scope.Aciklama1 = ''
         $scope.Aciklama2 = ''
@@ -97,8 +96,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.Aciklama4 = ''
         $scope.Aciklama5 = ''
 
-=======
->>>>>>> 62f65bc27302865cf666551adbe1e23539b16319
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
         $scope.NetToplam = 0;
@@ -319,13 +316,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     type: "text",
                     align: "center",
                     width: 150
-                },
-                {
-                    name: "BIRIM",
-                    title: "BIRIM",
-                    type: "text",
-                    align: "center",
-                    width: 100
                 },
                 {
                     name: "ADI",
@@ -1120,7 +1110,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             Adi = $scope.StokGridText.replace("*","%").replace("*","%");
         }
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
@@ -1131,8 +1121,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
             else
             {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
-            }     
+            }   
         });
     }
     $scope.BtnStokGridSec = function()
@@ -1337,10 +1329,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data)
         {
             $scope.PersonelListe = data;
+            console.log(data)
             $scope.Personel = UserParam[ParamName].Personel;
             $scope.PersonelListe.forEach(function(item)
             {
-                $scope.PersonelAdi == item.ADI;
+                if(item.KODU == $scope.Personel)
+                $scope.PersonelAdi = item.ADI;
             });
         });           
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
@@ -1423,7 +1417,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         CariSelectedRow = $row;
-        
+        console.log($scope.CariListe[pIndex])
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
         $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;    
@@ -1700,41 +1694,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.EvrakGetir = function()
     {
-        var EvrakAciklama = 
-        {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT " + 
-            "egk_evr_seri AS SERI, " +
-            "egk_evr_sira AS SIRA ," +
-            "egk_dosyano AS SIPARISTIP, " + 
-            "egk_evr_tip AS EVRAKTIP, " + 
-            "egk_hareket_tip AS HAREKETTIP, " + 
-            "egk_evracik1 AS ACIKLAMA1, " + 
-            "egk_evracik2 AS ACIKLAMA2, " + 
-            "egk_evracik3 AS ACIKLAMA3, " + 
-            "egk_evracik4 AS ACIKLAMA4, " + 
-            "egk_evracik5 AS ACIKLAMA5, " + 
-            "egk_evracik6 AS ACIKLAMA6, " + 
-            "egk_evracik7 AS ACIKLAMA7, " + 
-            "egk_evracik8 AS ACIKLAMA8, " + 
-            "egk_evracik9 AS ACIKLAMA9, " + 
-            "egk_evracik10 AS ACIKLAMA10 " + 
-            "FROM EVRAK_ACIKLAMALARI WHERE egk_dosyano = @ACKTIP AND " + 
-            "egk_evr_tip = @EVRACKTIP ", 
-            param:  ['ACKTIP','EVRACKTIP','HAREKETTIP'],
-            type:   ['int','int','int'],
-            value:  [$scope.AciklamaTip,$scope.AciklamaEvrTip,$scope.AciklamaHarTip]
-        }
-        db.GetDataQuery(EvrakAciklama,function(pEvrakAciklama)
-        {  
-            console.log($scope.AciklamaTip)
-            console.log($scope.AciklamaEvrTip)
-            console.log($scope.SeriTip)
-            console.log($scope.SiraTip)
-            console.log(pEvrakAciklama)
-            $scope.EvrAciklama.Evr1 = pEvrakAciklama.ACIKLAMA1;
-            console.log($scope.EvrAciklama)
-        });
         db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(data)
         {
             if(data.length > 0)
