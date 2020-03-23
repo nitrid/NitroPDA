@@ -134,6 +134,10 @@ angular.module("app",
     .when("/YapilanTahsilatlar",
     {
         templateUrl : "html/rapor/YapilanTahsilatlar.html"
+    })
+    .when("/DuraganCariler",
+    {
+        templateUrl : "html/rapor/DuraganCariler.html"
     });
 });
 

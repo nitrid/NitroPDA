@@ -300,13 +300,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     width: 125
                 }, 
                 {
-                    name: "BIRM",
-                    title: "BIRIM",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                },
-                {
                     name: "ADI",
                     title: "ADI",
                     type: "text",
@@ -703,6 +696,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {   
                 if(BarkodData.length > 0)
                 { 
+                    console.log(BarkodData)
                     $scope.Stok = BarkodData;
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     console.log($scope.Stok[0])
@@ -733,9 +727,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         db : '{M}.' + $scope.Firma,
                         query : "SELECT TOP 1 " + 
                                 "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano) " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) " + 
                                 "ELSE " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
                                 "END AS FIYAT, " + 
                                 "sfiyat_doviz AS DOVIZ, " + 
                                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
@@ -1174,13 +1168,21 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
         }
             
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
-            if($scope.StokListe.length > 0)
-            $scope.Loading = false;
-            $scope.TblLoading = true;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+            if ($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
+            else
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+            }
         });
 
     }
@@ -1750,6 +1752,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.CariFiyatListe = data[0].sth_fiyat_liste_no;
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
+                $scope.Tip = data[0].sth_tip;
                 $scope.EvrakTip = data[0].sth_evraktip.toString();
                 $scope.CariKodu = data[0].sth_cari_kodu;
                 $scope.CariAdi = data[0].CARIADI;

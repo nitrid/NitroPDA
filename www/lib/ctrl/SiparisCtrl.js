@@ -54,8 +54,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.TeslimTarihi = moment(new Date()).format("DD.MM.YYYY");
         $scope.Sorumluluk = "";
         $scope.SorumlulukAdi = "";
-        $scope.Personel = "";
-        $scope.PersonelAdi = "";
+        $scope.Personel;
+        $scope.PersonelAdi;
         $scope.Proje = "";
         $scope.OdemeNo = "0";
         $scope.Barkod = "";
@@ -70,6 +70,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariVDADI = "";
         $scope.CariVDNO = "";
         $scope.Fiyat = "";
+        $scope.AciklamaTip = 21;
+        $scope.AciklamaEvrTip = 0;
+        $scope.AciklamaHarTip = 0;
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -86,6 +89,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BedenListe = [];
         DepoMiktarListe = [];
 
+        $scope.AciklamaGuid = ''
+        $scope.Aciklama1 = ''
+        $scope.Aciklama2 = ''
+        $scope.Aciklama3 = ''
+        $scope.Aciklama4 = ''
+        $scope.Aciklama5 = ''
 
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -307,13 +316,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     type: "text",
                     align: "center",
                     width: 150
-                },
-                {
-                    name: "BIRIM",
-                    title: "BIRIM",
-                    type: "text",
-                    align: "center",
-                    width: 100
                 },
                 {
                     name: "ADI",
@@ -944,32 +946,32 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             console.log(error)
         }
     }
-    function SpaceLength(pData,pLength)
-    {
-        try 
-        {
-            let x = pLength - pData.toString().length;
+    // function SpaceLength(pData,pLength)
+    // {
+    //     try 
+    //     {
+    //         let x = pLength - pData.toString().length;
 
-            if(pData.toString().length > pLength)
-            {
-                pData = pData.substring(0,25);
-            }
+    //         if(pData.toString().length > pLength)
+    //         {
+    //             pData = pData.substring(0,25);
+    //         }
 
-            Space = "";
+    //         Space = "";
 
-            for(let i=0; i < x; i++)
-            {
-                Space = Space + " ";
-            }
+    //         for(let i=0; i < x; i++)
+    //         {
+    //             Space = Space + " ";
+    //         }
 
-            return pData + Space
+    //         return pData + Space
             
-        } 
-        catch (error) 
-        {
-            console.log(error)
-        }
-    }
+    //     } 
+    //     catch (error) 
+    //     {
+    //         console.log(error)
+    //     }
+    // }
     $scope.BtnCariListele = function()
     {   
         $scope.Loading = true;
@@ -1108,7 +1110,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             Adi = $scope.StokGridText.replace("*","%").replace("*","%");
         }
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
@@ -1119,8 +1121,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
             else
             {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
-            }     
+            }   
         });
     }
     $scope.BtnStokGridSec = function()
@@ -1325,10 +1329,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data)
         {
             $scope.PersonelListe = data;
+            console.log(data)
             $scope.Personel = UserParam[ParamName].Personel;
             $scope.PersonelListe.forEach(function(item)
             {
-                $scope.PersonelAdi == item.ADI;
+                if(item.KODU == $scope.Personel)
+                $scope.PersonelAdi = item.ADI;
             });
         });           
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
@@ -1411,7 +1417,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         CariSelectedRow = $row;
-        
+        console.log($scope.CariListe[pIndex])
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
         $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;    
@@ -1968,10 +1974,11 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbCariSec").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
+        $("#TblAciklama").removeClass('active');
+
     }
     $scope.CariSecClick = function() 
     {
-        console.log($scope.Sira)
         if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
         {            
             alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
@@ -1984,6 +1991,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbMain").removeClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TblAciklama").removeClass('active');
+
             }        
             else
             {
@@ -1995,6 +2004,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {
         $("#TbBelgeBilgisi").addClass('active');
         $("#TbMain").removeClass('active');
+        $("#TblAciklama").removeClass('active');
+
     }
     $scope.BarkodGirisClick = function() 
     {   
@@ -2011,6 +2022,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbCariSec").removeClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TblAciklama").removeClass('active');
+
                             
                 BarkodFocus();
             }
@@ -2027,6 +2040,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbCariSec").removeClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
+        $("#TblAciklama").removeClass('active');
+
     }
     $scope.ScanBarkod = function()
     {
@@ -2062,5 +2077,80 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );                
             }
         });
+    }
+    $scope.BtnAciklamaGir = function()
+    {
+        $("#TbIslemSatirlari").removeClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TblAciklama").addClass('active');
+        $scope.AciklamaGetir();
+    }
+    $scope.BtnAciklamaKaydet = function()
+    {
+        if($scope.AciklamaGuid == '')
+        {
+                var InsertData =
+            [
+                0,
+                0,
+                $scope.Seri,
+                $scope.Sira,
+                $scope.Aciklama1,
+                $scope.Aciklama2,
+                $scope.Aciklama3,
+                $scope.Aciklama4,
+                $scope.Aciklama5
+            ];
+
+            db.ExecuteTag($scope.Firma,'AciklamaInsert',InsertData,function(InsertResult)
+            {
+                if(typeof(InsertResult.result.err) == 'undefined')
+                {
+                    alertify.alert('Başarıyla Kaydedildi')
+                    console.log(InsertResult)
+                }
+            })
+        }
+        else
+        {
+            var  InsertData =  [$scope.Aciklama1,$scope.Aciklama2,$scope.Aciklama3,$scope.Aciklama4,$scope.Aciklama5,$scope.AciklamaGuid]
+            console.log($scope.AciklamaGuid)
+            
+            db.ExecuteTag($scope.Firma,'AciklamaUpdate',InsertData,function(InsertResult)
+            {
+                if(typeof(InsertResult.result.err) == 'undefined')
+                {
+                    alertify.alert('Başarıyla Kaydedildi')
+                    console.log(InsertResult)
+                }
+            })
+            
+        
+        }
+        
+
+    }
+    $scope.AciklamaGetir = function()
+    {
+        
+        db.GetData($scope.Firma,'AciklamaGetir',[0,0,$scope.Seri,$scope.Sira],function(pData)
+        {
+
+            if(pData.length > 0)
+            {
+                $scope.AciklamaSatir = pData
+                $scope.Aciklama1 = $scope.AciklamaSatir[0].egk_evracik1,
+                $scope.Aciklama2 = $scope.AciklamaSatir[0].egk_evracik2,
+                $scope.Aciklama3 = $scope.AciklamaSatir[0].egk_evracik3,
+                $scope.Aciklama4 = $scope.AciklamaSatir[0].egk_evracik4,
+                $scope.Aciklama5 = $scope.AciklamaSatir[0].egk_evracik5,
+                $scope.AciklamaGuid = $scope.AciklamaSatir[0].egk_Guid
+                console.log($scope.AciklamaGuid)
+            }
+
+        })
     }
 }

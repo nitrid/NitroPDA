@@ -508,6 +508,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
 
         db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(BarkodData)
         {
+            console.log(BarkodData)
             if(BarkodData.length > 0)
             {
                 pCallback(BarkodData,'Siparis');
@@ -562,23 +563,23 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 }
             }
         }
-        if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
-        {   
-            if($scope.Stok[0].BEDENKODU != '' || $scope.Stok[0].RENKKODU != '')
-            {   
-                $('#MdlRenkBeden').modal("show");
-                await db.GetPromiseTag($scope.Firma,'RenkGetir',[$scope.Stok[0].RENKKODU],function(pRenkData)
-                {
-                    $scope.RenkListe = pRenkData;
-                    $scope.Stok[0].RENKPNTR = "1";
-                });
-                await db.GetPromiseTag($scope.Firma,'BedenGetir',[$scope.Stok[0].BEDENKODU],function(pBedenData)
-                {  
-                    $scope.BedenListe = pBedenData;
-                    $scope.Stok[0].BEDENPNTR = "1";
-                });
-            }
-        } 
+        // if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
+        // {   
+        //     if($scope.Stok[0].BEDENKODU != '' || $scope.Stok[0].RENKKODU != '')
+        //     {   
+        //         $('#MdlRenkBeden').modal("show");
+        //         await db.GetPromiseTag($scope.Firma,'RenkGetir',[$scope.Stok[0].RENKKODU],function(pRenkData)
+        //         {
+        //             $scope.RenkListe = pRenkData;
+        //             $scope.Stok[0].RENKPNTR = "1";
+        //         });
+        //         await db.GetPromiseTag($scope.Firma,'BedenGetir',[$scope.Stok[0].BEDENKODU],function(pBedenData)
+        //         {  
+        //             $scope.BedenListe = pBedenData;
+        //             $scope.Stok[0].BEDENPNTR = "1";
+        //         });
+        //     }
+        // } 
         if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
         {
             if($scope.Stok[0].PARTI !='')
@@ -587,7 +588,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 {   
                     $scope.PartiLotListe = data;
                     
-                    if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && ($scope.Stok[0].PARTI != ''))
+                    if ($scope.Stok[0].PARTI != '')
                     {  
                         $scope.Miktar = $scope.PartiLotListe[0].MIKTAR  * $scope.Stok[0].CARPAN;
                     }
