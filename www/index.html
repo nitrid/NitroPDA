@@ -31,6 +31,7 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="theme/global/fonts/web-icons/web-icons.min.css">
     <link rel="stylesheet" href="theme/global/fonts/brand-icons/brand-icons.min.css">
+    <link rel="stylesheet" href="theme/global/vendor/bootstrap-select/bootstrap-select.css">
     <!-- <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'> -->
 
     <!--[if lt IE 9]>
@@ -123,10 +124,17 @@
                 <div class="col-xl-4 form-group">
                     <input type="text" class="form-control" name="socket_port" placeholder="Soket Port" id="socket_port" ng-model="socket_port">
                 </div>               
-                <div class="col-xl-offset-12">
+                <div class="col-xl-offset-12 form-group">
                   <a class="btn btn-primary" href="#" ng-click="BtnTryConnect()">Bağlantı Test</a>                
                   <a class="btn btn-success" href="#" ng-click="HostSettingSave()" data-dismiss="modal">Kaydet</a>   
-                </div>           
+                </div>  
+                <div class="col-xl-12"> 
+                  <div ng-click="ChangeMode()">
+                    <label id="Off" class="pt-3" for="inputBasicOff">Offline</label>
+                    <input type="checkbox" id="inputBasicOn" data-plugin="switchery" data-switchery="true" style="display: none;">                                   
+                    <label id="On" class="pt-3" for="inputBasicOn">Online</label>
+                  </div>  
+                </div>         
               </div>
             </form>         
           </div>
@@ -137,7 +145,7 @@
       <div class="page-content animation-slide-top animation-duration-1 mx--20 py-0">
         <div class="panel modal-center"> 
           <div class="panel-body">
-            <div class="brand">
+            <div class="brand pb-25">
               <img class="brand-img col-xl-10 offset-xl-1 py-10" src="img/logo.png" alt="...."> 
               <!-- <h2 class="brand-text font-size-18 col-xl-5 offset-xl-5">Nitro</h2>     -->
               <div class="btn-group float-right">
@@ -150,20 +158,19 @@
                   </div>
               </div>
             </div>
-            <form>
-              <div class="form-group form-material floating" data-plugin="formMaterial">
-                  <select required id="firma-secim" class="form-control" ng-model="Firm" ng-disabled='FirmLock'>
-                      <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
-                  </select>
-                <label class="floating-label">Firma</label>
+              <label class="floating-label">Firma</label>
+              <div class="form-group form-material" >
+                  <select class="form-control" data-plugin="selectpicker" data-style="btn-outline btn-primary" required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Şube Seçimi Yapınız">
+                    <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
+                </select>
               </div>
-              <div class="form-group form-material floating" data-plugin="formMaterial">
+              <label class="floating-label">Kullanıcı</label>
+              <div class="form-group form-material" data-plugin="formMaterial">
                   <input required id="kullanıcı-secim" class="form-control" ng-model="Kullanici">
-                <label class="floating-label">Kullanıcı</label>
               </div>
-              <div class="form-group form-material floating" data-plugin="formMaterial">
+              <label class="floating-label">Şifre</label>
+              <div class="form-group form-material" data-plugin="formMaterial">
                 <input required type="password" class="form-control" name="password" ng-model="Password" />
-                <label class="floating-label">Şifre</label>
               </div>
               <div class="form-group clearfix">
                 <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
@@ -181,31 +188,12 @@
                   </div>
                 </div>
               </div>            
-                <div class="form-group">
-                  <div class="float-center mr-20" style="text-align: center" ng-click="ChangeMode()">
-                    <label id="Off" class="pt-3" for="inputBasicOff">Offline</label>
-                    <input type="checkbox" id="inputBasicOn" data-plugin="switchery" data-switchery="true" style="display: none;">                                   
-                    <label id="On" class="pt-3" for="inputBasicOn">Online</label>
-                  </div>
-              </div> 
-            </form>
           </div>           
         </div>
       </div>
       <footer class=" page-copyright-inverse " style="text-align: center;">
           <a href="http://www.teknoerp.com.tr/"><p>www.teknoerp.com.tr</p></a>
-            <p>© 2018. Tüm hakları saklıdır.</p>
-            <div class="social">
-              <a class="btn btn-icon btn-pure" href="javascript:void(0)">
-              <i class="icon bd-twitter" aria-hidden="true"></i>
-            </a>
-              <a class="btn btn-icon btn-pure" href="javascript:void(0)">
-              <i class="icon bd-facebook" aria-hidden="true"></i>
-            </a>
-              <a class="btn btn-icon btn-pure" href="javascript:void(0)">
-              <i class="icon bd-google-plus" aria-hidden="true"></i>
-            </a>
-            </div>
+            <p>© 2013. Tüm hakları saklıdır.</p>
       </footer>
     </div>
 
@@ -222,6 +210,7 @@
 
     <!-- Plugins -->
     <script src="theme/global/vendor/switchery/switchery.js"></script>
+    <script src="theme/global/vendor/bootstrap-select/bootstrap-select.js"></script>
 
     <!-- Scripts -->
     <script src="theme/global/js/Component.js"></script>

@@ -68,6 +68,10 @@ function Login ($scope,$rootScope,$window,db)
                     {
                         if(typeof data.result.err == 'undefined')
                         {
+                            setTimeout(function () 
+                            {
+                                $('select').selectpicker('refresh');
+                            },500)
                             if(Firma != '')
                             {
                                 $scope.Firm = Firma;
