@@ -1,21 +1,14 @@
 <div class="col-12" ng-controller="StokRaporCtrl" ng-init="Init()">
-    <br>
-    <div class="panel my-2">
-        <div class="row">
-            <div class="col-xl-4 offset-xl-4 col-md-4 offset-md-4 col-sm-11 offset-1">
-                <h4 class="text-primary">Stok Depo Miktarı Raporu</h4>
-            </div>
-        </div>
-    </div>
+  
     <div class="panel">
         <div class="panel-body">
             <div class="form-group form-material" data-plugin="formMaterial">
-                <label class="form-control-label text-primary">Depo Seçim</label>
+                <label class="form-control-label text-primary">Stok Depo Miktarı Raporu</label>
                 <input type="text" class="form-control focus" placeholder="Depo Listelemek İçin Tıklayınız..." data-target="#MdlDepoGetir" data-toggle="modal" ng-model="DepoAdi">
             </div>
             <div class="row py-5">
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">Getir</button>
+                    <button type="submit" class="btn btn-primary btn-block" ng-click="BtnGetir()">Getir</button>
                 </div>
             </div>            
             <div id="TblStokListe" class="pt-5"></div>

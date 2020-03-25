@@ -1,95 +1,83 @@
 <div class="col-12" ng-controller="YapilacakTahsilatlarCtrl" ng-init="Init()">
-    <br>
-    <div class="panel my-2">
-        <div class="row">
-            <div class="col-xl-4 offset-xl-4 col-md-4 offset-md-4 col-sm-11 offset-1">
-                <h4 class="text-primary">Yapılacak Tahsilatlar Raporu</h4>
+        <div class="page-content container-fluid">
+            <div class="row">
+                <div class="col-4 px-1">
+                    <select class="form-control form-control right" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
+                        <option value="0">Tahsilat</option>
+                        <option value="1">Ödeme</option>
+                    </select>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="col-4 px-5">
-        <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
-            <option value="0">Tahsilat</option>
-            <option value="1">Ödeme</option>
-        </select>
-    </div>
-    <div class="row py-1">
-        <div class="col-12 px-1">
-            <label class="form-control-label text-primary">Temsilci Seçim</label>
-            <div class="input-group">
-                <input type="text" class="form-control focus" placeholder="Temsilci Listelemek İçin Tıklayınız..." data-target="#MdlPersonelGetir" data-toggle="modal" ng-model="PersonelAdi">
-                <span class="input-group-append">
-                <button type="submit" class="btn btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
-                </span>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-md-12 text-primary px-1"><div class="col-form-label px-1 float-left  py-2"> Toplam Bakiye : {{ToplamBakiye}}</div></div>
-    </div>
-    <div class="row py-5">
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">RAPOR AL</button>
-        </div>
-    </div>
-    <div id="TblTahsilatRapor" class="pt-5"></div>
-        <!-- Islem Detay Modal -->
-        <div class="modal fade" id="MdlIslemDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-simple modal-center modal-primary">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">X</span>
-                        </button>
-                        <h4 class="modal-title">Cari Haraketleri</h4>
+                 <div class="text-primary" style="padding: -10px;"><h3 class="text-center">{{Evrakadi}}</h3> </div>
+            <div class="row py-1">
+                <div class="col-12 px-1">
+                    <div class="input-group">
+                        <input type="text" class="form-control focus" placeholder="Temsilci Seçmek İçin Tıklayınız..." data-target="#MdlPersonelGetir" data-toggle="modal" ng-model="PersonelAdi">
+                        <span class="input-group-append">
+                        <button type="submit" class="btn btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                        </span>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div id="TblCariFoy" class="pt-5 pb-5"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-12 text-primary px-1"><div class="col-form-label px-1 float-left  py-2"> Toplam Bakiye : {{ToplamBakiye}}</div></div>
+            </div>
+            <div class="row py-5">
+                <div class="col-12" >
+                    <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">RAPOR AL</button>
+                </div>
+            </div>
+            <div id="TblTahsilatRapor" class="col-12 px-1"></div>
+                <!-- Islem Detay Modal -->
+                <div class="modal fade" id="MdlIslemDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-simple modal-center modal-primary">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">X</span>
+                                </button>
+                                <h4 class="modal-title">Cari Haraketleri</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div id="TblCariFoy" class="pt-5 pb-5"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Temsilci Listele Modal -->
+            <div class="modal fade" id="MdlPersonelGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-simple modal-center modal-primary">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                            <h4 class="modal-title">Temsilci Listesi</h4>
+                        </div>
+                        <div class="modal-body">
+                        <!--    <div class="row py-5">
+                                <div class="col-4 px-1 ">
+                                    <select class="form-control" ng-model="CmbPersonelAra" ng-disabled="EvrakLock">
+                                        <option value="0">ADI</option>
+                                        <option value="1">KODU</option>
+                                    </select>
+                                </div>
+                                <div class="col-8 px-1">
+                                    <input type="text" class="form-control" ng-model="TxtPersonelAra" ng-disabled="EvrakLock">
+                                </div>
+                            </div>
+                            -->
+                            <div class="col-1 offset-5" ng-show="Loading">
+                                <div class="loader vertical-align-middle loader-circle"></div>
+                            </div>
+                            <div id="TblPersonel" class="pt-5" ng-show="TblLoading"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Temsilci Listele Modal -->
-    <div class="modal fade" id="MdlPersonelGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-simple modal-center modal-primary">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">X</span>
-                    </button>
-                    <h4 class="modal-title">Temsilci Listele</h4>
-                </div>
-                <div class="modal-body">
-                <!--    <div class="row py-5">
-                        <div class="col-4 px-1 ">
-                            <select class="form-control" ng-model="CmbPersonelAra" ng-disabled="EvrakLock">
-                                <option value="0">ADI</option>
-                                <option value="1">KODU</option>
-                            </select>
-                        </div>
-                        <div class="col-8 px-1">
-                            <input type="text" class="form-control" ng-model="TxtPersonelAra" ng-disabled="EvrakLock">
-                        </div>
-                    </div>
-                    -->
-                    <div class="row py-5">
-                        <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnPersonelSec()">Temsilci Seç</button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnPersonelListele()">Temsilci Listele</button>
-                        </div>
-                    </div>
-                    <div class="col-1 offset-5" ng-show="Loading">
-                        <div class="loader vertical-align-middle loader-circle"></div>
-                    </div>
-                    <div id="TblPersonel" class="pt-5" ng-show="TblLoading"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </div>    
 </div>
 
 <script>

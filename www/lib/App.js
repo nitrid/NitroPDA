@@ -138,6 +138,10 @@ angular.module("app",
     .when("/DuraganCariler",
     {
         templateUrl : "html/rapor/DuraganCariler.html"
+    })  
+    .when("/AmbarFisi",
+    {
+        templateUrl : "html/evraklar/AmbarFisi.html"
     });
 });
 

@@ -165,6 +165,9 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         InitTahsilatRapor();
         InitCariFoy();
         InitPersonelGrid();
+        $scope.BtnPersonelListele()
+        $scope.Evrakadi = 'Tahsilat Raporu'
+
     }
     $scope.BtnPersonelSec = function()
     {   
@@ -298,6 +301,18 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             
             $scope.PersonelAdi = $scope.PersonelListe[pIndex].ADI;
             $scope.PlasiyerKodu = $scope.PersonelListe[pIndex].KODU;
+            $scope.BtnPersonelSec();
+        }
+    }
+    $scope.EvrakTipChange = function()
+    {
+        if($scope.CmbEvrakTip == 0)
+        {
+            $scope.Evrakadi = 'Tahsilat Raporu'
+        }
+        else if($scope.CmbEvrakTip == 1)
+        {
+            $scope.Evrakadi = 'Ödeme Raporu'
         }
     }
    
