@@ -696,14 +696,14 @@ var QuerySql =
                 "BARKOD_TANIMLARI AS BARKOD ON SIPARIS.sip_stok_kod = BARKOD.bar_stokkodu " +
                 "AND SIPARIS.sip_teslim_miktar < SIPARIS.sip_miktar INNER JOIN " +
                 "CARI_HESAPLAR ON SIPARIS.sip_musteri_kod = CARI_HESAPLAR.cari_kod " +
-                "WHERE SIPARIS.sip_evrakno_seri=@SERI AND SIPARIS.sip_evrakno_sira=@SIRA " +
+                "WHERE SIPARIS.sip_belgeno=@BELGE " +
                 " AND SIPARIS.sip_tip=@TIP " +
-                "GROUP BY SIPARIS.sip_teslim_tarih,SIPARIS.sip_evrakno_seri,SIPARIS.sip_evrakno_sira,SIPARIS.sip_depono, " +
+                "GROUP BY SIPARIS.sip_teslim_tarih,SIPARIS.sip_evrakno_seri,SIPARIS.sip_evrakno_sira,SIPARIS.sip_depono,SIPARIS.sip_belgeno, " +
                 "SIPARIS.sip_adresno,CARI_HESAPLAR.cari_kod,CARI_HESAPLAR.cari_unvan1,SIPARIS.sip_aciklama,SIPARIS.sip_doviz_cinsi " +
                 "HAVING SUM(SIPARIS.sip_miktar - SIPARIS.sip_teslim_miktar) > 0 " +
                 "ORDER BY sip_teslim_tarih",
-        param : ['SERI','SIRA','TIP'],
-        type : ['string|25','int','int']
+        param : ['BELGE','TIP'],
+        type : ['string|25','int']
     },  
     NakliyeListele :
     {

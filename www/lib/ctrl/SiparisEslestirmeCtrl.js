@@ -1721,8 +1721,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     { 
         $scope.Loading = true;
         $scope.TblLoading = false;
-        $scope.SipSeri = $scope.SipSeriSira.split("-",1).pop(1);
-        $scope.SipSira = $scope.SipSeriSira.split("-",2).pop(1);
 
         if($scope.SipSeriSira == "")
         {
@@ -1754,7 +1752,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.SiparisKabulListele = function()
     {
-        let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
+        console.log($scope.SipSeriSira)
+        let TmpParam = [$scope.SipSeriSira,0];
 
         db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
         {
@@ -1952,9 +1951,12 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BelgeBilgisiClick = function() 
     {
+       
+
         $("#TbBelgeBilgisi").addClass('active');
         $("#TbMain").removeClass('active');
         $("#TbSiparisSecimi").removeClass('active');
+
     }
     $scope.BarkodGirisClick = function() 
     {
@@ -1991,12 +1993,34 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.TbIslemSatirlariClick = function() 
     {
-        $("#TbIslemSatirlari").addClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbCariSec").removeClass('active');
-        $("#TbBelgeBilgisi").removeClass('active');
-        $("#TbBarkodGiris").removeClass('active');
-        $("#TbSiparisSecimi").removeClass('active');
+        if($scope.StokListe.length > 0)
+        {
+            alertify.okBtn('Evet');
+            alertify.cancelBtn('Hayır');
+    
+            alertify.confirm('Bu Sipariş Tamamlanmadı Devam Edilsin mi ?', 
+            function()
+            { 
+                $("#TbIslemSatirlari").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbCariSec").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbBarkodGiris").removeClass('active');
+                $("#TbSiparisSecimi").removeClass('active');
+            } 
+            ,function(){})
+        }
+        else
+        {
+            $("#TbIslemSatirlari").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbCariSec").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbBarkodGiris").removeClass('active');
+                $("#TbSiparisSecimi").removeClass('active');
+        }
+
+       
     }
     $scope.SiparisSecimi = function() 
     {
