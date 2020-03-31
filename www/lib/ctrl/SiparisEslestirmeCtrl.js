@@ -926,7 +926,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     $scope.StokHarListe = IrsaliyeData;
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
-                        BedenHarInsert(InsertResult.result.recordset[0].sth_RECno);
+                        BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
                     InsertAfterRefresh(IrsaliyeData);       
                     $scope.InsertLock = false  
