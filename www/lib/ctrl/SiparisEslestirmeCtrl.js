@@ -1721,6 +1721,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     { 
         $scope.Loading = true;
         $scope.TblLoading = false;
+        $scope.SipSeri = $scope.SipSeriSira.split("-",1).pop(1);
+        $scope.SipSira = $scope.SipSeriSira.split("-",2).pop(1);
 
         if($scope.SipSeriSira == "")
         {
@@ -1752,8 +1754,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.SiparisKabulListele = function()
     {
-        console.log($scope.SipSeriSira)
-        let TmpParam = [$scope.SipSeriSira,0];
+        let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
 
         db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
         {
