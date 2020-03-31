@@ -148,51 +148,53 @@
             <div class="brand pb-25">
               <img class="brand-img col-xl-10 offset-xl-1 py-10" src="img/logo.png" alt="...."> 
               <!-- <h2 class="brand-text font-size-18 col-xl-5 offset-xl-5">Nitro</h2>     -->
-              <div class="btn-group float-right">
-                  <button type="button" class="btn btn-primary dropdown-toggle" id="AnimationDropdown1" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
-                  <div class="dropdown-menu dropdown-menu-right " aria-labelledby="AnimationDropdown1" role="menu" x-placement="bottom-start" style="position: absolute; will-change: transform; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px;">                     
-                      <a class="dropdown-item" href="#server-settings" data-toggle="modal" role="menuitem">Ayarlar</a>
-                      <a class="dropdown-item" href="file:///android_asset/www/app_update.html" role="menuitem" id="btn-appupdate">Uygulamayı Güncelle</a> 
-                    <div class="dropdown-divider" role="presentation"></div>                
-                    <a class="dropdown-item" href="#vt-aktarim" data-toggle="modal" role="menuitem" ng-click="BtnMenuDbTransfer()">Veri Tabanı Oluştur</a>                    
-                  </div>
-              </div>
             </div>
-              <label class="floating-label">Firma</label>
               <div class="form-group form-material" >
-                  <select class="form-control" data-plugin="selectpicker" data-style="btn-outline btn-primary" required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Şube Seçimi Yapınız">
+                  <select class="form-control" data-plugin="selectpicker" data-style="btn-outline btn-primary" required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
                     <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
                 </select>
               </div>
-              <label class="floating-label">Kullanıcı</label>
-              <div class="form-group form-material" data-plugin="formMaterial">
-                  <input required id="kullanıcı-secim" class="form-control" ng-model="Kullanici">
+              <div class="form-group form-material floating" data-plugin="formMaterial">
+                  <input required id="kullanıcı-secim" class="form-control" placeholder="Kullanıcı" ng-model="Kullanici">
+                 <!--<label class="floating-label">Kullanıcı</label> -->
               </div>
-              <label class="floating-label">Şifre</label>
-              <div class="form-group form-material" data-plugin="formMaterial">
-                <input required type="password" class="form-control" name="password" ng-model="Password" />
+              <div class="form-group form-material floating" data-plugin="formMaterial">
+                <input required type="password" class="form-control" name="password" placeholder="Şifre" ng-model="Password" />
+               <!-- <label class="floating-label">Şifre</label> -->
               </div>
               <div class="form-group clearfix">
                 <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
                   <input type="checkbox" id="BeniHatirla" name="remember">
                   <label for="inputCheckbox">Beni Hatırla</label>
                 </div>
+                <div class="btn-group  float-right">
+                  <a class="dropdown-toggle" id="AnimationDropdown1" data-toggle="dropdown" aria-expanded="false">İşlemler</a>
+                  <div class="dropdown-menu dropdown-menu-right " aria-labelledby="AnimationDropdown1" role="menu" x-placement="bottom-start" style="position: absolute; will-change: transform; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px;">                     
+                      <a class="dropdown-item" href="#server-settings" data-toggle="modal" role="menuitem">Ayarlar</a>
+                      <a class="dropdown-item" href="file:///android_asset/www/app_update.html" role="menuitem" id="btn-appupdate">Uygulamayı Güncelle</a> 
+                    <div class="dropdown-divider" role="presentation"></div>                
+                    <a class="dropdown-item" href="#vt-aktarim" data-toggle="modal" role="menuitem" ng-click="BtnMenuDbTransfer()">Veri Tabanı Oluştur</a>                    
+                  </div>
+              </div>  
               </div>
               <div class="form-group clearfix">
                 <div class="row">
                   <div class="col-6 px-5">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg mt-40" ng-click="BtnEntry()">Giriş</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" ng-click="BtnEntry()">Giriş</button>
                   </div>
                   <div class="col-6 px-5">
-                    <button type="submit" class="btn btn-danger btn-block btn-lg mt-40" ng-click="BtnExit()">Çıkış</button>
+                    <button type="submit" class="btn btn-danger btn-block btn-lg" ng-click="BtnExit()">Çıkış</button>
                   </div>
                 </div>
-              </div>            
+              </div>  
+              <footer class=" page-copyright-inverse " style="text-align: center;">
+                <a href="http://www.teknoerp.com.tr/"><p>www.teknoerp.com.tr</p></a>
+            </footer>   
+
           </div>           
         </div>
       </div>
       <footer class=" page-copyright-inverse " style="text-align: center;">
-          <a href="http://www.teknoerp.com.tr/"><p>www.teknoerp.com.tr</p></a>
             <p>© 2013. Tüm hakları saklıdır.</p>
       </footer>
     </div>
