@@ -306,7 +306,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.StokListe,
             paging : true,
-            pageSize: 5,
+            pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -1118,12 +1118,15 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             else
             {
+                alertify.alert("Stok Bulunamadı")
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }   
         });
     }
@@ -1133,6 +1136,20 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         StokBarkodGetir($scope.Barkod);
         $scope.BtnStokGridGetir();
         $("#TblStok").jsGrid({pageIndex: true})
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
+    }
+    $scope.BtnCariListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnCariListele();
+        }
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {
@@ -1431,6 +1448,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.Adres = $scope.CariListe[pIndex].ADRES;
         $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
         $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+        $scope.MainClick();
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -1446,6 +1464,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
     }
@@ -1975,6 +1995,18 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TblAciklama").removeClass('active');
+        $("#TbStok").removeClass('active');
+
+    }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+        $("#TblAciklama").removeClass('active');
 
     }
     $scope.CariSecClick = function() 
@@ -1992,6 +2024,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TblAciklama").removeClass('active');
+                $("#TbStok").removeClass('active');
 
             }        
             else
@@ -2005,6 +2038,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbBelgeBilgisi").addClass('active');
         $("#TbMain").removeClass('active');
         $("#TblAciklama").removeClass('active');
+        $("#TbStok").removeClass('active');
 
     }
     $scope.BarkodGirisClick = function() 
@@ -2023,6 +2057,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TblAciklama").removeClass('active');
+                $("#TbStok").removeClass('active');
 
                             
                 BarkodFocus();
@@ -2041,6 +2076,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TblAciklama").removeClass('active');
+        $("#TbStok").removeClass('active');
 
     }
     $scope.ScanBarkod = function()
@@ -2080,6 +2116,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnAciklamaGir = function()
     {
+        $("#TbStok").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TbMain").removeClass('active');
         $("#TbCariSec").removeClass('active');
