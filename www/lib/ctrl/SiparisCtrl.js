@@ -301,14 +301,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblStok").jsGrid
         ({
             width: "100%",
+            height: "auto",
+            autoload : true,
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.StokListe,
             paging : true,
-            pageSize: 10,
-            pageButtonCount: 3,
-            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+
             fields: [
                 {
                     name: "KODU",

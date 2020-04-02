@@ -209,13 +209,13 @@ var Param = [
 			]
 		},
 		"Menu": {
-			"Stok Detay": "0",
+			"Stok Detay": "1",
 			"Sayım Fişi": "1",
 			"Ambar Fişi": "0",
 			"Stok Virman Fişi": "0",
 			"Stok Listesi": "0",
 			"Stok Ekle": "0",
-			"Cari Listesi": "0",
+			"Cari Listesi": "1",
 			"Cari Ekle": "0",
 			"Deposevk": "1",
 			"Depo Sipariş": "0",
