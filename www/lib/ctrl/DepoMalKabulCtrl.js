@@ -950,6 +950,8 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             
         });

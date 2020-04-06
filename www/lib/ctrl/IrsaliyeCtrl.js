@@ -1176,12 +1176,16 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             else
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
         });
 
@@ -1192,6 +1196,20 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         StokBarkodGetir($scope.Barkod);
         //$scope.BtnStokGridGetir();
         $("#TblStok").jsGrid({pageIndex: true})
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
+    }
+    $scope.BtnCariListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnCariListele();
+        }
     }
     $scope.BtnBarkodGetirClick = function()
     {
@@ -1255,6 +1273,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.Adres = $scope.CariListe[pIndex].ADRES;
             $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
             $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+            $scope.MainClick();
         }
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
@@ -1273,6 +1292,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
     {   
@@ -2027,6 +2048,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.TxtLot = 1;
         }
     }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+    }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
@@ -2034,6 +2064,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TbCariSec").removeClass('active');
+        $("#TbStok").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
     {
@@ -2055,6 +2086,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbCariSec").removeClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
                             
                 BarkodFocus();
             }
@@ -2077,6 +2109,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $("#TbMain").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
     }
     $scope.CariSecClick = function()

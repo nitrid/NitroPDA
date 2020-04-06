@@ -188,7 +188,7 @@
                     </div>
                     <div class="row pt-5">
                         <div class="col-5 px-1">
-                            <button type="submit" data-target="#MdlStokGetir" data-toggle="modal" class="btn btn-primary btn-block h-40">Manuel Arama</button>        
+                            <button type="submit" ng-click="ManuelAramaClick()" class="btn btn-primary btn-block h-40">Manuel Arama</button>       
                         </div>
                         <div class="col-2 px-1">
                             <button type="submit" class="btn btn-primary btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
@@ -262,6 +262,37 @@
                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Satır :</span> {{ToplamSatir | number:2}}</h5>
                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Miktar 2 :</span> {{Miktar2 | number:2}}</h5>
                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Miktar :</span> {{ToplamMiktar | number:2}}</h5>
+                </div>
+                <div id="TbStok" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1">
+                        <div class="col-4 px-1">
+                            <select class="form-control" ng-model="StokGridTip" ng-disabled="EvrakLock">
+                                <option value="0">ADI</option>
+                                <option value="1">KODU</option>
+                            </select>
+                        </div>
+                        <div class="col-8 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText" ng-disabled="EvrakLock">
+                                <span class="input-group-append">
+                                    <button type="submit" class="btn btn-primary" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading" >
+                            <div class="loader vertical-align-middle loader-circle"></div>
+                        </div>
+                    <div class="row py-1 px-1" ng-show="TblLoading">           
+                        <div class="table-responsive">
+                        <div class="table" id="TblStok"></div>                        
+                        </div>
+                    </div>
                 </div>
             </div>            
         </div>

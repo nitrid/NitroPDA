@@ -418,12 +418,16 @@ function SayimCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             else
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
         });
     }
@@ -433,6 +437,20 @@ function SayimCtrl($scope,$window,$timeout,db)
 
         StokBarkodGetir($scope.Barkod);
         $scope.Barkod = "";
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
+    }
+    $scope.BtnCariListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnCariListele();
+        }
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {
@@ -460,8 +478,9 @@ function SayimCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
-        
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        StokBarkodGetir($scope.Barkod);
+        $scope.BarkodGirisClick();
     }
     $scope.BtnTemizle = function()
     {   
@@ -763,12 +782,23 @@ function SayimCtrl($scope,$window,$timeout,db)
 
         UpdateData(Data);
     }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+
+    }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
+        $("#TbStok").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
     {
@@ -787,6 +817,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             $("#TbMain").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
+            $("#TbStok").removeClass('active');
             BarkodFocus();
         }
     }
@@ -798,6 +829,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             $("#TbMain").addClass('active');
             $("#TbIslemSatirlari").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
         else
         {
@@ -805,6 +837,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             $("#TbMain").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
+            $("#TbStok").removeClass('active');
             
             db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
             {   
