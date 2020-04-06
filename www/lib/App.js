@@ -107,6 +107,10 @@ angular.module("app",
     {
         templateUrl : "html/ayarlar/KullaniciParametre.html"
     })
+    .when("/GenelAyarlar",
+    {
+        templateUrl : "html/ayarlar/GenelAyarlar.html"
+    })
     .when("/CariSecimliSiparisDurumRaporu",
     {
         templateUrl : "html/rapor/CariSecimliSiparisDurumRaporu.html"
