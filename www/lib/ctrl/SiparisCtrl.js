@@ -1399,6 +1399,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.MiktarFiyatValid = function()
     {
+        $scope.Stok[0].INDIRIM = 0;
+        
         $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
         
         $scope.Stok[0].ISK.TUTAR1 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100);
