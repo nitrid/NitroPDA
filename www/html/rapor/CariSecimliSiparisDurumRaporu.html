@@ -30,7 +30,7 @@ background-color: #90ee90 !important;
                                 <div class="row py-1">
                                     <div class="col-12 px-1">
                                         <div class="input-group">
-                                            <input type="text" class="form-control focus" placeholder="Şube Listelemek İçin Tıklayınız..." data-target="#MdlSubeGetir" data-toggle="modal" ng-model="SubeAdi">
+                                            <input type="text" class="form-control focus" placeholder="Şube Listelemek İçin Tıklayınız..." ng-click="BtnSubeTab()" data-toggle="modal" ng-model="SubeAdi">
                                             <span class="input-group-append">
                                                 <button type="submit" class="btn btn-primary" ng-click="BtnSubeTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
                                             </span>
@@ -92,30 +92,31 @@ background-color: #90ee90 !important;
                         </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div id="TbSube" class="tab-pane">
-        <div class="row pt-0 pb-1 pb-5">
-            <div class="col-4 px-1">
-                <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+            <div id="TbSube" class="tab-pane">
+                <div class="row pt-0 pb-1 pb-5">
+                    <div class="col-4 px-1">
+                        <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Sube Seçimi</h3> </div>
+                <div class="row py-1 px-1">           
+                    <div id="TblSube"></div>                        
+                </div>
+            </div>
+            <div id="TbCari" class="tab-pane">
+                <div class="row pt-0 pb-1 pb-5">
+                    <div class="col-4 px-1">
+                        <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Cari Seçimi</h3> </div>
+                <div class="row py-1 px-1">           
+                    <div id="TblSube"></div>                        
+                </div>
             </div>
         </div>
-        <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Sube Seçimi</h3> </div>
-        <div class="row py-1 px-1">           
-            <div id="TblSube"></div>                        
-        </div>
     </div>
-    <div id="TbCari" class="tab-pane">
-        <div class="row pt-0 pb-1 pb-5">
-            <div class="col-4 px-1">
-                <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
-            </div>
-        </div>
-        <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Cari Seçimi</h3> </div>
-        <div class="row py-1 px-1">           
-            <div id="TblSube"></div>                        
-        </div>
-    </div>
+    
 </div>
     <!-- Şube Listele Modal -->
     <div class="modal fade" id="MdlSubeGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">

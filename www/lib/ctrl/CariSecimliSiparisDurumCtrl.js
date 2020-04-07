@@ -261,6 +261,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         IslemGrid();
         IslemDetayGrid();
         InitSubeGrid();
+        $scope.MainClick();
     }
     $scope.BtnCariSec = function()
     {   
@@ -415,6 +416,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             
             $scope.SubeAdi = $scope.SubeListe[pIndex].ADI;
             $scope.SubeKodu = $scope.SubeListe[pIndex].KODU;
+            $scope.MainClick();
         }
     }
     $scope.IslemDetayRowClick = function(pIndex,pItem,pObj)
@@ -474,10 +476,11 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $("#TbSube").removeClass('active');
         $("#TbMain").removeClass('active');
     }
-    $scope.SubeTab = function()
+    $scope.BtnSubeTab = function()
     {
         $("#TbSube").addClass('active');
         $("#TbCari").removeClass('active');
         $("#TbMain").removeClass('active');
+        $scope.BtnSubeListele();
     }
 }
