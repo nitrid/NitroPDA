@@ -7,6 +7,33 @@ function GenelAyarlarCtrl($scope,$window,db)
     $scope.Init = function()
     {
         $scope.SqlClick()
+        $scope.FirmaGetir();
+    }
+    $scope.FirmaGetir = function()
+    {
+        db.Emit('QMikroDb',QuerySql.Firma,(data) =>
+        {
+            if(typeof data.result.err == 'undefined')
+            {
+                setTimeout(function () 
+                {
+                    $('select').selectpicker('refresh');
+                },500)
+               
+                /*else
+                {
+                    $scope.Firm = UserParam.Sistem.Firma;
+                }*/
+                $scope.User = "0";
+                $scope.FirmList = data.result.recordset;
+                $scope.UserList = Param;
+                console.log($scope.FirmList)
+            }
+            else
+            {
+                console.log("Mikro Sql Query Çalıştırma Hatası : " + data.result.err);
+            }
+        });
     }
     $scope.SqlClick = function()
     {
