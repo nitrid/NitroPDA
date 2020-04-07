@@ -1199,6 +1199,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         
         $scope.IsEmriKodu = $scope.IsEmriListe[pIndex].KODU;
         $scope.IsEmriAdi = $scope.IsEmriListe[pIndex].ADI;
+        $scope.MainClick();
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -1216,6 +1217,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
     {   
@@ -1253,12 +1256,16 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             else
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             
         });
@@ -1269,6 +1276,20 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         StokBarkodGetir($scope.Barkod);
         $scope.BtnStokGridGetir();
         $("#TblStok").jsGrid({pageIndex: true})
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
+    }
+    $scope.BtnIsEmriListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.IsEmriListele();
+        }
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {
@@ -1305,6 +1326,15 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $scope.Insert();
         }
     }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+        $("#TbIsEmriSecim").removeClass('active');
+    }
     $scope.MainClick = function() 
     {
         $scope.IsEmriListe = "";
@@ -1313,6 +1343,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TbIsEmriSecim").removeClass('active');
+        $("#TbStok").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
     {
@@ -1334,6 +1365,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbIsEmriSecim").removeClass('active');
+                $("#TbStok").removeClass('active');
                             
                 BarkodFocus();
             }
@@ -1353,6 +1385,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $("#TbBarkodGiris").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIsEmriSecim").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
         else
         {
@@ -1361,6 +1394,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $("#TbBarkodGiris").removeClass('active');
             $("#TbIsEmriSecim").removeClass('active');
             $("#TbMain").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
     }
     $scope.IsEmriSecimClick = function()
@@ -1372,6 +1406,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $("#TbBarkodGiris").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
+            $("#TbStok").removeClass('active');
         }        
         else
         {

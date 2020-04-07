@@ -1466,10 +1466,10 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
-        $scope.BarkodGirisClick();
-        StokBarkodGetir($scope.Barkod);
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -2009,7 +2009,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TblAciklama").removeClass('active');
-
     }
     $scope.CariSecClick = function() 
     {

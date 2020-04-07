@@ -462,7 +462,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnStokGridSec = function()
     {
-        $("#MdlStokGetir").modal('hide');
+        $("#TbStok").removeClass('active');
+        $("#TbMain").addClass('active');
         StokBarkodGetir($scope.Barkod);
         $scope.StokListe = [];
         $("#TblStok").jsGrid({data : $scope.StokListe});
@@ -470,6 +471,20 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     $scope.BtnBarkodGetirClick = function()
     {
         StokBarkodGetir($scope.Barkod);
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
+    }
+    $scope.BtnCariListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnCariListele();
+        }
     }
     $scope.BtnTemizle = function()
     {   
@@ -709,10 +724,21 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BtnStokGridSec();
+    }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
     }
     $scope.Insert = function()
     {
         InsertData();
+    }
+    $scope.ManuelAramaCikis = function()
+    {
+        $("#TbStok").removeClass('active');
+        $("#TbMain").addClass('active');
     }
     $scope.ScanBarkod = function()
     {
