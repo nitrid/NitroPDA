@@ -239,10 +239,10 @@ var Param = [
 			"EvrakGonder": "0",
 			"Cari Hesap Hareket": "1",
 			"Yapilacak Tahsilatlar/Ödemeler": "1",
-			"Stok Rapor": "0",
-			"Cari Secimli Siparis Raporu": "0",
-			"Cari Secimli Siparis Durum Raporu": "0",
-			"Durağan Cariler Raporu": "0"
+			"Stok Rapor": "1",
+			"Cari Secimli Siparis Raporu": "1",
+			"Cari Secimli Siparis Durum Raporu": "1",
+			"Durağan Cariler Raporu": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
