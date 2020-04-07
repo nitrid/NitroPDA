@@ -94,8 +94,8 @@ function StokRaporCtrl($scope,$window,db)
         $scope.Firma = $window.sessionStorage.getItem('Firma');
         UserParam = Param[$window.sessionStorage.getItem('User')];
 
-        $scope.CmbStokAra = "0";
-        $scope.TxtStokAra = "";
+        $scope.CmbDepoAra = "0";
+        $scope.TxtDepoAra = "";
         $scope.DepoAdi = "";
         $scope.DepoNo;
         $scope.StokAdi = "";
@@ -142,11 +142,6 @@ function StokRaporCtrl($scope,$window,db)
             }
         });
     }
-    $scope.BtnDepoSec = function()
-    {   
-        $('#MdlDepoGetir').modal('hide');
-        $scope.BtnGetir();
-    }
     $scope.BtnDepoListele = function()
     {   
         $scope.Loading = true;
@@ -155,24 +150,33 @@ function StokRaporCtrl($scope,$window,db)
         let Kodu = '';
         let Adi = '';
 
-        if($scope.TxtStokAra != "")
+        if($scope.TxtDepoAra != "")
         {
-            if($scope.CmbStokAra == "0")
+            if($scope.CmbDepoAra == "0")
             {   
-                Adi = $scope.TxtStokAra.replace("*","%").replace("*","%");
+                Adi = $scope.TxtDepoAra.replace("*","%").replace("*","%");
             }
             else
             {
-                Kodu = $scope.TxtStokAra.replace("*","%").replace("*","%");
+                Kodu = $scope.TxtDepoAra.replace("*","%").replace("*","%");
             }
         }
         
         db.GetData($scope.Firma,'CmbDepoGetir',[Kodu,Adi,$scope.DepoNo,''],function(data)
         {
-            $scope.Loading = false;
-            $scope.TblLoading = true;
-            $scope.DepoListe = data;   
-            $("#TblDepo").jsGrid({data : $scope.DepoListe});
+            if(data.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $scope.DepoListe = data;   
+                $("#TblDepo").jsGrid({data : $scope.DepoListe});
+            }
+            else
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                alertify.alert("Depo bulunamadı")
+            }
         });
     }
     $scope.DepoListeRowClick = function(pIndex,pItem,pObj)
@@ -186,6 +190,25 @@ function StokRaporCtrl($scope,$window,db)
 
             $scope.DepoAdi = $scope.DepoListe[pIndex].ADI;
             $scope.DepoNo =$scope.DepoListe[pIndex].KODU;
+            $scope.BtnGetir();
+            $scope.MainClick();
         }
+    }
+    $scope.BtnDepoListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnDepoListele();
+        }
+    }
+    $scope.MainClick = function() 
+    {
+        $("#TbMain").addClass('active');
+        $("#TbDepo").removeClass('active');
+    }
+    $scope.CariSecClick = function() 
+    {
+        $("#TbDepo").addClass('active');
+        $("#TbMain").removeClass('active');
     }
 }
