@@ -125,10 +125,6 @@ function CariHesapHareketCtrl($scope,$window,db)
         InitCariGrid();
         InitCariFoyGrid();
     }
-    $scope.BtnCariSec = function()
-    {   
-        $('#MdlCariGetir').modal('hide');
-    }
     $scope.BtnCariListele = function()
     {   
         let Kodu = '';
@@ -191,6 +187,13 @@ function CariHesapHareketCtrl($scope,$window,db)
             $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
         });
     }
+    $scope.BtnCariListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnCariListele();
+        }
+    }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {
         if(!$scope.EvrakLock)
@@ -202,6 +205,17 @@ function CariHesapHareketCtrl($scope,$window,db)
             
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
             $scope.Carikodu =$scope.CariListe[pIndex].KODU;
+            $scope.MainClick();
         }
+    }
+    $scope.CariSecClick = function() 
+    {
+        $("#TbCari").addClass('active');
+        $("#TbMain").removeClass('active');
+    }
+    $scope.MainClick = function() 
+    {
+        $("#TbMain").addClass('active');
+        $("#TbCari").removeClass('active');
     }
 }
