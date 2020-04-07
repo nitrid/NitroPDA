@@ -403,6 +403,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
             $scope.Carikodu =$scope.CariListe[pIndex].KODU;
+            $scope.MainClick();
         }
     }
     $scope.SubeListeRowClick = function(pIndex,pItem,pObj)

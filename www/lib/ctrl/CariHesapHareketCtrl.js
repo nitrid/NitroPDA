@@ -218,4 +218,9 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TbMain").addClass('active');
         $("#TbCari").removeClass('active');
     }
+    $scope.BtnTemizle = function()
+    {
+        $scope.CariAdi = "";
+        $scope.Carikodu = "";
+    }
 }
