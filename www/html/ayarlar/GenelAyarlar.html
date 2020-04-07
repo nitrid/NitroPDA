@@ -70,17 +70,17 @@
                     <div id="TbFirma" class="tab-pane ">
                         <h3 style="font-weight:bold" class="panel-title text-center text-center">Firma Ayarları</h3>
                         <div class="form-group form-material" >
-                            <select class="form-control" data-plugin="selectpicker" data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
+                            <select class="form-control"  data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
                             <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
-                        </select>
-                        <div class="row">
-                            <div class="col-md-2 col-sm-5 m-5 ">
-                                <button type="button" class="btn btn-block btn-danger">Çıkış</button>
+                            </select>
+                            <div class="row">
+                                <div class="col-md-2 col-sm-5 m-5 ">
+                                    <button type="button" class="btn btn-block btn-danger">Çıkış</button>
+                                </div>
+                                <div class="col-md-2 col-sm-5 m-5 ">
+                                    <button type="button" class="btn btn-block btn-success">Kaydet</button>
+                                </div>
                             </div>
-                            <div class="col-md-2 col-sm-5 m-5 ">
-                                <button type="button" class="btn btn-block btn-success">Kaydet</button>
-                            </div>
-                        </div>
                         </div>
                     </div>
                 </div>

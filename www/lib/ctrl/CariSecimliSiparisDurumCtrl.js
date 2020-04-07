@@ -462,4 +462,22 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $("#MdlIslemDetay").modal('show');
         $('#IlkTarih').bootstrapMaterialDatePicker({format: "DD.MM.YYYY",lang: "tr",time:false,date:true,currentDate:new Date()});
     }
+    $scope.MainClick = function()
+    {
+        $("#TbMain").addClass('active');
+        $("#TbSube").removeClass('active');
+        $("#TbCari").removeClass('active');
+    }
+    $scope.BtnCariTab = function()
+    {
+        $("#TbCari").addClass('active');
+        $("#TbSube").removeClass('active');
+        $("#TbMain").removeClass('active');
+    }
+    $scope.SubeTab = function()
+    {
+        $("#TbSube").addClass('active');
+        $("#TbCari").removeClass('active');
+        $("#TbMain").removeClass('active');
+    }
 }
