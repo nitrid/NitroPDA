@@ -349,6 +349,16 @@ var QuerySql =
         type :  ['string|25','string|50','int']
 
     },
+    CariAdiGetir : 
+    {
+        quert : "SELECT  " +
+                " cari_kod  AS KODU, " +
+                " cari_unvan1 AS UNVAN1, " +
+                " ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS BAKIYE" +
+                " FROM CARI_HESAPLAR WHERE  ((cari_kod = @KODU) OR (@KODU = '')) AND ((cari_unvan1 = @ADI) OR (@ADI = '')) " ,
+        param : ['KODU','ADI'],
+        type : ['string|25','string|127']
+    },
     FiyatGetir : 
     {
         query : "SELECT TOP 1 " + 

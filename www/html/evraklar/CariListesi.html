@@ -1,296 +1,113 @@
-<div class="panel" ng-controller="CariListeCtrl" ng-init="YeniEvrak()">
-    <div class="panel-body">
-        <form class="page-search-form" role="search">
-            <div class="input-search input-search-dark">
-              <i class="input-search-icon wb-search" aria-hidden="true"></i>
-              <input type="text" class="form-control" id="inputSearch" name="search" placeholder="Arama">
-              <button type="button" class="input-search-close icon wb-close" aria-label="Close"></button>
-            </div>
-        </form>
-        <div class="nav-tabs-horizontal nav-tabs-animate" data-plugin="tabs">
-            <div class="tab-content">
-                <div class="tab-pane animation-fade active show" id="all_contacts" role="tabpanel">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <div class="media">
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                    <div class="avatar avatar-online">
-                                        <img src="html/evraklar/pp.png" alt="...">
-                                        <i class="avatar avatar-busy"></i>
-                                    </div>
-                                </div>
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                </div>
-                                <div class="media-body align-self-center">
-                                <h5 class="mt-0 mb-5">MAHİR GÜNDÜZ -- 001</h5>
-                                <p>
-                                    <i class="icon icon-color wb-map" aria-hidden="true"></i>KAYSERİ</p>
-                                <div>
-                                <a class="text-action" href="mahir@teknoerp.com.tr">
-                                    <i class="icon icon-color wb-envelope" aria-hidden="true"></i>
-                                </a>
-                                <a class="text-action" href="mahir@teknoerp.com.tr">
-                                    <i class="icon icon-color wb-mobile" aria-hidden="true"></i>
-                                </a>
-                                <a class="text-action" href="mahir@teknoerp.com.tr">
-                                    <i class="icon icon-color bd-twitter" aria-hidden="true"></i>
-                                </a>
-                                <a class="text-action" href="mahir@teknoerp.com.tr">
-                                    <i class="icon icon-color bd-facebook" aria-hidden="true"></i>
-                                </a>
-                                <a class="text-action" href="mahir@teknoerp.com.tr">
-                                    <i class="icon icon-color bd-dribbble" aria-hidden="true"></i>
-                                </a>
-                                </div>
-                                </div>
+<div class="col-12" ng-controller="CariListeCtrl" ng-init="YeniEvrak()">
+    <div class="page-content container-fluid">
+        <div class="tab-content">
+            <div id="TbMain" class="tab-pane active">
+                <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+                    <div class="panel-heading">
+                        <h3 style="font-weight:bold" class="panel-title">Cari Listesi</h3>
+                    </div>
+                    
+                    <div style="margin-left: -15px; margin-right: -15px; margin-top: -5px;" class="panel-body">
+                        <div class="row py-1">
+                            <div class="col-4 px-1">
+                                <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                             </div>
-                        </li>
-                        <div class="page-header text-center bg-blue-grey-200 p-1 my-5">
+                            <div class="col-4 px-1">
+                                <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
+                            </div>
                         </div>
-                        <li class="list-group-item">
-                            <div class="media">
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                    <div class="avatar avatar-online">
-                                        <img src="html/evraklar/pp.png" alt="...">
-                                        <i class="avatar avatar-busy"></i>
-                                    </div>
-                                </div>
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                </div>
-                                <div class="media-body align-self-center">
-                                    <h5 class="mt-0 mb-5">
-                                        Ali Kemal Karaca
-                                        <small>Cari Kodu : 002</small>
-                                    </h5>
-                                    <p>
-                                        <i class="icon icon-color wb-map" aria-hidden="true"></i>Trabzon
-                                    </p>
-                                    <div>
-                                    <a class="text-action" href="mahir@teknoerp.com.tr">
-                                        <i class="icon icon-color wb-envelope" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color wb-mobile" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                    <i class="icon icon-color bd-twitter" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-facebook" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-dribbble" aria-hidden="true"></i>
-                                    </a>
-                                    </div>
-                                </div>
+                        <div class="row pt-5">
+                            <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">  
+                                <label class="mb-0 h4 text-primary">{{CariKodu}} - {{CariAdi}}</label> 
                             </div>
-                        </li>
-                        <div class="page-header text-center bg-blue-grey-200 p-1 my-5">
                         </div>
-                        <li class="list-group-item">
-                                <div class="media">
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                    <div class="avatar avatar-online">
-                                        <img src="html/evraklar/pp.png" alt="...">
-                                        <i class="avatar avatar-busy"></i>
-                                    </div>
-                                </div>
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                </div>
-                                <div class="media-body align-self-center">
-                                    <h5 class="mt-0 mb-5">
-                                        Kerem Aygün
-                                        <small>Cari Kodu : 003</small>
-                                    </h5>
-                                    <p>
-                                        <i class="icon icon-color wb-map" aria-hidden="true"></i>Trabzon
-                                    </p>
-                                    <div>
-                                    <a class="text-action" href="mahir@teknoerp.com.tr">
-                                      <i class="icon icon-color wb-envelope" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color wb-mobile" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color bd-twitter" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-facebook" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-dribbble" aria-hidden="true"></i>
-                                    </a>
-                                    </div>
+                        <div class="form-group row my-1">
+                            <div class="col-4 px-1">
+                                <select class="form-control" ng-model="CmbCariAra" ng-disabled="EvrakLock">
+                                    <option value="0">ADI</option>
+                                    <option value="1">KODU</option>
+                                </select>
+                            </div>
+                            <div class="col-8 px-1">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" ng-keypress = "BtnCariListeleEnter($event)" ng-model="TxtCariAra" ng-disabled="EvrakLock">
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-primary"  ng-click="BtnCariListele()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                                    </span>
                                 </div>
                             </div>
-                        </li>
-                        <div class="page-header text-center bg-blue-grey-200 p-1 my-5">
                         </div>
-                        <li class="list-group-item">
-                            <div class="media">
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                    <div class="avatar avatar-online">
-                                        <img src="html/evraklar/pp.png" alt="...">
-                                        <i class="avatar avatar-busy"></i>
-                                    </div>
-                                </div>
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                </div>
-                                <div class="media-body align-self-center">
-                                    <h5 class="mt-0 mb-5">
-                                        Metin Duman
-                                        <small>Cari Kodu : 004</small>
-                                    </h5>
-                                    <p>
-                                        <i class="icon icon-color wb-map" aria-hidden="true"></i>Trabzon
-                                    </p>
-                                    <div>
-                                    <a class="text-action" href="mahir@teknoerp.com.tr">
-                                      <i class="icon icon-color wb-envelope" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color wb-mobile" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color bd-twitter" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-facebook" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-dribbble" aria-hidden="true"></i>
-                                    </a>
-                                    </div>
-                                </div>
+                        <div class="col-1 offset-5" ng-show="Loading" >
+                                <div class="loader vertical-align-middle loader-circle"></div>
                             </div>
-                        </li>
-                        <div class="page-header text-center bg-blue-grey-200 p-1 my-5">
+                        <div class="row py-1 px-1" ng-show="TblLoading">           
+                            <div id="TblCari"></div>                        
                         </div>
-                        <li class="list-group-item">
-                            <div class="media">
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                    <div class="avatar avatar-online">
-                                        <img src="html/evraklar/pp.png" alt="...">
-                                        <i class="avatar avatar-busy"></i>
-                                    </div>
-                                </div>
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                </div>
-                                <div class="media-body align-self-center">
-                                    <h5 class="mt-0 mb-5">
-                                        Metin Duman
-                                        <small>Cari Kodu : 005</small>
-                                    </h5>
-                                    <p>
-                                        <i class="icon icon-color wb-map" aria-hidden="true"></i>Trabzon
-                                    </p>
-                                    <div>
-                                    <a class="text-action" href="mahir@teknoerp.com.tr">
-                                      <i class="icon icon-color wb-envelope" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color wb-mobile" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color bd-twitter" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-facebook" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-dribbble" aria-hidden="true"></i>
-                                    </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <div class="page-header text-center bg-blue-grey-200 p-1 my-5">
-                        </div>
-                        <li class="list-group-item">
-                            <div class="media">
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                    <div class="avatar avatar-online">
-                                        <img src="html/evraklar/pp.png" alt="...">
-                                        <i class="avatar avatar-busy"></i>
-                                    </div>
-                                </div>
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                </div>
-                                <div class="media-body align-self-center">
-                                    <h5 class="mt-0 mb-5">
-                                        Erdem Akın
-                                        <small>Cari Kodu : 006</small>
-                                    </h5>
-                                    <p>
-                                        <i class="icon icon-color wb-map" aria-hidden="true"></i>Trabzon
-                                    </p>
-                                    <div>
-                                    <a class="text-action" href="mahir@teknoerp.com.tr">
-                                      <i class="icon icon-color wb-envelope" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color wb-mobile" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color bd-twitter" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-facebook" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-dribbble" aria-hidden="true"></i>
-                                    </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <div class="page-header text-center bg-blue-grey-200 p-1 my-5">
-                        </div>
-                        <li class="list-group-item">
-                            <div class="media">
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                    <div class="avatar avatar-online">
-                                        <img src="html/evraklar/pp.png" alt="...">
-                                        <i class="avatar avatar-busy"></i>
-                                    </div>
-                                </div>
-                                <div class="pr-0 pr-sm-20 align-self-center">
-                                </div>
-                                <div class="media-body align-self-center">
-                                    <h5 class="mt-0 mb-5">
-                                        Mustafa Burak Varol
-                                        <small>Cari Kodu : 007</small>
-                                    </h5>
-                                    <p>
-                                        <i class="icon icon-color wb-map" aria-hidden="true"></i>Trabzon
-                                    </p>
-                                    <div>
-                                    <a class="text-action" href="mahir@teknoerp.com.tr">
-                                      <i class="icon icon-color wb-envelope" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color wb-mobile" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                      <i class="icon icon-color bd-twitter" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-facebook" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="text-action" href="javascript:void(0)">
-                                        <i class="icon icon-color bd-dribbble" aria-hidden="true"></i>
-                                    </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <nav>
-                    <ul data-plugin="paginator" data-total="50" data-skin="pagination-no-border" class="pagination pagination-no-border"><li class="pagination-prev page-item disabled"><a class="page-link" href="javascript:void(0)" aria-label="Prev"><span class="icon wb-chevron-left-mini"></span></a></li><li class="pagination-items page-item active" data-value="1"><a class="page-link" href="javascript:void(0)">1</a></li><li class="pagination-items page-item" data-value="2"><a class="page-link" href="javascript:void(0)">2</a></li><li class="pagination-items page-item" data-value="3"><a class="page-link" href="javascript:void(0)">3</a></li><li class="pagination-items page-item" data-value="4"><a class="page-link" href="javascript:void(0)">4</a></li><li class="pagination-items page-item" data-value="5"><a class="page-link" href="javascript:void(0)">5</a></li><li class="pagination-next page-item"><a class="page-link" href="javascript:void(0)" aria-label="Next"><span class="icon wb-chevron-right-mini"></span></a></li></ul>
-                    </nav>
+                    </div>
                 </div>
             </div>
         </div>
+        <div id="TbDetay" class="tab-pane">
+            <div class="row pt-0 pb-1 pb-5">
+                <div class="col-4 px-1">
+                    <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Temsilci Seçimi</h3> </div>
+            <div class="row py-1 px-1">           
+                <div id="TblPersonel"></div>                        
+            </div>
+        </div>
     </div>
+            <!-- Islem Detay Modal -->
+            <!-- <div class="modal fade" id="MdlIslemDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-simple modal-center modal-primary">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                            <h4 class="modal-title">Cari Haraketleri</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div id="TblCariFoy" class="pt-5 pb-5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Temsilci Listele Modal -->
+        <div class="modal fade" id="MdlPersonelGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-simple modal-center modal-primary">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">X</span>
+                        </button>
+                        <h4 class="modal-title">Temsilci Listesi</h4>
+                    </div>
+                    <div class="modal-body">
+                    <!--    <div class="row py-5">
+                            <div class="col-4 px-1 ">
+                                <select class="form-control" ng-model="CmbPersonelAra" ng-disabled="EvrakLock">
+                                    <option value="0">ADI</option>
+                                    <option value="1">KODU</option>
+                                </select>
+                            </div>
+                            <div class="col-8 px-1">
+                                <input type="text" class="form-control" ng-model="TxtPersonelAra" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                        -->
+                        <div class="col-1 offset-5" ng-show="Loading">
+                            <div class="loader vertical-align-middle loader-circle"></div>
+                        </div>
+                        <div id="TblPersonel" class="pt-5" ng-show="TblLoading"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>  
+
 </div>
