@@ -8,17 +8,9 @@
                     </div>
                     
                     <div style="margin-left: -15px; margin-right: -15px; margin-top: -5px;" class="panel-body">
-                        <div class="row py-1">
-                            <div class="col-4 px-1">
-                                <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
-                            </div>
-                            <div class="col-4 px-1">
-                                <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
-                            </div>
-                        </div>
                         <div class="row pt-5">
                             <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">  
-                                <label class="mb-0 h4 text-primary">{{CariKodu}} - {{CariAdi}}</label> 
+                                <label class="mb-0 h4 text-primary">Detay Bilgileri Görmek İçin Cari Seçiniz !</label> 
                             </div>
                         </div>
                         <div class="form-group row my-1">
@@ -46,68 +38,37 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="TbDetay" class="tab-pane">
-            <div class="row pt-0 pb-1 pb-5">
-                <div class="col-4 px-1">
-                    <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+            <div id="TbDetay" class="tab-pane">
+                <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+                    <div class="panel-heading">
+                        <h3 style="font-weight:bold" class="panel-title">Cari Detay</h3>
+                          <div class="row pt-0 pb-1 pb-5">
+                            <div class="col-4 px-1">
+                                <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                        <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">{{CariKodu}} - {{CariAdi}}</h3> </div>
+                    </div>
+                    <div style="margin-left: -15px; margin-right: -15px; margin-top: -5px;" class="panel-body">
+                        <div class="row">
+                            <div class="col-4 text-info"><label class="form-control-label float-right">V.D Adı - No :</label></div>
+                            <div class="col-8 px-0"><label class="form-control-label pl-10">{{CariVDADI}} - {{CariVDNO}}</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-info"><label class="form-control-label float-right">Adres : </label></div>
+                            <div class="col-8 px-0"><label class="form-control-label pl-10">{{Adres}} {{Adres1}} {{Adres2}}</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-info"><label class="form-control-label float-right">Tel No :</label></div>
+                            <div class="col-8 px-0"><label class="form-control-label pl-10">{{Telnolge}}{{TelNo1}}</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-info"><label class="form-control-label float-right">Bakiye :</label></div>
+                            <div class="col-8 px-0"><label class="form-control-label pl-10">{{CariBakiye}}  </label></div>
+                        </div>     
+                    </div>
                 </div>
-            </div>
-            <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Temsilci Seçimi</h3> </div>
-            <div class="row py-1 px-1">           
-                <div id="TblPersonel"></div>                        
             </div>
         </div>
     </div>
-            <!-- Islem Detay Modal -->
-            <!-- <div class="modal fade" id="MdlIslemDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
-                <div class="modal-dialog modal-simple modal-center modal-primary">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">X</span>
-                            </button>
-                            <h4 class="modal-title">Cari Haraketleri</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div id="TblCariFoy" class="pt-5 pb-5"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Temsilci Listele Modal -->
-        <div class="modal fade" id="MdlPersonelGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-simple modal-center modal-primary">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">X</span>
-                        </button>
-                        <h4 class="modal-title">Temsilci Listesi</h4>
-                    </div>
-                    <div class="modal-body">
-                    <!--    <div class="row py-5">
-                            <div class="col-4 px-1 ">
-                                <select class="form-control" ng-model="CmbPersonelAra" ng-disabled="EvrakLock">
-                                    <option value="0">ADI</option>
-                                    <option value="1">KODU</option>
-                                </select>
-                            </div>
-                            <div class="col-8 px-1">
-                                <input type="text" class="form-control" ng-model="TxtPersonelAra" ng-disabled="EvrakLock">
-                            </div>
-                        </div>
-                        -->
-                        <div class="col-1 offset-5" ng-show="Loading">
-                            <div class="loader vertical-align-middle loader-circle"></div>
-                        </div>
-                        <div id="TblPersonel" class="pt-5" ng-show="TblLoading"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
 </div>  
-
-</div>

@@ -143,6 +143,10 @@ angular.module("app",
     {
         templateUrl : "html/rapor/DuraganCariler.html"
     })  
+    .when("/KasaRapor",
+    {
+        templateUrl : "html/rapor/KasaRapor.html"
+    }) 
     .when("/AmbarFisi",
     {
         templateUrl : "html/evraklar/AmbarFisi.html"

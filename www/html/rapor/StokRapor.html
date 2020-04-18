@@ -1,101 +1,65 @@
 <div class="col-12" ng-controller="StokRaporCtrl" ng-init="Init()">
-    <div class="tab-content">
-        <div id="TbMain" class="tab-pane active">
-            <div class="panel">
+    <div class="page-content container-fluid">
+        <div class="tab-content">     
+            <div id="TbMain" class="tab-pane active">
+                <div class="panel">
+                    <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+                            <div class="panel-heading">
+                                <h3 style="font-weight:bold" class="panel-title">Stok Depo Miktarı Raporu</h3>
+                            </div>
+                        <div class="panel-body">
+                            <div class="form-group form-material" data-plugin="formMaterial">
+                                <input type="text" class="form-control focus" placeholder="Depo Listelemek İçin Tıklayınız..." ng-click="CariSecClick()" ng-model="DepoAdi">
+                            </div>
+                            <div class="row py-5">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-block" ng-click="BtnGetir()">Getir</button>
+                                </div>
+                            </div> 
+                            <div class="col-1 offset-5" ng-show="Loading" >
+                                <div class="loader vertical-align-middle loader-circle"></div>
+                            </div>
+                            <div class="row py-1 px-1" ng-show="TblLoading">           
+                                <div id="TblStokListe"></div>                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="TbDepo" class="tab-pane">
                 <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
-                    <div class="panel-heading">
-                        <h3 style="font-weight:bold" class="panel-title">Stok Depo Miktarı Raporu</h3>
-                    </div>
-                <div class="panel-body">
-                    <div class="form-group form-material" data-plugin="formMaterial">
-                        <input type="text" class="form-control focus" placeholder="Depo Listelemek İçin Tıklayınız..." ng-click="CariSecClick()" ng-model="DepoAdi">
-                    </div>
-                    <div class="row py-5">
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block" ng-click="BtnGetir()">Getir</button>
+                    <div style="margin-left: 15px; margin-right: -15px; margin-top: -5px;" class="panel-body">
+                        <div class="row py-1">
+                            <div class="col-4 px-1">
+                                <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            </div>
                         </div>
-                    </div> 
-                    <div class="col-1 offset-5" ng-show="Loading" >
-                        <div class="loader vertical-align-middle loader-circle"></div>
-                </div>
-                <div class="row py-1 px-1" ng-show="TblLoading">           
-                    <div id="TblStokListe"></div>                        
-                </div>
-                </div>
-                </div>
-            </div>
-        </div>
-        <div id="TbDepo" class="tab-pane">
-            <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
-                <div style="margin-left: 15px; margin-right: -15px; margin-top: -5px;" class="panel-body">
-            <div class="row py-1">
-                <div class="col-4 px-1">
-                    <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
-                </div>
-            </div>
-            <div class="form-group row my-1">
-                <div class="col-4 px-1">
-                    <select class="form-control" ng-model="CmbDepoAra" ng-disabled="EvrakLock">
-                        <option value="0">ADI</option>
-                        <option value="1">KODU</option>
-                    </select>
-                </div>
-                <div class="col-8 px-1">
-                    <div class="input-group">
-                        <input type="text" class="form-control" ng-keypress = "BtnDepoListeleEnter($event)" ng-model="TxtDepoAra" ng-disabled="EvrakLock">
-                        <span class="input-group-append">
-                            <button type="submit" class="btn btn-primary"  ng-click="BtnDepoListele()"><i class="icon wb-search" aria-hidden="true"></i></button>
-                        </span>
+                        <div class="form-group row my-1">
+                            <div class="col-4 px-1">
+                                <select class="form-control" ng-model="CmbDepoAra" ng-disabled="EvrakLock">
+                                    <option value="0">ADI</option>
+                                    <option value="1">KODU</option>
+                                </select>
+                            </div>
+                            <div class="col-8 px-1">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" ng-keypress = "BtnDepoListeleEnter($event)" ng-model="TxtDepoAra" ng-disabled="EvrakLock">
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-primary"  ng-click="BtnDepoListele()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1 offset-5" ng-show="Loading" >
+                                <div class="loader vertical-align-middle loader-circle"></div>
+                        </div>
+                        <div class="row py-1 px-1" ng-show="TblLoading">           
+                            <div id="TblDepo"></div>                        
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-1 offset-5" ng-show="Loading" >
-                    <div class="loader vertical-align-middle loader-circle"></div>
-            </div>
-            <div class="row py-1 px-1" ng-show="TblLoading">           
-                <div id="TblDepo"></div>                        
-            </div>
-            </div>
-        </div>
+            </div>  
         </div>          
-    </div>
-    <!-- Cari Listele Modal -->
-    <div class="modal fade" id="MdlDepoGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-simple modal-center modal-primary">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">X</span>
-                    </button>
-                    <h4 class="modal-title">Stok Listele</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row py-5">
-                        <div class="col-4 px-1 ">
-                            <select class="form-control" ng-model="CmbStokAra" ng-disabled="EvrakLock">
-                                <option value="0">ADI</option>
-                                <option value="1">KODU</option>
-                            </select>
-                        </div>
-                        <div class="col-8 px-1">
-                            <input type="text" class="form-control" ng-model="TxtStokAra" ng-disabled="EvrakLock">
-                        </div>
-                    </div>
-                    <div class="row py-5">
-                        <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnDepoSec()">Depo Seç</button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnDepoListele()">Depo Listele</button>
-                        </div>
-                    </div>
-                    <div class="col-1 offset-5" ng-show="Loading">
-                        <div class="loader vertical-align-middle loader-circle"></div>
-                    </div>
-                    <div id="TblDepo" class="pt-5" ng-show="TblLoading"></div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

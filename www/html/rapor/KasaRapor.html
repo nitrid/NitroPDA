@@ -1,0 +1,38 @@
+<div class="col-12" ng-controller="KasaRaporCtrl" ng-init="Init()">
+    <div class="page-content container-fluid">
+        <div class="tab-content">     
+            <div id="TbMain" class="tab-pane active">
+                <div class="panel">
+                    <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+                            <div class="panel-heading">
+                                <h3 style="font-weight:bold" class="panel-title">Kasa Durum Raporu</h3>
+                            </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 text-danger py-5"><div class="col-form-label px-1 float-left  py-2"> Toplam Bakiye : {{ToplamBakiye}}</div></div>
+                            </div>
+                            <div class="row py-5">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-block" ng-click="BtnGetir()">Rapor Al</button>
+                                </div>
+                            </div> 
+                            <div class="row py-1 px-1" >           
+                                <div id="TblKasaListe"></div>                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>          
+    </div>
+</div>
+
+<script>
+        $("#IlkTarih").datepicker({
+        language: "tr"
+        });
+        $("#SonTarih").datepicker({
+        language: "tr"
+        });
+</script>
+        

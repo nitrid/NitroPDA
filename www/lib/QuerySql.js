@@ -91,6 +91,8 @@ var QuerySql =
                 "ADRES, " +
                 "ADRES1, " +
                 "ADRES2, " +
+                "TELNOLGE, " +
+                "TELNO1, " +
                 "VERGISIZ, " +
                 "EFATURA " +
                 "FROM  " +
@@ -124,6 +126,8 @@ var QuerySql =
                 "ISNULL((SELECT adr_ilce + '-' + adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES, " +
                 "ISNULL((SELECT adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES1, " +
                 "ISNULL((SELECT adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES2, " +
+                "ISNULL((SELECT adr_tel_bolge_kodu FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS TELNOLGE, " +
+                "ISNULL((SELECT adr_tel_no1 FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS TELNO1, " +
                 "cari_BUV_tabi_fl AS VERGISIZ, " +
                 "cari_efatura_fl AS EFATURA  " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +

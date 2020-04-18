@@ -242,7 +242,8 @@ var Param = [
 			"Stok Rapor": "1",
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1",
-			"Durağan Cariler Raporu": "1"
+			"Durağan Cariler Raporu": "1",
+			"Kasa Rapor": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -592,7 +593,8 @@ var Param = [
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1",
 			"Yapilacak Tahsilatlar": "1",
-			"Stok Detay": "1"
+			"Stok Detay": "1",
+			"Kasa Rapor": "1"
 		},
 		"UrunGirisCikis": {
 			"EvrakTip": "0",
@@ -948,7 +950,8 @@ var Param = [
 			"Stok Rapor": "1",
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1",
-			"Durağan Cariler Raporu": "1"
+			"Durağan Cariler Raporu": "1",
+			"Kasa Rapor": "1"
 		}
 	}
 ]

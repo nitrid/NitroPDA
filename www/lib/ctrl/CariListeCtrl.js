@@ -13,6 +13,7 @@ function CariListeCtrl($scope,$window,db)
         $scope.CmbCariAra = "0";
 
         InitCariGrid();
+        $scope.MainClick();
     }
     function InitCariGrid()
     {   
@@ -127,8 +128,22 @@ function CariListeCtrl($scope,$window,db)
             $scope.Adres = $scope.CariListe[pIndex].ADRES;
             $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
             $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+            $scope.TelBolge =  $scope.CariListe[pIndex].TELBOLGE
+            $scope.TelNo1 =  $scope.CariListe[pIndex].TELNO1
 
             console.log($scope.Adres)
+            $scope.CariClick();
         }
     }
+    $scope.CariClick = function() 
+    {
+        $("#TbDetay").addClass('active');
+        $("#TbMain").removeClass('active');
+    }
+    $scope.MainClick = function() 
+    {
+        $("#TbMain").addClass('active');
+        $("#TbDetay").removeClass('active');
+    }
+    
 }
