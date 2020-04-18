@@ -2,12 +2,10 @@ function Login ($scope,$rootScope,$window,db)
 {
     let Firma = "";
     $scope.server_adress = localStorage.host;
-    $scope.server_port = localStorage.port;
-    $scope.socket_port = localStorage.socketport;        
     $scope.IsDbCreateWorking = false;
     $scope.TransferEventProgress = 0;    
     $scope.FirmLock = false
-
+    
     $scope.Init = function()
     {   
         gtag('config', 'UA-12198315-14', 
@@ -15,7 +13,9 @@ function Login ($scope,$rootScope,$window,db)
             'page_title' : 'Login',
             'page_path': '/Login'
         });
-        $scope.Kullanici = localStorage.username
+
+        $scope.Kullanici = localStorage.username;
+
         for(i = 0;i < Param.length;i++)
         {
             if(Param[i].Kullanici == $scope.Kullanici)
@@ -28,7 +28,6 @@ function Login ($scope,$rootScope,$window,db)
         if(typeof Param[$window.sessionStorage.getItem('User')] != 'undefined')
         {
             Firma = UserParam.Sistem.Firma
-            console.log(Firma)
         }
         
         if(typeof Param[$window.sessionStorage.getItem('User')] != 'undefined')
@@ -44,15 +43,12 @@ function Login ($scope,$rootScope,$window,db)
         if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
         {
             document.getElementById("BeniHatirla").checked = true;
-            //Firma = localStorage.Firma;
         }
 
         if (typeof localStorage.host == 'undefined')
         {
             localStorage.mode = "true";
-            $scope.server_adress = "pda.tone.ist";            
-            $scope.server_port = "8089";
-            $scope.socket_port = "8091";
+            $scope.server_adress = window.location.hostname;            
             $scope.HostSettingSave();
         }
         
@@ -62,7 +58,7 @@ function Login ($scope,$rootScope,$window,db)
             {       
                 if(data == true)
                 {
-                    $('#alert').alert('close');
+                    $('#alert').alert('close');                    
 
                     db.Emit('QMikroDb',QuerySql.Firma,(data) =>
                     {
@@ -77,10 +73,7 @@ function Login ($scope,$rootScope,$window,db)
                                 $scope.Firm = Firma;
                                 $scope.FirmLock = true
                             }
-                            /*else
-                            {
-                                $scope.Firm = UserParam.Sistem.Firma;
-                            }*/
+
                             $scope.User = "0";
                             $scope.FirmList = data.result.recordset;
                             $scope.UserList = Param;
@@ -116,10 +109,8 @@ function Login ($scope,$rootScope,$window,db)
     $scope.HostSettingSave = function()
     {
         localStorage.host = $scope.server_adress;
-        localStorage.port = $scope.server_port;
-        localStorage.socketport = $scope.socket_port;
 
-        db.SetHost($scope.server_adress,$scope.socket_port);
+        db.SetHost($scope.server_adress);
         $window.location.reload();
     }
     $scope.BtnEntry = function()
@@ -165,7 +156,7 @@ function Login ($scope,$rootScope,$window,db)
     }
     $scope.BtnTryConnect = function()
     {
-        db.SetHost($scope.server_adress,$scope.socket_port);
+        db.SetHost($scope.server_adress);
 
         if(localStorage.mode == 'true')
         {
