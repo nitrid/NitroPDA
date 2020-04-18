@@ -1,8 +1,0 @@
-{
-	"server": "192.168.100.121",
-	"database": "MikroDB_V16",
-	"uid": "beka",
-	"pwd": "1122334455",
-	"trustedConnection": false,
-	"firm": ""
-}
