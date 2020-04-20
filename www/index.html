@@ -141,6 +141,45 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="sql-settings" aria-labelledby="sql-settings"  role="dialog" tabindex="-1" >
+      <div class="modal-dialog modal-simple">
+        <div class="modal-content ">
+          <div class="modal-header">          
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>                       
+            </button>
+            <h4 class="modal-title" id="sql-settings">Sql Ayarlar</h4>                                    
+          </div>                        
+          <div class="modal-body">           
+            <form>
+              <div class=".col-sm-6 .col-lg-4 my--100">
+                <p>{{ConnectionStatus}}</p>
+              </div>              
+              <div class="row">                               
+                <div class="col-xl-12 form-group">
+                  <input type="text" class="form-control" name="server" placeholder="Server" id="serves" ng-model="server">
+                </div>
+                <div class="col-xl-12 form-group">
+                  <input type="text" class="form-control" name=database" placeholder="Batabase" id="database" ng-model="database">
+                </div>
+                <div class="col-xl-12 form-group">
+                    <input type="text" class="form-control" name="kullanici" placeholder="Kullanıcı" id="kullanici" ng-model="kullanici">
+                </div>      
+                <div class="col-xl-12 form-group">
+                  <input type="text" class="form-control" name="sifre" placeholder="Şifre" id="sifre" ng-model="sifre">
+              </div>          
+                <div class="col-xl-offset-12 form-group">
+                  <a class="btn btn-success" href="#" ng-click="ConfigSave()" data-dismiss="modal">Kaydet</a>   
+                </div> 
+                <div class="row">
+                  <div class="col-sm-12 col-md-12 text-danger py-5"><div class="col-form-label px-1 float-left  py-2"> Sql Bilgilerinizi Kaydettikten Sonra Servisi Yeniden Başlatmalısınız !</div></div>
+                </div>        
+              </div>
+            </form>         
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="page-content py-5" data-animsition-in="fade-in" data-animsition-out="fade-out"> 
       <div class="page-content animation-slide-top animation-duration-1 mx--20 py-0">
         <div class="panel modal-center"> 
@@ -299,7 +338,7 @@
     <script src="lib/ctrl/Login.js"></script>
     <script src="lib/ctrl/Main.js"></script>
     <script src="lib/ctrl/KullaniciParametreCtrl.js"></script>
-    <script src="lib/ctrl/GenelAyarlar.js"></script>
+    <script src="lib/ctrl/GenelAyarlarCtrl.js"></script>
     <script src="lib/ctrl/SiparisCtrl.js"></script>
     <script src="lib/ctrl/DepoSevkCtrl.js"></script>
     <script src="lib/ctrl/DepoNakliyeCtrl.js"></script>

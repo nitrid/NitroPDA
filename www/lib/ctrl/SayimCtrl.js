@@ -423,6 +423,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             }
             else
             {
+                alertify.alert("Stok Bulunamadı")
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});

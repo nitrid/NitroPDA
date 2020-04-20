@@ -288,11 +288,24 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
-            $scope.Loading = false;
-            $scope.TblLoading = true;
-            $scope.CariListe = data;
-            $("#TblCari").jsGrid({data : $scope.CariListe});
-            $("#TblCari").jsGrid({pageIndex : true});
+            
+            $scope.CariListe = data;  
+
+            if ($scope.CariListe.length > 0)   
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
+            }
+            else
+            {
+                alertify.alert("Cari Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
+            }
         });
     }
     $scope.BtnCariTemizle = function()

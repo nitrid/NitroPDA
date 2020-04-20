@@ -24,66 +24,37 @@
                     <div id="TbSql" class="tab-pane active">
                         <h3 style="font-weight:bold" class="panel-title text-center text-center">Sql Server Ayarları</h3>
                         <div class="col-md-6 col-lg-4 py-5">
-                            <input type="text" class="form-control" id="SqlPort" placeholder="PORT">
+                            <input type="text" class="form-control" id="SqlServer" ng-model="SqlServer" placeholder="SERVER">
                         </div>
                         <div class="col-md-6 col-lg-4 py-5">
-                            <input type="text" class="form-control" id="SqlServer" placeholder="SERVER">
+                            <input type="text" class="form-control" id="SqlDatabase" ng-model="SqlDatabase" placeholder="DATABASE">
                         </div>
                         <div class="col-md-6 col-lg-4 py-5">
-                            <input type="text" class="form-control" id="SqlDatabase" placeholder="DATABASE">
+                            <input type="text" class="form-control" id="SqlKullanici" ng-model="SqlKullanici" placeholder="KULLANICI">
                         </div>
                         <div class="col-md-6 col-lg-4 py-5">
-                            <input type="text" class="form-control" id="SqlKullanıcı" placeholder="KULLANICI">
+                            <input type="text" class="form-control" id="SqlSifre" ng-model="SqlSifre" placeholder="SIFRE">
                         </div>
-                        <div class="col-md-6 col-lg-4 py-5">
-                            <input type="text" class="form-control" id="SqlSifre" placeholder="SIFRE">
+                        <h3 style="font-weight:bold" class="panel-title text-center text-center">Gösterilecek Firmalar</h3>
+                        <h3 style="font-weight:bold" class="panel-title ">Firma Seçimi</h3>
+                        <div class="row">
+                            <div class="col-12">                           
+                                 <div class="form-group form-material" >
+                                    <select class="form-control"  data-style="btn-outline" required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
+                                    <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-2 col-sm-5 m-5 ">
                                 <button type="button" class="btn btn-block btn-danger">Çıkış</button>
                             </div>
                             <div class="col-md-2 col-sm-5 m-5 ">
-                                <button type="button" class="btn btn-block btn-success">Kaydet</button>
+                                <button type="button" ng-click="Kaydet()" class="btn btn-block btn-success">Kaydet</button>
                             </div>
                         </div>
                     </div>
-                    <div id="TbBaglanti" class="tab-pane ">
-                        <h3 style="font-weight:bold" class="panel-title text-center text-center">Genel Bağlantı Ayarları</h3>
-                        <div class="col-md-6 col-lg-4 py-5">
-                            <input type="text" class="form-control" id="BagServer" placeholder="SERVES  ADRES">
-                        </div>
-                        <div class="col-md-6 col-lg-4 py-5">
-                            <input type="text" class="form-control" id="BagServerPort" placeholder="SERVER PORT">
-                        </div>
-                        <div class="col-md-6 col-lg-4 py-5">
-                            <input type="text" class="form-control" id="BagSocketPort" placeholder="SOCKET PORT">
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 col-sm-5 m-5 ">
-                                <button type="button" class="btn btn-block btn-danger">Çıkış</button>
-                            </div>
-                            <div class="col-md-2 col-sm-5 m-5 ">
-                                <button type="button" class="btn btn-block btn-success">Kaydet</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="TbFirma" class="tab-pane ">
-                        <h3 style="font-weight:bold" class="panel-title text-center text-center">Firma Ayarları</h3>
-                        <div class="form-group form-material" >
-                            <select class="form-control"  data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
-                            <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
-                            </select>
-                            <div class="row">
-                                <div class="col-md-2 col-sm-5 m-5 ">
-                                    <button type="button" class="btn btn-block btn-danger">Çıkış</button>
-                                </div>
-                                <div class="col-md-2 col-sm-5 m-5 ">
-                                    <button type="button" class="btn btn-block btn-success">Kaydet</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
               </div>
             </div>
     </div>

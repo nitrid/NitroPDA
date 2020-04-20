@@ -105,6 +105,8 @@ function Login ($scope,$rootScope,$window,db)
             $scope.FirmList = JSON.parse(localStorage.localDb);
             $scope.UserList = Param;
         }
+
+        $scope.ConfigControl();
     }
     $scope.HostSettingSave = function()
     {
@@ -297,6 +299,39 @@ function Login ($scope,$rootScope,$window,db)
     {
         localStorage.mode = document.getElementById('inputBasicOn').checked;
         $window.location.reload();
+    }
+    $scope.ConfigControl = function()
+    {
+        console.log(1)
+        db.Emit('ConfigRead','',function(ConfigData)
+        {
+            console.log(ConfigData)
+            if(ConfigData.server == "")
+            {
+                console.log('kolay oldu')
+                $('#sql-settings').modal("show");
+            }
+            else
+            {
+                console.log('uğraş aq')
+            }
+        });
+    }
+    $scope.ConfigSave = function()
+    {
+        let SqlAyarlar = 
+        {
+            server:$scope.server,
+            database:$scope.database,
+            uid:$scope.kullanici,
+            pwd:$scope.sifre,
+            trustedConnection : false,
+            firm: ""
+        }
+        db.Emit('ConfigSave',SqlAyarlar,function(status)
+        {
+            console.log(status)
+        });
     }
     db.LocalDb.On('TransferEvent',function(e)
     {   
