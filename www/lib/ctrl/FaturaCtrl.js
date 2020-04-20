@@ -1210,6 +1210,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else
             {
+                alertify.alert("Stok Bulunamadı")
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
@@ -1269,6 +1270,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else
             {
+                alertify.alert("Cari Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
                 $("#TblCari").jsGrid({pageIndex : true});
             }

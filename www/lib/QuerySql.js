@@ -12,6 +12,10 @@ var QuerySql =
     },
     CmbDepoGetir : 
     {
+        query : "SELECT dep_no AS KODU,dep_adi AS ADI FROM DEPOLAR"
+    },
+    DepoAra : 
+    {
         query : "SELECT dep_no AS KODU,dep_adi AS ADI FROM DEPOLAR WHERE ((dep_no = @dep_no) OR (@dep_no = '')) AND ((dep_adi = @dep_adi) OR (@dep_adi = ''))",
         param : ['dep_no','dep_adi'],
         type : ['string|25','string|25'] 

@@ -162,7 +162,7 @@ function StokRaporCtrl($scope,$window,db)
             }
         }
         
-        db.GetData($scope.Firma,'CmbDepoGetir',[Kodu,Adi,$scope.DepoNo,''],function(data)
+        db.GetData($scope.Firma,'DepoAra',[Kodu,Adi,$scope.DepoNo,''],function(data)
         {
             if(data.length > 0)
             {

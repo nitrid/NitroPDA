@@ -529,13 +529,24 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
             
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
-            $scope.Loading = false;
-            $scope.TblLoading = true;
-            $scope.StokListe = StokData;
-            console.log(StokData)
-            $("#TblStok").jsGrid({data : $scope.StokListe});
-            $("#TblStok").jsGrid({data : $scope.StokListe});
-            $("#TblStok").jsGrid({pageIndex: true});
+             $scope.StokListe = StokData;
+            if ($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
+            }
+            else
+            {
+                alertify.alert("Stok Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
+            }
         });
     }
     $scope.BtnStokGridSec = function()
