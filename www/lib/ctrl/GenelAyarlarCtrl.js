@@ -7,31 +7,40 @@ function GenelAyarlarCtrl($scope,$window,db)
         $scope.SqlServer =''
         $scope.SqlDatabase =''
         $scope.SqlKullanici =''
-        $scope.SqlSifre = '' 
+        $scope.SqlSifre = ''
+        $scope.CmbFirm = 
+        {
+            FirmaListe : []
+        }; 
 
+        
         $scope.FirmaGetir();
         $scope.ConfigGetir()
-        console.log(1)
+
+        
+        $scope.SecilenFirmalar = [];
     }
+    $scope.selectpicker = function () 
+    {
+        $('select').selectpicker('refresh');
+    }
+
     $scope.FirmaGetir = function()
     {
         db.Emit('QMikroDb',QuerySql.Firma,(data) =>
         {
             if(typeof data.result.err == 'undefined')
-            {
-                setTimeout(function () 
+            {           
                 {
-                    $('select').selectpicker('refresh');
-                },500)
-               
-                /*else
-                {
-                    $scope.Firm = UserParam.Sistem.Firma;
-                }*/
+                    $scope.Firm = "";
+                }
                 $scope.User = "0";
                 $scope.FirmList = data.result.recordset;
                 $scope.UserList = Param;
                 console.log($scope.FirmList)
+                setTimeout($scope.selectpicker,100)
+                console.log($scope.FirmList.FIRM)
+               
             }
             else
             {
@@ -47,6 +56,7 @@ function GenelAyarlarCtrl($scope,$window,db)
             $scope.SqlDatabase = ConfigData.database
             $scope.SqlKullanici = ConfigData.uid
             $scope.SqlSifre = ConfigData.pwd
+            $scope.CmbFirm.FirmaListe = ConfigData.firm2
         });
     }
     $scope.SqlClick = function()
@@ -69,6 +79,12 @@ function GenelAyarlarCtrl($scope,$window,db)
     }
     $scope.Kaydet = function()
     {
+        for (let i = 0; i < $scope.CmbFirm.FirmaListe.length; i++)
+        {
+            $scope.SecilenFirmalar.push({FIRM: $scope.CmbFirm.FirmaListe[i]})
+            console.log($scope.SecilenFirmalar)
+        }
+
         console.log($scope.SqlServer)
         let SqlAyarlar = 
         {
@@ -77,11 +93,21 @@ function GenelAyarlarCtrl($scope,$window,db)
             uid:$scope.SqlKullanici,
             pwd:$scope.SqlSifre,
             trustedConnection : false,
-            firm: ""
-        }
+            firm: $scope.SecilenFirmalar,
+            firm2 : $scope.CmbFirm.FirmaListe
+        } 
         db.Emit('ConfigSave',SqlAyarlar,function(status)
         {
             console.log(status)
-        });
+            $scope.FirmaTemizle();
+        }); 
+
+        // FİRMALAR LOGİN SAYFASINDA GELMESİ İÇİN OBJE OLARAK GENEL AYARLARDA GÖZÜKMESİ İCİN DİZİ OLARAK KAYIT EDİLİYOR // EKREM-RECEP 20.04.2020 
+
+ 
+    }
+    $scope.FirmaTemizle = function()
+    {
+        $scope.SecilenFirmalar = []
     }
 }
