@@ -101,6 +101,9 @@ function CariListeCtrl($scope,$window,db)
             } 
             else
             {
+                alertify.alert("Cari Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
                 $("#TblCari").jsGrid({pageIndex: true})
             }     
