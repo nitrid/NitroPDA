@@ -40,9 +40,9 @@
                         <div class="row">
                             <div class="col-12">                           
                                  <div class="form-group form-material" >
-                                    <select class="form-control"  data-style="btn-outline" required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
+                                    <select class="form-control select2-primary"  data-style="btn-outline" required id="firma-secim" ng-model="CmbFirm.FirmaListe" ng-disabled='FirmLock' multiple title="Lütfen Firma Seçimi Yapınız" >
                                     <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
-                                    </select>
+                                    </select>           
                                 </div>
                             </div>
                         </div>

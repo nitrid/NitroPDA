@@ -4,5 +4,20 @@
 	"uid": "beka",
 	"pwd": "1122334455",
 	"trustedConnection": false,
-	"firm": ""
+	"firm": [
+		{
+			"FIRM": "MAHIR"
+		},
+		{
+			"FIRM": "MOPSAN2020"
+		},
+		{
+			"FIRM": "TEST"
+		}
+	],
+	"firm2": [
+		"MAHIR",
+		"MOPSAN2020",
+		"TEST"
+	]
 }

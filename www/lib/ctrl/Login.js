@@ -72,10 +72,28 @@ function Login ($scope,$rootScope,$window,db)
                             {
                                 $scope.Firm = Firma;
                                 $scope.FirmLock = true
+                                $scope.FirmList = data.result.recordset;
                             }
-
+                            else
+                            {
+                                console.log(data.result.recordset)
+                                db.Emit('ConfigRead','',function(ConfigData)
+                                {
+                                    
+                                    console.log(ConfigData.firm)
+                                    if(ConfigData.firm == "")
+                                    {
+                                        console.log(123)
+                                        console.log(data.result.recordset)
+                                        $scope.FirmList = data.result.recordset;
+                                    }
+                                    else
+                                    {
+                                        $scope.FirmList = ConfigData.firm
+                                    }
+                                });
+                            }
                             $scope.User = "0";
-                            $scope.FirmList = data.result.recordset;
                             $scope.UserList = Param;
                         }
                         else
@@ -308,12 +326,10 @@ function Login ($scope,$rootScope,$window,db)
             console.log(ConfigData)
             if(ConfigData.server == "")
             {
-                console.log('kolay oldu')
                 $('#sql-settings').modal("show");
             }
             else
             {
-                console.log('uğraş aq')
             }
         });
     }

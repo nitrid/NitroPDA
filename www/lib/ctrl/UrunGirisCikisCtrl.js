@@ -1217,6 +1217,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        console.log($scope.StokListe[pIndex].KODU)
         $scope.BarkodGirisClick();
         StokBarkodGetir($scope.Barkod);
     }
