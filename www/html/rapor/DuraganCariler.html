@@ -1,48 +1,51 @@
 <div class="col-12" ng-controller="DuraganCarilerCtrl" ng-init="Init()">
-    <div class="panel my-2">
-        <div class="row">
-            <div class="col-xl-4 offset-xl-4 col-md-4 offset-md-4 col-sm-11 offset-1">
-                <h4 class="text-primary">Durağan Cariler Raporu</h4>
+    <div class="page-content container-fluid">
+        <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;"  class="panel panel-primary panel-line">
+            <div class="panel-heading">
+                <h3 style="font-weight:bold" class="panel-title">Durağan Cariler Raporu</h3>
+                <ul class="panel-actions panel-actions-keep">
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
-        <div class="col-sm-7 col-md-9 px-1">
-            <div class="input-group input-group-icon">
-                <div class="input-group-prepend">
-                    <div class="input-group-text">
-                        <span class="icon wb-calendar" aria-hidden="true"></span>
-                    </div>
-                </div>
-                <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
-            </div>
-        </div>
-    </div>
-    <div class="row py-5">
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">RAPOR AL</button>
-        </div>
-    </div>
-    <div id="TblCariRapor" class="pt-5"></div>
-        <!-- Islem Detay Modal -->
-        <div class="modal fade" id="MdlIslemDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-simple modal-center modal-primary">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">X</span>
-                        </button>
-                        <h4 class="modal-title">Cari Haraketleri</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div id="TblCariFoy" class="pt-5 pb-5"></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
+                    <div class="col-sm-7 col-md-9 px-1">
+                        <div class="input-group input-group-icon">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <span class="icon wb-calendar" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
                         </div>
                     </div>
                 </div>
+                <div class="row py-5">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">RAPOR AL</button>
+                    </div>
+                </div>
+                <div id="TblCariRapor" class="pt-5"></div>
             </div>
         </div>
+    </div>
+    <!-- Islem Detay Modal -->
+    <div class="modal fade" id="MdlIslemDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Cari Haraketleri</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div id="TblCariFoy" class="pt-5 pb-5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>

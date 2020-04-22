@@ -110,4 +110,9 @@ function GenelAyarlarCtrl($scope,$window,db)
     {
         $scope.SecilenFirmalar = []
     }
+    $scope.BtnMain = function()
+    {
+        var url = "main.html";
+        $window.location.href = url;
+    }
 }
