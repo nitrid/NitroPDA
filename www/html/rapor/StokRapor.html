@@ -5,11 +5,22 @@
                 <div class="panel">
                     <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
                             <div class="panel-heading">
-                                <h3 style="font-weight:bold" class="panel-title">Stok Depo Miktarı Raporu</h3>
+                                <h3 style="font-weight:bold" class="panel-title">Stok Raporu</h3>
                             </div>
-                        <div class="panel-body">
-                            <div class="form-group form-material" data-plugin="formMaterial">
-                                <input type="text" class="form-control focus" placeholder="Depo Listelemek İçin Tıklayınız..." ng-click="CariSecClick()" ng-model="DepoAdi">
+                            <div style="margin-left: 15px; margin-right: -15px; margin-top: -5px;" class="panel-body">
+                            <div class="row py-1">
+                                <div class="col-11 px-1 py-5">
+                                    <div class="input-group px-5">
+                                        <input type="text" class="form-control focus" placeholder="Depo Listelemek İçin Tıklayınız..." ng-click="DepoSec()" ng-model="DepoAdi">
+                                        <button type="submit" class="btn btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 text-success py-5"><div class="col-form-label px-1 float-left  py-2"> Toplam Satış Değeri : {{ToplamDeger}}</div></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 text-danger py-5"><div class="col-form-label px-1 float-left  py-2"> Toplam Maliyet : {{ToplamMaliyet}}</div></div>
                             </div>
                             <div class="row py-5">
                                 <div class="col-12">

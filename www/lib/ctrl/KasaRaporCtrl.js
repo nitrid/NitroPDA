@@ -13,6 +13,14 @@ function KasaRaporCtrl($scope,$window,db)
             data : $scope.KasaListe,
             fields: 
             [
+              
+                {
+                    name: "ADI",
+                    title: "ADI",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
                 {
                     name: "TIP",
                     title: "TIP",
@@ -22,24 +30,9 @@ function KasaRaporCtrl($scope,$window,db)
                     
                 },
                 {
-                    name: "KODU",
-                    title: "KODU",
+                    name: "DOVIZSEMBOL",
+                    title: "DOVIZ CINSI",
                     type: "number",
-                    align: "center",
-                    width: 120
-                    
-                },
-                {
-                    name: "ADI",
-                    title: "ADI",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "MUHKODU",
-                    title: "MUHASEBE KODU",
-                    type: "text",
                     align: "center",
                     width: 120
                 },
@@ -50,20 +43,6 @@ function KasaRaporCtrl($scope,$window,db)
                     align: "center",
                     width: 120
                 },
-                {
-                    name: "DOVIZSEMBOL",
-                    title: "DOVIZ CINSI",
-                    type: "number",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "ALTERNATIFDOVIZ",
-                    title: "ALTERNATIF DOVIZ BAKIYE",
-                    type: "number",
-                    align: "center",
-                    width: 120
-                }
 
             ],
         });

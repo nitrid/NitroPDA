@@ -56,6 +56,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.DepoMiktar = false;
         $scope.Combo = true;
         $scope.FiyatGizle = true;
+        $scope.StokResim = false;
 
         $scope.Loading = false;
         $scope.TblLoading = true;
@@ -688,6 +689,10 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         if(UserParam.FiyatGor.FiyatGizle == "1")
         {
             $scope.FiyatGizle = false;
+        }
+        if(UserParam.FiyatGor.StokResmi == "1")
+        {
+            $scope.StokResim = true;
         }
 
         if(typeof UserParam.Etiket != 'undefined')

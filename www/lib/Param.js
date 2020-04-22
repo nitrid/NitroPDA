@@ -182,7 +182,8 @@ var Param = [
 			"SecimliFiyatListe": "0",
 			"DovizTipi": "-1",
 			"Special": "1",
-			"FiyatGizle": "0"
+			"FiyatGizle": "0",
+			"StokResmi" : "0"
 		},
 		"Etiket": {
 			"Etiket": [
@@ -557,7 +558,8 @@ var Param = [
 			"SecimliFiyatListe": "0",
 			"DovizTipi": "-1",
 			"Special": "1",
-			"FiyatGizle": "0"
+			"FiyatGizle": "0",
+			"StokResmi" : "0"
 		},
 		"Menu": {
 			"Fiyat Gör Etiket Bas": "1",
@@ -875,7 +877,8 @@ var Param = [
 			"SecimliFiyatListe": "0",
 			"DovizTipi": "-1",
 			"Special": "1",
-			"FiyatGizle": "0"
+			"FiyatGizle": "0",
+			"StokResmi" : "0"
 		},
 		"UrunGirisCikis": {
 			"CmbEvrakTip": "0",

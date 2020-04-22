@@ -3,7 +3,7 @@ function CariHesapHareketCtrl($scope,$window,db)
     let CariSelectedRow = null;
 
     function InitCariGrid()
-    {   
+    {
         $("#TblCari").jsGrid
         ({
             width: "100%",
@@ -11,14 +11,17 @@ function CariHesapHareketCtrl($scope,$window,db)
             heading: true,
             selecting: true,
             data : $scope.CariListe,
-            fields: 
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields:
             [
                 {
                     name: "KODU",
                     type: "number",
                     align: "center",
                     width: 100
-                    
                 },
                 {
                     name: "UNVAN1",
@@ -49,6 +52,8 @@ function CariHesapHareketCtrl($scope,$window,db)
             updateOnResize: true,
             heading: true,
             selecting: true,
+            pageSize: 15,
+            pageButtonCount: 3,
             data : $scope.CariFoyListe,
             fields: 
             [
@@ -118,6 +123,8 @@ function CariHesapHareketCtrl($scope,$window,db)
         $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Bakiye = 0;
+        $scope.CariAdi = "";
+        $scope.Carikodu = "";
         
         $scope.CariListe = [];
         $scope.CariFoyListe = [];
@@ -155,37 +162,44 @@ function CariHesapHareketCtrl($scope,$window,db)
     }
     $scope.BtnCariFoyGetir = function()
     {
-        let TmpQuery = 
+        if($scope.Carikodu == '')
         {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT  " +
-                    "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +       
-                    "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA, " +
-                    "msg_S_0094 AS EVRAKTIP, " +
-                    "msg_S_0003 AS CINSI, " +
-                    "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
-                    "msg_S_0099 AS VADEGUN, " +
-                    "msg_S_0100 AS BA, " +
-                    "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
-                    "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
-                    "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE, " +
-                    "ROUND(CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))),2) AS ANADOVIZBORCBAKIYE, " +
-                    "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
-                    "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
-                    "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
-                    "[msg_S_0112] AS ORJINALDOVIZ " +
-                    "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 DESC " ,
-            param:  ['KODU','ILKTARIH','SONTARIH'],
-            type:   ['string|25','date','date',],
-            value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
+            alertify.alert("Lütfen Cari Seçin !" );
         }
-
-        db.GetDataQuery(TmpQuery,function(Data)
+        else
         {
-            $scope.CariFoyListe = Data;
-            $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
-            $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
-        });
+            let TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT  " +
+                        "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +       
+                        "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA, " +
+                        "msg_S_0094 AS EVRAKTIP, " +
+                        "msg_S_0003 AS CINSI, " +
+                        "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
+                        "msg_S_0099 AS VADEGUN, " +
+                        "msg_S_0100 AS BA, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
+                        "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE, " +
+                        "ROUND(CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))),2) AS ANADOVIZBORCBAKIYE, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
+                        "[msg_S_0112] AS ORJINALDOVIZ " +
+                        "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 DESC " ,
+                param:  ['KODU','ILKTARIH','SONTARIH'],
+                type:   ['string|25','date','date',],
+                value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
+            }
+    
+            db.GetDataQuery(TmpQuery,function(Data)
+            {
+                $scope.CariFoyListe = Data;
+                $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
+                $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
+            });
+        }
     }
     $scope.BtnCariListeleEnter = function(keyEvent)
     {
