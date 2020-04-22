@@ -160,7 +160,7 @@
                   <input type="text" class="form-control" name="server" placeholder="Server" id="serves" ng-model="server">
                 </div>
                 <div class="col-xl-12 form-group">
-                  <input type="text" class="form-control" name=database" placeholder="Batabase" id="database" ng-model="database">
+                  <input type="text" class="form-control" name="database" placeholder="Batabase" id="database" ng-model="database">
                 </div>
                 <div class="col-xl-12 form-group">
                     <input type="text" class="form-control" name="kullanici" placeholder="Kullanıcı" id="kullanici" ng-model="kullanici">
@@ -188,18 +188,21 @@
               <img class="brand-img col-xl-10 offset-xl-1 py-10" src="img/logo.png" alt="...."> 
               <!-- <h2 class="brand-text font-size-18 col-xl-5 offset-xl-5">Nitro</h2>     -->
             </div>
-              <div class="form-group form-material" >
-                  <select class="form-control" data-plugin="selectpicker" data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
-                    <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
-                </select>
-              </div>
+             
               <div class="form-group form-material floating" data-plugin="formMaterial">
                   <input required id="kullanıcı-secim" class="form-control" placeholder="Kullanıcı" ng-model="Kullanici">
                  <!--<label class="floating-label">Kullanıcı</label> -->
               </div>
+              <sifreleave>
               <div class="form-group form-material floating" data-plugin="formMaterial">
                 <input required type="password" class="form-control" name="password" placeholder="Şifre" ng-model="Password" />
                <!-- <label class="floating-label">Şifre</label> -->
+              </div>
+              </sifreleave>
+               <div class="form-group form-material" >
+                 <select class="form-control" data-plugin="selectpicker" data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
+                    <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
+                </select>
               </div>
               <div class="form-group clearfix">
                 <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
@@ -222,7 +225,7 @@
                     <button type="submit" class="btn btn-primary btn-block btn-lg" ng-click="BtnEntry()">Giriş</button>
                   </div>
                   <div class="col-6 px-5">
-                    <button type="submit" class="btn btn-danger btn-block btn-lg" ng-click="BtnExit()">Çıkış</button>
+                    <button type="submit" class="btn btn-danger btn-block btn-lg" ng-click="DenemeClick()">Çıkış</button>
                   </div>
                 </div>
               </div>  
@@ -376,5 +379,6 @@
     
     <script src="lib/App.js"></script>
     <script src="lib/Controller.js"></script>    
+
   </body>
 </html>

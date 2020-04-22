@@ -35,17 +35,6 @@
                         <div class="col-md-6 col-lg-4 py-5">
                             <input type="text" class="form-control" id="SqlSifre" ng-model="SqlSifre" placeholder="SIFRE">
                         </div>
-                        <h3 style="font-weight:bold" class="panel-title text-center text-center">Gösterilecek Firmalar</h3>
-                        <h3 style="font-weight:bold" class="panel-title ">Firma Seçimi</h3>
-                        <div class="row">
-                            <div class="col-12">                           
-                                 <div class="form-group form-material" >
-                                    <select class="form-control select2-primary"  data-style="btn-outline" required id="firma-secim" ng-model="CmbFirm.FirmaListe" ng-disabled='FirmLock' multiple title="Lütfen Firma Seçimi Yapınız" >
-                                    <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
-                                    </select>           
-                                </div>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-md-2 col-sm-5 m-5 ">
                                 <button type="button" class="btn btn-block btn-danger" ng-click="BtnMain()">Çıkış</button>

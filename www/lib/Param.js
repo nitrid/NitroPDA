@@ -24,7 +24,8 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "nitrogen"
+			"BTYaziciAdi": "nitrogen",
+			"FirmaListe": ""
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -183,7 +184,7 @@ var Param = [
 			"DovizTipi": "-1",
 			"Special": "1",
 			"FiyatGizle": "0",
-			"StokResmi" : "0"
+			"StokResmi": "0"
 		},
 		"Etiket": {
 			"Etiket": [
@@ -559,7 +560,7 @@ var Param = [
 			"DovizTipi": "-1",
 			"Special": "1",
 			"FiyatGizle": "0",
-			"StokResmi" : "0"
+			"StokResmi": "0"
 		},
 		"Menu": {
 			"Fiyat Gör Etiket Bas": "1",
@@ -878,7 +879,7 @@ var Param = [
 			"DovizTipi": "-1",
 			"Special": "1",
 			"FiyatGizle": "0",
-			"StokResmi" : "0"
+			"StokResmi": "0"
 		},
 		"UrunGirisCikis": {
 			"CmbEvrakTip": "0",
