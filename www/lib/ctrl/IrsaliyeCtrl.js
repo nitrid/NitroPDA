@@ -53,7 +53,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.SorumlulukAdi = "";
         $scope.OdemeNo = "0";
         $scope.Barkod = "";
-        $scope.Birim = "0";
+        $scope.Birim = "1";
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
         $scope.Personel = "";
@@ -769,14 +769,17 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
                         $scope.BirimListe = data; 
-                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
+                        console.log($scope.Birim)
 
                         if($scope.BirimListe.length > 0)
                         {
+                            
+                            console.log($scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim}))
                             $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
                             $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
                             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
                             $scope.MiktarFiyatValid();
+                            console.log($scope.Stok[0].BIRIMPNTR)
                         }
                         else
                         {  //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
@@ -1660,6 +1663,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     {
         if($scope.BirimListe.length > 0)
         {
+            console.log($scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim}))
             $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
             $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;

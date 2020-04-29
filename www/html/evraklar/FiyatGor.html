@@ -278,27 +278,21 @@
                             <select class="form-control form-control-sm ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="StokGridTip" ng-change="ComboHideTextShow()">
                                 <option value="0" selected="selected">ADI</option>
                                 <option value="1">KODU</option>
-                                <option value="2">MARKA</option>
-                            </select>
-                        </div>
-                        <div class="col-7">
-                            <select class="form-control form-control-sm ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="Marka">
-                                <option ng-repeat="option in MarkaListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                        <button class="btn btn-block btn-primary" ng-click="BtnStokGridSec()">Seç</button>
+                        <button class="btn btn-block btn-primary" ng-click="BtnBarkodEkleGridSec()">Seç</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnStokGridGetir()">Getir</button>
+                            <button class="btn btn-block btn-primary" ng-click="BtnBarkodEkleGridGetir()">Getir</button>
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading">
                         <div class="loader vertical-align-middle loader-circle"></div>
                     </div>
-                    <div id="TblStok" class="pt-5" ng-show="TblLoading"></div>
+                    <div id="TblBarkodStok" class="pt-5" ></div>
                     <div ng-hide="Combo">
                         <div class="row">
                             <div class="col-11 offset-1">
@@ -353,6 +347,39 @@
                             <button type="submit" class="btn btn-primary btn-block h-40" ng-click="BtnReyonUpdate()">Kaydet</button>        
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Barkod Ekle Modal-->
+    <div class="modal fade" id="MdlBarkodEkle" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">X</span>
+                </button>
+                <h4 class="modal-title">Barkod Ekle</h4>
+            </div>
+                <div class="panel-body">
+                    <div class="row">{{EklenecekStokKodu}}-{{EklenecekStokAdi}}</div>
+                    <div class="row my-0 py-0">
+                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Barkod :</div></div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtEklenecekBarkod">
+                        </div>
+                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Birim :</div></div>
+                        <div class="col-4 px-1">
+                            <select class="form-control form-control-sm" ng-model="EklenecekBirim" ng-change="BirimChange()">
+                                <option ng-repeat="option in BirimListe" value="{{option.BIRIMPNTR}}">{{option.BIRIM}}</option>
+                            </select>
+                        </div>
+                    </div>
+                        <div class="col-6">
+                            <button class="form-group btn btn-block btn-primary my-1" ng-click="BtnBarkodEkle()">Barkod Ekle</button>
+                        </div>
+                    </div>
+                    <div id="TblPartiLot"></div>
                 </div>
             </div>
         </div>
