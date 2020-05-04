@@ -3,23 +3,25 @@ function CariHesapHareketCtrl($scope,$window,db)
     let CariSelectedRow = null;
 
     function InitCariGrid()
-    {   
+    {
         $("#TblCari").jsGrid
         ({
             width: "100%",
-            height: "300px",
             updateOnResize: true,
             heading: true,
             selecting: true,
             data : $scope.CariListe,
-            fields: 
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields:
             [
                 {
                     name: "KODU",
                     type: "number",
                     align: "center",
                     width: 100
-                    
                 },
                 {
                     name: "UNVAN1",
@@ -46,25 +48,27 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TblCariFoy").jsGrid
         ({
             width: "100%",
-            height: "300px",
+            height: "auto",
             updateOnResize: true,
             heading: true,
             selecting: true,
+            pageSize: 15,
+            pageButtonCount: 3,
             data : $scope.CariFoyListe,
             fields: 
             [
                 {
-                    name: "SERI",
-                    title: "SERİ",
+                    name: "TARIH",
+                    title: "TARİH",
                     type: "text",
                     align: "center",
                     width: 120
                     
                 },
                 {
-                    name: "SIRA",
-                    title: "SIRA",
-                    type: "number",
+                    name: "SERISIRA",
+                    title: "SERİ SIRA",
+                    type: "text",
                     align: "center",
                     width: 120
                     
@@ -83,76 +87,29 @@ function CariHesapHareketCtrl($scope,$window,db)
                     align: "center",
                     width: 120
                 },
-                {
-                    name: "VADETARIH",
-                    title: "VADE TARİH",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "VADEGUN",
-                    title: "VADE GÜN",
-                    type: "number",
-                    align: "center",
-                    width: 120
-                },
-                {
-                    name: "BA",
-                    title: "BORÇ/ALACAK",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
+           
                 {
                     name: "ANADOVIZBORC",
-                    title: "ANA DOViZ BORÇ",
+                    title: "BORÇ",
                     type: "text",
                     align: "center",
                     width: 200
                 },
                 {
                     name: "ANADOVIZALACAK",
-                    title: "ANA DÖVİZ ALACAK",
+                    title: "ALACAK",
                     type: "text",
                     align: "center",
                     width: 200
                 },
                 {
-                    name: "ANADOVIZBORCBAKIYE",
-                    title: "ANA DÖVİZ BORÇ BAKIYE",
+                    name: "ANADOVIZBAKIYE",
+                    title: "BAKİYE",
                     type: "text",
                     align: "center",
                     width: 200
                 },
-                {
-                    name: "ANADOVIZALACAKBAKIYE",
-                    title: "ANA DÖVİZ ALACAK BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 220
-                },
-                {
-                    name: "ORJINALDOVIZBORCBAKIYE",
-                    title: "ORJINAL DÖVİZ BORÇ BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 250
-                },
-                {
-                    name: "ORJINALDOVIZALACAKBAKİYE",
-                    title: "ORJINAL DÖVİZ ALACAK BAKİYE",
-                    type: "text",
-                    align: "center",
-                    width: 250
-                },
-                {
-                    name: "ORJINALDOVIZ",
-                    title: "ORJINAL DÖVİZ",
-                    type: "text",
-                    align: "center",
-                    width: 180
-                }
+             
             ],
         });
     }
@@ -163,23 +120,24 @@ function CariHesapHareketCtrl($scope,$window,db)
         
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = "";
-        $scope.IlkTarih = moment("01.01." + new Date().getFullYear()).format("DD.MM.YYYY");
+        $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
-
+        $scope.Bakiye = 0;
+        $scope.CariAdi = "";
+        $scope.Carikodu = "";
+        
         $scope.CariListe = [];
         $scope.CariFoyListe = [];
 
         InitCariGrid();
         InitCariFoyGrid();
     }
-    $scope.BtnCariSec = function()
-    {   
-        $('#MdlCariGetir').modal('hide');
-    }
     $scope.BtnCariListele = function()
     {   
         let Kodu = '';
         let Adi = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;  
 
         if($scope.TxtCariAra != "")
         {
@@ -195,41 +153,60 @@ function CariHesapHareketCtrl($scope,$window,db)
         
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
+            $scope.Loading = false;
+            $scope.TblLoading = true; 
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
+            $("#TblCari").jsGrid({pageIndex: true})
         });
     }
     $scope.BtnCariFoyGetir = function()
     {
-        var TmpQuery = 
+        if($scope.Carikodu == '')
         {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT  " +
-                    "msg_S_0090 AS SERI, " +
-                    "msg_S_0091 AS SIRA, " +
-                    "msg_S_0094 AS EVRAKTIP, " +
-                    "msg_S_0003 AS CINSI, " +
-                    "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
-                    "msg_S_0099 AS VADEGUN, " +
-                    "msg_S_0100 AS BA, " +
-                    "ROUND([msg_S_0101\\T],2) AS ANADOVIZBORC, " +
-                    "ROUND([msg_S_0102\\T],2) AS ANADOVIZALACAK, " +
-                    "ROUND([msg_S_1706],2) AS ANADOVIZBORCBAKIYE, " +
-                    "ROUND([msg_S_1707],2) AS ANADOVIZALACAKBAKIYE, " +
-                    "ROUND([msg_S_1710],2) AS ORJINALDOVIZBORCBAKIYE, " +
-                    "ROUND([msg_S_1711],2) AS ORJINALDOVIZALACAKBAKİYE, " +
-                    "[msg_S_0112] AS ORJINALDOVIZ " +
-                    "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
-            param:  ['KODU','ILKTARIH','SONTARIH'],
-            type:   ['string|25','date','date',],
-            value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
+            alertify.alert("Lütfen Cari Seçin !" );
         }
-
-        db.GetDataQuery(TmpQuery,function(Data)
+        else
         {
-            $scope.CariFoyListe = Data;
-            $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
-        });
+            let TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT  " +
+                        "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +       
+                        "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA, " +
+                        "msg_S_0094 AS EVRAKTIP, " +
+                        "msg_S_0003 AS CINSI, " +
+                        "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
+                        "msg_S_0099 AS VADEGUN, " +
+                        "msg_S_0100 AS BA, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
+                        "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE, " +
+                        "ROUND(CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))),2) AS ANADOVIZBORCBAKIYE, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
+                        "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
+                        "[msg_S_0112] AS ORJINALDOVIZ " +
+                        "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 DESC " ,
+                param:  ['KODU','ILKTARIH','SONTARIH'],
+                type:   ['string|25','date','date',],
+                value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
+            }
+    
+            db.GetDataQuery(TmpQuery,function(Data)
+            {
+                $scope.CariFoyListe = Data;
+                $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
+                $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
+            });
+        }
+    }
+    $scope.BtnCariListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnCariListele();
+        }
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -242,6 +219,22 @@ function CariHesapHareketCtrl($scope,$window,db)
             
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
             $scope.Carikodu =$scope.CariListe[pIndex].KODU;
+            $scope.MainClick();
         }
+    }
+    $scope.CariSecClick = function() 
+    {
+        $("#TbCari").addClass('active');
+        $("#TbMain").removeClass('active');
+    }
+    $scope.MainClick = function() 
+    {
+        $("#TbMain").addClass('active');
+        $("#TbCari").removeClass('active');
+    }
+    $scope.BtnTemizle = function()
+    {
+        $scope.CariAdi = "";
+        $scope.Carikodu = "";
     }
 }

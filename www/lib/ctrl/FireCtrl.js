@@ -213,6 +213,7 @@ function FireCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             "",
+            '',//İŞEMRİ KODU
             0, //PLASİYERKODU
             0, //HARDOVİZCİNSİ
             0, //HARDOVİZKURU
@@ -327,7 +328,7 @@ function FireCtrl($scope,$window,$timeout,db)
     }
     $scope.MaxSira = function()
     {
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     }
     $scope.YeniEvrak = function()
     {
@@ -367,7 +368,7 @@ function FireCtrl($scope,$window,$timeout,db)
             $scope.SorumlulukListe = data; 
             $scope.Sorumluluk = UserParam.Fire.Sorumluluk
         });
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
         {
             $scope.Sira = data
         });
@@ -387,7 +388,7 @@ function FireCtrl($scope,$window,$timeout,db)
         $scope.Cins = 4;
         $scope.NormalIade = 0;
        
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.DepoChange = function()
     {
@@ -748,14 +749,21 @@ function FireCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function()
     {   
-        $("#TbMain").addClass('active');
-        $("#TbBelgeBilgisi").removeClass('active');
-        $("#TbBarkodGiris").removeClass('active');
-        $("#TbIslemSatirlari").removeClass('active');
-        $("#TbBarkodGiris").addClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbBelgeBilgisi").removeClass('active');
-        $("#TbIslemSatirlari").removeClass('active');
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
+        }
+        else
+        { 
+            $("#TbBarkodGiris").addClass('active');
+            $("#TbMain").removeClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');         
+            $("#TbIslemSatirlari").removeClass('active');
+            $("#TbBarkodGiris").addClass('active');
+            $("#TbMain").removeClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');
+            $("#TbIslemSatirlari").removeClass('active');
+        }
     }
     $scope.IslemSatirlariClick = function()
     {   

@@ -390,6 +390,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             "",
+            '', //İŞEMRİ KODU
             $scope.PlasiyerKodu,
             0, //HARDOVİZCİNSİ
             0, //HARDOVİZKURU
@@ -638,7 +639,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
     }
     $scope.MaxSira = function()
     {
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     }
     $scope.YeniEvrak = async function ()
     {
@@ -703,12 +704,12 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $scope.ProjeListe = data; 
             $scope.Proje = UserParam.DepoNakliye.Proje
         });
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EkrakTip],function(data)
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EkrakTip],function(data)
         {
             $scope.Sira = data
         });
         
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
         
         BarkodFocus();
 
@@ -813,6 +814,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         {
             $scope.CariListe = data;      
             $("#TblCari").jsGrid({data : $scope.CariListe});
+            $("#TblCari").jsGrid({pageIndex: true})
         });
     }
     $scope.BtnStokGridGetir = function()
@@ -834,15 +836,15 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
-            console.log(2);
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
-            console.log(3);
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
             }
             $("#TblStok").jsGrid({data : $scope.StokListe});
+            $("#TblStok").jsGrid({data : $scope.StokListe});
+            $("#TblStok").jsGrid({pageIndex: true});
         });
         
     }
@@ -851,6 +853,14 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         $("#MdlStokGetir").modal('hide');
         StokBarkodGetir($scope.Barkod);
         $scope.BtnStokGridGetir();
+        $("#TblStok").jsGrid({pageIndex: true})
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {
@@ -877,8 +887,10 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
-        
+
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
     {   
@@ -933,7 +945,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $scope.Cins = 6;
             $scope.NormalIade = 0;
         }
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.BirimChange = function()
     {
@@ -1320,12 +1332,23 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $scope.TxtLot = 1;
         }
     }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+
+    }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
+        $("#TbStok").removeClass('active');
+
     }
     $scope.BelgeBilgisiClick = function() 
     {
@@ -1334,24 +1357,33 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function()
     {   
-        if($scope.GDepo == $scope.CDepo)
-        {
-            alertify.alert("Giriş ve Çıkış Deposu Aynı Olamaz!");
-
-            $("#TbMain").addClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbBarkodGiris").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
         }
         else
         {
-            $("#TbBarkodGiris").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
-            BarkodFocus();
+            if($scope.GDepo == $scope.CDepo)
+            {
+                alertify.alert("Giriş ve Çıkış Deposu Aynı Olamaz!");
+
+                $("#TbMain").addClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbBarkodGiris").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
+            }
+            else
+            {
+                $("#TbBarkodGiris").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
+
+                BarkodFocus();
+            }
         }
-        
     }
     $scope.IslemSatirlariClick = function()
     {   
@@ -1362,6 +1394,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
         else
         {
@@ -1369,6 +1402,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $("#TbMain").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
     }
     $scope.ScanBarkod = function()

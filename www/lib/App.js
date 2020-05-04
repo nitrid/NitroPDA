@@ -23,6 +23,10 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/DepoSiparis.html"
     })
+    .when("/DepoMalKabul",
+    {
+        templateUrl : "html/evraklar/DepoMalKabul.html"
+    })
     .when("/AlinanSiparis",
     {
         templateUrl : "html/evraklar/AlinanSiparis.html"
@@ -103,6 +107,10 @@ angular.module("app",
     {
         templateUrl : "html/ayarlar/KullaniciParametre.html"
     })
+    .when("/GenelAyarlar",
+    {
+        templateUrl : "html/ayarlar/GenelAyarlar.html"
+    })
     .when("/CariSecimliSiparisDurumRaporu",
     {
         templateUrl : "html/rapor/CariSecimliSiparisDurumRaporu.html"
@@ -118,6 +126,30 @@ angular.module("app",
     .when("/StokRapor",
     {
         templateUrl : "html/rapor/StokRapor.html"
+    })
+    .when("/TahsilatMakbuzu",
+    {
+        templateUrl : "html/evraklar/TahsilatMakbuzu.html"
+    })
+    .when("/YapilacakTahsilatlar",
+    {
+        templateUrl : "html/rapor/YapilacakTahsilatlar.html"
+    })
+    .when("/YapilanTahsilatlar",
+    {
+        templateUrl : "html/rapor/YapilanTahsilatlar.html"
+    })
+    .when("/DuraganCariler",
+    {
+        templateUrl : "html/rapor/DuraganCariler.html"
+    })  
+    .when("/KasaRapor",
+    {
+        templateUrl : "html/rapor/KasaRapor.html"
+    }) 
+    .when("/AmbarFisi",
+    {
+        templateUrl : "html/evraklar/AmbarFisi.html"
     });
 });
 

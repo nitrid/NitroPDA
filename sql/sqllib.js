@@ -160,8 +160,6 @@ sqllib.prototype.QueryPromise = function(pQuery,pResult)
                 pResult(JSON.stringify(tmperr));
             }
         });
-
-        
     }
     catch(err)
     {

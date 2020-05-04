@@ -41,7 +41,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.Seri = "";
         $scope.Sira = 0;
         
-        $scope.EvrakTip =13;
+        $scope.EvrakTip = 13;
         $scope.CariKodu = "";
         $scope.CariAdi = "";
         $scope.CariFiyatListe = 0;
@@ -56,6 +56,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.ToplamSatir = 0;
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.MalKabulSevkTarihi = moment(new Date()).format("DD.MM.YYYY");
+        $scope.Vade = moment(new Date()).format("YYYY-MM-DD");
         $scope.BelgeTarih = 0;
         $scope.OdemeNo = "0";
         $scope.Barkod = "";
@@ -758,9 +759,10 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             0,  //KASAHIZMET
             "", //KASAHIZKOD
             0, //KARSIDGRUPNO
+            "",
             $scope.Stok[0].TOPTUTAR, //MEBLAG
             $scope.Stok[0].TUTAR,    //ARATOPLAM
-            0, //VADE
+            $scope.Vade, //VADE
             0, //FTISKONTO1
             0, //FTISKONTO2
             0, //FTISKONTO3
@@ -1047,6 +1049,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
+            '', //İŞEMRİ KODU
             $scope.Personel,
             0, //HARDOVİZCİNSİ
             1, //HARDOVİZKURU
@@ -1181,6 +1184,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             $scope.CariKodu,
+            '', //İŞEMRİ KODU
             $scope.Personel,
             0, //HARDOVİZCİNSİ
             0, //HARDOVİZKURU
@@ -1392,10 +1396,15 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             }     
             else
             {
+                alertify.alert("Cari Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
             }
         });
     }
@@ -1517,7 +1526,6 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.Loading = true;
             Cari = $scope.CariKodu;
         } 
-        
         db.GetData($scope.Firma,'SiparisListeGetir',[$scope.DepoNo,Cari,Seri,Sira,1],function(StokData)
         {
             $scope.StokListe = StokData;
@@ -1535,13 +1543,13 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                 $("#MdlStokGetir").modal('hide');
                 alertify.alert("Sipariş içeriği boş")                
             }
-            
         });
     }
     $scope.BtnStokGridSec = function()
     {
         $("#MdlStokGetir").modal('hide');
         BarkodGetir($scope.Barkod);
+        $("#TblStok").jsGrid({pageIndex: true})
     }
     $scope.BtnPartiLotGetir = function()
     {   
@@ -1927,12 +1935,12 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
 
         if($scope.CmbEvrakTip == 0)
         {
-            await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
+            await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
         }
        
        if($scope.CmbEvrakTip == 1)
        {
-            await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
+            await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
        }     
     }
     $scope.YeniEvrak = function ()
@@ -2242,25 +2250,32 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.CariSecClick = function() 
     {
-        if($scope.StokHarListe.length == 0)
-        {
-            $("#TbCariSec").addClass('active');
-            $("#TbMain").removeClass('active');
-
-            db.DepoGetir($scope.Firma,EvrakParam.DepoListe,function(data)
-            {
-                $scope.DepoListe = data; 
-                $scope.DepoListe.forEach(function(item) 
-                {
-                    if(item.KODU == $scope.DepoNo)
-                        $scope.DepoAdi = item.ADI;
-                });     
-            });
-        }        
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
+        }
         else
         {
-            alertify.okBtn("Tamam");
-            alertify.alert("Kayıtlı Evrak Olmadan Bu Menüye Giremezsiniz!");
+            if($scope.StokHarListe.length == 0)
+            {
+                $("#TbCariSec").addClass('active');
+                $("#TbMain").removeClass('active');
+
+                db.DepoGetir($scope.Firma,EvrakParam.DepoListe,function(data)
+                {
+                    $scope.DepoListe = data; 
+                    $scope.DepoListe.forEach(function(item) 
+                    {
+                        if(item.KODU == $scope.DepoNo)
+                            $scope.DepoAdi = item.ADI;
+                    });     
+                });
+            }        
+            else
+            {
+                alertify.okBtn("Tamam");
+                alertify.alert("Kayıtlı Evrak Olmadan Bu Menüye Giremezsiniz!");
+            }
         }
     }
     $scope.BelgeBilgisiClick = function() 
@@ -2271,21 +2286,28 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function() 
     {
-        if($scope.CariKodu != "")
-        {
-            $("#TbBarkodGiris").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbCariSec").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
-            $("#TbSiparisSecimi").removeClass('active');
-            
-            BarkodFocus();
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
         }
         else
         {
-            alertify.okBtn("Tamam");
-            alertify.alert("Lütfen Cari Seçiniz !");
+            if($scope.CariKodu != "")
+            {
+                $("#TbBarkodGiris").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbCariSec").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                $("#TbSiparisSecimi").removeClass('active');
+                
+                BarkodFocus();
+            }
+            else
+            {
+                alertify.okBtn("Tamam");
+                alertify.alert("Lütfen Cari Seçiniz !");
+            }
         }
     }
     $scope.TbIslemSatirlariClick = function() 
@@ -2358,6 +2380,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                         0, //SATIR ISKONTO TİP 10
                         0, //CARİCİNSİ
                         $scope.StokHarListe[i].sth_cari_kodu,
+                        '', //İŞEMRİ KODU
                         $scope.StokHarListe[i].sth_plasiyer_kodu,
                         0, //HARDOVİZCİNSİ
                         0, //HARDOVİZKURU

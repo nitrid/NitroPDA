@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="theme/global/css/bootstrap.css">
     <link rel="stylesheet" href="theme/global/css/bootstrap-extend.css">
     <link rel="stylesheet" href="theme/base/assets/css/site.css">
+    <link rel="stylesheet" href="theme/base/assets/css/custom.css">
 
     <!-- Add-on Stil Dosyaları Basla -->
     <link rel="stylesheet" href="theme/global/vendor/animsition/animsition.css">
@@ -32,11 +33,12 @@
     <link rel="stylesheet" href="theme/base/assets/examples/css/tables/jsgrid.css">
     <link rel="stylesheet" href="theme/base/assets/examples/css/uikit/modals.css">
     <link rel="stylesheet" href="theme/base/assets/examples/css/pages/profile.css">
+    <link rel="stylesheet" href="theme/global/vendor/bootstrap-select/bootstrap-select.css">
     <!-- Fonts -->
     <link rel="stylesheet" href="theme/global/fonts/web-icons/web-icons.min.css">
     <link rel="stylesheet" href="theme/global/fonts/brand-icons/brand-icons.min.css">
     <link rel="stylesheet" href="theme/global/fonts/glyphicons/glyphicons.css">
-    <!-- <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'> -->
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
     <!-- İcon -->
     <link rel="stylesheet" href="theme/base/assets/examples/css/uikit/icon.css">
     <link rel="stylesheet" href="theme/global/vendor/asrange/asRange.css">
@@ -84,7 +86,7 @@
           <!-- <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
             <span class="hamburger-bar"></span>
           </button> -->
-        <a href="#!"><button class="btn btn-primary pt-1  col-4 offset-4 h-50"><i class="fas fa-lg fa-home"></i></button></a> 
+        <button class="btn btn-primary pt-1  col-4 offset-4 h-50" ng-click="BtnMain()"><i class="fas fa-lg fa-home"></i></button>
         <div class="navbar-container container-fluid">
           <!-- Navbar Collapse -->
           <div class="collapse navbar-collapse navbar-collapse-toolbar" id="site-navbar-collapse">
@@ -203,6 +205,7 @@
     <script src="theme/base/assets/js/Section/Sidebar.js"></script>
     <script src="theme/base/assets/js/Section/PageAside.js"></script>
     <script src="theme/base/assets/js/Plugin/menu.js"></script>
+    <script src="theme/global/vendor/bootstrap-select/bootstrap-select.js"></script>
 
     <script src="theme/global/js/config/colors.js"></script>
     <script src="theme/base/assets/js/config/tour.js"></script>
@@ -219,6 +222,8 @@
     <script src="theme/global/js/Plugin/responsive-tabs.js"></script>
     <script src="theme/global/js/Plugin/tabs.js"></script>
     <script src="theme/global/js/Plugin/panel.js"></script>
+    <script src="theme/global/js/Plugin/bootstrap-select.js"></script>
+    <script src="theme/global/vendor/multi-select/jquery.multi-select.js"></script>
 
     <!-- Nitro -->
     <script src="js/angular.js"></script>
@@ -227,13 +232,14 @@
     <script src="js/socket.io.js"></script>
     <script src="js/moment.min.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
-
+    
     <script src="js/DbService.js"></script>
     <script src="js/LocalDb.js"></script>
     
     <script src="lib/ctrl/Login.js"></script>
     <script src="lib/ctrl/Main.js"></script>
     <script src="lib/ctrl/KullaniciParametreCtrl.js"></script>
+    <script src="lib/ctrl/GenelAyarlarCtrl.js"></script>
     <script src="lib/ctrl/SiparisCtrl.js"></script>
     <script src="lib/ctrl/DepoSevkCtrl.js"></script>
     <script src="lib/ctrl/DepoNakliyeCtrl.js"></script>
@@ -253,12 +259,17 @@
     <script src="lib/ctrl/PlanliUretimCtrl.js"></script>
     <script src="lib/ctrl/FasonGirisCikisCtrl.js"></script>
     <script src="lib/ctrl/EvrakGonderCtrl.js"></script>
+    <script src="lib/ctrl/DepoMalKabulCtrl.js"></script>
+    <script src="lib/ctrl/TahsilatMakbuzuCtrl.js"></script>
     <!-- RAPORLAR -->
     <script src="lib/ctrl/CariHesapHareketCtrl.js"></script>
     <script src="lib/ctrl/CariHesapHareketCtrl.js"></script>
-    <script src="lib/ctrl/CariHesapBakiyeCtrl.js"></script>
+    <script src="lib/ctrl/YapilacakTahsilatlarCtrl.js"></script>
+    <script src="lib/ctrl/YapilanTahsilatlarCtrl.js"></script>
     <script src="lib/ctrl/CariSecimliSiparisDurumCtrl.js"></script>
     <script src="lib/ctrl/StokRaporCtrl.js"></script>
+    <script src="lib/ctrl/DuraganCarilerCtrl.js"></script>
+    <script src="lib/ctrl/KasaRaporCtrl.js"></script>
 
     <script src="lib/Param.js"></script>    
     <script src="lib/ParamTemp.js"></script>

@@ -1,68 +1,182 @@
+<style>
+.bg-red td {
+background-color: #f08080 !important;
+}
+.bg-green td{
+background-color: #90ee90 !important;
+}
+</style>
 <div class="col-12" ng-controller="CariSecimliSiparisDurumCtrl" ng-init="Init()">
-    <br>
-    <div class="panel my-2">
-        <div class="row">
-            <div class="col-xl-4 offset-xl-4 col-md-4 offset-md-4 col-sm-11 offset-1">
-                <h4 class="text-primary">Sipariş Durum Raporu</h4>
+    <div class="page-content container-fluid">
+        <div class="tab-content">
+            <div id="TbMain" class="tab-pane active">
+                <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+                    <div class="panel-heading">
+                        <h3 style="font-weight:bold" class="panel-title">Sipariş Durum Raporu</h3>
+                        <ul class="panel-actions panel-actions-keep">
+                    </div>
+                        
+                            <div class="panel-body">
+                                <div class="row ">
+                                    <div class="col-12 px-1">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control focus" placeholder="Cari Listelemek İçin Tıklayınız..." ng-click="BtnCariTab()" data-toggle="modal" ng-model="CariAdi">
+                                            <span class="input-group-append">
+                                                <button type="submit" class="btn btn-primary" ng-click="BtnCariTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 px-1">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control focus" placeholder="Şube Listelemek İçin Tıklayınız..." ng-click="BtnSubeTab()" data-toggle="modal" ng-model="SubeAdi">
+                                            <span class="input-group-append">
+                                                <button type="submit" class="btn btn-primary" ng-click="BtnSubeTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="row my-0 py-0">
+                                    <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Evrak Tip:</div></div>
+                                    <div class="col-sm-7 col-md-9 px-1">
+                                        <select class="form-control" ng-model="EvrakTip">
+                                            <option  value="0">Alınan Sipariş</option>
+                                            <option  value="1">Verilen Sipariş</option>
+                                        </select>
+                                    </div>
+                                </div> -->
+                                <div class="row">
+                                    <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
+                                    <div class="col-sm-7 col-md-9 px-1">
+                                        <div class="input-group input-group-icon">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span class="icon wb-calendar" aria-hidden="true"></span>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Son Tarih:</div></div>
+                                    <div class="col-sm-7 col-md-9 px-1">
+                                        <div class="input-group input-group-icon">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span class="icon wb-calendar" aria-hidden="true"></span>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" id="SonTarih" type="text" ng-model="SonTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row my-0 py-0">
+                                    <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Sipariş Durumu:</div></div>
+                                    <div class="col-sm-7 col-md-9 px-1">
+                                        <select class="form-control" ng-model="SipTip">
+                                            <option  value="0">Tüm Siparişler</option>
+                                            <option  value="1">Kapalı Siparişler</option>
+                                            <option  value="2">Açık Siparişler</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row py-5">
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">Getir</button>
+                                    </div>
+                                </div>
+                                <div id="TblCariFoy" class=""></div>
+                            </div>
+                        </div>
+            
+            </div>
+            <div id="TbSube" class="tab-pane">
+                <div class="row pt-0 pb-1 pb-5">
+                    <div class="col-4 px-1">
+                        <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Sube Seçimi</h3> </div>
+                <div class="row py-1 px-1">           
+                    <div id="TblSube"></div>                        
+                </div>
+            </div>
+            <div id="TbCari" class="tab-pane">
+                <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+                    <div style="margin-left: 15px; margin-right: -15px; margin-top: -5px;" class="panel-body">
+                      
+                <div class="row py-1">
+                    <div class="col-4 px-1">
+                        <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Cari Seçimi</h3> </div>
+                <div class="form-group row my-1">
+                    <div class="col-4 px-1">
+                        <select class="form-control" ng-model="CmbCariAra" ng-disabled="EvrakLock">
+                            <option value="0">ADI</option>
+                            <option value="1">KODU</option>
+                        </select>
+                    </div>
+                    <div class="col-8 px-1">
+                        <div class="input-group">
+                            <input type="text" class="form-control" ng-keypress = "BtnCariListeleEnter($event)" ng-model="TxtCariAra" ng-disabled="EvrakLock">
+                            <span class="input-group-append">
+                                <button type="submit" class="btn btn-primary"  ng-click="BtnCariListele()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 offset-5" ng-show="Loading" >
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                <div class="row py-1 px-1" ng-show="TblLoading">           
+                    <div id="TblCari"></div>                        
+                </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="panel">
-        <div class="panel-body">
-            <div class="form-group form-material" data-plugin="formMaterial">
-                <label class="form-control-label text-primary">Cari Seçim</label>
-                <input type="text" class="form-control focus" placeholder="Cari Listelemek İçin Tıklayınız..." data-target="#MdlCariGetir" data-toggle="modal" ng-model="CariAdi">
-            </div>
-            <div class="row my-0 py-0">
-                <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Evrak Tip:</div></div>
-                <div class="col-sm-7 col-md-9 px-1">
-                    <select class="form-control" ng-model="EvrakTip">
-                        <option  value="0">Alınan Sipariş</option>
-                        <option  value="1">Verilen Sipariş</option>
-                    </select>
+    
+</div>
+    <!-- Şube Listele Modal -->
+    <div class="modal fade" id="MdlSubeGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Şube Listele</h4>
                 </div>
-            </div><div class="row my-0 py-0">
-                <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Sipariş Durumu:</div></div>
-                <div class="col-sm-7 col-md-9 px-1">
-                    <select class="form-control" ng-model="SipTip">
-                        <option  value="0">Tüm Siparişler</option>
-                        <option  value="1">Teslim Edilen S.</option>
-                        <option  value="2">Teslim Edilmemiş S.</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
-                <div class="col-sm-7 col-md-9 px-1">
-                    <div class="input-group input-group-icon">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <span class="icon wb-calendar" aria-hidden="true"></span>
-                            </div>
+                <div class="modal-body">
+                    <div class="row py-5">
+                        <div class="col-4 px-1 ">
+                            <select class="form-control" ng-model="CmbSubeAra" ng-disabled="EvrakLock">
+                                <option value="0">ADI</option>
+                                <option value="1">KODU</option>
+                            </select>
                         </div>
-                        <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Son Tarih:</div></div>
-                <div class="col-sm-7 col-md-9 px-1">
-                    <div class="input-group input-group-icon">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <span class="icon wb-calendar" aria-hidden="true"></span>
-                            </div>
+                        <div class="col-8 px-1">
+                            <input type="text" class="form-control" ng-model="TxtSubeAra" ng-disabled="EvrakLock">
                         </div>
-                        <input type="text" class="form-control" id="SonTarih" type="text" ng-model="SonTarih" data-provide="datepicker" ng-disabled="EvrakLock">
                     </div>
+                    <div class="row py-5">
+                        <div class="col-6">
+                            <button class="btn btn-block btn-primary" ng-click="BtnSubeSec()">Şube Seç</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-block btn-primary" ng-click="BtnSubeListele()">Şube Listele</button>
+                        </div>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblSube" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
-            <div class="row py-5">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnGetir()">Getir</button>
-                </div>
-            </div>
-            <div id="TblCariFoy" class="pt-5"></div>
         </div>
     </div>
     <!-- Cari Listele Modal -->
@@ -95,7 +209,10 @@
                             <button class="btn btn-block btn-primary" ng-click="BtnCariListele()">Cari Listele</button>
                         </div>
                     </div>
-                    <div id="TblCari" class="pt-5"></div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblCari" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
         </div>

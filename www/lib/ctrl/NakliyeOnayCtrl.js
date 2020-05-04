@@ -353,7 +353,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
     }
     $scope.MaxSira = function()
     {
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     }
     $scope.YeniEvrak = function ()
     {
@@ -372,12 +372,12 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
    
  
 
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EkrakTip],function(data)
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EkrakTip],function(data)
         {
             $scope.Sira = data
         });
       
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
         
         BarkodFocus();
 
@@ -406,10 +406,14 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             else
             {
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
         });
     }
@@ -418,6 +422,13 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
         $("#MdlStokGetir").modal('hide');
         StokBarkodGetir($scope.Barkod);
         $scope.BtnStokGridGetir();
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {
@@ -518,6 +529,8 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
     }
     $scope.NakliyeListeRowClick = function(pIndex,pItem,pObj)
     {   
@@ -573,7 +586,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
             $scope.Cins = 6;
             $scope.NormalIade = 0;
         }
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
     $scope.BirimChange = function()
     {
@@ -834,6 +847,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                     0, //SATIR ISKONTO TİP 10
                     0, //CARİCİNSİ
                     "",
+                    '', //İŞEMRİ KODU
                     0, //PLASİYER
                     0, //HARDOVİZCİNSİ
                     0, //HARDOVİZKURU
@@ -975,12 +989,21 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
             });
         }
     }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+    }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
         $("#TbNakliyeSecim").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
+        $("#TbStok").removeClass('active');
     }
     $scope.NakliyeSecimClick = function() 
     {
@@ -989,31 +1012,38 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
     }
     $scope.BarkodGirisClick = function()
     {   
-        if($scope.GDepo == $scope.CDepo)
-        {
-            alertify.alert("Giriş ve Çıkış Deposu Aynı Olamaz!");
-
-            $("#TbMain").addClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbBarkodGiris").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
         }
         else
         {
-            $("#TbBarkodGiris").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbIslemSatirlari").removeClass('active');
+            if($scope.GDepo == $scope.CDepo)
+            {
+                alertify.alert("Giriş ve Çıkış Deposu Aynı Olamaz!");
+
+                $("#TbMain").addClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbBarkodGiris").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+            }
+            else
+            {
+                $("#TbBarkodGiris").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
+            }
         }
-        
     }
     $scope.IslemSatirlariClick = function()
     {   
- 
-            $("#TbIslemSatirlari").addClass('active');
-            $("#TbMain").removeClass('active');
-            $("#TbBelgeBilgisi").removeClass('active');
-            $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbStok").removeClass('active');
         
     }
     $scope.EvrakGonder = async function()
@@ -1101,6 +1131,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                             0, //SATIR ISKONTO TİP 10
                             0, //CARİCİNSİ
                             '', //CARIKOD
+                            '', //İŞEMRİ KODU
                             $scope.NakliyeOnayListe[i].sth_plasiyer_kodu,
                             0, //HARDOVİZCİNSİ
                             0, //HARDOVİZKURU

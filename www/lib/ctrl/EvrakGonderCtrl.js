@@ -221,6 +221,7 @@ function EvrakGonderCtrl($scope,$window,$timeout,db)
                                     0, //SATIR ISKONTO TİP 10
                                     0, //CARİCİNSİ
                                     '', //CARIKOD
+                                    '', //İŞEMRİ KODU
                                     $scope.NakliyeOnayListe[i].sth_plasiyer_kodu,
                                     0, //HARDOVİZCİNSİ
                                     0, //HARDOVİZKURU

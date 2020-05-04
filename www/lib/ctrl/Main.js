@@ -42,7 +42,7 @@
             HtmlText = HtmlText + "<li class='site-menu-item has-sub'>";
             HtmlText = HtmlText + "<a href='javascript:void(0)'>";
             HtmlText = HtmlText + "<i class='site-menu-icon'></i>";
-            HtmlText = HtmlText + "<span class='site-menu-title'>Kullanıcı Ayarları</span>";
+            HtmlText = HtmlText + "<span class='site-menu-title'> Ayarlar</span>";
             HtmlText = HtmlText + "<span class='site-menu-arrow'></span>";
             HtmlText = HtmlText + "</a>";
             HtmlText = HtmlText + "<ul class='site-menu-sub'>";
@@ -50,6 +50,11 @@
             HtmlText = HtmlText + "<li class='site-menu-item'>";
             HtmlText = HtmlText + "<a class='animsition-link' href='#!KullaniciParametre'>";
             HtmlText = HtmlText + "<span class='site-menu-title'>Kullanıcı ve Parametreler</span>";
+            HtmlText = HtmlText + "</a></li>";
+
+            HtmlText = HtmlText + "<li class='site-menu-item'>";
+            HtmlText = HtmlText + "<a class='animsition-link' href='#!GenelAyarlar'>";
+            HtmlText = HtmlText + "<span class='site-menu-title'>Genel Ayarlar</span>";
             HtmlText = HtmlText + "</a></li>";
 
             HtmlText = HtmlText + "</ul>";
@@ -68,8 +73,18 @@
         }
         return false;
     }
+    $scope.BtnMain = function()
+    {
+        var url = "main.html";
+        $window.location.href = url;
+    }
     $scope.Init = function()
     {
+        
+        if(typeof localStorage.FaturaParam != 'undefined')
+        {
+            localStorage.removeItem("FaturaParam");
+        }
         if(localStorage.mode == 'true')
         {
             db.Connection(function(data)

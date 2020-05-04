@@ -39,7 +39,7 @@
                     </div>
                     <div class="row pt-5">
                         <div class="col-5 px-1">
-                            <button type="submit" data-target="#MdlStokGetir" data-toggle="modal" class="btn btn-primary btn-block h-40">Manuel Arama</button>        
+                            <button type="submit" ng-click="ManuelAramaClick()" class="btn btn-primary btn-block h-40">Manuel Arama</button>        
                         </div>
                         <div class="col-2 px-1">
                             <button type="submit" class="btn btn-primary btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
@@ -60,7 +60,7 @@
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Birim :</label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{Stok[0].BIRIM}}</label></div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-show = "FiyatGizle">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Son Alış F.: </label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{SonAlis}}</label></div>
                     </div>
@@ -68,9 +68,13 @@
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Miktar:</label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{Stok[0].DEPOMIKTAR}}</label></div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-show = "FiyatGizle">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Birim Fiyatı:</label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{Fiyat}}  {{Stok[0].DOVIZSEMBOL}}</label></div>
+                    </div>
+                    <div class="row"  ng-show = "StokResim">
+                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Stok Resmi:</label></div>
+                        <div class="col-7 px-0"><label class="form-control-label pl-10"><img width="100" src="http:///{{Stok[0].KODU}}-1.jpg"></label></div>
                     </div>
                     <!-- <div class="row pb-50">
                         <div class="col-6 px-1 offset-6 pb-5">
@@ -90,6 +94,37 @@
                         </div>
                         <div class="col-5 px-1">
                             <button type="button" data-target="#MdlIslemDetay" data-toggle="modal" class="btn btn-block btn-primary h-40">İşlem Detayları</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="TbStok" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="ManuelAramaCikis()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1">
+                        <div class="col-4 px-1">
+                            <select class="form-control" ng-model="StokGridTip">
+                                <option value="0">ADI</option>
+                                <option value="1">KODU</option>
+                            </select>
+                        </div>
+                        <div class="col-8 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText" >
+                                <span class="input-group-append">
+                                    <button type="submit" class="btn btn-primary" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading" >
+                            <div class="loader vertical-align-middle loader-circle"></div>
+                        </div>
+                    <div class="row py-1 px-1" ng-show="TblLoading">           
+                        <div class="table-responsive">
+                        <div class="table" id="TblStok"></div>                        
                         </div>
                     </div>
                 </div>
@@ -127,6 +162,10 @@
                     <div class="row">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat 2 :</b></label></div>
                         <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{SatisFiyatListe2}}</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Maliyet :</b></label></div>
+                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Maliyet}}</label></div>
                     </div>
                     <div class="row py-1 px-1">
                         <div id="TblDepoMiktar"></div>
@@ -239,27 +278,21 @@
                             <select class="form-control form-control-sm ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="StokGridTip" ng-change="ComboHideTextShow()">
                                 <option value="0" selected="selected">ADI</option>
                                 <option value="1">KODU</option>
-                                <option value="2">MARKA</option>
-                            </select>
-                        </div>
-                        <div class="col-7">
-                            <select class="form-control form-control-sm ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="Marka">
-                                <option ng-repeat="option in MarkaListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                        <button class="btn btn-block btn-primary" ng-click="BtnStokGridSec()">Seç</button>
+                        <button class="btn btn-block btn-primary" ng-click="BtnBarkodEkleGridSec()">Seç</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnStokGridGetir()">Getir</button>
+                            <button class="btn btn-block btn-primary" ng-click="BtnBarkodEkleGridGetir()">Getir</button>
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading">
                         <div class="loader vertical-align-middle loader-circle"></div>
                     </div>
-                    <div id="TblStok" class="pt-5" ng-show="TblLoading"></div>
+                    <div id="TblBarkodStok" class="pt-5" ></div>
                     <div ng-hide="Combo">
                         <div class="row">
                             <div class="col-11 offset-1">
@@ -314,6 +347,39 @@
                             <button type="submit" class="btn btn-primary btn-block h-40" ng-click="BtnReyonUpdate()">Kaydet</button>        
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Barkod Ekle Modal-->
+    <div class="modal fade" id="MdlBarkodEkle" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">X</span>
+                </button>
+                <h4 class="modal-title">Barkod Ekle</h4>
+            </div>
+                <div class="panel-body">
+                    <div class="row">{{EklenecekStokKodu}}-{{EklenecekStokAdi}}</div>
+                    <div class="row my-0 py-0">
+                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Barkod :</div></div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtEklenecekBarkod">
+                        </div>
+                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Birim :</div></div>
+                        <div class="col-4 px-1">
+                            <select class="form-control form-control-sm" ng-model="EklenecekBirim" ng-change="BirimChange()">
+                                <option ng-repeat="option in BirimListe" value="{{option.BIRIMPNTR}}">{{option.BIRIM}}</option>
+                            </select>
+                        </div>
+                    </div>
+                        <div class="col-6">
+                            <button class="form-group btn btn-block btn-primary my-1" ng-click="BtnBarkodEkle()">Barkod Ekle</button>
+                        </div>
+                    </div>
+                    <div id="TblPartiLot"></div>
                 </div>
             </div>
         </div>

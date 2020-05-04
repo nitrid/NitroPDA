@@ -2,7 +2,7 @@
 
 angular.module('app.db', []).service('db',function($rootScope)
 {
-    let _Host = "";
+    let _Host = '';
     let _LocalDb = new LocalDb(this);
     let _Socket = null;
     let _MenuData = {};
@@ -10,7 +10,8 @@ angular.module('app.db', []).service('db',function($rootScope)
 
     if (typeof(localStorage.host) !== "undefined") 
     {
-        _Host = 'http://' + localStorage.host + ':' + localStorage.socketport;
+        //_Host = 'http://' + localStorage.host + ':' + localStorage.socketport;
+        _Host = 'http://' + localStorage.host + ':8091';
     }
     if (typeof(localStorage.mode) !== "undefined")
     {
@@ -113,6 +114,7 @@ angular.module('app.db', []).service('db',function($rootScope)
             if(_Socket.connected)
             {
                 TmpQuery = window["QuerySql"][pParam.tag];
+                
                 TmpQuery.value = pParam.param;
                 TmpQuery.db = pParam.db;
                 _Socket.emit('QMikroDb', TmpQuery, function (data) 
@@ -378,9 +380,9 @@ angular.module('app.db', []).service('db',function($rootScope)
             pScope.$apply(pFn);
         }
     };     
-    this.SetHost = function(host,port)
+    this.SetHost = function(host)
     {
-        _Host = 'http://' + host + ':' + port;
+        _Host = 'http://' + host + ':8091';
         //_Socket.io.uri = _Host;
     }
     this.On = function(eventName,callback)
@@ -561,6 +563,26 @@ angular.module('app.db', []).service('db',function($rootScope)
             }
         });
     }
+    this.MaxSiraPromiseTag = function(pFirma,pQueryTag,pQueryParam,pCallback)
+    {
+        return new Promise(resolve => 
+        {
+            var m = 
+            {
+                db : '{M}.' + pFirma,
+                tag : pQueryTag,
+                param : pQueryParam
+            }
+            _SqlExecute(m,function(data)
+            {
+                if(pCallback)
+                {
+                    pCallback(data.result.recordset[0].MAXEVRSIRA);
+                    resolve(data.result.recordset[0].MAXEVRSIRA);
+                }
+            });
+        });
+    }
     this.MaxSira = function(pFirma,pQueryTag,pQueryParam,pCallback)
     {
         var m = 
@@ -660,10 +682,9 @@ angular.module('app.db', []).service('db',function($rootScope)
         // FİYAT GETİR
         await _GetPromiseTag(pFirma,'FiyatGetir',FiyatParam,function(FiyatData)
         {   
-            BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
-
             if(FiyatData.length > 0)
             {   
+                BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
                 BarkodData[0].FIYAT = FiyatData[0].FIYAT;
             }
             else
@@ -673,7 +694,7 @@ angular.module('app.db', []).service('db',function($rootScope)
         });        
 
         // İSKONTO MATRİS
-        if(pEvrParam.IskontoMatris == "1" && pEvrParam.SonAlisFiyati == "0" && pEvrParam.AlisSarti == "0" && pEvrParam.SonSatisFiyati == "0" && pEvrParam.SatisSarti == "0")
+        if(pEvrParam.IskontoMatris == "1" && pEvrParam.AlisSarti == "0" && pEvrParam.SatisSarti == "0")
         {
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
             {
@@ -760,6 +781,54 @@ angular.module('app.db', []).service('db',function($rootScope)
         
         let pResult = {Barkod : pBarkod,Miktar : Miktar};
         return pResult;
+    }
+    this.BTYazdir = function(pData,pParam,pCallback)
+    {
+        if(pParam.BTYaziciTip == "CORDOVABT")
+        {
+
+            window.BTPrinter.connect(function()
+            {                
+                window.BTPrinter.printTextSizeAlign(function(data)
+                {                    
+                    setTimeout(function()
+                    {
+                        BTPrinter.disconnect(function(data)
+                        {
+                            console.log("Success");
+                            console.log(data)
+                        },function(err){
+                            console.log("Error");
+                            console.log(err)
+                        }, pParam.BTYaziciAdi)
+                    }, 1500);
+
+                    console.log("Success");
+                    pCallback(true);
+                },function(err)
+                {                    
+                    console.log("Error");
+                    console.log(err);
+                    pCallback(false);
+                }, pData,'0','0')
+
+            },function(err)
+            {
+                console.log("Error");
+                console.log(err)
+                pCallback(false);
+            }, pParam.BTYaziciAdi);      
+        }
+        else if(pParam.BTYaziciTip == "RAWBT")
+        {
+            let S = "#Intent;scheme=rawbt;";
+            let P =  "package=ru.a402d.rawbtprinter;end;";
+            let textEncoded = encodeURI(pData);
+
+            window.location.href="intent:"+textEncoded+S+P;
+
+            pCallback(true);
+        }
     }
      //#endregion "PUBLIC"
 });
