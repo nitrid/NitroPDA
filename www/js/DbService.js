@@ -685,7 +685,7 @@ angular.module('app.db', []).service('db',function($rootScope)
             if(FiyatData.length > 0)
             {   
                 BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
-                BarkodData[0].FIYAT = FiyatData[0].FIYAT;
+                BarkodData[0].FIYAT = (FiyatData[0].FIYAT * FiyatData[0].DOVIZKUR) / pFiyatParam.CariDovizKuru;
             }
             else
             {
