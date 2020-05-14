@@ -147,7 +147,7 @@ var Param = [
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
-			"Personel": "",
+			"Personel": "01",
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
@@ -228,11 +228,11 @@ var Param = [
 			"Satış İrsaliyesi": "1",
 			"Satış Faturası": "1",
 			"Alış Faturası": "1",
-			"Tahsilat Makbuzu": "0",
+			"Tahsilat Makbuzu": "1",
 			"Sipariş Eşleştirme": "1",
 			"Verilen Sipariş": "0",
 			"Alış İrsaliyesi": "1",
-			"Tediye Makbuzu": "0",
+			"Tediye Makbuzu": "1",
 			"Mal Kabul Eşleştirme": "1",
 			"Ürün Giriş Çıkış": "0",
 			"Fason Giriş Çıkış": "0",
@@ -263,17 +263,18 @@ var Param = [
 			"AlisSarti": "0",
 			"FiyatListe": "1",
 			"FiyatLock": "0",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"Kasa" : "",
 		},
 		"SatisFatura": {
-			"EvrakTip": "0",
+			"EvrakTip": "4",
 			"Seri": "FTR",
 			"BelgeNo": "",
 			"Cari": "",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
-			"Personel": "",
+			"Personel": "01",
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
@@ -282,7 +283,8 @@ var Param = [
 			"FiyatListe": "1",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
-			"EksiyeDusme": "0"
+			"EksiyeDusme": "0",
+			"Kasa" : "KASA1",
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
@@ -312,6 +314,7 @@ var Param = [
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",
+			"ChaTip" : "1",
 			"Seri": "THS",
 			"BelgeNo": "",
 			"Cari": "",
@@ -325,6 +328,23 @@ var Param = [
 			"OdemeKasa": "O01",
 			"EvrakSil": "0",
 			"EvrakTip": "0"
+		},
+		"TediyeMakbuzu": {
+			"EvrakTip": "0",
+			"Seri": "TDY",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"NakitKasa": "",
+			"KrediKasa": "",
+			"CekKasa": "",
+			"SenetKasa": "",
+			"HavaleKasa": "",
+			"OdemeKasa": "",
+			"EvrakSil": "0",
+			"ChaEvrakTip": "64",
+			"ChaTip" : "0"
 		},
 		"DepoMalKabul": {
 			"EvrakTip": "0",
@@ -513,7 +533,8 @@ var Param = [
 			"AlisSarti": "0",
 			"FiyatListe": "0",
 			"FiyatLock": "0",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"Kasa" : "",
 		},
 		"SatisFatura": {
 			"EvrakTip": "0",
@@ -532,7 +553,8 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
-			"EksiyeDusme": "0"
+			"EksiyeDusme": "0",
+			"Kasa" : "",
 		},
 		"Fire": {
 			"EvrakTip": "0",
@@ -631,7 +653,25 @@ var Param = [
 			"HavaleKasa": "",
 			"OdemeKasa": "",
 			"EvrakSil": "0",
-			"ChaEvrakTip": "1"
+			"ChaEvrakTip": "1",
+			"ChaTip" : "1"
+		},
+		"TediyeMakbuzu": {
+			"EvrakTip": "0",
+			"Seri": "TDY",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"NakitKasa": "",
+			"KrediKasa": "",
+			"CekKasa": "",
+			"SenetKasa": "",
+			"HavaleKasa": "",
+			"OdemeKasa": "",
+			"EvrakSil": "0",
+			"ChaEvrakTip": "64",
+			"ChaTip" : "0"
 		},
 		"DepoMalKabul": {
 			"EvrakTip": "0",
@@ -832,7 +872,8 @@ var Param = [
 			"AlisSarti": "0",
 			"FiyatListe": "0",
 			"FiyatLock": "0",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"Kasa" : "",
 		},
 		"SatisFatura": {
 			"EvrakTip": "0",
@@ -851,7 +892,8 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
-			"EksiyeDusme": "0"
+			"EksiyeDusme": "0",
+			"Kasa" : "",
 		},
 		"Fire": {
 			"EvrakTip": "0",
@@ -907,6 +949,7 @@ var Param = [
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",
+			"ChaTip" : "1",
 			"Seri": "THS",
 			"BelgeNo": "",
 			"Cari": "",
@@ -919,6 +962,23 @@ var Param = [
 			"HavaleKasa": "",
 			"OdemeKasa": "",
 			"EvrakSil": "0"
+		},
+		"TediyeMakbuzu": {
+			"EvrakTip": "0",
+			"Seri": "TDY",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"NakitKasa": "",
+			"KrediKasa": "",
+			"CekKasa": "",
+			"SenetKasa": "",
+			"HavaleKasa": "",
+			"OdemeKasa": "",
+			"EvrakSil": "0",
+			"ChaEvrakTip": "64",
+			"ChaTip" : "0"
 		},
 		"Menu": {
 			"Stok Detay": "1",

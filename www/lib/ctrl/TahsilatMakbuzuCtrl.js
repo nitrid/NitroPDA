@@ -202,7 +202,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.Seri,
                 $scope.Sira,
                 $scope.Tarih,
-                1, //CHATİP
+                $scope.ChaTip, //CHATİP
                 $scope.ChaCins,
                 0, //NORMALIADE
                 0, //TPOZ
@@ -223,10 +223,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.Sorumluluk,
                 $scope.KasaHizmet,  //KASAHIZMET
                 $scope.KasaBanka, //KASAHIZKOD
+                $scope.KasaDoviz,
+                $scope.KasaKuru,
                 $scope.KarsiGrupNo, //KARSIDGRUPNO
                 $scope.Sorumluluk, //KARSISORUMLULUKKODU
-                $scope.Tutar,  //MEBLAG
-                $scope.Tutar,  //ARATOPLAM
+                $scope.Tutar ,  //MEBLAG
+                $scope.Tutar ,  //ARATOPLAM
                 $scope.Vade, //VADE
                 0, //FTISKONTO1
                 0, //FTISKONTO2
@@ -371,7 +373,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         CariSelectedRow = $row;
-        
+
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
         parseFloat($scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE).toFixed(2);
@@ -383,6 +385,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.Adres = $scope.CariListe[pIndex].ADRES;
         $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
         $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+        $scope.CariDovizAdi = $scope.CariListe[pIndex].DOVIZSEMBOL; 
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -432,18 +435,33 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             }
         });
     }
-    $scope.YeniEvrak = async function ()
+    $scope.YeniEvrak = async function (pTip)
     {
+        console.log(pTip)
         Init();
         InitCariGrid();
         InitIslemGrid();
         InitIslemDetayGrid();
+
+        if(pTip == 0)
+        {
+            ParamName = "TahsilatMakbuzu";
+            console.log(ParamName)
+        }
+        else
+        {
+            ParamName = "TediyeMakbuzu";
+        }
+         
+         
         $scope.MainClick();
 
-        $scope.Seri = UserParam.TahsilatMakbuzu.Seri;
-        $scope.BelgeNo = UserParam.TahsilatMakbuzu.BelgeNo;
-        $scope.ChaEvrakTip = UserParam.TahsilatMakbuzu.ChaEvrakTip;
-        $scope.CariKodu = UserParam.TahsilatMakbuzu.Cari;
+        console.log(UserParam[ParamName].Seri)
+        $scope.Seri = UserParam[ParamName].Seri;
+        $scope.BelgeNo = UserParam[ParamName].BelgeNo;
+        $scope.ChaEvrakTip = UserParam[ParamName].ChaEvrakTip;
+        $scope.ChaTip = UserParam[ParamName].ChaTip;
+        $scope.CariKodu = UserParam[ParamName].Cari;
 
         if(typeof (localStorage.FaturaParam) != 'undefined')
         {
@@ -472,7 +490,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         await db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
         {
             $scope.SorumlulukListe = data; 
-            $scope.Sorumluluk = UserParam.TahsilatMakbuzu.Sorumluluk;
+            $scope.Sorumluluk = UserParam[ParamName].Sorumluluk;
             $scope.SorumlulukListe.forEach(function(item)
             {
                 if(item.KODU == $scope.Sorumluluk)
@@ -482,7 +500,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         await db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data)
         {
             $scope.PersonelListe = data;
-            $scope.Personel = UserParam.TahsilatMakbuzu.Personel;
+            $scope.Personel = UserParam[ParamName].Personel;
             $scope.PersonelListe.forEach(function(item)
             {
                 $scope.PersonelAdi == item.ADI;
@@ -492,7 +510,17 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             $scope.KasaListe = data;
             $scope.KasaBankaListe = $scope.KasaListe;
-            $scope.KasaBanka = UserParam.TahsilatMakbuzu.NakitKasa;
+            $scope.KasaBanka = UserParam[ParamName].NakitKasa;
+            $scope.KasaListe.forEach(function(item)
+            {
+                if(item.KODU == $scope.KasaBanka)
+                {
+                    $scope.KasaAdi = item.ADI;
+                    $scope.KasaDoviz =item.DOVIZCINSI;
+                    $scope.KasaKuru = item.DOVIZKUR;
+                    $scope.KasaDovizAdi = item.DOVIZSEMBOL
+                }
+            });
         });  
         await db.FillCmbDocInfo($scope.Firma,'CmbBankaGetir',function(data)
         {
@@ -505,7 +533,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         if($scope.TahsilatCinsi == "0") //Nakit
         {
             $scope.KasaBankaListe = $scope.KasaListe;
-            $scope.KasaBanka = UserParam.TahsilatMakbuzu.NakitKasa;
+            $scope.KasaBanka = UserParam[ParamName].NakitKasa;
             $scope.ChaCins = 0;
             $scope.TrefNo = "";
             $scope.SntckPoz = 0;
@@ -530,7 +558,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             await db.GetPromiseTag($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
             {
                 $scope.KasaBankaListe = data;
-                $scope.KasaBanka = UserParam.TahsilatMakbuzu.CekKasa;
+                $scope.KasaBanka = UserParam[ParamName].CekKasa;
             });  
         }
         else if($scope.TahsilatCinsi == "2")  //Senet
@@ -550,13 +578,13 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             await db.GetPromiseTag($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
             {
                 $scope.KasaBankaListe = data;
-                $scope.KasaBanka = UserParam.TahsilatMakbuzu.SenetKasa;
+                $scope.KasaBanka = UserParam[ParamName].SenetKasa;
             });  
         }
         else if($scope.TahsilatCinsi == "3") //Kredi Kartı
         {
             $scope.KasaBankaListe = $scope.BankaListe;
-            $scope.KasaBanka = UserParam.TahsilatMakbuzu.KrediKasa;
+            $scope.KasaBanka = UserParam[ParamName].KrediKasa;
             $scope.SntckPoz = 2;
             $scope.ChaCins = 19;
             $scope.KasaHizmet = 2;
@@ -569,21 +597,69 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.TrefNo = data[0].MAXREFNO
             });  
         }
+        $scope.KasaChange();
+    }
+    $scope.KasaChange = function()
+    {
+        $scope.KasaListe.forEach(function(item)
+        {
+            if(item.KODU == $scope.KasaBanka)
+            {
+                $scope.KasaAdi = item.ADI;
+                $scope.KasaDoviz =item.DOVIZCINSI;
+                $scope.KasaKuru = item.DOVIZKUR;
+                $scope.KasaDovizAdi = item.DOVIZSEMBOL
+            }
+        });
     }
     $scope.Insert = function()
-    {
-        if($scope.Tutar != "")
+    { 
+        if($scope.KasaBanka != "")
         {
-            CariHarInsert();
-            if($scope.TahsilatCinsi !=0)
+            if($scope.Tutar != "")
             {
-                OdemeEmirleriInsert();
+                if($scope.KasaDoviz == $scope.CariDovizCinsi)
+                {
+                    CariHarInsert();
+                    if($scope.TahsilatCinsi !=0)
+                    {
+                        OdemeEmirleriInsert();
+                    }
+                }
+                else
+                {
+                    $('#MdlDoviz').modal('show');
+                }
+            }
+            else
+            {
+                alertify.alert("Lütfen Tutar Giriniz.");
             }
         }
         else
         {
-            alertify.alert("Lütfen Tutar Giriniz.");
+            alertify.alert("Lütfen Banka Seçiniz.");
         }
+    }
+    $scope.BtnCariDoviz = function()
+    {
+        CariHarInsert();
+        if($scope.TahsilatCinsi !=0)
+        {
+            OdemeEmirleriInsert();
+        }
+        $('#MdlDoviz').modal('hide');
+    }
+    $scope.BtnKasaDoviz = function()
+    {
+       $scope.Tutar = ($scope.Tutar * $scope.KasaKuru) / $scope.CariDovizKuru;
+       console.log
+       CariHarInsert();
+       if($scope.TahsilatCinsi !=0)
+       {
+           OdemeEmirleriInsert();
+       }
+       $('#MdlDoviz').modal('hide');
     }
     $scope.EvrakGetir = function(pData)
     {
@@ -616,7 +692,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 {
                     $scope.KasaListe = data;
                     $scope.KasaBankaListe = $scope.KasaListe;
-                    $scope.KasaBanka = UserParam.TahsilatMakbuzu.NakitKasa;
+                    $scope.KasaBanka = UserParam[ParamName].NakitKasa;
                 });  
                 db.FillCmbDocInfo($scope.Firma,'CmbBankaGetir',function(data)
                 {
@@ -665,7 +741,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         { 
             if($scope.CariHarListe.length > 0)
             {
-                if(UserParam.TahsilatMakbuzu.EvrakSil == 0)
+                if(UserParam[ParamName].EvrakSil == 0)
                 {
                     db.ExecuteTag($scope.Firma,'CariHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
                     {   
@@ -675,8 +751,17 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                         }
                         else
                         {
-                            $scope.YeniEvrak();
                             alertify.alert("<a style='color:#3e8ef7''>" + "Evrak Silme İşlemi Başarıyla Gerçekleşti !" + "</a>" );
+                            if(pTİp == 0)
+                            {
+                                ParamName = "TahsilatMakbuzu";
+                                $scope.YeniEvrak(0)
+                            }
+                            else
+                            {
+                                ParamName = "TediyeMakbuzu";
+                                $scope.YeniEvrak(1)
+                            }
                         }
                     });
                 }
@@ -694,7 +779,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.SatirSil = function()
     {
-        if(UserParam.TahsilatMakbuzu.EvrakSil == 0)
+        if(UserParam[ParamName].EvrakSil == 0)
         {
             alertify.okBtn('Evet');
             alertify.cancelBtn('Hayır');

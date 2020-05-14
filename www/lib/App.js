@@ -131,6 +131,10 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/TahsilatMakbuzu.html"
     })
+    .when("/TediyeMakbuzu",
+    {
+        templateUrl : "html/evraklar/TediyeMakbuzu.html"
+    })
     .when("/YapilacakTahsilatlar",
     {
         templateUrl : "html/rapor/YapilacakTahsilatlar.html"

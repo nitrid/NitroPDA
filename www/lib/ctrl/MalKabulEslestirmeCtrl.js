@@ -758,6 +758,8 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.Sorumluluk,
             0,  //KASAHIZMET
             "", //KASAHIZKOD
+            0, //KasaCİns
+            1, //KasaKur
             0, //KARSIDGRUPNO
             "",
             $scope.Stok[0].TOPTUTAR, //MEBLAG
