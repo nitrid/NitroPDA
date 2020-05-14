@@ -5,7 +5,7 @@
         421px;    
     }
 </style>
-<div class="col px-0 " ng-controller="TahsilatMakbuzuCtrl" ng-init="YeniEvrak(0)">
+<div class="col px-0 " ng-controller="TahsilatMakbuzuCtrl" ng-init="YeniEvrak(1)">
     <div class="panel panel-bordered ">
         <div class="panel-body py-1">
             <div class="tab-content">
@@ -13,15 +13,15 @@
                     <div class="row pb-15">
                         <div class="col-8 px-1">
                             <select class="form-control form-control" ng-model="CmbEvrakTip" ng-disabled="EvrakLock">
-                                <option value="0" selected>TAHSİLAT</option>
+                                <option value="0" selected>TEDİYE</option>
                             </select>
                         </div>
                         <div class="col-4 px-1">
                             <button type="button" class="btn btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
-                                <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak(0)">Yeni Tahsilat</button>
-                                <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Tahsilat Getir</a>
-                                <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(0)">Tahsilat Sil</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak(1)">Yeni Tediye</button>
+                                <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Tediye Getir</a>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(1)">Tediye Sil</button>
                             </div>
                         </div>
                     </div>

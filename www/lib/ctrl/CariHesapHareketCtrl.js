@@ -114,7 +114,7 @@ function CariHesapHareketCtrl($scope,$window,db)
         });
     }
     $scope.Init = function()
-    {   
+    {   console.log(123)
         $scope.Firma = $window.sessionStorage.getItem('Firma');
         UserParam = Param[$window.sessionStorage.getItem('User')];
         

@@ -68,8 +68,6 @@ function Login ($scope,$rootScope,$window,db)
     }
     $scope.BtnEntry = function()
     {
-        console.log($scope.Firm)
-        
         if($scope.Firm == "" )
         {
             alertify.alert("Lütfen Firma Seçiniz");
@@ -129,7 +127,6 @@ function Login ($scope,$rootScope,$window,db)
                                                     {
                                                         console.log(SipItem)
                                                         $scope.SecilenFirmalar.push({FIRM: SipItem})
-                                                        console.log($scope.SecilenFirmalar)
                                                     });
                                             $scope.FirmList = $scope.SecilenFirmalar       
                                         }
@@ -312,10 +309,8 @@ function Login ($scope,$rootScope,$window,db)
     }
     $scope.ConfigControl = function()
     {
-        console.log(1)
         db.Emit('ConfigRead','',function(ConfigData)
         {
-            console.log(ConfigData)
             if(ConfigData.server == "")
             {
                 $('#sql-settings').modal("show");

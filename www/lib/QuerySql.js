@@ -54,7 +54,7 @@ var QuerySql =
     },
     CmbKasaGetir : 
     {
-        query : "SELECT kas_kod AS KODU,kas_isim AS ADI FROM KASALAR WHERE kas_tip = @KASTIP" ,
+        query : "SELECT kas_kod AS KODU,kas_isim AS ADI,kas_doviz_cinsi AS DOVIZCINSI,(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(kas_doviz_cinsi,0),2)) AS DOVIZKUR, CASE kas_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZSEMBOL FROM KASALAR WHERE kas_tip = @KASTIP" ,
         param : ['KASTIP'],
         type : ['int']
     }, 
@@ -155,6 +155,7 @@ var QuerySql =
                 "cari_satis_isk_kod AS ISKONTOKOD," +
                 "cari_sektor_kodu AS SEKTOR," +
                 "cari_bolge_kodu AS BOLGE," +
+                "CASE cari_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "cari_grup_kodu AS GRUP," +
                 "cari_temsilci_kodu AS TEMSILCI," +
                 "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI," +
@@ -350,6 +351,8 @@ var QuerySql =
                 "sto_kod AS KODU, " +
                 "sto_isim AS ADI, " +
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar(sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
+                "sto_birim1_ad AS BIRIM1, " +
+                "CASE sto_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "sto_kod AS BARKOD " +
                 "FROM STOKLAR " +
                 "WHERE ((sto_kod LIKE   @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE '%' + @ADI + '%' ) OR (@ADI = '')) " ,
@@ -362,6 +365,7 @@ var QuerySql =
         quert : "SELECT  " +
                 " cari_kod  AS KODU, " +
                 " cari_unvan1 AS UNVAN1, " +
+                " CASE cari_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 " ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS BAKIYE" +
                 " FROM CARI_HESAPLAR WHERE  ((cari_kod = @KODU) OR (@KODU = '')) AND ((cari_unvan1 = @ADI) OR (@ADI = '')) " ,
         param : ['KODU','ADI'],
@@ -2026,8 +2030,8 @@ var QuerySql =
                 ",@cha_srmrkkodu								--<cha_srmrkkodu, nvarchar(25),> \n" + 
                 ",@cha_kasa_hizmet								--<cha_kasa_hizmet, tinyint,> \n" + 
                 ",@cha_kasa_hizkod								--<cha_kasa_hizkod, nvarchar(25),> \n" + 
-                ",0												--<cha_karsidcinsi, tinyint,> \n" + 
-                ",1												--<cha_karsid_kur, float,> \n" + 
+                ",@cha_kasaidcinsi												--<cha_karsidcinsi, tinyint,> \n" + 
+                ",@cha_kasaid_kur												--<cha_karsid_kur, float,> \n" + 
                 ",@cha_karsidgrupno								--<cha_karsidgrupno, tinyint,> \n" + 
                 ",@cha_karsisrmrkkodu											--<cha_karsisrmrkkodu, nvarchar(25),> \n" + 
                 ",0												--<cha_miktari, float,> \n" + 
@@ -2132,7 +2136,7 @@ var QuerySql =
         param : ['cha_create_user:int','cha_lastup_user:int','cha_firmano:int','cha_subeno:int','cha_evrak_tip:int','cha_evrakno_seri:string|25','cha_evrakno_sira:int',
                  'cha_tarihi:date','cha_tip:int','cha_cinsi:int','cha_normal_Iade:int','cha_tpoz:int','cha_ticaret_turu:int','cha_belge_no:string|25','cha_belge_tarih:date',
                  'cha_aciklama:string|40','cha_satici_kodu:string|25','cha_EXIMkodu:string|25','cha_projekodu:string|25','cha_cari_cins:int','cha_kod:string|25','cha_ciro_cari_kodu:string|25',
-                 'cha_d_cins:int','cha_d_kur:float','cha_altd_kur:float','cha_grupno:int','cha_srmrkkodu:string|25','cha_kasa_hizmet:int','cha_kasa_hizkod:string|25','cha_karsidgrupno:int','cha_karsisrmrkkodu:string|25',
+                 'cha_d_cins:int','cha_d_kur:float','cha_altd_kur:float','cha_grupno:int','cha_srmrkkodu:string|25','cha_kasa_hizmet:int','cha_kasa_hizkod:string|25','cha_kasaidcinsi:int','cha_kasaid_kur:float','cha_karsidgrupno:int','cha_karsisrmrkkodu:string|25',
                  'cha_meblag:float','cha_aratoplam:float','cha_vade:string|10','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float','cha_ft_iskonto4:float','cha_ft_iskonto5:float',
                  'cha_ft_iskonto6:float','cha_ft_masraf1:float','cha_ft_masraf2:float','cha_ft_masraf3:float','cha_ft_masraf4:float','cha_vergipntr:int','cha_vergi1:float','cha_vergi2:float',
                  'cha_vergi3:float','cha_vergi4:float','cha_vergi5:float','cha_vergi6:float','cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_vergisiz_fl:bit',

@@ -198,7 +198,8 @@ var ParamTemp =
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
-			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""}
 		},
 		"SatisFatura" :
 		{
@@ -218,7 +219,8 @@ var ParamTemp =
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
-			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
+			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""}
 		},
 		"Fire" :
 		{
@@ -290,7 +292,26 @@ var ParamTemp =
 			"SenetKasa" : {"Title" : "Senet Kasa Kodu","DefaultValue" : ""},
 			"HavaleKasa" : {"Title" : "Havale Kasa Kodu","DefaultValue" : ""},
 			"OdemeKasa" : {"Title" : "Odeme Kasa Kodu","DefaultValue" : ""},
-			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"ChaTip" : {"Title" : "ChaTip","DefaultValue" : "1"},
+		},
+		"TediyeMAkbuzu" :
+		{
+			"ChaEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "64"},
+			"Seri" : {"Title" : "Seri","DefaultValue" : "THS"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
+			"NakitKasa" : {"Title" : "Nakit Kasa Kodu","DefaultValue" : ""},
+			"KrediKasa" : {"Title" : "Kredi Kasa Kodu","DefaultValue" : ""},
+			"CekKasa" : {"Title" : "Çek Kasa Kodu","DefaultValue" : ""},
+			"SenetKasa" : {"Title" : "Senet Kasa Kodu","DefaultValue" : ""},
+			"HavaleKasa" : {"Title" : "Havale Kasa Kodu","DefaultValue" : ""},
+			"OdemeKasa" : {"Title" : "Odeme Kasa Kodu","DefaultValue" : ""},
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"ChaTip" : {"Title" : "ChaTip","DefaultValue" : "0"},
+
 		},
 		"Menu" :
 		{

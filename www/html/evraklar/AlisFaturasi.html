@@ -18,6 +18,7 @@
                                 <option value="2">İhraç Kayıtlı Yurtiçi Ticaret</option>
                                 <option value="3">İhraç Kayıtlı Yurtdışı Ticaret</option>
                                 <option value="4">İthalat Faturası</option>
+                                <option value="5">Kapalı Toptan Alış Faturası</option>
                             </select>
                         </div>
                         <div class="col-4 px-1">
@@ -49,9 +50,13 @@
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Depo :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{DepoAdi}}</label></div>
                     </div>
-                    <div class="row pb-45">
+                    <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Toplam Satır :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
+                    </div>
+                    <div class="row pb-30" >
+                        <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Kasa Adı :</label></div>
+                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{KasaAdi}}</label></div>
                     </div>
                     <div class="row py-10">
                         <div class="col-6">
@@ -134,6 +139,14 @@
                         <div class="col-8 px-1">
                             <select class="form-control" ng-model="Proje" ng-disabled="EvrakLock">
                                 <option ng-repeat="option in ProjeListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row my-0 py-0">
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Kasa:</div></div>
+                        <div class="col-8 px-1">
+                            <select class="form-control" ng-model="KasaKodu" ng-disabled="EvrakLock" ng-change="KasaChange()">
+                                <option ng-repeat="option in KasaListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
                     </div>
@@ -377,7 +390,7 @@
                     </div>
                     <div class="form-group row my-1">
                         <div class="col-4 px-1">
-                            <select class="form-control" ng-model="StokGridTip" ng-disabled="EvrakLock">
+                            <select class="form-control" ng-model="StokGridTip">
                                 <option value="0">ADI</option>
                                 <option value="1">KODU</option>
                             </select>
@@ -698,6 +711,25 @@
                     <div class="row py-1 px-1">
                         <div id="TblDepoMiktar"></div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      <!--Kasa Modal-->
+      <div class="modal fade" id="MdlKasaGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Kasa Listesi</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div id="TblKasa" class="pt-5" ng-show="TblLoading"></div>
                 </div>
             </div>
         </div>

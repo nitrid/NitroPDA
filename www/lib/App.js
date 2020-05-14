@@ -131,6 +131,10 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/TahsilatMakbuzu.html"
     })
+    .when("/TediyeMakbuzu",
+    {
+        templateUrl : "html/evraklar/TediyeMakbuzu.html"
+    })
     .when("/YapilacakTahsilatlar",
     {
         templateUrl : "html/rapor/YapilacakTahsilatlar.html"
@@ -146,6 +150,10 @@ angular.module("app",
     .when("/KasaRapor",
     {
         templateUrl : "html/rapor/KasaRapor.html"
+    }) 
+    .when("/StokHareket",
+    {
+        templateUrl : "html/rapor/StokHareket.html"
     }) 
     .when("/AmbarFisi",
     {

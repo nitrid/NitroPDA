@@ -178,7 +178,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     type: "number",
                     align: "center",
                     width: 75
-                } 
+                },
+                {
+                    name: "DOVIZSEMBOL",
+                    title: "DOVIZ",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                }
             ],
             rowClick: function(args)
             {

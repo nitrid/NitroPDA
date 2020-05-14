@@ -168,6 +168,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     type: "number",
                     align: "center",
                     width: 75
+                },
+                {
+                    name: "DOVIZCINS",
+                    type: "number",
+                    align: "center",
+                    width: 75
                 } 
             ],
             rowClick: function(args)
@@ -984,7 +990,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         
         if($scope.CariKodu != "")
         {
-            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
+            db.GetData($scope.Firma,'CariListeGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
             {
                 $scope.CariListe = data;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
@@ -1023,7 +1029,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.PersonelListe.forEach(function(item)
             {
                 if(item.KODU == $scope.Personel)
-                  $scope.PersonelAdi == item.ADI;
+                  $scope.PersonelAdi = item.ADI;
             });
         });    
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
@@ -1174,7 +1180,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
         }
             
-        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
             if ($scope.StokListe.length > 0)
