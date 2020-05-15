@@ -163,7 +163,7 @@ function StokHareketCtrl($scope,$window,db)
 
         $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
-        $scope.Bakiye = 0;
+        $scope.ToplamMiktar = 0;
         $scope.DepoAdi = "";
         $scope.DepoKodu = "";
         $scope.StokGridTip = "0";
@@ -314,6 +314,7 @@ function StokHareketCtrl($scope,$window,db)
         {
             $scope.MainClick()
         }
+        $scope.ToplamMiktar = $scope.StokListe[pIndex].DEPOMIKTAR
     }
     $scope.BtnStokTemizle = function()
     {
