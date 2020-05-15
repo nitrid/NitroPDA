@@ -198,7 +198,8 @@ function StokHareketCtrl($scope,$window,db)
                         "msg_S_0159 AS DEPO, " +
                         "msg_s_0160 AS KARSIDEPO, " +
                         "[msg_S_0163\\T] AS GIRISMIKTAR, " +
-                        "[msg_S_0164\\T] AS CIKISMIKTAR " +
+                        "[msg_S_0164\\T] AS CIKISMIKTAR, " +
+                        "ISNULL((SELECT dbo.fn_DepodakiMiktar(@KODU,@DEPO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR " +
                         "FROM dbo.fn_StokFoy (@KODU,'20191231',@ILKTARIH,@SONTARIH,1,@DEPO) ORDER BY #msg_S_0092 DESC " ,
                 param:  ['KODU','ILKTARIH','SONTARIH','DEPO'],
                 type:   ['string|25','date','date','int'],
@@ -208,6 +209,7 @@ function StokHareketCtrl($scope,$window,db)
             db.GetDataQuery(TmpQuery,function(Data)
             {
                 $scope.StokFoyListe = Data;
+                $scope.ToplamMiktar = $scope.StokFoyListe[0].DEPOMIKTAR;
                 console.log($scope.StokFoyListe)
                 $("#TblStokFoy").jsGrid({data : $scope.StokFoyListe});
             });
@@ -314,7 +316,6 @@ function StokHareketCtrl($scope,$window,db)
         {
             $scope.MainClick()
         }
-        $scope.ToplamMiktar = $scope.StokListe[pIndex].DEPOMIKTAR
     }
     $scope.BtnStokTemizle = function()
     {
