@@ -3,7 +3,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     let CariSelectedRow = null;
     let IslemSelectedRow = null;
     let StokSelectedRow = null;
-    let KasaSelectedRow = null;
     let ParamName = "";
     
     $('#MdlPartiLot').on('hide.bs.modal', function () 
@@ -235,7 +234,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 width: 100
             },
             {
-                name: "sth_tutar",
+                name: "TUTAR",
                 title: "TUTAR",
                 type: "number",
                 align: "center",
@@ -1493,7 +1492,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 Init();
                 InitCariGrid();
                 InitIslemGrid();
-                InitKasaGrid()
                 
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
@@ -1521,7 +1519,22 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(Data)
                 {
                     $scope.CariHarListe = Data;
-                    console.log($scope.CariHarListe[0])
+                    if($scope.CariHarListe[0].cha_tpoz == 1 )
+                    {
+                        db.GetData($scope.Firma,'CmbKasaGetir',[0],function(data)
+                        {
+                            $scope.KasaListe = data;
+                            $scope.KasaKodu = $scope.CariHarListe[0].cha_kod;
+                            $scope.KasaListe.forEach(function(item)
+                            {
+                                if(item.KODU == $scope.KasaKodu)
+                                {
+                                    $scope.KasaAdi = item.ADI;
+                                }
+                               $scope.KasaChange(); 
+                            });
+                        }); 
+                    }
                 });
 
                 $scope.AraToplam = 0;
@@ -1566,7 +1579,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = data[0].sth_plasiyer_kodu});
                 db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sth_proje_kodu});
                 db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(e){$scope.OdemePlanListe = e; $scope.OdemeNo = data[0].sth_odeme_op.toString()});
-                
+                   
                 $scope.StokHarListe = data;
                 $("#TblIslem").jsGrid({data : $scope.StokHarListe});  
 
@@ -2281,7 +2294,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             {
                 $scope.KasaChange();
             }
-            $scope.EvrakLock = true;
         }
     }
     $scope.StokListeRowClick = function(pIndex,pItem,pObj)

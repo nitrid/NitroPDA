@@ -643,6 +643,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnCariDoviz = function()
     {
+        $scope.Tutar = ($scope.Tutar * $scope.CariDovizKuru) / $scope.KasaKuru;
         CariHarInsert();
         if($scope.TahsilatCinsi !=0)
         {
@@ -652,8 +653,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnKasaDoviz = function()
     {
-       $scope.Tutar = ($scope.Tutar * $scope.KasaKuru) / $scope.CariDovizKuru;
-       console.log
        CariHarInsert();
        if($scope.TahsilatCinsi !=0)
        {

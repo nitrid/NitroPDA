@@ -1456,12 +1456,13 @@ var QuerySql =
     {
         query:  "SELECT CONVERT(VARCHAR(10),GETDATE(),112) AS sth_kur_tarihi , " +
                 "ISNULL((SELECT sto_isim from STOKLAR WHERE sto_kod=sth_stok_kod),'') AS ADI , " +
-                "(sth_tutar / sth_miktar) AS FIYAT, " +
+                "ROUND((sth_tutar / sth_miktar),2) AS FIYAT, " +
                 "(select cari_unvan1 from CARI_HESAPLAR WHERE cari_kod=sth_cari_kodu) AS CARIADI, " +
                 "(select som_isim from SORUMLULUK_MERKEZLERI where som_kod=sth_stok_srm_merkezi) AS SORUMLUMERADI, " +
                 "(select cari_per_adi from CARI_PERSONEL_TANIMLARI where cari_per_kod=sth_plasiyer_kodu) AS PERSONELADI," +
                 "sth_miktar AS MIKTAR , " +
                 "sth_miktar2 AS MIKTAR2 , " +
+                "ROUND(sth_tutar,2) AS TUTAR, " + 
                 "(SELECT dbo.fn_StokBirimi(sth_stok_kod,sth_birim_pntr)) AS BIRIMADI, " +
                 "(SELECT dbo.fn_StokBirimHesapla(sth_stok_kod,1,sth_miktar,sth_birim_pntr)) AS BIRIM," +
                 "ROW_NUMBER() OVER(ORDER BY sth_Guid) AS NO, " +
