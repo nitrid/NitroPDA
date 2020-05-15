@@ -25,7 +25,8 @@ var ParamTemp =
 			"SiparisOnayListele" : {"Title" : "Siparis Onay Listele","DefaultValue" : "-1"},
 			"EslestirmeEksiyeDusme" : {"Title" : "Eşleştirmede Eksiye Düşme","DefaultValue" : "0"},
 			"BTYaziciTip" : {"Title" : "BT Yazıcı Tipi","DefaultValue" : "RAWBT"},
-			"BTYaziciAdi" : {"Title" : "BT Yazıcı Adı","DefaultValue" : ""}
+			"BTYaziciAdi" : {"Title" : "BT Yazıcı Adı","DefaultValue" : ""},
+			"FirmaListe" : {"Title" : "Firma Liste","DefaultValue" : ""}
 		},
 		"Sayim" :
 		{

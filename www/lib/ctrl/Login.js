@@ -83,11 +83,10 @@ function Login ($scope,$rootScope,$window,db)
     {
          for(i = 0;i < Param.length;i++)
         {
+            console.log($scope.Kullanici )
             if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
             {
-                
                 console.log("Kullanıcı adı ve şifre doğru");
-                
                 
                 $window.sessionStorage.setItem('User', i);
                 UserParam = Param[$window.sessionStorage.getItem('User')];
