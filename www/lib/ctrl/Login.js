@@ -350,7 +350,11 @@ function Login ($scope,$rootScope,$window,db)
      $(document).ready(function(){
      $("sifreleave").mouseleave(function()
       {
-          $scope.FirmaClick()
+          if(typeof($scope.Password) != 'undefined')
+          {
+               $scope.FirmaClick()
+          }
+         
       });
     });
 }
