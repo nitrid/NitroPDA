@@ -37,6 +37,9 @@ function SayimCtrl($scope,$window,$timeout,db)
         $scope.ToplamMiktar4 = 0;
         $scope.ToplamMiktar5 = 0;
         $scope.ToplamSatir = 0;
+
+        $scope.Miktar1 = 1;
+        $scope.Miktar2 = 0;
         
         $scope.Miktar = 1;
 
@@ -47,7 +50,7 @@ function SayimCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = false;
         $scope.BarkodLock = false; 
         $scope.IslemListeSelectedIndex = -1; 
-        $scope.CmbEvrakTip = "10";
+        $scope.CmbEvrakTip = "0";
 
         $scope.Loading = false;
         $scope.TblLoading = true;
@@ -204,7 +207,8 @@ function SayimCtrl($scope,$window,$timeout,db)
             $scope.DepoNo,
             $scope.EvrakNo,
             $scope.Stok[0].KODU,
-            $scope.Miktar * $scope.Stok[0].CARPAN,
+            $scope.Miktar * ($scope.Stok[0].CARPAN * $scope.Miktar1),
+            $scope.Miktar * ($scope.Stok[0].CARPAN * $scope.Miktar2),
             $scope.Stok[0].BIRIMPNTR,
             $scope.Stok[0].BARKOD,
             0,
@@ -261,15 +265,15 @@ function SayimCtrl($scope,$window,$timeout,db)
         });
     }
     function UpdateData(pData) 
-    {   
+    {  
         db.ExecuteTag($scope.Firma,'SayimUpdate',pData.Param,function(InsertResult)
         {  
             if(typeof(InsertResult.result.err) == 'undefined')
             {   
                 db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
                 {
-                    $("#TblIslem").jsGrid({data : $scope.SayimListe});
                     InsertAfterRefresh(SayimData);
+                    $("#TblIslem").jsGrid({data : $scope.SayimListe});
                     Confirmation();
                     //ToplamMiktarHesapla();
                 });
@@ -512,9 +516,6 @@ function SayimCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnDuzenleKaydet = function(pIndex)
     {
-        let TmpMiktar = $scope.MiktarEdit;
-
-        $scope.SayimListe[pIndex].sym_miktar1 = TmpMiktar;
 
         $scope.Update(pIndex);
         angular.element('#MdlDuzenle').modal('hide');
@@ -767,21 +768,43 @@ function SayimCtrl($scope,$window,$timeout,db)
     }
     $scope.Update = function(pIndex)
     {   
-        let Data = 
+        if($scope.CmbEvrakTip == 0)
         {
-            Param :
-            [   
-                $scope.MiktarEdit,
-                1,
-                1,
-                1,
-                1,
-                $scope.SayimListe[pIndex].sym_Guid
-            ],
-            Miktar :  $scope.MiktarEdit
-        };
-
-        UpdateData(Data);
+            let Data = 
+            {
+                Param :
+                [   
+                    $scope.MiktarEdit,
+                    $scope.SayimListe[pIndex].sym_miktar2,
+                    0,
+                    0,
+                    0,
+                    $scope.SayimListe[pIndex].sym_Guid
+                ],
+                Miktar :  $scope.MiktarEdit
+            };
+    
+            UpdateData(Data);
+        }
+        else if($scope.CmbEvrakTip == 1)
+        {
+            let Data = 
+            {
+                Param :
+                [   
+                    $scope.SayimListe[pIndex].sym_miktar1,
+                    $scope.MiktarEdit,
+                    0,
+                    0,
+                    0,
+                    $scope.SayimListe[pIndex].sym_Guid
+                ],
+                Miktar :  $scope.MiktarEdit
+            };
+    
+            UpdateData(Data);
+        }
+       
     }
     $scope.ManuelAramaClick = function() 
     {
@@ -917,9 +940,17 @@ function SayimCtrl($scope,$window,$timeout,db)
     }
     $scope.EvrakTipChange = function()
     {
-        if(CmbEvrakTip == 0)
+        if($scope.CmbEvrakTip == 0)
         {
             $scope.OtoEkle = false
+            $scope.Miktar1 = 1
+            $scope.Miktar2 = 0
+        }
+        else if($scope.CmbEvrakTip == 1)
+        {
+            $scope.OtoEkle = false
+            $scope.Miktar1 = 0
+            $scope.Miktar2 = 1
         }
     }
     $scope.ScanBarkod = function()

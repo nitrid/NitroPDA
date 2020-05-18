@@ -12,7 +12,7 @@ font-size: 12
     <div id="TbMain" class="tab-pane active">
         <div class="row pb-20">
             <div class="col-8 px-1">
-                <select class="form-control form-control" ng-model="CmbEvrakTip">
+                <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()">
                     <option value="0">Sayım 1</option>
                     <option value="1">Sayım 2</option>
                 </select>

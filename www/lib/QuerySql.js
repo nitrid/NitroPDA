@@ -1399,7 +1399,7 @@ var QuerySql =
                 ",''		 		--<sym_koridorkodu, varchar(4),> \n" +
                 ",''		 		--<sym_rafkodu, varchar(4),> \n" +
                 ",@sym_miktar1 		--<sym_miktar1, float,> \n" +
-                ",0		 		--<sym_miktar2, float,> \n" +
+                ",@sym_miktar2		 		--<sym_miktar2, float,> \n" +
                 ",0		 		--<sym_miktar3, float,> \n" +
                 ",0		 		--<sym_miktar4, float,> \n" +
                 ",0		 		--<sym_miktar5, float,> \n" +
@@ -1415,7 +1415,7 @@ var QuerySql =
                 "ROW_NUMBER() OVER(ORDER BY sym_Guid) AS NO,*  FROM SAYIM_SONUCLARI WHERE sym_tarihi = @sym_tarihi AND " +
                 "sym_depono = @sym_depono AND sym_evrakno = @sym_evrakno AND sym_satirno = @sym_satirno ",
             param : ["sym_create_user:int","sym_lastup_user:int","sym_tarihi:date","sym_depono:int","sym_evrakno:int","sym_Stokkodu:string|25",
-                    "sym_miktar1:float","sym_birim_pntr:int","sym_barkod:string|25","sym_renkno:int","sym_bedenno:int","sym_parti_kodu:string|25",
+                    "sym_miktar1:float","sym_miktar2:float","sym_birim_pntr:int","sym_barkod:string|25","sym_renkno:int","sym_bedenno:int","sym_parti_kodu:string|25",
                     "sym_lot_no:int","sym_serino:string|25"]
     },
     SayimEvrDelete :
