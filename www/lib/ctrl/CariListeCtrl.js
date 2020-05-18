@@ -48,7 +48,13 @@ function CariListeCtrl($scope,$window,db)
                     type: "number",
                     align: "center",
                     width: 75
-                } 
+                },
+                {
+                    name: "DOVIZCINS",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                }
             ],
             rowClick: function(args)
             {
