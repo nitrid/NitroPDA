@@ -268,7 +268,7 @@ var Param = [
 			"Kasa": ""
 		},
 		"SatisFatura": {
-			"EvrakTip": "4",
+			"EvrakTip": "1",
 			"Seri": "FTR",
 			"BelgeNo": "",
 			"Cari": "",
