@@ -230,7 +230,7 @@ var Param = [
 			"Alış Faturası": "1",
 			"Tahsilat Makbuzu": "1",
 			"Sipariş Eşleştirme": "1",
-			"Verilen Sipariş": "0",
+			"Verilen Sipariş": "1",
 			"Alış İrsaliyesi": "1",
 			"Tediye Makbuzu": "1",
 			"Mal Kabul Eşleştirme": "1",
@@ -246,7 +246,7 @@ var Param = [
 			"Cari Secimli Siparis Durum Raporu": "1",
 			"Durağan Cariler Raporu": "1",
 			"Kasa Rapor": "1",
-			"Stok Hareket Rapor" : "1"
+			"Stok Hareket Rapor": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -265,7 +265,7 @@ var Param = [
 			"FiyatListe": "1",
 			"FiyatLock": "0",
 			"EvrakSil": "0",
-			"Kasa" : "",
+			"Kasa": ""
 		},
 		"SatisFatura": {
 			"EvrakTip": "4",
@@ -285,7 +285,7 @@ var Param = [
 			"EvrakSil": "0",
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
-			"Kasa" : "KASA1",
+			"Kasa": "K01"
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
@@ -315,7 +315,7 @@ var Param = [
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",
-			"ChaTip" : "1",
+			"ChaTip": "1",
 			"Seri": "THS",
 			"BelgeNo": "",
 			"Cari": "",
@@ -345,7 +345,7 @@ var Param = [
 			"OdemeKasa": "",
 			"EvrakSil": "0",
 			"ChaEvrakTip": "64",
-			"ChaTip" : "0"
+			"ChaTip": "0"
 		},
 		"DepoMalKabul": {
 			"EvrakTip": "0",
@@ -535,7 +535,7 @@ var Param = [
 			"FiyatListe": "0",
 			"FiyatLock": "0",
 			"EvrakSil": "0",
-			"Kasa" : "",
+			"Kasa": ""
 		},
 		"SatisFatura": {
 			"EvrakTip": "0",
@@ -555,7 +555,7 @@ var Param = [
 			"EvrakSil": "0",
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
-			"Kasa" : "",
+			"Kasa": ""
 		},
 		"Fire": {
 			"EvrakTip": "0",
@@ -655,7 +655,7 @@ var Param = [
 			"OdemeKasa": "",
 			"EvrakSil": "0",
 			"ChaEvrakTip": "1",
-			"ChaTip" : "1"
+			"ChaTip": "1"
 		},
 		"TediyeMakbuzu": {
 			"EvrakTip": "0",
@@ -672,7 +672,7 @@ var Param = [
 			"OdemeKasa": "",
 			"EvrakSil": "0",
 			"ChaEvrakTip": "64",
-			"ChaTip" : "0"
+			"ChaTip": "0"
 		},
 		"DepoMalKabul": {
 			"EvrakTip": "0",
@@ -874,7 +874,7 @@ var Param = [
 			"FiyatListe": "0",
 			"FiyatLock": "0",
 			"EvrakSil": "0",
-			"Kasa" : "",
+			"Kasa": ""
 		},
 		"SatisFatura": {
 			"EvrakTip": "0",
@@ -894,7 +894,7 @@ var Param = [
 			"EvrakSil": "0",
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
-			"Kasa" : "",
+			"Kasa": ""
 		},
 		"Fire": {
 			"EvrakTip": "0",
@@ -950,7 +950,7 @@ var Param = [
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",
-			"ChaTip" : "1",
+			"ChaTip": "1",
 			"Seri": "THS",
 			"BelgeNo": "",
 			"Cari": "",
@@ -979,7 +979,7 @@ var Param = [
 			"OdemeKasa": "",
 			"EvrakSil": "0",
 			"ChaEvrakTip": "64",
-			"ChaTip" : "0"
+			"ChaTip": "0"
 		},
 		"Menu": {
 			"Stok Detay": "1",

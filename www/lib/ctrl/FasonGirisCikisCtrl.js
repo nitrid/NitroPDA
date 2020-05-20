@@ -300,18 +300,11 @@ function FasonGirisCikisCtrl($scope,$window,$timeout,db,$filter)
                     width: 125
                 }, 
                 {
-                    name: "BIRM",
-                    title: "BIRIM",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                },
-                {
                     name: "ADI",
                     title: "ADI",
                     type: "text",
                     align: "center",
-                    width: 300
+                    width: 200
                 }, 
                 {
                     name: "DEPOMIKTAR",
@@ -319,7 +312,21 @@ function FasonGirisCikisCtrl($scope,$window,$timeout,db,$filter)
                     type: "number",
                     align: "center",
                     width: 100
-                } 
+                },
+                {
+                    name: "BIRIM1",
+                    title: "BIRIM 1",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "DOVIZCINS",
+                    title: "DOVIZ",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }
             ],
             rowClick: function(args)
             {

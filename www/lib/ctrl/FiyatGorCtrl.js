@@ -398,6 +398,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     db.GetData($scope.Firma,'TumSonAlisGetir',[BarkodData[0].KODU],function(data)
                     {
                         $scope.SonAlis = data[0].SONFIYAT
+                        $scope.SonAlisDoviz = data[0].DOVIZSEMBOL
                     });
                     db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
                     {   
@@ -450,6 +451,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         $scope.Fiyat = "";
                         $scope.Barkod = "";
                         $scope.SonAlis = "";
+                        $scope.SonAlisDoviz = ""
                         $scope.BarkodLock = false;
                         BarkodFocus();
                         
@@ -611,6 +613,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.Fiyat = "";
         $scope.Barkod = "";
         $scope.SonAlis = "";
+        $scope.SonAlisDoviz = ""
         $scope.BarkodLock = false;
         $window.document.getElementById("Barkod").focus();
     }

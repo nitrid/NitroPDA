@@ -143,26 +143,29 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             [
                 {
                     name: "KODU",
-                    title: "KODU",
                     type: "number",
                     align: "center",
                     width: 100
-                    
                 },
                 {
                     name: "UNVAN1",
-                    title: "UNVAN",
                     type: "text",
                     align: "center",
                     width: 300
                 },
                 {
                     name: "BAKIYE",
-                    title: "BAKIYE",
                     type: "number",
                     align: "center",
                     width: 75
-                } 
+                },
+                {
+                    name: "DOVIZSEMBOL",
+                    title: "DOVIZ",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                }
             ],
             rowClick: function(args)
             {

@@ -322,22 +322,36 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     title: "KODU",
                     type: "text",
                     align: "center",
-                    width: 150
-                },
+                    width: 125
+                }, 
                 {
                     name: "ADI",
                     title: "ADI",
                     type: "text",
                     align: "center",
-                    width: 300
+                    width: 200
                 }, 
                 {
                     name: "DEPOMIKTAR",
                     title: "DEPO MIKTAR",
                     type: "number",
                     align: "center",
-                    width: 120
-                } 
+                    width: 100
+                },
+                {
+                    name: "BIRIM1",
+                    title: "BIRIM 1",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "DOVIZCINS",
+                    title: "DOVIZ",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }
             ],
             rowClick: function(args)
             {
@@ -808,13 +822,16 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
                     });
                     
+                    console.log(BarkodData[0].KODU)
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
-                        $scope.BirimListe = data; 
-                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
+                        $scope.BirimListe = data;
+                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR); 
+                        console.log($scope.Birim)
 
                         if($scope.BirimListe.length > 0)
                         {
+                            
                             $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
                             $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
                             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
@@ -826,7 +843,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                             $scope.Stok[0].BIRIM = 'ADET';
                             $scope.Stok[0].CARPAN = 1;
                             $scope.MiktarFiyatValid();
+
                         }
+                        
                     });
 
                     //****** FİYAT GETİR */
@@ -1120,7 +1139,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             Adi = $scope.StokGridText.replace("*","%").replace("*","%");
         }
-        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
@@ -1300,6 +1319,11 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.EvrakTip = pAlinanVerilen;
         $scope.CariKodu = UserParam[ParamName].Cari;
+        if(pAlinanVerilen == 0)
+        $scope.PersonelTip = "0";
+        else
+        $scope.PersonelTip= "1"
+
         if(UserParam[ParamName].FiyatLock == 1)
         {
             $scope.FiyatLock = true;
@@ -1353,17 +1377,16 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                    $scope.SorumlulukAdi = item.ADI;
            });
         });   
-        db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data)
+        db.GetPromiseTag($scope.Firma,'PersonelTipGetir',[$scope.PersonelTip],function(data)
         {
             $scope.PersonelListe = data;
-            console.log(data)
             $scope.Personel = UserParam[ParamName].Personel;
             $scope.PersonelListe.forEach(function(item)
             {
                 if(item.KODU == $scope.Personel)
-                $scope.PersonelAdi = item.ADI;
+                  $scope.PersonelAdi = item.ADI;
             });
-        });           
+        });      
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
 
@@ -1647,6 +1670,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
             $scope.MiktarFiyatValid();
+            console.log($scope.Stok[0].BIRIMPNTR)
         }
     } 
     $scope.Insert = function()

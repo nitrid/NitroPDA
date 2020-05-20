@@ -164,7 +164,21 @@ function FireCtrl($scope,$window,$timeout,db)
                     type: "number",
                     align: "center",
                     width: 100
-                } 
+                },
+                {
+                    name: "BIRIM1",
+                    title: "BIRIM 1",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "DOVIZCINS",
+                    title: "DOVIZ",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }
             ],
             rowClick: function(args)
             {

@@ -53,7 +53,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.SorumlulukAdi = "";
         $scope.OdemeNo = "0";
         $scope.Barkod = "";
-        $scope.Birim = "1";
+        $scope.Birim = 0;
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
         $scope.Personel = "";
@@ -71,6 +71,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariVDNO = "";
         $scope.VergiEdit = "";
         $scope.Fiyat = "";
+
+
+       
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -155,7 +158,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     type: "number",
                     align: "center",
                     width: 100
-                    
                 },
                 {
                     name: "UNVAN1",
@@ -170,11 +172,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     width: 75
                 },
                 {
-                    name: "DOVIZCINS",
-                    type: "number",
+                    name: "DOVIZSEMBOL",
+                    title: "DOVIZ",
+                    type: "text",
                     align: "center",
-                    width: 75
-                } 
+                    width: 100
+                }
             ],
             rowClick: function(args)
             {
@@ -310,7 +313,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     title: "ADI",
                     type: "text",
                     align: "center",
-                    width: 300
+                    width: 200
                 }, 
                 {
                     name: "DEPOMIKTAR",
@@ -318,7 +321,21 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     type: "number",
                     align: "center",
                     width: 100
-                } 
+                },
+                {
+                    name: "BIRIM1",
+                    title: "BIRIM 1",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "DOVIZCINS",
+                    title: "DOVIZ",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }
             ],
             rowClick: function(args)
             {
@@ -772,20 +789,20 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
                     });
 
+                    console.log(BarkodData[0].KODU)
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
-                        $scope.BirimListe = data; 
+                        $scope.BirimListe = data;
+                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR); 
                         console.log($scope.Birim)
 
                         if($scope.BirimListe.length > 0)
                         {
                             
-                            console.log($scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim}))
                             $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
                             $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
                             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
                             $scope.MiktarFiyatValid();
-                            console.log($scope.Stok[0].BIRIMPNTR)
                         }
                         else
                         {  //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
@@ -974,7 +991,14 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             $scope.FiyatLock = true;
         }
-        
+        if(pAlisSatis == 0)
+        {
+            $scope.PersonelTip = 1
+        }
+        else
+        {
+            $scope.PersonelTip = 0
+        }
         $scope.Stok = 
         [
             {
@@ -1022,7 +1046,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $scope.SorumlulukAdi = item.ADI;
             });
         });
-        db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data)
+        db.GetPromiseTag($scope.Firma,'PersonelTipGetir',[$scope.PersonelTip],function(data)
         {
             $scope.PersonelListe = data;
             $scope.Personel = UserParam[ParamName].Personel;

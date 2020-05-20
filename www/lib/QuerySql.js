@@ -30,6 +30,14 @@ var QuerySql =
                 "FROM CARI_PERSONEL_TANIMLARI AS PER1 INNER JOIN CARI_PERSONEL_TANIMLARI AS PER2 ON " +
                 "PER1.cari_per_kod = PER2.cari_per_kod --AND PER1.cari_per_tip = 0 "
     },
+    PersonelTipGetir : 
+    {
+        query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP UNION ALL SELECT PER1.cari_per_kod AS KODU,PER1.cari_per_adi AS ADI,PER1.cari_per_soyadi AS SOYADI,PER1.cari_per_tip AS TIP " +
+                "FROM CARI_PERSONEL_TANIMLARI AS PER1 INNER JOIN CARI_PERSONEL_TANIMLARI AS PER2 ON " +
+                "PER1.cari_per_kod = PER2.cari_per_kod where PER1.cari_per_tip in(@TIP,2) " ,
+                param : ['TIP'],
+                type : ['int'] 
+    },
     CmbProjeGetir : 
     {
         query : "SELECT '' AS KODU, '' AS ADI UNION ALL SELECT pro_kodu AS KODU,pro_adi AS ADI FROM PROJELER"

@@ -35,7 +35,6 @@ function CariListeCtrl($scope,$window,db)
                     type: "number",
                     align: "center",
                     width: 100
-                    
                 },
                 {
                     name: "UNVAN1",
@@ -50,10 +49,11 @@ function CariListeCtrl($scope,$window,db)
                     width: 75
                 },
                 {
-                    name: "DOVIZCINS",
-                    type: "number",
+                    name: "DOVIZSEMBOL",
+                    title: "DOVIZ",
+                    type: "text",
                     align: "center",
-                    width: 75
+                    width: 100
                 }
             ],
             rowClick: function(args)
