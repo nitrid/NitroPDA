@@ -531,16 +531,27 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
-                        $scope.BirimListe = data; 
-                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
+                        $scope.BirimListe = data;
+                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR); 
+                        console.log($scope.Birim)
 
                         if($scope.BirimListe.length > 0)
                         {
+                            
                             $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
                             $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
                             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
                             $scope.MiktarFiyatValid();
                         }
+                        else
+                        {  //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
+                            $scope.Stok[0].BIRIMPNTR = 1;
+                            $scope.Stok[0].BIRIM = 'ADET';
+                            $scope.Stok[0].CARPAN = 1;
+                            $scope.MiktarFiyatValid();
+
+                        }
+                        
                     });
 
                     if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)

@@ -54,6 +54,7 @@
 </head>
 
 <body class="animaition page-login-v3 layout-full">
+    TEST TEST
     <div class="page-content py-5" data-animsition-in="fade-in" data-animsition-out="fade-out" id="page-update" style="visibility: hidden;"> 
         <div class="page-content animation-slide-top animation-duration-1 mx--20 py-0">
             <div class="panel modal-center"> 
@@ -142,11 +143,11 @@
         });
       })(document, window, jQuery);
     </script>
-    <script type="text/javascript" src="../js/angular.js"></script>
-    <script type="text/javascript" src="../js/angular-route.js"></script>
-    <script src="../js/socket.io.js"></script>
+    <script type="text/javascript" src="js/angular.js"></script>
+    <script type="text/javascript" src="js/angular-route.js"></script>
+    <script src="js/socket.io.js"></script>
 
-    <script type="text/javascript" src="../cordova.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
 
     <script>
     document.getElementById('host').value = localStorage.host;
@@ -250,10 +251,8 @@
         },
         update : function(Host,Port,Callback)
         {
-            console.log(11);
             downloader.init({folder: "lib"});
             downloader.get("http://" + Host + ':' + Port + "/lib/Param.js");
-            console.log(12);
             document.addEventListener('DOWNLOADER_downloadSuccess', function(event){
                 var data = event.data;
                 console.log(data);

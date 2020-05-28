@@ -323,6 +323,14 @@ function SayimCtrl($scope,$window,$timeout,db)
                             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
                             $scope.MiktarFiyatValid();
                         }
+                        else
+                        {
+                            //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
+                            $scope.Stok[0].BIRIMPNTR = 1;
+                            $scope.Stok[0].BIRIM = 'ADET';
+                            $scope.Stok[0].CARPAN = 1;
+                            $scope.MiktarFiyatValid();
+                        }
                         if($scope.OtoEkle == true)
                         {
                             $scope.Insert()

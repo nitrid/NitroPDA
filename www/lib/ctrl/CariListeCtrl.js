@@ -132,6 +132,8 @@ function CariListeCtrl($scope,$window,db)
             $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
             $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
             $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
+            $scope.CariBakiye1 = $scope.CariListe[pIndex].BAKIYE1;
+            $scope.CariBakiye2 = $scope.CariListe[pIndex].BAKIYE2;
             $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
             $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
             $scope.Adres = $scope.CariListe[pIndex].ADRES;
@@ -139,8 +141,11 @@ function CariListeCtrl($scope,$window,db)
             $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
             $scope.TelBolge =  $scope.CariListe[pIndex].TELBOLGE
             $scope.TelNo1 =  $scope.CariListe[pIndex].TELNO1
+            $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
+            $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
+            $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
 
-            console.log($scope.Adres)
+
             $scope.CariClick();
         }
     }

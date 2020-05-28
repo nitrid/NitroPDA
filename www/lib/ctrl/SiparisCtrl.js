@@ -59,7 +59,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.Proje = "";
         $scope.OdemeNo = "0";
         $scope.Barkod = "";
-        $scope.Birim = "0";
+        $scope.Birim = "1";
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
         $scope.ToplamSatir = 0;
@@ -73,6 +73,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.AciklamaTip = 21;
         $scope.AciklamaEvrTip = 0;
         $scope.AciklamaHarTip = 0;
+        $scope.EvrakDovizTip = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -1469,20 +1470,28 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         CariSelectedRow = $row;
-        console.log($scope.CariListe[pIndex])
+        
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
-        $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;    
-        $scope.CariIskontoKodu = $scope.CariListe[pIndex].ISKONTOKOD;
+        $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
+        $scope.CariDovizCinsi1 = $scope.CariListe[pIndex].DOVIZCINSI1;
+        $scope.CariDovizCinsi2 = $scope.CariListe[pIndex].DOVIZCINSI2;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
+        $scope.CariDovizKuru1 = $scope.CariListe[pIndex].DOVIZKUR1;
+        $scope.CariDovizKuru2 = $scope.CariListe[pIndex].DOVIZKUR2;
         $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
         $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
         $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
         $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
         $scope.Adres = $scope.CariListe[pIndex].ADRES;
         $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
-        $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+        $scope.Adres2 = $scope.CariListe[pIndex].ADRES2;
+        $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
+        $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
+        $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
+        $scope.DovizChangeKodu = "0"
+        $scope.DovizChange()
         $scope.MainClick();
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
@@ -1673,6 +1682,26 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             console.log($scope.Stok[0].BIRIMPNTR)
         }
     } 
+    $scope.DovizChange = function()
+    {
+            if($scope.DovizChangeKodu == 0)
+            {
+               $scope.EvrakDovizTip = $scope.DovizSembol
+            }
+            else if($scope.DovizChangeKodu == 1)
+            {
+                console.log(1)
+                $scope.CariDovizCinsi = $scope.CariDovizCinsi1;
+                $scope.CariDovizKuru = $scope.CariDovizKuru1;
+                $scope.EvrakDovizTip = $scope.DovizSembol1
+            }
+            else if($scope.DovizChangeKodu == 2)
+            {
+                $scope.CariDovizCinsi = $scope.CariDovizCinsi2
+                $scope.CariDovizKuru =  $scope.CariDovizKuru2
+                $scope.EvrakDovizTip = $scope.DovizSembol2
+            }
+    }
     $scope.Insert = function()
     {
        
