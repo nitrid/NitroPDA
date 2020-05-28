@@ -186,6 +186,8 @@ function CariHesapHareketCtrl($scope,$window,db)
                         "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
+                        "ROUND(CONVERT(NVARCHAR,CAST([msg_S_0109\\T] AS DECIMAL(10,2))),2)  AS ORJINALDOVIZBAKIYE, " +
+                        "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0107\\T] AS DECIMAL(10,2))),2)  AS ALTERNATIFDOVIZBAKIYE, " +
                         "[msg_S_0112] AS ORJINALDOVIZ " +
                         "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 DESC " ,
                 param:  ['KODU','ILKTARIH','SONTARIH'],
@@ -195,10 +197,17 @@ function CariHesapHareketCtrl($scope,$window,db)
     
             db.GetDataQuery(TmpQuery,function(Data)
             {
+                console.log(Data)
                 $scope.CariFoyListe = Data;
                 $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
                 $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
+                $scope.AnaDovizBakiye = $scope.CariFoyListe[0].ANADOVIZBAKIYE
+                $scope.OrjDovizBakiye = $scope.CariFoyListe[0].ORJINALDOVIZBAKIYE
+                $scope.OrjDoviz = $scope.CariFoyListe[0].ORJINALDOVIZ
+                $scope.AltDovizBakiye = $scope.CariFoyListe[0].ALTERNATIFDOVIZBAKIYE
+
             });
+
         }
     }
     $scope.BtnCariListeleEnter = function(keyEvent)

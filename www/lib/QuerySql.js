@@ -91,7 +91,6 @@ var QuerySql =
                 "TEMSILCIADI, " +
                 "DOVIZSEMBOL, " +
                 "DOVIZSEMBOL1, " +
-                "DOVIZSEMBOL2, " +
                 "DOVIZKUR, " +
                 "DOVIZKUR1, " +
                 "DOVIZKUR2, " +
@@ -99,8 +98,6 @@ var QuerySql =
                 "RISK, " +
                 "ODEMEPLANI, " +
                 "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE, " +
-                "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE1, " +
-                "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE2, " +
                 "BELGETARIH, " +
                 "ADRES, " +
                 "ADRES1, " +
@@ -128,16 +125,13 @@ var QuerySql =
                 "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI, " +
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))) AS DOVIZSEMBOL, " +
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))) AS DOVIZSEMBOL1, " +
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi2,0))) AS DOVIZSEMBOL2, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi,0),2)) AS DOVIZKUR, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(1,0),2)) AS ALTDOVIZKUR, " +
                 "ISNULL((SELECT sum(ct_tutari) FROM dbo.CARI_HESAP_TEMINATLARI WHERE ct_carikodu = cari_kod),0) AS RISK, " +
                 "cari_odemeplan_no AS ODEMEPLANI, " +
-                "(SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)) AS BAKIYE, " +
-                "(SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi1,1,1,1,1)) AS BAKIYE1, " +
-                "(SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi2,1,1,1,1)) AS BAKIYE2, " +
+                "(SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)) AS BAKIYE, " +
                 "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH, " +
                 "ISNULL((SELECT adr_ilce + '-' + adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES, " +
                 "ISNULL((SELECT adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES1, " +
