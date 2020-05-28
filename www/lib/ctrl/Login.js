@@ -4,8 +4,7 @@ function Login ($scope,$rootScope,$window,db)
     $scope.server_adress = localStorage.host;
     $scope.IsDbCreateWorking = false;
     $scope.TransferEventProgress = 0;    
-    $scope.FirmLock = false
-    
+    $scope.FirmLock = false;    
     
     $scope.Init = function()
     {   
