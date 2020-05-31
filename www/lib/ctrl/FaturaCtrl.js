@@ -511,7 +511,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.CariDovizCinsi, //DCİNS
             $scope.CariDovizKuru, //DKUR
             $scope.CariAltDovizKuru, //ALTDKUR
-            0, //GRUPNO
+            $scope.CariDovizCinsi, //GRUPNO
             $scope.Sorumluluk,
             0,  //KASAHIZMET
             "", //KASAHIZKOD
@@ -552,6 +552,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             0 //EISLEMTURU
         ];
 
+        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
         {   
             if(typeof InsertResult.result.err == 'undefined')

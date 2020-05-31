@@ -109,6 +109,13 @@ function CariHesapHareketCtrl($scope,$window,db)
                     align: "center",
                     width: 200
                 },
+                {
+                    name: "DOVIZCINS",
+                    title: "DÖVİZ",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                },
              
             ],
         });
@@ -179,6 +186,7 @@ function CariHesapHareketCtrl($scope,$window,db)
                         "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
                         "msg_S_0099 AS VADEGUN, " +
                         "msg_S_0100 AS BA, " +
+                        "msg_s_0112 AS DOVIZCINS, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
                         "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE, " +
@@ -186,8 +194,9 @@ function CariHesapHareketCtrl($scope,$window,db)
                         "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
-                        "ROUND(CONVERT(NVARCHAR,CAST([msg_S_0109\\T] AS DECIMAL(10,2))),2)  AS ORJINALDOVIZBAKIYE, " +
-                        "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0107\\T] AS DECIMAL(10,2))),2)  AS ALTERNATIFDOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapAnaDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,@ILKTARIH,@SONTARIH ,0,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS ANADOVIZBAKIYE1, " +
+                        "(select ROUND(dbo.fn_CariHesapOrjinalDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,@ILKTARIH,@SONTARIH ,0,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS ORJINALDOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapAlternatifDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,@ILKTARIH,@SONTARIH ,0,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS ALTERNATIFDOVIZBAKIYE, " +
                         "[msg_S_0112] AS ORJINALDOVIZ " +
                         "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 DESC " ,
                 param:  ['KODU','ILKTARIH','SONTARIH'],
@@ -201,7 +210,7 @@ function CariHesapHareketCtrl($scope,$window,db)
                 $scope.CariFoyListe = Data;
                 $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
                 $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
-                $scope.AnaDovizBakiye = $scope.CariFoyListe[0].ANADOVIZBAKIYE
+                $scope.AnaDovizBakiye = $scope.CariFoyListe[0].ANADOVIZBAKIYE1
                 $scope.OrjDovizBakiye = $scope.CariFoyListe[0].ORJINALDOVIZBAKIYE
                 $scope.OrjDoviz = $scope.CariFoyListe[0].ORJINALDOVIZ
                 $scope.AltDovizBakiye = $scope.CariFoyListe[0].ALTERNATIFDOVIZBAKIYE
