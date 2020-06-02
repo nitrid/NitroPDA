@@ -72,7 +72,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.KasaSecim = false;
         $scope.KasaAdi = "";
         $scope.EvrakDovizTip = "";
-
+        $scope.DisTicaretTur;
+        $scope.VergisizFl;
 
         //CARİHAREKET
         if(ParamName == "AlisFatura")
@@ -481,7 +482,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         let Vergi = [0,0,0,0,0,0,0,0,0,0];
         for(let i = 0;i < Vergi.length;i++)
         {
-            Vergi[$scope.Stok[0].TOPTANVERGIPNTR - 1] = $scope.Stok[0].KDV;
+            Vergi[$scope.Stok[0].TOPTANVERGIPNTR - 1] = $scope.Stok[0].KDV;        
         } 
 
         var InsertData = 
@@ -878,7 +879,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             0, // MASRAF 2
             0, // MASRAF 3
             0, // MASRAF 4
-            $scope.Stok[0].TOPTANVERGIPNTR, //VERİPNTR
+            $scope.Stok[0].TOPTANVERGIPNTR, //VERGİPNTR
             $scope.Stok[0].KDV,             //VERGİ
             0, // MASRAFVERGİPNTR,
             0, // MASRAFVERGİ
@@ -891,13 +892,13 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.Tarih, //MALKABULSEVKTARİHİ
             '', // CARİSORUMLULUKMERKEZİ
             $scope.Sorumluluk,
-            0,  // VERGİSİZFL
+            $scope.VergisizFl,  // VERGİSİZFL
             0,  // ADRESNO
             $scope.Stok[0].PARTI,
             $scope.Stok[0].LOT,
             $scope.Proje,
             '', // EXİMKODU
-            0,  // DİSTİCARETTURU
+            $scope.DisTicaretTur,  // DİSTİCARETTURU
             0,  // OTVVERGİSİZFL
             0,  // OİVVERGİSİZ
             $scope.CariFiyatListe,
@@ -1625,6 +1626,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {   
             if($scope.CmbEvrakTip == 0) //Perakende Alış Faturası
             {
+               $scope.VergisizFl = 0;
+               $scope.DisTicaretTur = 0; 
                $scope.EvrakTip = 3;
                $scope.NormalIade = 0;
                $scope.Tip = 1;
@@ -1640,6 +1643,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 1) //Toptan Alıs Faturası
             {
+                $scope.VergisizFl = 0;
+                $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
                 $scope.NormalIade = 0;
                 $scope.Tip = 0;
@@ -1655,6 +1660,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 2) //İhraç Kayıtlı Yurtiçi Ticaret
             {
+                $scope.VergisizFl = 0;
+                $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
                 $scope.NormalIade = 0;
                 $scope.Tip = 0;
@@ -1670,6 +1677,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 3) //İhraç Kayıtlı Yurtdışı Ticaret
             {
+                $scope.VergisizFl = 0;
+                $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
                 $scope.NormalIade = 0;
                 $scope.Tip = 0;
@@ -1685,6 +1694,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 4) // Kapalı Toptan Alıs Faturası
             {
+                $scope.VergisizFl = 0;
+                $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
                 $scope.NormalIade = 0;
                 $scope.Tip = 0;
@@ -1711,10 +1722,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 5) //İthalat Faturası
             {
+                $scope.VergisizFl = 1;
+                $scope.DisTicaretTur = 3;
                 $scope.EvrakTip = 3;
                 $scope.NormalIade = 0;
                 $scope.Tip = 0;
-                $scope.Cins = 0;
+                $scope.Cins = 12;
                 $scope.ChaEvrakTip = 0;
                 $scope.ChaTip = 1;
                 $scope.ChaCins = 6;
@@ -1730,6 +1743,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {
             if($scope.CmbEvrakTip == 0) //Perakende Satış Faturası
             {
+               $scope.VergisizFl = 0
+               $scope.DisTicaretTur = 0;
                $scope.EvrakTip = 4;
                $scope.NormalIade = 0;
                $scope.Tip = 1;
@@ -1745,6 +1760,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 1) //Toptan Satış Faturası
             {
+                $scope.VergisizFl = 0
+                $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 4;
                 $scope.NormalIade = 0;
                 $scope.Tip = 1;
@@ -1760,6 +1777,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 2) //İhraç Kayıtlı Yurtiçi Ticaret
             {
+                $scope.VergisizFl = 0
+                $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 4;
                 $scope.NormalIade = 0;
                 $scope.Tip = 1;
@@ -1775,6 +1794,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 3) //İhraç Kayıtlı Yurtdışı Ticaret
             {
+                $scope.VergisizFl = 0
+                $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 4;
                 $scope.NormalIade = 0;
                 $scope.Tip = 1;
@@ -1790,6 +1811,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 4) // Kapalı Toptan Satış Faturası
             {
+                $scope.VergisizFl = 0
+                $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 4;
                 $scope.NormalIade = 0;
                 $scope.Tip = 1;
@@ -1810,7 +1833,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         {
                             $scope.KasaAdi = item.ADI;
                         }
-                          
                     });
                 });    
             }
@@ -2324,9 +2346,19 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     $scope.MiktarFiyatValid = function()
     {
-        $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
-        $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
-        $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
+        if($scope.CmbEvrakTip != 5)
+        {
+            $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
+            $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
+            $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
+        }
+        else
+        {
+            $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
+            $scope.Stok[0].KDV = 0;
+            $scope.Stok[0].TOPTUTAR = $scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM;
+            $scope.Stok[0].TOPTANVERGIPNTR = 0;
+        }
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {
