@@ -73,7 +73,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.KasaAdi = "";
         $scope.EvrakDovizTip = "";
         $scope.DisTicaretTur;
-        $scope.VergisizFl;
+        $scope.VergisizFl = 0;
+
 
         //CARİHAREKET
         if(ParamName == "AlisFatura")
@@ -1626,7 +1627,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {   
             if($scope.CmbEvrakTip == 0) //Perakende Alış Faturası
             {
-               $scope.VergisizFl = 0;
+               $scope.VergisizFl = 0
                $scope.DisTicaretTur = 0; 
                $scope.EvrakTip = 3;
                $scope.NormalIade = 0;
@@ -1643,7 +1644,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 1) //Toptan Alıs Faturası
             {
-                $scope.VergisizFl = 0;
+                $scope.VergisizFl = 0
                 $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
                 $scope.NormalIade = 0;
@@ -1660,7 +1661,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 2) //İhraç Kayıtlı Yurtiçi Ticaret
             {
-                $scope.VergisizFl = 0;
+                $scope.VergisizFl = 0
                 $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
                 $scope.NormalIade = 0;
@@ -1677,7 +1678,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 3) //İhraç Kayıtlı Yurtdışı Ticaret
             {
-                $scope.VergisizFl = 0;
+                $scope.VergisizFl = 0
                 $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
                 $scope.NormalIade = 0;
@@ -1694,7 +1695,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 4) // Kapalı Toptan Alıs Faturası
             {
-                $scope.VergisizFl = 0;
+                $scope.VergisizFl = 0
                 $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
                 $scope.NormalIade = 0;

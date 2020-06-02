@@ -475,7 +475,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.YeniEvrak = async function (pTip)
     {
-        console.log(pTip)
         Init();
         InitCariGrid();
         InitIslemGrid();
@@ -1035,5 +1034,29 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     {
         $("#TbCariSec").addClass('active');
         $("#TbMain").removeClass('active');
+    }
+    $scope.BtnOnlineYazdir = function()
+    {   
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "UPDATE CARI_HESAP_HAREKETLERI SET cha_special1 = 1 " +
+                    "WHERE cha_evrakno_seri = @cha_evrakno_seri AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip ",
+            param:  ['cha_evrakno_seri','cha_evrakno_sira','cha_evrak_tip'],
+            type:   ['string|25','int','int',],
+            value:  [$scope.Seri,$scope.Sira,$scope.ChaEvrakTip]
+        }
+
+        db.ExecuteQuery(TmpQuery,function(data)
+        {   
+            if(typeof(data.result.err) == 'undefined')
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Başarıyla Gerçekleşti !" + "</a>" ); 
+            }
+            else
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşleminde Hata !" + "</a>" ); 
+            }
+        });
     }
 }
