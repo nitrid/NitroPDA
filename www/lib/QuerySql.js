@@ -1835,6 +1835,7 @@ var QuerySql =
     {
         query:  "SELECT *, " +
                 "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod=cha_kod) AS CARIADI, " +
+                "ROUND(cha_meblag,2) AS TUTAR, " +
                 "CASE cha_cinsi WHEN 19 THEN ISNULL((SELECT ban_ismi FROM BANKALAR WHERE ban_kod = cha_kasa_hizkod),'') " +
                 "ELSE ISNULL((SELECT kas_isim FROM KASALAR WHERE kas_kod = cha_kasa_hizkod),'') END AS KASAADI, " +
                 "CONVERT(VARCHAR(10),GETDATE(),112) AS cha_d_kurtar " +

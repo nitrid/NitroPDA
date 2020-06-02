@@ -120,7 +120,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 width: 125
             },
             {
-                name: "cha_meblag",
+                name: "TUTAR",
                 title: "TUTAR",
                 type: "number",
                 align: "center",
