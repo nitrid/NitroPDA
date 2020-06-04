@@ -125,6 +125,7 @@ function CariListeCtrl($scope,$window,db)
             $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
             CariSelectedRow = $row;
             
+            console.log($scope.CariListe[pIndex].ANABAKIYE)
             $scope.CariKodu = $scope.CariListe[pIndex].KODU;
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
             $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
@@ -132,8 +133,9 @@ function CariListeCtrl($scope,$window,db)
             $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
             $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
             $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
-            $scope.CariBakiye1 = $scope.CariListe[pIndex].BAKIYE1;
-            $scope.CariBakiye2 = $scope.CariListe[pIndex].BAKIYE2;
+            $scope.CariBakiyeAna = $scope.CariListe[pIndex].ANABAKIYE;
+            $scope.CariBakiyeAlt = $scope.CariListe[pIndex].ALTBAKIYE;
+            $scope.CariBakiyeOrj = $scope.CariListe[pIndex].ORJBAKIYE;            
             $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
             $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
             $scope.Adres = $scope.CariListe[pIndex].ADRES;
@@ -143,7 +145,6 @@ function CariListeCtrl($scope,$window,db)
             $scope.TelNo1 =  $scope.CariListe[pIndex].TELNO1
             $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
             $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
-            $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
 
 
             $scope.CariClick();

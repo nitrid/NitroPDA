@@ -120,7 +120,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 width: 125
             },
             {
-                name: "cha_meblag",
+                name: "TUTAR",
                 title: "TUTAR",
                 type: "number",
                 align: "center",
@@ -259,6 +259,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.SntckPoz, //SNTCKPOZ
                 0 //EISLEMTURU
                 ];
+                console.log(InsertData)
             db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
             {   
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(CariHarGetir)
@@ -367,6 +368,31 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             console.log(error)
         }
     }
+    $scope.DovizChange = function()
+    {
+            if($scope.DovizChangeKodu == 0)
+            {
+                console.log($scope.CariAnaDovizCinsi)
+                $scope.CariDovizCinsi = $scope.CariAnaDovizCinsi;
+                $scope.CariDovizKuru = $scope.CariAnaDovizKuru
+                $scope.CariDovizAdi = $scope.DovizAnaSembol
+
+            }
+            else if($scope.DovizChangeKodu == 1)
+            {
+                console.log(1)
+                console.log($scope.CariDovizCinsi1)
+                $scope.CariDovizCinsi = $scope.CariDovizCinsi1;
+                $scope.CariDovizKuru = $scope.CariDovizKuru1;
+                $scope.CariDovizAdi = $scope.DovizSembol1
+            }
+            else if($scope.DovizChangeKodu == 2)
+            {
+                $scope.CariDovizCinsi = $scope.CariDovizCinsi2
+                $scope.CariDovizKuru =  $scope.CariDovizKuru2
+                $scope.CariDovizAdi = $scope.DovizSembol2
+            }
+    }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {    
         if ( CariSelectedRow ) { CariSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
@@ -374,11 +400,17 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         CariSelectedRow = $row;
 
+        console.log($scope.CariListe[pIndex])
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
         parseFloat($scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE).toFixed(2);
-        $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
+        $scope.CariDovizCinsi1 = $scope.CariListe[pIndex].DOVIZCINSI1;
+        $scope.CariDovizCinsi2 = $scope.CariListe[pIndex].DOVIZCINSI2;
+        $scope.CariAnaDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
+        $scope.CariAnaDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
+        $scope.CariDovizKuru1 = $scope.CariListe[pIndex].DOVIZKUR1;
+        $scope.CariDovizKuru2 = $scope.CariListe[pIndex].DOVIZKUR2;
         $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
         $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
         $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
@@ -386,6 +418,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
         $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
         $scope.CariDovizAdi = $scope.CariListe[pIndex].DOVIZSEMBOL; 
+        $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
+        $scope.DovizAnaSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
+        $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
+        $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
+        $scope.DovizChangeKodu = "0"
+        $scope.DovizChange()
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -437,7 +475,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.YeniEvrak = async function (pTip)
     {
-        console.log(pTip)
         Init();
         InitCariGrid();
         InitIslemGrid();
@@ -643,7 +680,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnCariDoviz = function()
     {
-        $scope.Tutar = ($scope.Tutar * $scope.CariDovizKuru) / $scope.KasaKuru;
+        $scope.Tutar = ($scope.Tutar * $scope.KasaKuru) / $scope.CariDovizKuru;
         CariHarInsert();
         if($scope.TahsilatCinsi !=0)
         {
@@ -972,6 +1009,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
             BarkodFocus();
+            console.log($scope.CariDovizCinsi)
         }
         else
         {
@@ -996,5 +1034,29 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     {
         $("#TbCariSec").addClass('active');
         $("#TbMain").removeClass('active');
+    }
+    $scope.BtnOnlineYazdir = function()
+    {   
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "UPDATE CARI_HESAP_HAREKETLERI SET cha_special1 = 1 " +
+                    "WHERE cha_evrakno_seri = @cha_evrakno_seri AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip ",
+            param:  ['cha_evrakno_seri','cha_evrakno_sira','cha_evrak_tip'],
+            type:   ['string|25','int','int',],
+            value:  [$scope.Seri,$scope.Sira,$scope.ChaEvrakTip]
+        }
+
+        db.ExecuteQuery(TmpQuery,function(data)
+        {   
+            if(typeof(data.result.err) == 'undefined')
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Başarıyla Gerçekleşti !" + "</a>" ); 
+            }
+            else
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşleminde Hata !" + "</a>" ); 
+            }
+        });
     }
 }
