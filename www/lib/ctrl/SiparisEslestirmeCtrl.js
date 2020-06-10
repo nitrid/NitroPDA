@@ -5,6 +5,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     let StokSelectedRow = null;
     let PartiLotSelectedRow = null;
     let SiparisKabulListeSelectedRow = null;
+    let SonSatisSelectedRow = null;
     let ChaGuid = "";
     let ParamName = "";
 
@@ -73,6 +74,9 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SipSira = 0;
         $scope.SipSeriSira = "";
         $scope.IhracKod = "";
+        $scope.Aciklama = "";
+        $scope.DetSipSeri = "";
+        $scope.DetSipSira = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -107,6 +111,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.IslemListeSelectedIndex = -1;
         $scope.PartiLotListeSelectedIndex = 0;
         $scope.SiparisKabulListeSelectedIndex = 0;
+        $scope.SonSatisListeSelectedIndex = 0; 
 
         $scope.TxtParti = "";
         $scope.TxtLot = 0;
@@ -163,6 +168,59 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             rowClick: function(args)
             {
                 $scope.CariListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitSonSatisDetayGrid()
+    {
+        $("#TblSonSatisDetay").jsGrid({
+            responsive: true,
+            width: "100%",
+            height: "350px",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            
+            data : $scope.DetayData,
+            rowClass: function (item, itemIndex)
+            {
+                return "rowheight";
+            },
+            fields: 
+            [
+                {
+                    name: "ADI",
+                    title: "ADI",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                },
+                {
+                    name: "BMIKTAR",
+                    title: "BEKLEYEN MIK.",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "RENK",
+                    title: "RENK",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "BEDEN",
+                    title: "BEDEN",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                }
+            ],
+            rowClick: function(args)
+            {
+                $scope.SiparisKabulListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -405,19 +463,27 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             updateOnResize: true,
             heading: true,
             selecting: true,
-            data : $scope.SiparisKabulListe,
+            data : $scope.StokListe,
             paging : true,
             pageSize: 10,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
-                {
-                    name: "TESLIMTARIH",
-                    title: "TESLIM TARIHI",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                }, 
+                { 
+                    itemTemplate: function(_, item) 
+                    {
+                        
+                        return $("<button type='submit' class='btn btn-primary btn-block btn-sm'></button>").text("D")
+                            .on("click", function() 
+                            {
+                                console.log(item)
+                                $scope.DetayGrid(item);
+                                //alert(item.Name);
+                            });
+                    },
+                    width: 45
+                },
+
                 {
                     name: "SERI",
                     title: "SERI",
@@ -438,28 +504,35 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     type: "number",
                     align: "center",
                     width: 150
-                } , 
+                }, 
                 {
                     name: "CARIADI",
                     title: "CARI ADI",
                     type: "number",
                     align: "center",
                     width: 300
-                } , 
+                }, 
                 {
                     name: "BMIKTAR",
                     title: "BİRİM",
                     type: "number",
                     align: "center",
                     width: 100
-                } , 
+                }, 
                 {
                     name: "SATIR",
                     title: "SATIR",
                     type: "number",
                     align: "center",
                     width: 50
-                } 
+                },
+                {
+                    name: "TESLIMTARIH",
+                    title: "TESLIM TARIHI",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                }
             ],
             rowClick: function(args)
             {
@@ -1388,6 +1461,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         InitSiparisListeGrid();
         InitPartiLotGrid();
         InitSiparisKabulListeGrid();
+        InitSonSatisDetayGrid();
         
 
         $scope.EvrakLock = false;
@@ -1540,7 +1614,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
        {
             await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
        }
-    
      
     }
     $scope.BtnCariListele = function()
@@ -1726,7 +1799,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
        
     }
     $scope.BtnSiparisKabulListele = async function()
-    { 
+    {
         $scope.Loading = true;
         $scope.TblLoading = false;
         $scope.SipSeri = $scope.SipSeriSira.split("-",1).pop(1);
@@ -1763,6 +1836,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     $scope.SiparisKabulListele = function()
     {
         let TmpParam = [$scope.SipSeri,$scope.SipSira,0];
+
 
         db.GetPromiseTag($scope.Firma,"SiparisSeriSiraListele",TmpParam,function(data)
         {
@@ -1823,6 +1897,14 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         PartiLotSelectedRow = $row;
         $scope.PartiLotListeSelectedIndex = pIndex;
+    }
+    $scope.SiparisKabulListeRowClick = function(pIndex,pItem,pObj)
+    {   
+        if ( SiparisKabulListeSelectedRow ) { SiparisKabulListeSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        var $row = pObj.rowByItem(pItem);
+        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+        SiparisKabulListeSelectedRow = $row;
+        $scope.SiparisKabulListeSelectedIndex = pIndex;
     }
     $scope.BtnPartiLotGetir = function()
     {   
@@ -1897,15 +1979,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         {
             $scope.Okutulan = data;
         });
-    }
-    $scope.SiparisKabulListeRowClick = function(pIndex,pItem,pObj)
-    {   
-        if ( SiparisKabulListeSelectedRow ) { SiparisKabulListeSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
-        var $row = pObj.rowByItem(pItem);
-        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
-        SiparisKabulListeSelectedRow = $row;
-        $scope.SiparisKabulListeSelectedIndex = pIndex;
-        
     }
     $scope.BtnTemizle = function()
     {
@@ -2028,8 +2101,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $("#TbBarkodGiris").removeClass('active');
                 $("#TbSiparisSecimi").removeClass('active');
         }
-
-       
     }
     $scope.SiparisSecimi = function() 
     {
@@ -2058,6 +2129,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.CariKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].CARIKOD;
         $scope.SipSeri = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SERI;
         $scope.SipSira = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SIRA;
+        
 
         if(typeof($scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].TEMSILCIKODU) != 'undefined')
         {
@@ -2475,5 +2547,48 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 orientation : "portrait"
             }
         );
+    }
+    $scope.BtnGeri = function()
+    {
+        $('#MdlSonSatisDetay').modal('hide');
+    }
+    $scope.DetayGrid = function(pItem)
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query : "SELECT " +
+            "(sip_miktar - sip_teslim_miktar) AS BMIKTAR, " +
+            "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod) AS ADI, " +
+            "sip_stok_kod AS KODU, " +
+            "BdnHar_BedenNo, " +
+            "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
+            "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN " +
+            "FROM SIPARISLER LEFT OUTER JOIN BEDEN_HAREKETLERI ON sip_Guid = BdnHar_Har_uid " +
+            "WHERE sip_depono =@sip_depono AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
+            param : ['sip_depono','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
+            type : ['string|15','string|10','int','int'],
+            value:  [$scope.DepoNo,pItem.SERI,pItem.SIRA,0]
+        }
+        db.GetPromiseQuery(TmpQuery,function(data)
+        {   
+            console.log(data);
+            $scope.DetayData = data;
+
+            if($scope.DetayData.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblSonSatisDetay").jsGrid({data : $scope.DetayData});
+                $("#MdlSonSatisDetay").modal('show');
+            } 
+            else
+            {                
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#MdlSonSatisDetay").modal('hide');
+                alertify.alert("Sipariş içeriği boş")                
+            }  
+        });
     }
 }
