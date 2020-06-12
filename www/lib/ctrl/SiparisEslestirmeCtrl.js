@@ -5,7 +5,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     let StokSelectedRow = null;
     let PartiLotSelectedRow = null;
     let SiparisKabulListeSelectedRow = null;
-    let SonSatisSelectedRow = null;
     let ChaGuid = "";
     let ParamName = "";
 

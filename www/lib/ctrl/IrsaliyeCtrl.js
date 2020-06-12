@@ -72,10 +72,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.VergiEdit = "";
         $scope.Fiyat = "";
         $scope.EvrakDovizTip = "";
-
-
+        $scope.Special = "1";
+        $scope.Aciklama = "";
+        $scope.BelgeNo = "";
        
-
         $scope.DepoListe = [];
         $scope.CariListe = [];
         $scope.SorumlulukListe = [];
@@ -1296,6 +1296,46 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
         });
     }
+    $scope.BtnEtiketBas = function()
+    {
+        console.log($scope.IrsaliyeListe)
+        for(i = 0; i < $scope.IrsaliyeListe.length; i++)
+        {
+            console.log($scope.IrsaliyeListe[i])
+            $scope.StokKodu = $scope.IrsaliyeListe[i].sth_stok_kod;
+            var InsertData = 
+            [
+                UserParam.MikroId,
+                UserParam.MikroId,
+                1,
+                $scope.Seri,
+                $scope.Sira,
+                "",
+                $scope.BelgeNo,
+                0,
+                0,
+                $scope.IrsaliyeListe[i].sth_miktar,
+                $scope.DepoNo,
+                $scope.StokKodu,
+                1,
+                1,
+                $scope.Barkod,
+                $scope.IrsaliyeListe[i].sth_miktar
+            ]
+            db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
+            {
+
+            });
+        }
+        if(i == $scope.IrsaliyeListe.length)
+        {
+            alertify.alert("Etiket Yazdırıldı.");
+        }
+        else
+        {
+            alertify.alert("Etiket Yazdıralamadı.");
+        }
+    }
     $scope.MiktarFiyatValid = function()
     {
         $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
@@ -1839,6 +1879,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }     
 
         BarkodFocus();
+        console.log($scope.IrsaliyeListe);
     }
     $scope.EvrakGetir = function ()
     {

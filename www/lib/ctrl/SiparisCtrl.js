@@ -973,32 +973,32 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             console.log(error)
         }
     }
-    // function SpaceLength(pData,pLength)
-    // {
-    //     try 
-    //     {
-    //         let x = pLength - pData.toString().length;
+     function SpaceLength(pData,pLength)
+     {
+         try 
+         {
+             let x = pLength - pData.toString().length;
 
-    //         if(pData.toString().length > pLength)
-    //         {
-    //             pData = pData.substring(0,25);
-    //         }
+             if(pData.toString().length > pLength)
+             {
+                 pData = pData.substring(0,25);
+             }
 
-    //         Space = "";
+             Space = "";
 
-    //         for(let i=0; i < x; i++)
-    //         {
-    //             Space = Space + " ";
-    //         }
+             for(let i=0; i < x; i++)
+             {
+                 Space = Space + " ";
+             }
 
-    //         return pData + Space
+             return pData + Space
             
-    //     } 
-    //     catch (error) 
-    //     {
-    //         console.log(error)
-    //     }
-    // }
+         } 
+         catch (error) 
+         {
+             console.log(error)
+         }
+     }
     $scope.BtnCariListele = function()
     {   
         $scope.Loading = true;
@@ -2253,5 +2253,45 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
 
         })
+    }
+    $scope.BtnEtiketBas = function()
+    {
+        console.log($scope.SiparisListe)
+        for(i = 0; i < $scope.SiparisListe.length; i++)
+        {
+            console.log($scope.SiparisListe[i])
+            $scope.StokKodu = $scope.SiparisListe[i].sip_stok_kod;
+            var InsertData = 
+            [
+                UserParam.MikroId,
+                UserParam.MikroId,
+                1,
+                $scope.Seri,
+                $scope.Sira,
+                "",
+                $scope.BelgeNo,
+                0,
+                0,
+                $scope.SiparisListe[i].sip_miktar,
+                $scope.DepoNo,
+                $scope.StokKodu,
+                1,
+                1,
+                $scope.Barkod,
+                $scope.SiparisListe[i].sip_miktar
+            ]
+            db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function()
+            {
+
+            });
+        }
+        if(i == $scope.SiparisListe.length)
+        {
+            alertify.alert("Etiket Yazdırıldı.");
+        }
+        else
+        {
+            alertify.alert("Etiket Yazdıralamadı.");
+        }
     }
 }
