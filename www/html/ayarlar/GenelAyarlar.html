@@ -1,0 +1,50 @@
+
+<div class="col-12">
+    <div class="row" ng-controller="GenelAyarlarCtrl" ng-init="Init()">
+        <div class="page-content container-fluid">
+            <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+              <div class="panel-heading">
+                <h3 style="font-weight:bold" class="panel-title">Genel Ayarlar</h3>
+                <ul class="panel-actions panel-actions-keep">
+                    <div class="btn-group dropdown">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" id="exampleBulletDropdown2"
+                          data-toggle="dropdown" aria-expanded="false">
+                          İşlemler
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-bullet dropdown-menu-right" aria-labelledby="exampleBulletDropdown2"
+                          role="menu">
+                          <a class="dropdown-item" href="javascript:void(0)" role="menuitem" ng-click="SqlClick()">Sql Server Ayarları</a>
+                          <a class="dropdown-item" href="javascript:void(0)" role="menuitem" ng-click="BaglantiClick()">Genel Bağlantı Ayarları</a>
+                          <a class="dropdown-item" href="javascript:void(0)" role="menuitem" ng-click="FirmaClick()">Gösterilecek Firma Ayarları</a>
+                        </div>
+                </ul>
+              </div>
+              <div style="margin-left: -15px; margin-right: -15px; margin-top: -5px;" class="panel-body">
+                <div class="tab-content">
+                    <div id="TbSql" class="tab-pane active">
+                        <h3 style="font-weight:bold" class="panel-title text-center text-center">Sql Server Ayarları</h3>
+                        <div class="col-md-6 col-lg-4 py-5">
+                            <input type="text" class="form-control" id="SqlServer" ng-model="SqlServer" placeholder="SERVER">
+                        </div>
+                        <div class="col-md-6 col-lg-4 py-5">
+                            <input type="text" class="form-control" id="SqlDatabase" ng-model="SqlDatabase" placeholder="DATABASE">
+                        </div>
+                        <div class="col-md-6 col-lg-4 py-5">
+                            <input type="text" class="form-control" id="SqlKullanici" ng-model="SqlKullanici" placeholder="KULLANICI">
+                        </div>
+                        <div class="col-md-6 col-lg-4 py-5">
+                            <input type="text" class="form-control" id="SqlSifre" ng-model="SqlSifre" placeholder="SIFRE">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-sm-5 m-5 ">
+                                <button type="button" class="btn btn-block btn-danger" ng-click="BtnMain()">Çıkış</button>
+                            </div>
+                            <div class="col-md-2 col-sm-5 m-5 ">
+                                <button type="button" ng-click="Kaydet()" class="btn btn-block btn-success">Kaydet</button>
+                            </div>
+                        </div>
+                    </div>
+              </div>
+            </div>
+    </div>
+</div>

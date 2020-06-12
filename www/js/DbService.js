@@ -2,7 +2,7 @@
 
 angular.module('app.db', []).service('db',function($rootScope)
 {
-    let _Host = "";
+    let _Host = '';
     let _LocalDb = new LocalDb(this);
     let _Socket = null;
     let _MenuData = {};
@@ -10,7 +10,8 @@ angular.module('app.db', []).service('db',function($rootScope)
 
     if (typeof(localStorage.host) !== "undefined") 
     {
-        _Host = 'http://' + localStorage.host + ':' + localStorage.socketport;
+        //_Host = 'http://' + localStorage.host + ':' + localStorage.socketport;
+        _Host = 'http://' + localStorage.host + ':8091';
     }
     if (typeof(localStorage.mode) !== "undefined")
     {
@@ -379,9 +380,9 @@ angular.module('app.db', []).service('db',function($rootScope)
             pScope.$apply(pFn);
         }
     };     
-    this.SetHost = function(host,port)
+    this.SetHost = function(host)
     {
-        _Host = 'http://' + host + ':' + port;
+        _Host = 'http://' + host + ':8091';
         //_Socket.io.uri = _Host;
     }
     this.On = function(eventName,callback)

@@ -14,6 +14,8 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             selecting: true,
             sorting: true,
             paging: true,
+            pageSize: 12,
+            pageButtonCount: 3,
             data : $scope.TahsilatRapor,
             fields: 
             [
@@ -52,12 +54,14 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
     {   
         $("#TblCariFoy").jsGrid
         ({
-            width: "100%",
+            width: "150%",
             updateOnResize: true,
             heading: true,
             selecting: true,
             sorting: true,
             paging: true,
+            pageSize: 12,
+            pageButtonCount: 3,
             data : $scope.CariFoyListe,
             fields: 
             [
@@ -128,7 +132,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             paging : true,
             pageSize: 10,
             pageButtonCount: 3,
-            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            pagerFormat: "{Sayfa} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
             [
                 {
@@ -165,6 +169,10 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         InitTahsilatRapor();
         InitCariFoy();
         InitPersonelGrid();
+        $scope.BtnPersonelListele()
+        $scope.MainClick();
+        $scope.Evrakadi = 'Tahsilat Raporu'
+
     }
     $scope.BtnPersonelSec = function()
     {   
@@ -230,7 +238,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             {
                 db : '{M}.' + $scope.Firma,
                 query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) *  (-1))  AS TOPLAM from CARI_HESAPLAR " +
-                " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) < 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
+                " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) < 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) ",
                 param:  ['PLASIYERKODU'], 
                 type:   ['string|25'], 
                 value:  [$scope.PlasiyerKodu]    
@@ -252,6 +260,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         IslemSelectedRow = $row;
 
         $scope.CariKodu = $scope.IslemListe[pIndex].KODU;
+        $scope.CariAdi = $scope.IslemListe[pIndex].ADI;
         $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
 
@@ -285,7 +294,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             $scope.CariFoyListe = Data;
             $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
         });
-        $("#MdlIslemDetay").modal('show');
+        $scope.FoyClick();
     }
     $scope.PersonelListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -298,7 +307,55 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             
             $scope.PersonelAdi = $scope.PersonelListe[pIndex].ADI;
             $scope.PlasiyerKodu = $scope.PersonelListe[pIndex].KODU;
+            $scope.BtnPersonelSec();
+            $scope.MainClick();
         }
+    }
+    $scope.OdemeChange = function()
+    {
+
+        $scope.Evrakadi = 'Ödeme Raporu'
+        $scope.CmbEvrakTip = 1
+        $scope.PersonelAdi = "";
+        $scope.PlasiyerKodu = "";
+        $scope.IslemListe = "";
+        InitTahsilatRapor();
+        $scope.ToplamBakiye = 0
+        $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
+
+    }
+     $scope.TahsilatChange = function()
+    {
+
+        $scope.Evrakadi = 'Tahsilat Raporu'
+        $scope.CmbEvrakTip = 0
+        $scope.PersonelAdi = "";
+        $scope.PlasiyerKodu = "";
+        $scope.IslemListe = "";
+        InitTahsilatRapor();
+        $scope.ToplamBakiye = 0
+        $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
+
+    }
+    $scope.BtnTemsilciTab = function()
+    {
+        $("#TbTemsilci").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbCariFoy").removeClass('active');
+
+    }
+    $scope.MainClick = function()
+    {
+        $("#TbMain").addClass('active');
+        $("#TbTemsilci").removeClass('active');
+        $("#TbCariFoy").removeClass('active');
+      
+    }
+    $scope.FoyClick = function()
+    {
+        $("#TbMain").removeClass('active');
+        $("#TbTemsilci").removeClass('active');
+        $("#TbCariFoy").addClass('active');
     }
    
 }

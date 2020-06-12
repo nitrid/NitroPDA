@@ -247,7 +247,8 @@ var ParamTemp =
 			"SecimliFiyatListe" : {"Title" : "Seçimli Fiyat Liste","DefaultValue" : "0"},
 			"DovizTipi" : {"Title" : "Döviz Tipi","DefaultValue" : "-1"},
 			"Special" : {"Title" : "Special","DefaultValue" : "1"},
-			"FiyatGizle" : {"Title" : "Fiyat Gizle","DefaultValue" : "0"}
+			"FiyatGizle" : {"Title" : "Fiyat Gizle","DefaultValue" : "0"},
+			"StokResmi" : {"Title" : "Stok Resmi ","DefaultValue" : "0"}
 		},
 		"UrunGirisCikis" :
 		{
@@ -322,10 +323,11 @@ var ParamTemp =
 			"Aktarim" : {"Title" : "Aktarim","DefaultValue" : "1"},
 			"EvrakGonder" : {"Title" : "EvrakGonder","DefaultValue" : "1"},
 			"Cari Hesap Hareket" : {"Title" : "Cari Hesap Hareket","DefaultValue" : "1"},
-			"Yapilacak Tahsilatlar" : {"Title" : "Yapilacak Tahsilatlar","DefaultValue" : "1"},
+			"Yapilacak Tahsilatlar/Ödemeler" : {"Title" : "Yapilacak Tahsilatlar/Ödemeler","DefaultValue" : "1"},
 			"Stok Rapor" : {"Title" : "Stok Rapor","DefaultValue" : "1"},
 			"Cari Secimli Siparis Raporu" : {"Title" : "Cari Secimli Siparis Raporu","DefaultValue" : "1"},
 			"Cari Secimli Siparis Durum Raporu" : {"Title" : "Cari Secimli Siparis Durum Raporu","DefaultValue" : "1"},
-			"Durağan Cariler Raporu" : {"Title" : "Durağan Cariler Raporu","DefaultValue" : "1"}
+			"Durağan Cariler Raporu" : {"Title" : "Durağan Cariler Raporu","DefaultValue" : "1"},
+			"Kasa Rapor" : {"Title" : "Kasa Rapor","DefaultValue" : "1"}
 		}
 	}

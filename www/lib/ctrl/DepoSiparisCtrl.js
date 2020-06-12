@@ -48,6 +48,9 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
         $scope.ToplamSatir = 0;
 
         $scope.IslemListeSelectedIndex = -1;
+
+        $scope.Loading = false;
+        $scope.TblLoading = true;
     }
     function InitIslemGrid()
     {   
@@ -512,6 +515,8 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
     {
         let Kodu = '';
         let Adi = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;
 
         if($scope.StokGridTip == "0")
         {   
@@ -524,8 +529,24 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
             
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
-            $scope.StokListe = StokData;
-            $("#TblStok").jsGrid({data : $scope.StokListe});
+             $scope.StokListe = StokData;
+            if ($scope.StokListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
+            }
+            else
+            {
+                alertify.alert("Stok Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
+            }
         });
     }
     $scope.BtnStokGridSec = function()
@@ -534,6 +555,13 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
         StokBarkodGetir($scope.Barkod);
         $scope.BtnStokGridGetir();
         $("#TblStok").jsGrid({pageIndex: true})
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
     }
     $scope.BirimChange = function()
     {
@@ -579,8 +607,9 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
-        
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
     }
     $scope.EvrakGetir = function()
     {
@@ -794,12 +823,21 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
         console.log($scope.DepoSiparisListe[pIndex])
         UpdateData(Data1);
     }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+    }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
+        $("#TbStok").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
     {
@@ -822,6 +860,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbBarkodGiris").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
             }
             else
             {
@@ -829,6 +868,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
                 $("#TbMain").removeClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
             }
         }
         BarkodFocus();
@@ -839,6 +879,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
         $("#TbMain").removeClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
+        $("#TbStok").removeClass('active');
     }
     $scope.ScanBarkod = function()
     {

@@ -1205,19 +1205,34 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             else
             {
+                alertify.alert("Stok Bulunamadı")
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             
         });
     }
-    $scope.BtnManuelArama = function()
+    $scope.BtnManuelArama = function(keyEvent)
     {
-        $("#MdlStokGetir").modal('show');
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
+    }
+    $scope.BtnCariListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnCariListele();
+        }
     }
     $scope.BtnStokGridSec = function()
     {
@@ -1255,6 +1270,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else
             {
+                alertify.alert("Cari Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
                 $("#TblCari").jsGrid({pageIndex : true});
             }
@@ -2170,6 +2188,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.Adres = $scope.CariListe[pIndex].ADRES;
             $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
             $scope.Adres2 = $scope.CariListe[pIndex].ADRES2;
+            $scope.MainClick();
         }
     }
     $scope.StokListeRowClick = function(pIndex,pItem,pObj)
@@ -2180,6 +2199,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -2209,6 +2230,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $("#TbCariSec").removeClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
                             
                 BarkodFocus();
             }
@@ -2231,7 +2253,17 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $("#TbMain").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
+    }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
     }
     $scope.CariSecClick = function()
     {
@@ -2252,6 +2284,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TbCariSec").removeClass('active');
+        $("#TbStok").removeClass('active');
     }
     $scope.ScanBarkod = function()
     {

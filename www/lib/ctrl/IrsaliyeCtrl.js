@@ -53,7 +53,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.SorumlulukAdi = "";
         $scope.OdemeNo = "0";
         $scope.Barkod = "";
-        $scope.Birim = "0";
+        $scope.Birim = "1";
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
         $scope.Personel = "";
@@ -769,14 +769,17 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
                         $scope.BirimListe = data; 
-                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
+                        console.log($scope.Birim)
 
                         if($scope.BirimListe.length > 0)
                         {
+                            
+                            console.log($scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim}))
                             $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
                             $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
                             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
                             $scope.MiktarFiyatValid();
+                            console.log($scope.Stok[0].BIRIMPNTR)
                         }
                         else
                         {  //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
@@ -1062,6 +1065,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             } 
             else
             {
+                alertify.alert("Cari Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
                 $("#TblCari").jsGrid({pageIndex: true})
             }     
@@ -1176,12 +1182,17 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
             else
             {
+                alertify.alert("Stok Bulunamadı")
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({data : $scope.StokListe});
+                $("#TblStok").jsGrid({pageIndex: true});
             }
         });
 
@@ -1192,6 +1203,20 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         StokBarkodGetir($scope.Barkod);
         //$scope.BtnStokGridGetir();
         $("#TblStok").jsGrid({pageIndex: true})
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
+    }
+    $scope.BtnCariListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnCariListele();
+        }
     }
     $scope.BtnBarkodGetirClick = function()
     {
@@ -1255,6 +1280,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.Adres = $scope.CariListe[pIndex].ADRES;
             $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
             $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+            $scope.MainClick();
         }
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
@@ -1273,6 +1299,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
     {   
@@ -1635,6 +1663,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     {
         if($scope.BirimListe.length > 0)
         {
+            console.log($scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim}))
             $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
             $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
@@ -2027,6 +2056,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.TxtLot = 1;
         }
     }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+    }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
@@ -2034,6 +2072,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TbCariSec").removeClass('active');
+        $("#TbStok").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
     {
@@ -2055,6 +2094,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbCariSec").removeClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
                             
                 BarkodFocus();
             }
@@ -2077,6 +2117,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $("#TbMain").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
     }
     $scope.CariSecClick = function()

@@ -12,7 +12,7 @@ var LicMenu = "";
 function dbengine(config)
 {    
     this.config = config;
-    io.listen(config.port);
+    io.listen(8091);
 
     //BELİRLİ ZAMANLARDA LİSANS DURUMU KONTROL EDİLİYOR. 
     setInterval(function()
@@ -55,7 +55,7 @@ function dbengine(config)
                     LicMenu = data.result[0].MENUDATA;
                     
                     io.close();
-                    io.listen(config.port);
+                    io.listen(8091);
                 }
                 else
                 {
@@ -87,6 +87,7 @@ io.on('connection', function(socket)
     // {
     //     socket.emit('MaxUserCounted',LicMenu);
     // }
+
     socket.on('GetMenu',function(pParam,pFn)
     {
         if(Object.keys(io.sockets.connected).length > LicKullanici)
@@ -273,6 +274,27 @@ io.on('connection', function(socket)
             else
                 fn(false);
         });
+    });
+    socket.on("ConfigSave",function(pParam,fn)
+    {
+        let FilePath = "./config.json";
+        if(typeof process.env.APP_DIR_PATH != 'undefined')
+        {
+            console.log(1);
+            FilePath = process.env.APP_DIR_PATH + "/../config.json";
+        }
+        
+        fs.writeFile(FilePath,JSON.stringify(pParam, null, '\t'),function(err)
+        {
+            if(typeof(err) != "undefined")
+                fn(true);
+            else
+                fn(false);
+        });
+    });
+    socket.on("ConfigRead",function(pParam,fn)
+    {
+        fn(config);
     });
 });
 

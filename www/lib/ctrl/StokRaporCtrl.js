@@ -4,7 +4,6 @@ function StokRaporCtrl($scope,$window,db)
 
     function InitDepoGrid()
     {   
-        console.log($scope.DepoListe)
         $("#TblDepo").jsGrid
         ({
             width: "100%",
@@ -85,6 +84,33 @@ function StokRaporCtrl($scope,$window,db)
                     type: "number",
                     align: "center",
                     width: 120
+                },
+                {
+                    name: "FIYAT",
+                    title: "FIYAT",
+                    type: "number",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "MALIYET",
+                    title: "MALIYET",
+                    type: "number",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "TOPLAMFIYAT",
+                    title: "TOPLAM FIYAT",
+                    type: "number",
+                    align: "center",
+                    width: 120
+                },  {
+                    name: "TOPLAMMALIYET",
+                    title: "TOPLAM MALIYET",
+                    type: "number",
+                    align: "center",
+                    width: 120
                 }
             ],
         });
@@ -94,14 +120,16 @@ function StokRaporCtrl($scope,$window,db)
         $scope.Firma = $window.sessionStorage.getItem('Firma');
         UserParam = Param[$window.sessionStorage.getItem('User')];
 
-        $scope.CmbStokAra = "0";
-        $scope.TxtStokAra = "";
+        $scope.CmbDepoAra = "0";
+        $scope.TxtDepoAra = "";
         $scope.DepoAdi = "";
-        $scope.DepoNo;
+        $scope.DepoNo = 0;
         $scope.StokAdi = "";
         $scope.StokKodu = "";
         $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.ToplamDeger = 0;
+        $scope.ToplamMaliyet = 0;
 
         $scope.DepoListe = [];
         $scope.StokListe = [];
@@ -122,6 +150,10 @@ function StokRaporCtrl($scope,$window,db)
             "sto_isim AS STOKADI,"+
             "sto_renk_kodu AS RENK,"+
             "sto_beden_kodu AS BEDEN,"+
+            "(SELECT TOP 1 dbo.fn_StokSatisFiyati(sto_kod,1,@DEPONO,1)) AS FIYAT, " +
+            "(SELECT TOP 1 dbo.fn_StokSatisFiyati(sto_kod,1,@DEPONO,1)) * ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS TOPLAMFIYAT, " +
+            "sto_standartmaliyet * ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS TOPLAMMALIYET, " +
+            "sto_standartmaliyet AS MALIYET, " +
             "ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR " +
             "FROM STOKLAR",
             param:  ['STOKKODU','STOKADI','DEPONO'],
@@ -130,22 +162,20 @@ function StokRaporCtrl($scope,$window,db)
         }
         db.GetDataQuery(TmpQuery,function(Data)
         {
-            if($scope.DepoNo > 0)
-            {
             $scope.StokListe = Data;
-            console.log(Data)
-            $("#TblStokListe").jsGrid({data : $scope.StokListe});
+            if($scope.StokListe.length > 0)
+            {
+                console.log(Data)
+                $("#TblStokListe").jsGrid({data : $scope.StokListe});
+                $scope.ToplamDeger = parseFloat(db.SumColumn($scope.StokListe,"TOPLAMFIYAT")).toFixed(2)
+                $scope.ToplamMaliyet = parseFloat(db.SumColumn($scope.StokListe,"TOPLAMMALIYET")).toFixed(2)
+                
             }
             else
             {
-                alertify.alert("Depo Seçiniz")
+                alertify.alert("Rapor İçeriği Boş !")
             }
         });
-    }
-    $scope.BtnDepoSec = function()
-    {   
-        $('#MdlDepoGetir').modal('hide');
-        $scope.BtnGetir();
     }
     $scope.BtnDepoListele = function()
     {   
@@ -155,24 +185,33 @@ function StokRaporCtrl($scope,$window,db)
         let Kodu = '';
         let Adi = '';
 
-        if($scope.TxtStokAra != "")
+        if($scope.TxtDepoAra != "")
         {
-            if($scope.CmbStokAra == "0")
+            if($scope.CmbDepoAra == "0")
             {   
-                Adi = $scope.TxtStokAra.replace("*","%").replace("*","%");
+                Adi = $scope.TxtDepoAra.replace("*","%").replace("*","%");
             }
             else
             {
-                Kodu = $scope.TxtStokAra.replace("*","%").replace("*","%");
+                Kodu = $scope.TxtDepoAra.replace("*","%").replace("*","%");
             }
         }
         
-        db.GetData($scope.Firma,'CmbDepoGetir',[Kodu,Adi,$scope.DepoNo,''],function(data)
+        db.GetData($scope.Firma,'DepoAra',[Kodu,Adi,$scope.DepoNo,''],function(data)
         {
-            $scope.Loading = false;
-            $scope.TblLoading = true;
-            $scope.DepoListe = data;   
-            $("#TblDepo").jsGrid({data : $scope.DepoListe});
+            if(data.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $scope.DepoListe = data;   
+                $("#TblDepo").jsGrid({data : $scope.DepoListe});
+            }
+            else
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                alertify.alert("Depo bulunamadı")
+            }
         });
     }
     $scope.DepoListeRowClick = function(pIndex,pItem,pObj)
@@ -186,6 +225,30 @@ function StokRaporCtrl($scope,$window,db)
 
             $scope.DepoAdi = $scope.DepoListe[pIndex].ADI;
             $scope.DepoNo =$scope.DepoListe[pIndex].KODU;
+            $scope.BtnGetir();
+            $scope.MainClick();
         }
+    }
+    $scope.BtnDepoListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnDepoListele();
+        }
+    }
+    $scope.MainClick = function() 
+    {
+        $("#TbMain").addClass('active');
+        $("#TbDepo").removeClass('active');
+    }
+    $scope.DepoSec = function() 
+    {
+        $("#TbDepo").addClass('active');
+        $("#TbMain").removeClass('active');
+    }
+    $scope.BtnTemizle = function()
+    {
+        $scope.DepoAdi = "";
+        $scope.DepoNo = 0;
     }
 }

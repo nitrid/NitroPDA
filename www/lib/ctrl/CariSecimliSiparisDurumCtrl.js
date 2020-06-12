@@ -261,6 +261,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         IslemGrid();
         IslemDetayGrid();
         InitSubeGrid();
+        $scope.MainClick();
     }
     $scope.BtnCariSec = function()
     {   
@@ -287,11 +288,24 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
         {
-            $scope.Loading = false;
-            $scope.TblLoading = true;
-            $scope.CariListe = data;
-            $("#TblCari").jsGrid({data : $scope.CariListe});
-            $("#TblCari").jsGrid({pageIndex : true});
+            
+            $scope.CariListe = data;  
+
+            if ($scope.CariListe.length > 0)   
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
+            }
+            else
+            {
+                alertify.alert("Cari Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCari").jsGrid({data : $scope.CariListe});
+                $("#TblCari").jsGrid({pageIndex: true})
+            }
         });
     }
     $scope.BtnCariTemizle = function()
@@ -402,6 +416,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
             $scope.Carikodu =$scope.CariListe[pIndex].KODU;
+            $scope.MainClick();
         }
     }
     $scope.SubeListeRowClick = function(pIndex,pItem,pObj)
@@ -415,6 +430,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             
             $scope.SubeAdi = $scope.SubeListe[pIndex].ADI;
             $scope.SubeKodu = $scope.SubeListe[pIndex].KODU;
+            $scope.MainClick();
         }
     }
     $scope.IslemDetayRowClick = function(pIndex,pItem,pObj)
@@ -461,5 +477,24 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         
         $("#MdlIslemDetay").modal('show');
         $('#IlkTarih').bootstrapMaterialDatePicker({format: "DD.MM.YYYY",lang: "tr",time:false,date:true,currentDate:new Date()});
+    }
+    $scope.MainClick = function()
+    {
+        $("#TbMain").addClass('active');
+        $("#TbSube").removeClass('active');
+        $("#TbCari").removeClass('active');
+    }
+    $scope.BtnCariTab = function()
+    {
+        $("#TbCari").addClass('active');
+        $("#TbSube").removeClass('active');
+        $("#TbMain").removeClass('active');
+    }
+    $scope.BtnSubeTab = function()
+    {
+        $("#TbSube").addClass('active');
+        $("#TbCari").removeClass('active');
+        $("#TbMain").removeClass('active');
+        $scope.BtnSubeListele();
     }
 }

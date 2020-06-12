@@ -836,15 +836,15 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             
         db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
         {
-            console.log(2);
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
-            console.log(3);
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
             }
             $("#TblStok").jsGrid({data : $scope.StokListe});
+            $("#TblStok").jsGrid({data : $scope.StokListe});
+            $("#TblStok").jsGrid({pageIndex: true});
         });
         
     }
@@ -854,6 +854,13 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         StokBarkodGetir($scope.Barkod);
         $scope.BtnStokGridGetir();
         $("#TblStok").jsGrid({pageIndex: true})
+    }
+    $scope.BtnManuelArama = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnStokGridGetir();
+        }
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {
@@ -880,8 +887,10 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
-        
+
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        $scope.BarkodGirisClick();
+        StokBarkodGetir($scope.Barkod);
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
     {   
@@ -1323,12 +1332,23 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $scope.TxtLot = 1;
         }
     }
+    $scope.ManuelAramaClick = function() 
+    {
+        $("#TbStok").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+
+    }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
+        $("#TbStok").removeClass('active');
+
     }
     $scope.BelgeBilgisiClick = function() 
     {
@@ -1351,6 +1371,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbBarkodGiris").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
             }
             else
             {
@@ -1358,6 +1379,8 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
                 $("#TbMain").removeClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
+
                 BarkodFocus();
             }
         }
@@ -1371,6 +1394,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
         else
         {
@@ -1378,6 +1402,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             $("#TbMain").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
     }
     $scope.ScanBarkod = function()

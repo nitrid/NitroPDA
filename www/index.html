@@ -31,6 +31,7 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="theme/global/fonts/web-icons/web-icons.min.css">
     <link rel="stylesheet" href="theme/global/fonts/brand-icons/brand-icons.min.css">
+    <link rel="stylesheet" href="theme/global/vendor/bootstrap-select/bootstrap-select.css">
     <!-- <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'> -->
 
     <!--[if lt IE 9]>
@@ -123,10 +124,56 @@
                 <div class="col-xl-4 form-group">
                     <input type="text" class="form-control" name="socket_port" placeholder="Soket Port" id="socket_port" ng-model="socket_port">
                 </div>               
-                <div class="col-xl-offset-12">
+                <div class="col-xl-offset-12 form-group">
                   <a class="btn btn-primary" href="#" ng-click="BtnTryConnect()">Bağlantı Test</a>                
                   <a class="btn btn-success" href="#" ng-click="HostSettingSave()" data-dismiss="modal">Kaydet</a>   
-                </div>           
+                </div>  
+                <div class="col-xl-12"> 
+                  <div ng-click="ChangeMode()">
+                    <label id="Off" class="pt-3" for="inputBasicOff">Offline</label>
+                    <input type="checkbox" id="inputBasicOn" data-plugin="switchery" data-switchery="true" style="display: none;">                                   
+                    <label id="On" class="pt-3" for="inputBasicOn">Online</label>
+                  </div>  
+                </div>         
+              </div>
+            </form>         
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="sql-settings" aria-labelledby="sql-settings"  role="dialog" tabindex="-1" >
+      <div class="modal-dialog modal-simple">
+        <div class="modal-content ">
+          <div class="modal-header">          
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>                       
+            </button>
+            <h4 class="modal-title" id="sql-settings">Sql Ayarlar</h4>                                    
+          </div>                        
+          <div class="modal-body">           
+            <form>
+              <div class=".col-sm-6 .col-lg-4 my--100">
+                <p>{{ConnectionStatus}}</p>
+              </div>              
+              <div class="row">                               
+                <div class="col-xl-12 form-group">
+                  <input type="text" class="form-control" name="server" placeholder="Server" id="serves" ng-model="server">
+                </div>
+                <div class="col-xl-12 form-group">
+                  <input type="text" class="form-control" name="database" placeholder="Batabase" id="database" ng-model="database">
+                </div>
+                <div class="col-xl-12 form-group">
+                    <input type="text" class="form-control" name="kullanici" placeholder="Kullanıcı" id="kullanici" ng-model="kullanici">
+                </div>      
+                <div class="col-xl-12 form-group">
+                  <input type="text" class="form-control" name="sifre" placeholder="Şifre" id="sifre" ng-model="sifre">
+              </div>          
+                <div class="col-xl-offset-12 form-group">
+                  <a class="btn btn-success" href="#" ng-click="ConfigSave()" data-dismiss="modal">Kaydet</a>   
+                </div> 
+                <div class="row">
+                  <div class="col-sm-12 col-md-12 text-danger py-5"><div class="col-form-label px-1 float-left  py-2"> Sql Bilgilerinizi Kaydettikten Sonra Servisi Yeniden Başlatmalısınız !</div></div>
+                </div>        
               </div>
             </form>         
           </div>
@@ -137,76 +184,60 @@
       <div class="page-content animation-slide-top animation-duration-1 mx--20 py-0">
         <div class="panel modal-center"> 
           <div class="panel-body">
-            <div class="brand">
+            <div class="brand pb-25">
               <img class="brand-img col-xl-10 offset-xl-1 py-10" src="img/logo.png" alt="...."> 
               <!-- <h2 class="brand-text font-size-18 col-xl-5 offset-xl-5">Nitro</h2>     -->
-              <div class="btn-group float-right">
-                  <button type="button" class="btn btn-primary dropdown-toggle" id="AnimationDropdown1" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
-                  <div class="dropdown-menu dropdown-menu-right " aria-labelledby="AnimationDropdown1" role="menu" x-placement="bottom-start" style="position: absolute; will-change: transform; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px;">                     
-                      <a class="dropdown-item" href="#server-settings" data-toggle="modal" role="menuitem">Ayarlar</a>
-                      <a class="dropdown-item" href="file:///android_asset/www/app_update.html" role="menuitem" id="btn-appupdate">Uygulamayı Güncelle</a> 
-                    <div class="dropdown-divider" role="presentation"></div>                
-                    <a class="dropdown-item" href="#vt-aktarim" data-toggle="modal" role="menuitem" ng-click="BtnMenuDbTransfer()">Veri Tabanı Oluştur</a>                    
-                  </div>
-              </div>
             </div>
-            <form>
+             
               <div class="form-group form-material floating" data-plugin="formMaterial">
-                  <select required id="firma-secim" class="form-control" ng-model="Firm" ng-disabled='FirmLock'>
-                      <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
-                  </select>
-                <label class="floating-label">Firma</label>
+                  <input required id="kullanıcı-secim" class="form-control" placeholder="Kullanıcı" ng-model="Kullanici">
+                 <!--<label class="floating-label">Kullanıcı</label> -->
               </div>
+              <sifreleave>
               <div class="form-group form-material floating" data-plugin="formMaterial">
-                  <input required id="kullanıcı-secim" class="form-control" ng-model="Kullanici">
-                <label class="floating-label">Kullanıcı</label>
+                <input required type="password" class="form-control" name="password" placeholder="Şifre" ng-model="Password" />
+               <!-- <label class="floating-label">Şifre</label> -->
               </div>
-              <div class="form-group form-material floating" data-plugin="formMaterial">
-                <input required type="password" class="form-control" name="password" ng-model="Password" />
-                <label class="floating-label">Şifre</label>
+              </sifreleave>
+               <div class="form-group form-material" >
+                 <select class="form-control" data-plugin="selectpicker" data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
+                    <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
+                </select>
               </div>
               <div class="form-group clearfix">
                 <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
                   <input type="checkbox" id="BeniHatirla" name="remember">
                   <label for="inputCheckbox">Beni Hatırla</label>
                 </div>
+                <div class="btn-group  float-right">
+                  <a class="dropdown-toggle" id="AnimationDropdown1" data-toggle="dropdown" aria-expanded="false">İşlemler</a>
+                  <div class="dropdown-menu dropdown-menu-right " aria-labelledby="AnimationDropdown1" role="menu" x-placement="bottom-start" style="position: absolute; will-change: transform; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px;">                     
+                      <a class="dropdown-item" href="#server-settings" data-toggle="modal" role="menuitem">Ayarlar</a>
+                      <a class="dropdown-item" href="file:///android_asset/www/app_update.html" role="menuitem" id="btn-appupdate">Uygulamayı Güncelle</a> 
+                    <div class="dropdown-divider" role="presentation"></div>                
+                    <a class="dropdown-item" href="#vt-aktarim" data-toggle="modal" role="menuitem" ng-click="BtnMenuDbTransfer()">Veri Tabanı Oluştur</a>                    
+                  </div>
+              </div>  
               </div>
               <div class="form-group clearfix">
                 <div class="row">
                   <div class="col-6 px-5">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg mt-40" ng-click="BtnEntry()">Giriş</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" ng-click="BtnEntry()">Giriş</button>
                   </div>
                   <div class="col-6 px-5">
-                    <button type="submit" class="btn btn-danger btn-block btn-lg mt-40" ng-click="BtnExit()">Çıkış</button>
+                    <button type="submit" class="btn btn-danger btn-block btn-lg" ng-click="DenemeClick()">Çıkış</button>
                   </div>
                 </div>
-              </div>            
-                <div class="form-group">
-                  <div class="float-center mr-20" style="text-align: center" ng-click="ChangeMode()">
-                    <label id="Off" class="pt-3" for="inputBasicOff">Offline</label>
-                    <input type="checkbox" id="inputBasicOn" data-plugin="switchery" data-switchery="true" style="display: none;">                                   
-                    <label id="On" class="pt-3" for="inputBasicOn">Online</label>
-                  </div>
-              </div> 
-            </form>
+              </div>  
+              <footer class=" page-copyright-inverse " style="text-align: center;">
+                <a href="http://www.teknoerp.com.tr/"><p>www.teknoerp.com.tr</p></a>
+                <p style="color:#000;" >© 2013. Tüm hakları saklıdır.</p>
+            </footer>   
+
           </div>           
         </div>
       </div>
-      <footer class=" page-copyright-inverse " style="text-align: center;">
-          <a href="http://www.teknoerp.com.tr/"><p>www.teknoerp.com.tr</p></a>
-            <p>© 2018. Tüm hakları saklıdır.</p>
-            <div class="social">
-              <a class="btn btn-icon btn-pure" href="javascript:void(0)">
-              <i class="icon bd-twitter" aria-hidden="true"></i>
-            </a>
-              <a class="btn btn-icon btn-pure" href="javascript:void(0)">
-              <i class="icon bd-facebook" aria-hidden="true"></i>
-            </a>
-              <a class="btn btn-icon btn-pure" href="javascript:void(0)">
-              <i class="icon bd-google-plus" aria-hidden="true"></i>
-            </a>
-            </div>
-      </footer>
+    
     </div>
 
     <!-- Core  -->
@@ -222,6 +253,7 @@
 
     <!-- Plugins -->
     <script src="theme/global/vendor/switchery/switchery.js"></script>
+    <script src="theme/global/vendor/bootstrap-select/bootstrap-select.js"></script>
 
     <!-- Scripts -->
     <script src="theme/global/js/Component.js"></script>
@@ -296,7 +328,6 @@
           $("#btn-appupdate").hide();
         }
     </script>
-    
     <!-- Nitro -->    
     <script src="js/angular.js"></script>
     <script src="js/angular-route.js"></script>
@@ -310,6 +341,7 @@
     <script src="lib/ctrl/Login.js"></script>
     <script src="lib/ctrl/Main.js"></script>
     <script src="lib/ctrl/KullaniciParametreCtrl.js"></script>
+    <script src="lib/ctrl/GenelAyarlarCtrl.js"></script>
     <script src="lib/ctrl/SiparisCtrl.js"></script>
     <script src="lib/ctrl/DepoSevkCtrl.js"></script>
     <script src="lib/ctrl/DepoNakliyeCtrl.js"></script>
@@ -339,12 +371,14 @@
     <script src="lib/ctrl/DuraganCarilerCtrl.js"></script>
     <script src="lib/ctrl/CariSecimliSiparisDurumCtrl.js"></script>
     <script src="lib/ctrl/StokRaporCtrl.js"></script>
+    <script src="lib/ctrl/KasaRaporCtrl.js"></script>
     
     <script src="lib/Param.js"></script>
     <script src="lib/QuerySql.js"></script>
     <script src="lib/QueryLocal.js"></script>
     
     <script src="lib/App.js"></script>
-    <script src="lib/Controller.js"></script>
+    <script src="lib/Controller.js"></script>    
+
   </body>
 </html>

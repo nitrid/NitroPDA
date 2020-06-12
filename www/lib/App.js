@@ -107,6 +107,10 @@ angular.module("app",
     {
         templateUrl : "html/ayarlar/KullaniciParametre.html"
     })
+    .when("/GenelAyarlar",
+    {
+        templateUrl : "html/ayarlar/GenelAyarlar.html"
+    })
     .when("/CariSecimliSiparisDurumRaporu",
     {
         templateUrl : "html/rapor/CariSecimliSiparisDurumRaporu.html"
@@ -138,6 +142,14 @@ angular.module("app",
     .when("/DuraganCariler",
     {
         templateUrl : "html/rapor/DuraganCariler.html"
+    })  
+    .when("/KasaRapor",
+    {
+        templateUrl : "html/rapor/KasaRapor.html"
+    }) 
+    .when("/AmbarFisi",
+    {
+        templateUrl : "html/evraklar/AmbarFisi.html"
     });
 });
 
