@@ -2608,4 +2608,42 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         }
         localStorage.FaturaParam = JSON.stringify(Param);
     }
+    $scope.BtnEtiketBas = function()
+    {
+        for(i = 0; i < $scope.StokHarListe.length; i++)
+        {
+            $scope.StokKodu = $scope.StokHarListe[i].sth_stok_kod;
+            var InsertData = 
+            [
+                UserParam.MikroId,
+                UserParam.MikroId,
+                1,
+                $scope.Seri,
+                $scope.Sira,
+                "",
+                $scope.BelgeNo,
+                0,
+                0,
+                $scope.StokHarListe[i].sth_miktar,
+                $scope.DepoNo,
+                $scope.StokKodu,
+                1,
+                1,
+                $scope.Barkod,
+                $scope.StokHarListe[i].sth_miktar
+            ]
+            db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
+            {
+
+            });
+        }
+        if(i == $scope.StokHarListe.length)
+        {
+            alertify.alert("Etiket Yazdırıldı.");
+        }
+        else
+        {
+            alertify.alert("Etiket Yazdıralamadı.");
+        }
+    }
 }
