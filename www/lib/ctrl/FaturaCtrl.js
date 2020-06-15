@@ -74,6 +74,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.EvrakDovizTip = "";
         $scope.DisTicaretTur;
         $scope.VergisizFl = 0;
+        $scope.BirimAdi = "";
 
 
         //CARİHAREKET
@@ -1055,24 +1056,25 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         });
     }
     function FisData(pData)
-    {
+    { console.log(pData)
+        $scope.FisLength = pData;
         $scope.FisDeger = "";
         $scope.FisData = "";
-
        try 
        {
             $scope.FisDeger = "";
-            $scope.FisDeger = "TARIH       : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI   : " + SpaceLength($scope.CariAdi,35) + "\n" + "EVRAK NO    : " + $scope.Seri + "-" + $scope.Sira + "\n" + "TAHSILAT NO : " + $scope.FatSeri + "-" +$scope.FatSira + "\n"
+            $scope.FisDeger = "                                    "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n" +"             " + SpaceLength($scope.CariAdi,35) + SpaceLength($scope.Adres1,60) +  SpaceLength($scope.Adres,20) + "-\n" + "-\n" + "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "-\n";
 
             for(let i=0; i < pData.length; i++)
             {
-                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,25) + "       " + SpaceLength(pData[i].BIRIM,4) + SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),6) + " " + SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),8) + "\n";
+                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,20) + "    " +  SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),8) + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)) + pData[i].BIRIMADI,6) + SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),8) + "\n";
             } 
        } 
        catch (error) 
        {
            console.log(error)
        }
+    console.log($scope.Tarih);
     }
     function SpaceLength(pData,pLength)
     {
@@ -1467,9 +1469,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "UPDATE STOK_HAREKETLERI SET sth_special1 = 1 " +
-                    "WHERE sth_evrakno_seri = @sth_evrakno_seri AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip ",
-            param:  ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
+            query:  "UPDATE CARI_HESAP_HAREKETLERI SET cha_special1 = 1" +
+                    "WHERE cha_evrakno_seri = @cha_evrakno_seri AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip ",
+            param:  ['cha_evrakno_seri','cha_evrakno_sira','cha_evrak_tip'],
             type:   ['string|25','int','int',],
             value:  [$scope.Seri,$scope.Sira,$scope.EvrakTip]
         }
@@ -2383,6 +2385,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
             $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
             $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
+            $scope.BirimAdi = $scope.CariListe[pIndex].BIRIMADI;
             $scope.Adres = $scope.CariListe[pIndex].ADRES;
             $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
             $scope.Adres2 = $scope.CariListe[pIndex].ADRES2;
@@ -2396,6 +2399,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             {
                 $scope.KasaChange();
             }
+            console.log($scope.Adres)
+            console.log($scope.Adres1)
+            console.log($scope.Adres2)
         }
     }
     $scope.StokListeRowClick = function(pIndex,pItem,pObj)
@@ -2551,16 +2557,32 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
         FisGenelToplam = $scope.GenelToplam + $scope.CariBakiye
         FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
+        let i = 20 - $scope.FisLength.length;
+        let Satır = "";
+        console.log($scope.FisLength.length)
+        console.log(i)
 
-        FisDizayn = "                  BILGI FISI" + "\n" +
-                    "                                             -" + "\n" + 
-                    $scope.FisDeger + "\n" + 
-                    "                                             -" + "\n" + 
-                    "URUN ADI                    "+ " ADET" + " FIYAT" + " TUTAR" + "\n" + 
-                    $scope.FisData + "\n" +  //İÇERİK
-                    "                                            -" + "\n" 
-        FisDizayn = FisDizayn + "                              Toplam : " + parseInt($scope.GenelToplam).toFixed(2) + "\n" +  "                       Onceki Bakiye : " +  parseInt($scope.CariBakiye).toFixed(2) + "\n" 
-        FisDizayn = FisDizayn + "                        Genel Toplam : "  + parseInt(FisGenelToplam).toFixed(2) + "\n" + "                        Nakit Alinan : " + parseInt($scope.TahToplam).toFixed(2) + "\n"  + "                        Kalan Bakiye : " + parseInt(FisKalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" 
+        for(let x = 0; x <= i; x++)
+        {
+            console.log(1)        
+            Satır = Satır + "                                             -"+ "\n"; 
+            console.log(Satır)
+        } 
+
+        FisDizayn = "                                             -" + "\n" + 
+                    $scope.FisDeger + "-\n" + "\n" +
+                    $scope.FisData + "-\n" + //İÇERİK
+                    Satır
+        FisDizayn = FisDizayn + "                         Ara Toplam : " + parseFloat($scope.AraToplam).toFixed(2) + "\n" +  "                     Toplam Iskonto : " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n"
+        FisDizayn = FisDizayn + "                         Toplam Kdv : "  + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
+        "                                             -" + "\n" + 
+        "                                             -" + "\n" + 
+        "                                             -" + "\n" + 
+        "                                             -" + "\n" + 
+        "                                             -" + "\n" + 
+        "                                             -" + "\n" + 
+        "                                             -" + "\n" + 
+        "                                             -" + "\n"
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
         console.log(FisDizayn)
@@ -2585,5 +2607,43 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             "EvrakTip" : $scope.EvrakTip
         }
         localStorage.FaturaParam = JSON.stringify(Param);
+    }
+    $scope.BtnEtiketBas = function()
+    {
+        for(i = 0; i < $scope.StokHarListe.length; i++)
+        {
+            $scope.StokKodu = $scope.StokHarListe[i].sth_stok_kod;
+            var InsertData = 
+            [
+                UserParam.MikroId,
+                UserParam.MikroId,
+                1,
+                $scope.Seri,
+                $scope.Sira,
+                "",
+                $scope.BelgeNo,
+                0,
+                0,
+                $scope.StokHarListe[i].sth_miktar,
+                $scope.DepoNo,
+                $scope.StokKodu,
+                1,
+                1,
+                $scope.Barkod,
+                $scope.StokHarListe[i].sth_miktar
+            ]
+            db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
+            {
+
+            });
+        }
+        if(i == $scope.StokHarListe.length)
+        {
+            alertify.alert("Etiket Yazdırıldı.");
+        }
+        else
+        {
+            alertify.alert("Etiket Yazdıralamadı.");
+        }
     }
 }

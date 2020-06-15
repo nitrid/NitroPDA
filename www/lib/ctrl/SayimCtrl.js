@@ -225,8 +225,8 @@ function SayimCtrl($scope,$window,$timeout,db)
             $scope.Miktar * ($scope.Stok[0].CARPAN * $scope.Miktar2),
             $scope.Stok[0].BIRIMPNTR,
             $scope.Stok[0].BARKOD,
-            0,
-            0,
+            $scope.Stok[0].RENKPNTR,
+            $scope.Stok[0].BEDENPNTR,
             '',
             0,
             ''
