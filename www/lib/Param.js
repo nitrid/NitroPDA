@@ -24,7 +24,7 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "DP321-BT",
+			"BTYaziciAdi": "BT-SPP",
 			"FirmaListe": ""
 		},
 		"Sayim": {
