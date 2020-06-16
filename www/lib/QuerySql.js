@@ -3575,6 +3575,390 @@ var QuerySql =
            ") ",
            param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int']
         },
+        CariInsert : 
+        {
+          query : "INSERT INTO [dbo].[CARI_HESAPLAR] " +
+          "([cari_DBCno] " +
+          ",[cari_SpecRECno] " +
+          ",[cari_iptal] " +
+          ",[cari_fileid] " +
+          ",[cari_hidden] " +
+          ",[cari_kilitli] " + 
+          ",[cari_degisti] " +
+          ",[cari_checksum] " +
+          ",[cari_create_user] " +
+          ",[cari_create_date] " +
+          ",[cari_lastup_user] " + 
+          ",[cari_lastup_date] " +
+          ",[cari_special1] " +
+          ",[cari_special2] " +
+          ",[cari_special3] " +
+          ",[cari_kod] " +
+          ",[cari_unvan1] " +
+          ",[cari_unvan2] " +
+          ",[cari_hareket_tipi] " +
+          ",[cari_baglanti_tipi] " +
+          ",[cari_stok_alim_cinsi] " +
+          ",[cari_stok_satim_cinsi] " +
+          ",[cari_muh_kod] " +
+          ",[cari_muh_kod1] " +
+          ",[cari_muh_kod2] " +
+          ",[cari_doviz_cinsi] " +
+          ",[cari_doviz_cinsi1] " +
+          ",[cari_doviz_cinsi2] " +
+          ",[cari_vade_fark_yuz] " +
+          ",[cari_vade_fark_yuz1] " +
+          ",[cari_vade_fark_yuz2] " +
+          ",[cari_KurHesapSekli] " +
+          ",[cari_vdaire_adi] " +
+          ",[cari_vdaire_no] " +
+          ",[cari_sicil_no] " + 
+          ",[cari_VergiKimlikNo] " +
+          ",[cari_satis_fk] " +
+          ",[cari_odeme_cinsi] " +
+          ",[cari_odeme_gunu] " +
+          ",[cari_odemeplan_no] " +
+          ",[cari_opsiyon_gun] " +
+          ",[cari_cariodemetercihi] " +
+          ",[cari_fatura_adres_no] " +
+          ",[cari_sevk_adres_no] " +
+          ",[cari_banka_tcmb_kod1] " +
+          ",[cari_banka_tcmb_subekod1] " +
+          ",[cari_banka_tcmb_ilkod1] " +
+          ",[cari_banka_hesapno1] " +
+          ",[cari_banka_swiftkodu1] " +
+          ",[cari_banka_tcmb_kod2] " +
+          ",[cari_banka_tcmb_subekod2] " +
+          ",[cari_banka_tcmb_ilkod2] " +
+          ",[cari_banka_hesapno2] " +
+          ",[cari_banka_swiftkodu2] " +
+          ",[cari_banka_tcmb_kod3] " +
+          ",[cari_banka_tcmb_subekod3] " +
+          ",[cari_banka_tcmb_ilkod3] " +
+          ",[cari_banka_hesapno3] " +
+          ",[cari_banka_swiftkodu3] " +
+          ",[cari_banka_tcmb_kod4] " +
+          ",[cari_banka_tcmb_subekod4] " +
+          ",[cari_banka_tcmb_ilkod4] " +
+          ",[cari_banka_hesapno4] " +
+          ",[cari_banka_swiftkodu4] " +
+          ",[cari_banka_tcmb_kod5] " +
+          ",[cari_banka_tcmb_subekod5] " +
+          ",[cari_banka_tcmb_ilkod5] " +
+          ",[cari_banka_hesapno5] " +
+          ",[cari_banka_swiftkodu5] " +
+          ",[cari_banka_tcmb_kod6] " +
+          ",[cari_banka_tcmb_subekod6] " +
+          ",[cari_banka_tcmb_ilkod6] " +
+          ",[cari_banka_hesapno6] " +
+          ",[cari_banka_swiftkodu6] " +
+          ",[cari_banka_tcmb_kod7] " +
+          ",[cari_banka_tcmb_subekod7] " +
+          ",[cari_banka_tcmb_ilkod7] " +
+          ",[cari_banka_hesapno7] " +
+          ",[cari_banka_swiftkodu7] " +
+          ",[cari_banka_tcmb_kod8] " +
+          ",[cari_banka_tcmb_subekod8] " +
+          ",[cari_banka_tcmb_ilkod8] " + 
+          ",[cari_banka_hesapno8] " +
+          ",[cari_banka_swiftkodu8] " + 
+          ",[cari_banka_tcmb_kod9] " +
+          ",[cari_banka_tcmb_subekod9] " +
+          ",[cari_banka_tcmb_ilkod9] " +
+          ",[cari_banka_hesapno9] " +
+          ",[cari_banka_swiftkodu9] " + 
+          ",[cari_banka_tcmb_kod10] " +
+          ",[cari_banka_tcmb_subekod10] " +
+          ",[cari_banka_tcmb_ilkod10] " +
+          ",[cari_banka_hesapno10] " + 
+          ",[cari_banka_swiftkodu10] " +
+          ",[cari_EftHesapNum] " + 
+          ",[cari_Ana_cari_kodu] " +
+          ",[cari_satis_isk_kod] " +
+          ",[cari_sektor_kodu] " +
+          ",[cari_bolge_kodu] " +
+          ",[cari_grup_kodu] " +
+          ",[cari_temsilci_kodu] " +
+          ",[cari_muhartikeli] " +
+          ",[cari_firma_acik_kapal] " +
+          ",[cari_BUV_tabi_fl] " +
+          ",[cari_cari_kilitli_flg] " +
+          ",[cari_etiket_bas_fl] " +
+          ",[cari_Detay_incele_flg] " +
+          ",[cari_efatura_fl] " +
+          ",[cari_POS_ongpesyuzde] " +
+          ",[cari_POS_ongtaksayi] " +
+          ",[cari_POS_ongIskOran] " +
+          ",[cari_kaydagiristarihi] " +
+          ",[cari_KabEdFCekTutar] " +
+          ",[cari_hal_caritip] " +
+          ",[cari_HalKomYuzdesi] " +
+          ",[cari_TeslimSuresi] " +
+          ",[cari_wwwadresi] " +
+          ",[cari_EMail] " +
+          ",[cari_CepTel] " +
+          ",[cari_VarsayilanGirisDepo] " +
+          ",[cari_VarsayilanCikisDepo] " +
+          ",[cari_Portal_Enabled] " +
+          ",[cari_Portal_PW] " +
+          ",[cari_BagliOrtaklisa_Firma] " +
+          ",[cari_kampanyakodu] " +
+          ",[cari_b_bakiye_degerlendirilmesin_fl] " +
+          ",[cari_a_bakiye_degerlendirilmesin_fl] " +
+          ",[cari_b_irsbakiye_degerlendirilmesin_fl] " +
+          ",[cari_a_irsbakiye_degerlendirilmesin_fl] " +
+          ",[cari_b_sipbakiye_degerlendirilmesin_fl] " +
+          ",[cari_a_sipbakiye_degerlendirilmesin_fl] " +
+          ",[cari_AvmBilgileri1KiraKodu] " +
+          ",[cari_AvmBilgileri1TebligatSekli] " +
+          ",[cari_AvmBilgileri2KiraKodu] " +
+          ",[cari_AvmBilgileri2TebligatSekli] " +
+          ",[cari_AvmBilgileri3KiraKodu] " +
+          ",[cari_AvmBilgileri3TebligatSekli] " +
+          ",[cari_AvmBilgileri4KiraKodu] " +
+          ",[cari_AvmBilgileri4TebligatSekli] " +
+          ",[cari_AvmBilgileri5KiraKodu]" +
+          ",[cari_AvmBilgileri5TebligatSekli] " +
+          ",[cari_AvmBilgileri6KiraKodu] " +
+          ",[cari_AvmBilgileri6TebligatSekli] " +
+          ",[cari_AvmBilgileri7KiraKodu] " +
+          ",[cari_AvmBilgileri7TebligatSekli] " +
+          ",[cari_AvmBilgileri8KiraKodu] " +
+          ",[cari_AvmBilgileri8TebligatSekli] " +
+          ",[cari_AvmBilgileri9KiraKodu] " +
+          ",[cari_AvmBilgileri9TebligatSekli] " +
+          ",[cari_AvmBilgileri10KiraKodu] " +
+          ",[cari_AvmBilgileri10TebligatSekli] " +
+          ",[cari_KrediRiskTakibiVar_flg] " +
+          ",[cari_ufrs_fark_muh_kod] " +
+          ",[cari_ufrs_fark_muh_kod1] " +
+          ",[cari_ufrs_fark_muh_kod2] " +
+          ",[cari_odeme_sekli] " +
+          ",[cari_TeminatMekAlacakMuhKodu] " +
+          ",[cari_TeminatMekAlacakMuhKodu1] " +
+          ",[cari_TeminatMekAlacakMuhKodu2] " +
+          ",[cari_TeminatMekBorcMuhKodu] " +
+          ",[cari_TeminatMekBorcMuhKodu1] " +
+          ",[cari_TeminatMekBorcMuhKodu2] " +
+          ",[cari_VerilenDepozitoTeminatMuhKodu] " +
+          ",[cari_VerilenDepozitoTeminatMuhKodu1] " +
+          ",[cari_VerilenDepozitoTeminatMuhKodu2] " +
+          ",[cari_AlinanDepozitoTeminatMuhKodu] " +
+          ",[cari_AlinanDepozitoTeminatMuhKodu1] " +
+          ",[cari_AlinanDepozitoTeminatMuhKodu2] " +
+          ",[cari_def_efatura_cinsi] " +
+          ",[cari_otv_tevkifatina_tabii_fl] " +
+          ",[cari_KEP_adresi] " +
+          ",[cari_efatura_baslangic_tarihi] " +
+          ",[cari_mutabakat_mail_adresi] " +
+          ",[cari_mersis_no] " +
+          ",[cari_istasyon_cari_kodu] " +
+          ",[cari_gonderionayi_sms] " +
+          ",[cari_gonderionayi_email] " +
+          ",[cari_eirsaliye_fl] " +
+          ",[cari_eirsaliye_baslangic_tarihi] " +
+          ",[cari_vergidairekodu] " +
+          ",[cari_CRM_sistemine_aktar_fl] " +
+          ",[cari_efatura_xslt_dosya] " +
+          ",[cari_pasaport_no] " +
+          ",[cari_kisi_kimlik_bilgisi_aciklama_turu] " +
+          ",[cari_kisi_kimlik_bilgisi_diger_aciklama] " +
+          ",[cari_uts_kurum_no] " +
+          ",[cari_kamu_kurumu_fl] " +
+          ",[cari_earsiv_xslt_dosya] " +
+          ",[cari_Perakende_fl]) " +
+          "VALUES " +
+          "(0                            --<cari_DBCno, smallint,>" +
+          ",0                            --<cari_SpecRECno, int,>" +
+          ",0                            --<cari_iptal, bit,>" +
+          ",31                            --<cari_fileid, smallint,>" +
+          ",0                            --<cari_hidden, bit,>" +
+          ",0                            --<cari_kilitli, bit,>" +
+          ",0                            --<cari_degisti, bit,>" +
+          ",0                            --<cari_checksum, int,>" +
+          ",1                            --<cari_create_user, smallint,>" +
+          ",GETDATE()                            --<cari_create_date, datetime,>" +
+          ",                            --<cari_lastup_user, smallint,>" +
+          ",                            --<cari_lastup_date, datetime,>" +
+          ",                            --<cari_special1, nvarchar(4),>" +
+          ",                            --<cari_special2, nvarchar(4),>" +
+          ",                            --<cari_special3, nvarchar(4),>" +
+          ",                            --<cari_kod, nvarchar(25),>" +
+          ",                            --<cari_unvan1, nvarchar(127),>" +
+          ",                            --<cari_unvan2, nvarchar(127),>" +
+          ",                            --<cari_hareket_tipi, tinyint,>" +
+          ",                            --<cari_baglanti_tipi, tinyint,>" +
+          ",                            --<cari_stok_alim_cinsi, tinyint,>" +
+          ",                            --<cari_stok_satim_cinsi, tinyint,>" +
+          ",                            --<cari_muh_kod, nvarchar(40),>" +
+          ",                            --<cari_muh_kod1, nvarchar(40),>" +
+          ",                            --<cari_muh_kod2, nvarchar(40),>" +
+          ",                            --<cari_doviz_cinsi, tinyint,>" +
+          ",                            --<cari_doviz_cinsi1, tinyint,>" +
+          ",                            --<cari_doviz_cinsi2, tinyint,>" +
+          ",                            --<cari_vade_fark_yuz, float,>" +
+          ",                            --<cari_vade_fark_yuz1, float,>" +
+          ",                            --<cari_vade_fark_yuz2, float,>" +
+          ",                            --<cari_KurHesapSekli, tinyint,>" +
+          ",                            --<cari_vdaire_adi, nvarchar(50),>" +
+          ",                            --<cari_vdaire_no, nvarchar(15),>" +
+          ",                            --<cari_sicil_no, nvarchar(15),>" +
+          ",                            --<cari_VergiKimlikNo, nvarchar(10),>" +
+          ",                            --<cari_satis_fk, int,>" +
+          ",                            --<cari_odeme_cinsi, tinyint,>" +
+          ",                            --<cari_odeme_gunu, tinyint,>" +
+          ",                            --<cari_odemeplan_no, int,>" +
+          ",                            --<cari_opsiyon_gun, int,>" +
+          ",                            --<cari_cariodemetercihi, tinyint,>" +
+          ",                            --<cari_fatura_adres_no, int,>" +
+          ",                            --<cari_sevk_adres_no, int,>" +
+          ",                            --<cari_banka_tcmb_kod1, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod1, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod1, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno1, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu1, nvarchar(25),> " +
+          ",                            --<cari_banka_tcmb_kod2, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod2, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod2, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno2, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu2, nvarchar(25),> " +
+          ",                            --<cari_banka_tcmb_kod3, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod3, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod3, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno3, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu3, nvarchar(25),> " +
+          ",                            --<cari_banka_tcmb_kod4, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod4, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod4, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno4, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu4, nvarchar(25),> " +
+          ",                            --<cari_banka_tcmb_kod5, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod5, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod5, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno5, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu5, nvarchar(25),> " +
+          ",                            --<cari_banka_tcmb_kod6, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod6, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod6, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno6, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu6, nvarchar(25),> " +
+          ",                            --<cari_banka_tcmb_kod7, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod7, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod7, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno7, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu7, nvarchar(25),> " +
+          ",                            --<cari_banka_tcmb_kod8, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod8, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod8, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno8, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu8, nvarchar(25),> " +
+          ",                            --<cari_banka_tcmb_kod9, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod9, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod9, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno9, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu9, nvarchar(25),> " +
+          ",                            --<cari_banka_tcmb_kod10, nvarchar(4),> " +
+          ",                            --<cari_banka_tcmb_subekod10, nvarchar(8),> " +
+          ",                            --<cari_banka_tcmb_ilkod10, nvarchar(3),> " +
+          ",                            --<cari_banka_hesapno10, nvarchar(30),> " +
+          ",                            --<cari_banka_swiftkodu10, nvarchar(25),> " +
+          ",                            --<cari_EftHesapNum, tinyint,> " +
+          ",                            --<cari_Ana_cari_kodu, nvarchar(25),> " +
+          ",                            --<cari_satis_isk_kod, nvarchar(4),> " +
+          ",                            --<cari_sektor_kodu, nvarchar(25),> " +
+          ",                            --<cari_bolge_kodu, nvarchar(25),> " +
+          ",                            --<cari_grup_kodu, nvarchar(25),> " +
+          ",                            --<cari_temsilci_kodu, nvarchar(25),> " +
+          ",                            --<cari_muhartikeli, nvarchar(10),> " +
+          ",                            --<cari_firma_acik_kapal, bit,> " +
+          ",                            --<cari_BUV_tabi_fl, bit,> " +
+          ",                            --<cari_cari_kilitli_flg, bit,> " +
+          ",                            --<cari_etiket_bas_fl, bit,> " +
+          ",                            --<cari_Detay_incele_flg, bit,> " +
+          ",                            --<cari_efatura_fl, bit,> " +
+          ",                            --<cari_POS_ongpesyuzde, float,> " +
+          ",                            --<cari_POS_ongtaksayi, float,> " +
+          ",                            --<cari_POS_ongIskOran, float,> " +
+          ",                            --<cari_kaydagiristarihi, datetime,> " +
+          ",                            --<cari_KabEdFCekTutar, float,> " +
+          ",                            --<cari_hal_caritip, tinyint,> " +
+          ",                            --<cari_HalKomYuzdesi, float,> " +
+          ",                            --<cari_TeslimSuresi, smallint,> " +
+          ",                            --<cari_wwwadresi, nvarchar(30),> " +
+          ",                            --<cari_EMail, nvarchar(127),> " +
+          ",                            --<cari_CepTel, nvarchar(20),> " +
+          ",                            --<cari_VarsayilanGirisDepo, int,> " +
+          ",                            --<cari_VarsayilanCikisDepo, int,> " +
+          ",                            --<cari_Portal_Enabled, bit,> " +
+          ",                            --<cari_Portal_PW, nvarchar(127),> " +
+          ",                            --<cari_BagliOrtaklisa_Firma, int,> " +
+          ",                            --<cari_kampanyakodu, nvarchar(4),> " +
+          ",                            --<cari_b_bakiye_degerlendirilmesin_fl, bit,> " +
+          ",                            --<cari_a_bakiye_degerlendirilmesin_fl, bit,> " +
+          ",                            --<cari_b_irsbakiye_degerlendirilmesin_fl, bit,> " +
+          ",                            --<cari_a_irsbakiye_degerlendirilmesin_fl, bit,> " +
+          ",                            --<cari_b_sipbakiye_degerlendirilmesin_fl, bit,> " +
+          ",                            --<cari_a_sipbakiye_degerlendirilmesin_fl, bit,> " +
+          ",                            --<cari_AvmBilgileri1KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri1TebligatSekli, tinyint,> " +
+          ",                            --<cari_AvmBilgileri2KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri2TebligatSekli, tinyint,> " +
+          ",                            --<cari_AvmBilgileri3KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri3TebligatSekli, tinyint,> " +
+          ",                            --<cari_AvmBilgileri4KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri4TebligatSekli, tinyint,> " +
+          ",                            --<cari_AvmBilgileri5KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri5TebligatSekli, tinyint,> " +
+          ",                            --<cari_AvmBilgileri6KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri6TebligatSekli, tinyint,> " +
+          ",                            --<cari_AvmBilgileri7KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri7TebligatSekli, tinyint,> " +
+          ",                            --<cari_AvmBilgileri8KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri8TebligatSekli, tinyint,> " +
+          ",                            --<cari_AvmBilgileri9KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri9TebligatSekli, tinyint,> " +
+          ",                            --<cari_AvmBilgileri10KiraKodu, nvarchar(25),> " +
+          ",                            --<cari_AvmBilgileri10TebligatSekli, tinyint,> " +
+          ",                            --<cari_KrediRiskTakibiVar_flg, bit,> " +
+          ",                            --<cari_ufrs_fark_muh_kod, nvarchar(40),> " +
+          ",                            --<cari_ufrs_fark_muh_kod1, nvarchar(40),> " +
+          ",                            --<cari_ufrs_fark_muh_kod2, nvarchar(40),> " +
+          ",                            --<cari_odeme_sekli, tinyint,> " +
+          ",                            --<cari_TeminatMekAlacakMuhKodu, nvarchar(40),> " +
+          ",                            --<cari_TeminatMekAlacakMuhKodu1, nvarchar(40),> " +
+          ",                            --<cari_TeminatMekAlacakMuhKodu2, nvarchar(40),> " +
+          ",                            --<cari_TeminatMekBorcMuhKodu, nvarchar(40),> " +
+          ",                            --<cari_TeminatMekBorcMuhKodu1, nvarchar(40),> " +
+          ",                            --<cari_TeminatMekBorcMuhKodu2, nvarchar(40),> " +
+          ",                            --<cari_VerilenDepozitoTeminatMuhKodu, nvarchar(40),> " +
+          ",                            --<cari_VerilenDepozitoTeminatMuhKodu1, nvarchar(40),> " +
+          ",                            --<cari_VerilenDepozitoTeminatMuhKodu2, nvarchar(40),> " +
+          ",                            --<cari_AlinanDepozitoTeminatMuhKodu, nvarchar(40),> " +
+          ",                            --<cari_AlinanDepozitoTeminatMuhKodu1, nvarchar(40),> " +
+          ",                            --<cari_AlinanDepozitoTeminatMuhKodu2, nvarchar(40),> " +
+          ",                            --<cari_def_efatura_cinsi, tinyint,> " +
+          ",                            --<cari_otv_tevkifatina_tabii_fl, bit,> " +
+          ",                            --<cari_KEP_adresi, nvarchar(80),> " +
+          ",                            --<cari_efatura_baslangic_tarihi, datetime,> " +
+          ",                            --<cari_mutabakat_mail_adresi, nvarchar(80),> " +
+          ",                            --<cari_mersis_no, nvarchar(25),> " +
+          ",                            --<cari_istasyon_cari_kodu, nvarchar(25),> " +
+          ",                            --<cari_gonderionayi_sms, bit,> " +
+          ",                            --<cari_gonderionayi_email, bit,> " +
+          ",                            --<cari_eirsaliye_fl, bit,> " +
+          ",                            --<cari_eirsaliye_baslangic_tarihi, datetime,> " +
+          ",                            --<cari_vergidairekodu, nvarchar(10),> " +
+          ",                            --<cari_CRM_sistemine_aktar_fl, bit,> " +
+          ",                            --<cari_efatura_xslt_dosya, nvarchar(127),> " +
+          ",                            --<cari_pasaport_no, nvarchar(20),> " +
+          ",                            --<cari_kisi_kimlik_bilgisi_aciklama_turu, tinyint,> " +
+          ",                            --<cari_kisi_kimlik_bilgisi_diger_aciklama, nvarchar(50),> " +
+          ",                            --<cari_uts_kurum_no, nvarchar(15),> " +
+          ",                            --<cari_kamu_kurumu_fl, bit,> " +
+          ",                            --<cari_earsiv_xslt_dosya, nvarchar(127),> " +
+          ",                            --<cari_Perakende_fl, bit,>) ",
+            param : ['ACIKLAMA1:string|127','ACIKLAMA2:string|127','ACIKLAMA3:string|127','ACIKLAMA4:string|127','ACIKLAMA5:string|127','GUID:string|50']
+        },
     
 
     //#endregion "AKTARIM"

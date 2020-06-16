@@ -24,7 +24,7 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "LKD10-BT",
+			"BTYaziciAdi": "BT-SPP",
 			"FirmaListe": ""
 		},
 		"Sayim": {
@@ -380,12 +380,13 @@ var Param = [
 			"KiloUzunluk": "5",
 			"KiloCarpan": "1000",
 			"Titresim": "1",
-			"PlasiyerKodu": "",
+			"PlasiyerKodu": "01",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "1",
 			"BTYaziciTip": "RAWBT",
-			"BTYaziciAdi": ""
+			"BTYaziciAdi": "",
+			"FirmaListe": ""
 		},
 		"Sayim": {
 			"EvrakNo": "1",
