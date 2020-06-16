@@ -16,6 +16,8 @@ function Login ($scope,$rootScope,$window,db)
         });
 
         $scope.Kullanici = localStorage.username;
+        $scope.Kullanici = "Admin";
+        $scope.Password = "1";
         $scope.SecilenFirmalar = []
 
         for(i = 0;i < Param.length;i++)

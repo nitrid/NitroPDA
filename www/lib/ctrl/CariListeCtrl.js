@@ -125,7 +125,6 @@ function CariListeCtrl($scope,$window,db)
             $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
             CariSelectedRow = $row;
             
-            console.log($scope.CariListe[pIndex].ANABAKIYE)
             $scope.CariKodu = $scope.CariListe[pIndex].KODU;
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
             $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
@@ -154,11 +153,37 @@ function CariListeCtrl($scope,$window,db)
     {
         $("#TbDetay").addClass('active');
         $("#TbMain").removeClass('active');
+        $("#TbCariEkle").removeClass('active');
     }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
         $("#TbDetay").removeClass('active');
+        $("#TbCariEkle").removeClass('active');
     }
-    
+    $scope.CariEkleClick = function()
+    {
+        $("#TbCariEkle").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbDetay").removeClass('active');
+    }
+    $scope.CariEkleInsert = function()
+    {
+        var InsertData = 
+        [
+            $scope.deneme
+        ]
+        db.ExecuteTag($scope.Firma,'CariInsert',InsertData,function(InsertResult)
+        {
+
+        });
+    }
+    if(i == $scope.IrsaliyeListe.length)
+    {
+        alertify.alert("Etiket Yazdırıldı.");
+    }
+    else
+    {
+        alertify.alert("Etiket Yazdıralamadı.");
+    }
 }
