@@ -2233,9 +2233,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         }
         else
         {
-            var  InsertData =  [$scope.Aciklama1,$scope.Aciklama2,$scope.Aciklama3,$scope.Aciklama4,$scope.Aciklama5,$scope.AciklamaGuid]
-            console.log($scope.AciklamaGuid)
-            
+            var  InsertData =  [$scope.Aciklama1,$scope.Aciklama2,$scope.Aciklama3,$scope.Aciklama4,$scope.Aciklama5,$scope.AciklamaGuid]            
             db.ExecuteTag($scope.Firma,'AciklamaUpdate',InsertData,function(InsertResult)
             {
                 if(typeof(InsertResult.result.err) == 'undefined')
@@ -2244,11 +2242,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     console.log(InsertResult)
                 }
             })
-            
-        
         }
-        
-
     }
     $scope.AciklamaGetir = function()
     {
@@ -2265,7 +2259,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Aciklama4 = $scope.AciklamaSatir[0].egk_evracik4,
                 $scope.Aciklama5 = $scope.AciklamaSatir[0].egk_evracik5,
                 $scope.AciklamaGuid = $scope.AciklamaSatir[0].egk_Guid
-                console.log($scope.AciklamaGuid)
             }
 
         })
