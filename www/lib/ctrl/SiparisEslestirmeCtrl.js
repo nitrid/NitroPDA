@@ -1398,7 +1398,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
-                    } 
+                    }
                     InsertAfterRefresh(FaturaData);
                     $scope.InsertLock = false;
                 });
