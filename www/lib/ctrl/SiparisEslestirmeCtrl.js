@@ -171,9 +171,9 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             }
         });
     }
-    function InitSonSatisDetayGrid()
+    function InitSiparisDetayGrid()
     {
-        $("#TblSonSatisDetay").jsGrid({
+        $("#TblSiparisDetay").jsGrid({
             responsive: true,
             width: "100%",
             height: "350px",
@@ -475,9 +475,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                         return $("<button type='submit' class='btn btn-primary btn-block btn-sm'></button>").text("D")
                             .on("click", function() 
                             {
-                                console.log(item)
                                 $scope.DetayGrid(item);
-                                //alert(item.Name);
                             });
                     },
                     width: 45
@@ -580,10 +578,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.SipSira,
             pBarkod
         ];
-
         db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(BarkodData)
         {
-            console.log(BarkodData)
             if(BarkodData.length > 0)
             {
                 pCallback(BarkodData,'Siparis');
@@ -638,7 +634,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 }
             }
         }
-        // if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
+        // if($scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].RENKPNTR != 0)
         // {   
         //     if($scope.Stok[0].BEDENKODU != '' || $scope.Stok[0].RENKKODU != '')
         //     {   
@@ -680,13 +676,12 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         if(pBarkod != '')
         {
             // KILO BARKOD KONTROL EDİLİYOR. DÖNEN DEĞERLER ATANIYOR. ALI KEMAL KARACA 18.09.2019
-            pBarkod = db.KiloBarkod(pBarkod,UserParam).Barkod;
+            //pBarkod = db.KiloBarkod(pBarkod,UserParam).Barkod;
             $scope.Miktar = db.KiloBarkod(pBarkod,UserParam).Miktar;
             //SİPARİŞE BAĞLI VEYA NORMAL STOK OLARAK GETİRME FONKSİYONU
             EslestirmeStokGetir(pBarkod,async function(pData,pTip)
             {
-                $scope.Stok = pData 
-                console.log($scope.Stok)         
+                $scope.Stok = pData
                 //FONKSİYONDA $scope.Stok İÇERİĞİ BOŞ GELİRSE TÜM İŞLEMLER İPTAL EDİLİYOR. ALI KEMAL KARACA 18.09.2019
                 if($scope.Stok.length == 0)
                 {
@@ -730,7 +725,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 //RENK BEDEN ,PARTİ LOT KONTROLÜ YAPILIYOR VE POP UP EKRANLARI AÇILIYOR.
                 RenkBedenPartiLotKontrol();
 
-                console.log($scope.Stok[0])
                 if($scope.OtoEkle == true)
                 {
                     MiktarLock = true
@@ -994,10 +988,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 {
                     db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].RECNO,Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR)]);
                 }
-                console.log(new Date,"1.")
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.StokEvrakTip],function(IrsaliyeData)
                 {    
-                    console.log(new Date,"2.")
                     $scope.StokHarListe = IrsaliyeData;
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
@@ -1057,7 +1049,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
 
                         if(!UpdateStatus)
                         {
-                            console.log(IrsaliyeData)
                             BedenHarInsert(IrsaliyeData[0].sth_Guid);
                         }
                     }                        
@@ -1114,7 +1105,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
 
                         if(!UpdateStatus)
                         {
-                            console.log(FaturaData)
                             BedenHarInsert(FaturaData[0].sth_Guid);
                         }
                     }                        
@@ -1159,13 +1149,14 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0,  // REZERVASYON MİKTAR
             0  // REZERVASYON TESLİM MİKTAR
         ];
-        
         db.ExecuteTag($scope.Firma,'BedenHarInsert',Data,function(data)
         {
+            console.log(3)
             if(typeof(data.result.err) == 'undefined')
             {
                 db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,9],function(BedenData)
                 {
+                    console.log(4)
                     $scope.BedenHarListe = BedenData;
                 });
             }
@@ -1401,11 +1392,15 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
             {
+                console.log(InsertResult.result)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(FaturaData)
                 {
+                    if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
+                    {
+                        BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
+                    } 
                     InsertAfterRefresh(FaturaData);
                     $scope.InsertLock = false;
-
                 });
             }
 
@@ -1460,7 +1455,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         InitSiparisListeGrid();
         InitPartiLotGrid();
         InitSiparisKabulListeGrid();
-        InitSonSatisDetayGrid();
+        InitSiparisDetayGrid();
         
 
         $scope.EvrakLock = false;
@@ -1705,8 +1700,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 IrsInsert();
             }
             if($scope.CmbEvrakTip == 1)
-            {
-                
+            {                
                 if(typeof($scope.Stok[0].KODU) != 'undefined')
                 {   
                     $scope.InsertLock = true
@@ -1794,8 +1788,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             {
                 IrsInsert();
             }
-        }
-       
+        }    
     }
     $scope.BtnSiparisKabulListele = async function()
     {
@@ -1811,6 +1804,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             await db.GetPromiseTag($scope.Firma,"SiparisKabulListele",TmpParam,function(data)
             {
                 $scope.SiparisKabulListe = data;
+
                 if($scope.SiparisKabulListe.length > 0)
                 {
                     $scope.Loading = false;
@@ -1887,7 +1881,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
-        
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
     {   
@@ -2549,7 +2542,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnGeri = function()
     {
-        $('#MdlSonSatisDetay').modal('hide');
+        $('#MdlSiparisDetay').modal('hide');
     }
     $scope.DetayGrid = function(pItem)
     {
@@ -2571,21 +2564,20 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         }
         db.GetPromiseQuery(TmpQuery,function(data)
         {   
-            console.log(data);
             $scope.DetayData = data;
 
             if($scope.DetayData.length > 0)
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
-                $("#TblSonSatisDetay").jsGrid({data : $scope.DetayData});
-                $("#MdlSonSatisDetay").modal('show');
+                $("#TblSiparisDetay").jsGrid({data : $scope.DetayData});
+                $("#MdlSiparisDetay").modal('show');
             } 
             else
             {                
                 $scope.Loading = false;
                 $scope.TblLoading = true;
-                $("#MdlSonSatisDetay").modal('hide');
+                $("#MdlSiparisDetay").modal('hide');
                 alertify.alert("Sipariş içeriği boş")                
             }  
         });

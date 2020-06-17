@@ -761,7 +761,7 @@ var QuerySql =
     {
         query : "SELECT " +
                 "CONVERT(NVARCHAR(50),SIPARIS.sip_Guid) AS RECNO, " +
-                "MAX(BARKOD.bar_kodu) AS BARKOD, " +
+                "ISNULL(MAX(BARKOD.bar_kodu),'') AS BARKOD, " +
                 "SIPARIS.sip_stok_kod AS KODU, " +
                 "STOK.sto_isim AS ADI, " +
                 "SIPARIS.sip_tarih AS TARIH, " +
@@ -809,8 +809,8 @@ var QuerySql =
                 "SIPARIS.sip_isk5 AS ISK5, " +
                 "SIPARIS.sip_isk6 AS ISK6, " +
                 "ISNULL((BEDENHAR.BdnHar_HarGor - BEDENHAR.BdnHar_TesMik)	,(SIPARIS.sip_miktar - SIPARIS.sip_teslim_miktar)) AS BMIKTAR, " +
-                "(SELECT dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),sto_beden_kodu)) AS BEDEN, " +
-                "(SELECT dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),sto_renk_kodu)) AS RENK, " +
+                "(SELECT dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_beden_kodu)) AS BEDEN, " +
+                "(SELECT dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_renk_kodu)) AS RENK, " +
                 "ISNULL(BEDENHAR.BdnHar_BedenNo,0) AS BEDENNO, " +
                 "CAST(ISNULL(NULL,0) AS FLOAT) AS MIKTAR, " +
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO  ,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
@@ -829,23 +829,23 @@ var QuerySql =
                 "MAX(sip_projekodu) AS PROJE, " +
                 "MAX(CONVERT(NVARCHAR(50),sip_yetkili_uid)) AS YETKILI, " +
                 "sip_Exp_Imp_Kodu AS EXIMKODU, " +
-                "bar_partikodu AS PARTI, " +
-                "bar_lotno AS LOT " +
-                "FROM SIPARISLER AS SIPARIS " + 
-                "LEFT OUTER JOIN BARKOD_TANIMLARI AS BARKOD ON " +
-                "BARKOD.bar_stokkodu = SIPARIS.sip_stok_kod " +
-                //"AND BARKOD.bar_birimpntr =SIPARIS.sip_birim_pntr " +
+                "ISNULL(BARKOD.bar_partikodu,sip_parti_kodu) AS PARTI, " +
+                "ISNULL(BARKOD.bar_lotno,sip_lot_no) AS LOT " +
+                "FROM SIPARISLER AS SIPARIS  " +
                 "LEFT OUTER JOIN BEDEN_HAREKETLERI AS BEDENHAR ON " +
                 "BEDENHAR.[BdnHar_Tipi] = 9 AND BEDENHAR.BdnHar_Har_uid = SIPARIS.sip_Guid " +
-                "AND (SELECT dbo.fn_RenkBedenBarkodBul(BARKOD.bar_stokkodu,BEDENHAR.BdnHar_BedenNo)) = BARKOD.bar_kodu " +
                 "INNER JOIN STOKLAR AS STOK ON " +
                 "STOK.sto_kod = SIPARIS.sip_stok_kod " +
+                "LEFT OUTER JOIN BARKOD_TANIMLARI AS BARKOD ON " +
+                "BARKOD.bar_stokkodu = SIPARIS.sip_stok_kod AND BARKOD.bar_bedenpntr = " +
+                "CASE WHEN STOK.sto_beden_kodu <> '' THEN ISNULL(dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),0) ELSE 0 END " +
+                "AND BARKOD.bar_renkpntr = CASE WHEN STOK.sto_renk_kodu <> '' THEN  ISNULL(dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),0) ELSE 0 END " +
                 "WHERE SIPARIS.sip_musteri_kod = @CARI " + 
                 "AND ((SIPARIS.sip_evrakno_seri = @SERI OR (@SERI = '')) AND ((SIPARIS.sip_evrakno_sira = @SIRA) OR (@SIRA = 0))) " +
                 "AND ((BARKOD.bar_kodu = @BARKOD OR STOK.sto_kod = @BARKOD) OR (@BARKOD = '')) " +
                 "AND ISNULL(BEDENHAR.BdnHar_HarGor,SIPARIS.sip_miktar) > ISNULL(BEDENHAR.BdnHar_TesMik,SIPARIS.sip_teslim_miktar) " +
-                "AND ((SELECT dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),sto_beden_kodu)) IS NOT NULL " +
-                "OR (SELECT dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),sto_renk_kodu)) IS NOT NULL) " +
+                "AND ((SELECT dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_beden_kodu)) IS NOT NULL " +
+                "OR (SELECT dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_renk_kodu)) IS NOT NULL) " +
                 "GROUP BY " + 
                 "SIPARIS.sip_Guid, " +
                 "SIPARIS.sip_stok_kod, " +
@@ -903,13 +903,15 @@ var QuerySql =
                 "bar_partikodu, " +
                 "bar_lotno, " +
                 "BARKOD.bar_birimpntr, " +
-                "sto_beden_kodu, " +
-                "sto_renk_kodu, " +
+                "STOK.sto_beden_kodu, " +
+                "STOK.sto_renk_kodu, " +
                 "BEDENHAR.BdnHar_BedenNo, " +
                 "STOK.sto_kod, " +
                 "sip_aciklama2, " +
                 "BEDENHAR.BdnHar_HarGor, " +
-                "BEDENHAR.BdnHar_TesMik", 
+                "BEDENHAR.BdnHar_TesMik," +
+                "sip_parti_kodu," +
+                "sip_lot_no " ,
         param : ['DEPONO','CARI','SERI','SIRA','BARKOD'],
         type : ['int','string|25','string|10','int','string|25']
     },
