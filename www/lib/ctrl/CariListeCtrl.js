@@ -11,6 +11,10 @@ function CariListeCtrl($scope,$window,db)
         $scope.CariAdres = "";
         $scope.TxtCariAra = "";
         $scope.CmbCariAra = "0";
+        $scope.VergiDaire = "";
+        $scope.VergiNo = "";
+        $scope.CariEkleKodu = "";
+        $scope.CariEkleAdi = "";
 
         InitCariGrid();
         $scope.MainClick();
@@ -169,21 +173,28 @@ function CariListeCtrl($scope,$window,db)
     }
     $scope.CariEkleInsert = function()
     {
+       console.log($scope.CariEkleKodu) 
+       console.log($scope.CariEkleAdi)  
+       console.log($scope.VergiDaire)  
+       console.log($scope.VergiNo)  
         var InsertData = 
         [
-            $scope.deneme
+            $scope.CariEkleKodu,
+            $scope.CariEkleAdi,
+            $scope.VergiDaire,
+            $scope.VergiNo
         ]
         db.ExecuteTag($scope.Firma,'CariInsert',InsertData,function(InsertResult)
         {
-
+            console.log(InsertResult)
+            if($scope.CariEkleKodu == "" || $scope.CariEkleAdi == "" || $scope.VergiDaire == "" || $scope.VergiNo == "" )
+            {
+                console.log($scope.CariEkleKodu) 
+                console.log($scope.CariEkleAdi)  
+                console.log($scope.VergiDaire)  
+                console.log($scope.VergiNo)  
+                alertify.alert("Alanların hepsi dolu olmalıdır")
+            }
         });
-    }
-    if(i == $scope.IrsaliyeListe.length)
-    {
-        alertify.alert("Etiket Yazdırıldı.");
-    }
-    else
-    {
-        alertify.alert("Etiket Yazdıralamadı.");
     }
 }

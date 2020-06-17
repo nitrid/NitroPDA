@@ -25,7 +25,9 @@ var Param = [
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
 			"BTYaziciAdi": "BT-SPP",
-			"FirmaListe": ""
+			"FirmaListe": "",
+			"RiskParam": "1",
+			"RiskLimitOran": "70"
 		},
 		"Sayim": {
 			"EvrakNo": "1",

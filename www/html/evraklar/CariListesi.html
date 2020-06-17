@@ -92,47 +92,76 @@
                                 <label class="mb-0 h4 text-primary">Cari Ekle</label> 
                             </div>
                         </div>
-                        <div class="form-group row my-1">
-                            <div class="col-4 px-1">
-                                <button type="button" class="btn btn-primary" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
-                            </div>
-                        </div>
-                        <div class="form-group row my-1">
-                            <div class="col-2 pt-3">
-                                <label class="mb-0 h4 text-primary">Cari Adı :</label> 
-                            </div>
-                            <div class="col-5 px-1">
-                                <div class="input-group">
-                                    <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-keypress="BtnCariListeleEnter($event)" ng-model="TxtCariAra" ng-disabled="EvrakLock">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row my-1">
-                            <div class="col-2 pt-3">
-                                <label class="mb-0 h4 text-primary">Cari Kodu :</label> 
-                            </div>
-                            <div class="col-5 px-1">
-                                <div class="input-group">
-                                    <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-keypress="BtnCariListeleEnter($event)" ng-model="TxtCariAra" ng-disabled="EvrakLock">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row my-1">
-                            <div class="col-2 pt-3">
-                                <label class="mb-0 h4 text-primary">Bağlantı Tipi :</label> 
-                            </div>
-                            <div class="col-5 px-1">
-                                <select class="form-control" ng-model="CmbCariAra" ng-disabled="EvrakLock">
-                                    <option value="0">Müşteri</option>
-                                    <option value="1">Satıcı</option>
-                                    <option value="2">Diğer Cari</option>
-                                    <option value="3">Dağıtıcı</option>
-                                    <option value="4">Bayi</option>
-                                    <option value="5">Hedef Müşteri</option>
-                                    <option value="6">Hedef Bayi</option>
-                                    <option value="7">Alt Bayi</option>
-                                </select>
-                            </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card card-inverse bg-info">
+                                    <div class="card-block">
+                                      <h4 class="card-title"></h4>
+                                      <p class="card-text">
+                                        <div class="form-group row my-1">
+                                            <div class="col-4 px-1">
+                                                <button type="button" class="btn btn-primary" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row my-1">
+                                            <div class="col-2 pt-3">
+                                                <label class="mb-0 h4 text-white">Cari Adı :</label> 
+                                            </div>
+                                            <div class="col-5 px-1">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="CariEkleAdi" ng-disabled="EvrakLock">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row my-1">
+                                            <div class="col-2 pt-3">
+                                                <label class="mb-0 h4 text-white">Cari Kodu :</label> 
+                                            </div>
+                                            <div class="col-5 px-1">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="CariEkleKodu" ng-disabled="EvrakLock">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row my-1">
+                                            <div class="col-2 pt-3">
+                                                <label class="mb-0 h4 text-white">Vergi Daire Adı :</label> 
+                                            </div>
+                                            <div class="col-5 px-1">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="VergiDaire" ng-disabled="EvrakLock">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row my-1">
+                                            <div class="col-2 pt-3">
+                                                <label class="mb-0 h4 text-white">Vergi Daire No :</label> 
+                                            </div>
+                                            <div class="col-5 px-1">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="VergiNo" ng-disabled="EvrakLock">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row my-1">
+                                            <div class="col-2 pt-3">
+                                                <label class="mb-0 h4 text-white">Bağlantı Tipi :</label> 
+                                            </div>
+                                            <div class="col-5 px-1">
+                                                <select class="form-control" ng-disabled="EvrakLock">
+                                                    <option value="0">Hedef Müşteri</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row my-1">
+                                            <div class="col-4 px-1">
+                                                <button type="button" class="btn btn-primary" ng-click="CariEkleInsert()">Cari Oluştur</i></button>
+                                            </div>
+                                        </div>
+                                      </p>
+                                    </div>
+                                  </div>
+                            </div>        
                         </div>
                     </div>
                 </div>
