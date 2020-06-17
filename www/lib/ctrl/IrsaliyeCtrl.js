@@ -2254,19 +2254,19 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     $scope.ScanBarkod = function()
     {
         cordova.plugins.barcodeScanner.scan(
-            function (result) 
-            {
-                $scope.Barkod = result.text;
-                StokBarkodGetir($scope.Barkod);
-            },
-            function (error) 
-            {
-                //alert("Scanning failed: " + error);
-            },
-            {
-              prompt : "Barkod Okutunuz",
-              orientation : "portrait"
-            }
+        function (result) 
+        {
+            $scope.Barkod = result.text;
+            StokBarkodGetir($scope.Barkod);
+        },
+        function (error) 
+        {
+            //alert("Scanning failed: " + error);
+        },
+        {
+            prompt : "Barkod Okutunuz",
+            orientation : "portrait"
+        }
         );
     }
     $scope.BtnFisYazdir = async function()
@@ -2303,9 +2303,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         for(let x = 0; x <= i; x++)
         {
-    
             Satır = Satır + "                                             "+ "\n"; 
-
         }
 
         FisDizayn = "                                             " + "\n" + 
@@ -2349,8 +2347,64 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             if(pStatus)
             {
                 alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
-               
             }
+        });
+    }
+    async function GunSonuData(pData,pToplam)
+    {
+        let FisDizayn = "";
+        let FisDeger = "";
+        $scope.GunSonuData = "";
+
+        FisDeger = FisDeger + "                              IRSALIYE GUN SONU " + "\n" 
+        FisDeger = FisDeger + "                                                   "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n";
+
+        for(let i=0; i < pData.length; i++)
+        {
+            $scope.GunSonuData = $scope.GunSonuData +  SpaceLength(pData[i].SERI,10) + "  " +  SpaceLength(pData[i].SIRA,10) + "  " + SpaceLength(pData[i].CARIKOD,15) + "  " + SpaceLength(pData[i].CARIADI,20) + SpaceLength(parseFloat(pData[i].TUTAR.toFixed(2)),8) + "\n";
+        } 
+
+        FisDizayn = "                                             " + "\n" + 
+                    FisDeger + "\n" + "\n" +
+                    FisDizayn + "SERI        SIRA       CARI KODU            CARI ADI        TUTAR" + "\n" + 
+                    "                                              " + "\n" + 
+                    $scope.GunSonuData + "\n"  +
+                    "                                                                                                                                   - " + "\n " +
+                    "                                                                                                                                   - " + "\n "
+        FisDizayn = FisDizayn + "                                                   TOPLAM : " + pToplam
+        FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+        
+        console.log(FisDizayn)
+        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+        {
+            if(pStatus)
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+            }
+        });
+    }
+    $scope.BtnGunSonuRapor = async function()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT " +
+                    "sth_evrakno_seri AS SERI, " +
+                    "sth_evrakno_sira AS SIRA, " +
+                    "MAX(sth_cari_kodu) AS CARIKOD, " +
+                    "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) + ' ' +" +
+                    "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) " +
+                    "AS CARIADI, " +
+                    "ROUND(SUM(sth_tutar),2) TUTAR " +
+                    "FROM STOK_HAREKETLERI  " +
+                    "WHERE sth_tip = 1 AND sth_evraktip = 1 AND sth_cins = 0 AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
+                    "GROUP BY sth_evrakno_seri,sth_evrakno_sira " 
+        }
+
+        await db.GetPromiseQuery(TmpQuery,async function(Data)
+        {
+            let Toplam = db.SumColumn(Data,"TUTAR");
+            await GunSonuData(Data,Toplam)
         });
     }
 }

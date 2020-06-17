@@ -1,6 +1,6 @@
 function CariListeCtrl($scope,$window,db)
 {
-     let CariSelectedRow = null;
+    let CariSelectedRow = null;
 
     function Init()
     {
@@ -14,7 +14,8 @@ function CariListeCtrl($scope,$window,db)
         $scope.VergiDaire = "";
         $scope.VergiNo = "";
         $scope.CariEkleKodu = "";
-        $scope.CariEkleAdi = "";
+        $scope.CariEkleUnvan1 = "";
+        $scope.CariEkleUnvan2 = "";
 
         InitCariGrid();
         $scope.MainClick();
@@ -67,9 +68,21 @@ function CariListeCtrl($scope,$window,db)
             } 
         });
     }
-    $scope.YeniEvrak = function ()
+    $scope.YeniEvrak =async function ()
     {
         Init();
+        $scope.BtnCariListele();
+
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT REPLACE(STR(ISNULL(MAX(CONVERT(int,SUBSTRING(cari_kod,3,LEN(cari_kod)))),0) + 1, 5), SPACE(1), '0') AS MAXCARIKOD FROM CARI_HESAPLAR WHERE cari_kod LIKE 'C%' "
+        }
+
+        await db.GetPromiseQuery(TmpQuery,async function(Data)
+        {
+            $scope.CariEkleKodu = "C" + Data[0].MAXCARIKOD;
+        });
     }
     $scope.EvrakGetir = function ()
     {
@@ -173,28 +186,32 @@ function CariListeCtrl($scope,$window,db)
     }
     $scope.CariEkleInsert = function()
     {
-       console.log($scope.CariEkleKodu) 
-       console.log($scope.CariEkleAdi)  
-       console.log($scope.VergiDaire)  
-       console.log($scope.VergiNo)  
-        var InsertData = 
-        [
-            $scope.CariEkleKodu,
-            $scope.CariEkleAdi,
-            $scope.VergiDaire,
-            $scope.VergiNo
-        ]
-        db.ExecuteTag($scope.Firma,'CariInsert',InsertData,function(InsertResult)
+        if($scope.CariEkleKodu != '' || $scope.CariEkleUnvan1 != '')
         {
-            console.log(InsertResult)
-            if($scope.CariEkleKodu == "" || $scope.CariEkleAdi == "" || $scope.VergiDaire == "" || $scope.VergiNo == "" )
+            var InsertData = 
+            [
+                $scope.CariEkleKodu,
+                $scope.CariEkleUnvan1,
+                $scope.CariEkleUnvan2,
+                $scope.VergiDaire,
+                $scope.VergiNo
+            ]
+            db.ExecuteTag($scope.Firma,'CariInsert',InsertData,function(InsertResult)
             {
-                console.log($scope.CariEkleKodu) 
-                console.log($scope.CariEkleAdi)  
-                console.log($scope.VergiDaire)  
-                console.log($scope.VergiNo)  
-                alertify.alert("Alanların hepsi dolu olmalıdır")
-            }
-        });
+                if(typeof(InsertResult.result.err) == 'undefined')
+                {
+                    alertify.alert("Cari Kayıt İşlemi Gerçekleşti.")
+                    $scope.VergiDaire = "";
+                    $scope.VergiNo = "";
+                    $scope.CariEkleKodu = "";
+                    $scope.CariEkleUnvan1 = "";
+                    $scope.CariEkleUnvan2 = "";
+                }
+            });
+        }
+        else
+        {
+            alertify.alert("CariKodu ve CariAdı Boş Geçilemez.")
+        }
     }
 }
