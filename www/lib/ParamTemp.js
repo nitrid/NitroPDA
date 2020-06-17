@@ -26,7 +26,9 @@ var ParamTemp =
 			"EslestirmeEksiyeDusme" : {"Title" : "Eşleştirmede Eksiye Düşme","DefaultValue" : "0"},
 			"BTYaziciTip" : {"Title" : "BT Yazıcı Tipi","DefaultValue" : "RAWBT"},
 			"BTYaziciAdi" : {"Title" : "BT Yazıcı Adı","DefaultValue" : ""},
-			"FirmaListe" : {"Title" : "Firma Liste","DefaultValue" : ""}
+			"FirmaListe" : {"Title" : "Firma Liste","DefaultValue" : ""},
+			"RiskParam": {"Title" : "Risk Param","DefaultValue" : ""},
+			"RiskLimitOran": {"Title" : "Risk Limit Oran","DefaultValue" : ""}
 		},
 		"Sayim" :
 		{

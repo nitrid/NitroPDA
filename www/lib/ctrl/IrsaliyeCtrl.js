@@ -173,6 +173,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     width: 75
                 },
                 {
+                    name: "RISK",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                },
+                {
                     name: "DOVIZSEMBOL",
                     title: "DOVIZ",
                     type: "text",
@@ -447,7 +453,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function BedenHarInsert(pGuid)
     {
-        console.log(1)
         let Data =
         [
             UserParam.MikroId, // KULLANICI
@@ -462,7 +467,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         
         db.ExecuteTag($scope.Firma,'BedenHarInsert',Data,function(data)
         {   
-            console.log(2)
             if(typeof(data.result.err) == 'undefined')
             {   
                 db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,11],function(BedenData)
@@ -611,7 +615,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
            0   //NAKLİYEDEPO
         ];
         
-        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {  
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -622,8 +625,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     {   
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
-
-                    console.log(IrsaliyeData);
                     InsertAfterRefresh(IrsaliyeData);  
 
                     $scope.InsertLock = false
@@ -721,10 +722,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {   
                 if(BarkodData.length > 0)
                 { 
-                    console.log(BarkodData)
                     $scope.Stok = BarkodData;
                     $scope.StokKodu = $scope.Stok[0].KODU;
-                    console.log($scope.Stok[0])
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
                         for(i = 0;i < $scope.IrsaliyeListe.length;i++)
@@ -770,7 +769,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     db.GetDataQuery(Fiyat,function(pFiyat)
                     {                         
                         
-                        console.log(pFiyat)
                         $scope.Fiyat = pFiyat[0].FIYAT
                         $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
@@ -791,12 +789,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
                     });
 
-                    console.log(BarkodData[0].KODU)
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
                         $scope.BirimListe = data;
                         $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR); 
-                        console.log($scope.Birim)
 
                         if($scope.BirimListe.length > 0)
                         {
@@ -866,7 +862,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         if($scope.Stok[0].PARTI !='')
                         {
                             db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.Stok[0].PARTI,$scope.Stok[0].LOT],function(data)
-                            {   console.log($scope.DepoNo)
+                            {  
                                 $scope.PartiLotListe = data;
 
                                 if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
@@ -937,7 +933,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }
     }
     function FisData(pData)
-    { console.log(pData)
+    {
         $scope.FisLength = pData;
         $scope.FisDeger = "";
         $scope.FisData = "";
@@ -955,9 +951,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
        {
            console.log(error)
        }
-       console.log(pData.length)
-       console.log($scope.FisData)
-    console.log($scope.Tarih);
     }
     function SpaceLength(pData,pLength)
     {
@@ -1298,10 +1291,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnEtiketBas = function()
     {
-        console.log($scope.IrsaliyeListe)
         for(i = 0; i < $scope.IrsaliyeListe.length; i++)
         {
-            console.log($scope.IrsaliyeListe[i])
             $scope.StokKodu = $scope.IrsaliyeListe[i].sth_stok_kod;
             var InsertData = 
             [
@@ -1370,6 +1361,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
             $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
             $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
+            $scope.Risk = $scope.CariListe[pIndex].RISK
             $scope.DovizChangeKodu = "0"
             $scope.DovizChange()
             $scope.MainClick();
@@ -1439,7 +1431,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
             else if($scope.DovizChangeKodu == 1)
             {
-                console.log(1)
                 $scope.CariDovizCinsi = $scope.CariDovizCinsi1;
                 $scope.CariDovizKuru = $scope.CariDovizKuru1;
                 $scope.EvrakDovizTip = $scope.DovizSembol1
@@ -1504,7 +1495,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             let sth_vergi = $scope.VergiEdit
             let sth_Guid = $scope.IrsaliyeListe[0].sth_Guid
-            console.log(sth_Guid)
             let TmpQuery = 
             {
 
@@ -1775,7 +1765,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     {
         if($scope.BirimListe.length > 0)
         {
-            console.log($scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim}))
             $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
             $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
             $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
@@ -1810,66 +1799,81 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     { 
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {
+            if(ParamName == "SatisIrsaliye")
+            {
+                if($scope.RiskParam != 0)
+                {
+                    let TmpRiskOran = ($scope.CariBakiye / $scope.Risk) * 100;
+
+                    if(TmpRiskOran >= 100)
+                    {
+                        alertify.alert("Risk limitini aştınız");
+                        return;
+                    }
+                    if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
+                    {
+                        alertify.alert("% " + UserParam.Sistem.RiskLimitOran + " kadarı doldu");
+                    }
+                }
+            }
             if(UserParam.SatisIrsaliye.EksiyeDusme == 1 && $scope.EvrakTip == 1 &&  ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
             {
                 alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
+                return;
+            } 
+            $scope.InsertLock = true
+            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+            {          
+                InsertData();
             }
             else
             {
-                $scope.InsertLock = true
-                if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
-                {          
-                    InsertData();
-                }
-                else
+                let UpdateStatus = false;
+
+                angular.forEach($scope.IrsaliyeListe,function(value)
                 {
-                    let UpdateStatus = false;
+                    if(value.sth_stok_kod == $scope.Stok[0].KODU)
+                    {   
+                        let TmpFiyat  = value.sth_tutar / value.sth_miktar
+                        let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+                        let Data = 
+                        {
+                            Param :
+                            [
+                                TmpMiktar,
+                                0,
+                                TmpFiyat * TmpMiktar,
+                                $scope.Stok[0].TOPTANVERGIPNTR,
+                                0, //ISKONTO TUTAR 1
+                                0, //ISKONTO TUTAR 2
+                                0, //ISKONTO TUTAR 3
+                                0, //ISKONTO TUTAR 4
+                                0, //ISKONTO TUTAR 5
+                                0, //ISKONTO TUTAR 6
+                                0, //SATIR ISKONTO TİP 1
+                                0, //SATIR ISKONTO TİP 2
+                                0, //SATIR ISKONTO TİP 3
+                                0, //SATIR ISKONTO TİP 4
+                                0, //SATIR ISKONTO TİP 5
+                                0, //SATIR ISKONTO TİP 6
+                                value.sth_Guid,
+                                '00000000-0000-0000-0000-000000000000' //Fat Uid
+                            ],
+                            BedenPntr : $scope.Stok[0].BEDENPNTR,
+                            RenkPntr : $scope.Stok[0].RENKPNTR,
+                            Miktar : TmpMiktar,
+                            Guid : value.sth_Guid
+                        };
 
-                    angular.forEach($scope.IrsaliyeListe,function(value)
-                    {
-                        if(value.sth_stok_kod == $scope.Stok[0].KODU)
-                        {   
-                            let TmpFiyat  = value.sth_tutar / value.sth_miktar
-                            let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-                            let Data = 
-                            {
-                                Param :
-                                [
-                                    TmpMiktar,
-                                    0,
-                                    TmpFiyat * TmpMiktar,
-                                    $scope.Stok[0].TOPTANVERGIPNTR,
-                                    0, //ISKONTO TUTAR 1
-                                    0, //ISKONTO TUTAR 2
-                                    0, //ISKONTO TUTAR 3
-                                    0, //ISKONTO TUTAR 4
-                                    0, //ISKONTO TUTAR 5
-                                    0, //ISKONTO TUTAR 6
-                                    0, //SATIR ISKONTO TİP 1
-                                    0, //SATIR ISKONTO TİP 2
-                                    0, //SATIR ISKONTO TİP 3
-                                    0, //SATIR ISKONTO TİP 4
-                                    0, //SATIR ISKONTO TİP 5
-                                    0, //SATIR ISKONTO TİP 6
-                                    value.sth_Guid,
-                                    '00000000-0000-0000-0000-000000000000' //Fat Uid
-                                ],
-                                BedenPntr : $scope.Stok[0].BEDENPNTR,
-                                RenkPntr : $scope.Stok[0].RENKPNTR,
-                                Miktar : TmpMiktar,
-                                Guid : value.sth_Guid
-                            };
+                        UpdateStatus = true;
+                        UpdateData(Data);
+                    }                        
+                });
 
-                            UpdateStatus = true;
-                            UpdateData(Data);
-                        }                        
-                    });
-
-                    if(!UpdateStatus)
-                    {
-                        InsertData();
-                    }                
-                }
+                if(!UpdateStatus)
+                {
+                    InsertData();
+                }                
             }
         }
         else
@@ -1879,7 +1883,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }     
 
         BarkodFocus();
-        console.log($scope.IrsaliyeListe);
     }
     $scope.EvrakGetir = function ()
     {
@@ -1940,6 +1943,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $scope.CariBakiye = $scope.CariListe[0].BAKIYE;
                     $scope.CariVDADI = $scope.CariListe[0].VDADI;
                     $scope.CariVDNO = $scope.CariListe[0].VDNO;
+                    $scope.Risk = $scope.CariListe[0].RISK;
 
                     $("#TblCari").jsGrid({data : $scope.CariListe});
 
@@ -2067,7 +2071,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         {
                             db.ExecuteTag($scope.Firma,'BedenHarDelete',[$scope.IrsaliyeListe[$scope.IslemListeSelectedIndex].sth_Guid,11],function(data)
                             {
-                                console.log($scope.IrsaliyeListe[$scope.IslemListeSelectedIndex].sth_Guid)
                                 if(typeof(data.result.err) != 'undefined')
                                 {
                                     console.log(data.result.err);
@@ -2223,6 +2226,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             alertify.alert("Gösterilecek Evrak Bulunamadı!");
             $("#TbMain").addClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');
+            $("#TbBarkodGiris").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
         else
         {
@@ -2294,14 +2300,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
         let i = 18 - $scope.FisLength.length;
         let Satır = "";
-        console.log($scope.FisLength.length)
-        console.log(i)
 
         for(let x = 0; x <= i; x++)
         {
-            console.log(1)        
+    
             Satır = Satır + "                                             "+ "\n"; 
-            console.log(Satır)
+
         }
 
         FisDizayn = "                                             " + "\n" + 
@@ -2338,7 +2342,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     "                                              " + "\n" 
         FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
-        console.log(FisDizayn)
         
        
         db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)

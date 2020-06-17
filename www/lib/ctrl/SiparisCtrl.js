@@ -1490,6 +1490,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
         $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
         $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
+        $scope.Risk = $scope.CariListe[0].RISK;
         $scope.DovizChangeKodu = "0"
         $scope.DovizChange()
         $scope.MainClick();
@@ -1707,12 +1708,28 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
        
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {   
+            if(ParamName == "AlinanSiparis")
+            {
+                if($scope.RiskParam != 0)
+                {
+                    let TmpRiskOran = ($scope.CariBakiye / $scope.Risk) * 100;
+    
+                    if(TmpRiskOran >= 100)
+                    {
+                        alertify.alert("Risk limitini aştınız");
+                        return;
+                    }
+                    if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
+                    {
+                        alertify.alert("% " + UserParam.Sistem.RiskLimitOran + " kadarı doldu");
+                    }
+                }
+            }
             if(UserParam.AlinanSiparis.EksiyeDusme == 1 &&  $scope.EvrakTip == 0 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
             {
                 alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
+                return;
             }
-            else
-            {
                 $scope.InsertLock = true
                 if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                 {
@@ -1766,8 +1783,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         InsertData();
                     }                
                 }
-            }
-           
         }
         else
         {
@@ -1832,6 +1847,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     $scope.CariBakiye = $scope.CariListe[0].BAKIYE;
                     $scope.CariVDADI = $scope.CariListe[0].VDADI;
                     $scope.CariVDNO = $scope.CariListe[0].VDNO;
+                    $scope.Risk = $scope.CariListe[0].RISK;
 
                     $("#TblCari").jsGrid({data : $scope.CariListe});
 
@@ -2193,7 +2209,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {
         if($scope.AciklamaGuid == '')
         {
-                var InsertData =
+            var InsertData =
             [
                 0,
                 0,
