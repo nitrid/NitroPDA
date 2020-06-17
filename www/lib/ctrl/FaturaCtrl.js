@@ -1056,7 +1056,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         });
     }
     function FisData(pData)
-    { console.log(pData)
+    { 
         $scope.FisLength = pData;
         $scope.FisDeger = "";
         $scope.FisData = "";
@@ -1074,7 +1074,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
        {
            console.log(error)
        }
-    console.log($scope.Tarih);
     }
     function SpaceLength(pData,pLength)
     {
@@ -1928,7 +1927,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     }
                     if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
                     {
-                        alertify.alert("% " + UserParam.Sistem.RiskLimitOran + " kadarı doldu");
+                        alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
                     }
                 }
             }   

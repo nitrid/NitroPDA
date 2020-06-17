@@ -1721,7 +1721,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     }
                     if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
                     {
-                        alertify.alert("% " + UserParam.Sistem.RiskLimitOran + " kadarı doldu");
+                        alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
                     }
                 }
             }
