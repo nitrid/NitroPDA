@@ -97,6 +97,7 @@ var QuerySql =
                 "DOVIZKUR2, " +
                 "ALTDOVIZKUR, " +
                 "RISK, " +
+                "RISKLIMIT, " +
                 "ODEMEPLANI, " +
                 "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE, " +
                 "BELGETARIH, " +
@@ -131,7 +132,8 @@ var QuerySql =
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(1,0),2)) AS ALTDOVIZKUR, " +
-                "ISNULL((SELECT sum(ct_tutari) FROM dbo.CARI_HESAP_TEMINATLARI WHERE ct_carikodu = cari_kod),0) AS RISK, " +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1475\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISK, " +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1479\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISKLIMIT, " +
                 "cari_odemeplan_no AS ODEMEPLANI, " +
                 "(SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)) AS BAKIYE, " +
                 "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH, " +
@@ -174,7 +176,8 @@ var QuerySql =
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1," +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2," +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(1,0),2)) AS ALTDOVIZKUR," +
-                "ISNULL((SELECT sum(ct_tutari) FROM dbo.CARI_HESAP_TEMINATLARI WHERE ct_carikodu = cari_kod),0) AS RISK," +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1475\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISK, " +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1479\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISKLIMIT, " +
                 "cari_odemeplan_no AS ODEMEPLANI," +
                 "ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS BAKIYE," +
                 "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH," +
