@@ -289,6 +289,8 @@ var QuerySql =
                 "MAX(BIRIM) AS BIRIM," +
                 "MAX(DETAYTAKIP) AS DETAYTAKIP," +
                 "MAX(DEPOMIKTAR) AS DEPOMIKTAR," +
+                "BEDENMIKTAR AS BEDENMIKTAR," +
+                "RENKMIKTAR AS RENKMIKTAR," +
                 "MAX(KIRILIMMIKTAR) AS KIRILIMMIKTAR, " +
                 "MAX(SIPARISDURSUN) AS SIPARISDURSUN, " +
                 "MAX(MALKABULDURSUN) AS MALKABULDURSUN, " +
@@ -336,6 +338,8 @@ var QuerySql =
                 "(SELECT dbo.fn_StokBirimi (sto_kod,bar_birimpntr)) AS BIRIM, " +
                 "sto_detay_takip AS DETAYTAKIP, " +
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
+                "ISNULL((SELECT msg_S_0165 AS MIKTAR FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] (bar_stokkodu,@DEPONO,GETDATE()) WHERE msg_S_0062 = bar_renkpntr),0) AS RENKMIKTAR," +
+                "ISNULL((SELECT msg_S_0165 AS MIKTAR FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] (bar_stokkodu,@DEPONO,GETDATE()) WHERE msg_S_0062 = bar_bedenpntr),0) AS BEDENMIKTAR," +
                 "ISNULL(( SELECT  msg_S_0165  FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] (sto_kod,@DEPONO,GETDATE()) WHERE msg_S_0062=CASE WHEN bar_renkpntr=0 THEN bar_bedenpntr ELSE CASE WHEN bar_bedenpntr=0 THEN (bar_renkpntr-1)*40+1 ELSE (bar_renkpntr-1)*40+bar_bedenpntr END  END),0) AS KIRILIMMIKTAR, " +
                 "sto_siparis_dursun AS SIPARISDURSUN, " +
                 "sto_malkabul_dursun as MALKABULDURSUN, " +
@@ -349,7 +353,7 @@ var QuerySql =
                 "WHERE ((sto_kod LIKE  @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE '%' + @ADI + '%' ) OR (@ADI = '')) " +
                 "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
                 ") AS TMP " +
-                "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI ORDER BY KODU" ,
+                "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI,BEDENMIKTAR,RENKMIKTAR ORDER BY KODU" ,
         param : ['KODU',"ADI",'DEPONO','MKODU'],
         type : ['string|25','string|50','int','string|25']
     },    
