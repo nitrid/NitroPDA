@@ -259,7 +259,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.SntckPoz, //SNTCKPOZ
                 0 //EISLEMTURU
                 ];
-                console.log(InsertData)
             db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
             {   
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(CariHarGetir)
@@ -1057,6 +1056,69 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             {
                 alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşleminde Hata !" + "</a>" ); 
             }
+        });
+    }
+    async function GunSonuData(pData,pNakit,pKredi,pToplam)
+    {
+        let FisDizayn = "";
+        let FisDeger = "";
+        $scope.GunSonuData = "";
+
+        FisDeger = FisDeger + "                                  TAHSILAT GUN SONU " + "\n" 
+        FisDeger = FisDeger + "                                                    Tarih : "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n";
+
+        for(let i=0; i < pData.length; i++)
+        {
+            $scope.GunSonuData = $scope.GunSonuData + SpaceLength(pData[i].TIP,10) + " " + SpaceLength(pData[i].SERI,8) + " " +  SpaceLength(pData[i].SIRA,6) + " " + SpaceLength(pData[i].CARIKOD,8) + "  " + SpaceLength(pData[i].CARIADI,18) + SpaceLength(parseFloat(pData[i].TUTAR.toFixed(2)),7) + " " + SpaceLength(pData[i].VADE,10) + "\n";
+        } 
+
+        FisDizayn = "                                             " + "\n" + 
+                    FisDeger + "\n" + "\n" +
+                    FisDizayn + "TAHSILAT   SERI    SIRA   CARI KODU    CARI ADI       TUTAR    VADE" + "\n" + 
+                    "                                              " + "\n" + 
+                    $scope.GunSonuData + "\n"  +
+                    "                                                                                                                                   - " + "\n " +
+                    "                                                                                                                                   - " + "\n "
+        FisDizayn = FisDizayn + "                                                Nakit Toplam : " + pNakit + "\n " 
+        FisDizayn = FisDizayn + "                                          Kredi Kartı Toplam : " + pKredi + "\n "
+        FisDizayn = FisDizayn + "                                                      Toplam : " + pToplam.toFixed(2) + "\n "
+        FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+        
+        console.log(FisDizayn)
+        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+        {
+            if(pStatus)
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+            }
+        });
+    }
+    $scope.BtnGunSonuRapor = async function()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT " +
+                    "cha_cinsi AS EVRAKTIP, " +
+                    "CONVERT(VARCHAR(10),MAX(cha_vade),112) AS VADE, " +
+                    "CASE WHEN cha_cinsi = 0 THEN 'NAKIT' WHEN cha_cinsi = 19 THEN 'K.KARTI'  " +
+                    "WHEN cha_cinsi = 1 THEN 'M. ÇEKİ' WHEN cha_cinsi = 2 THEN 'M. SENEDİ' END AS TIP, " +
+                    "cha_evrakno_seri AS SERI,  " +
+                    "cha_evrakno_sira AS SIRA,  " +
+                    "MAX(cha_kod) AS CARIKOD, " +
+                    "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) + ' ' +  " +
+                    "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) AS CARIADI, " +
+                    "ROUND(SUM(cha_meblag),2) AS TUTAR " +
+                    "FROM CARI_HESAP_HAREKETLERI WHERE cha_tip = 1 AND cha_evrak_tip = 1 AND cha_tarihi = CONVERT(VARCHAR(10),GETDATE(),112) " +
+                    "GROUP BY cha_evrakno_seri,cha_evrakno_sira,cha_cinsi " 
+        }
+
+        await db.GetPromiseQuery(TmpQuery,async function(Data)
+        {
+            let NakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
+            let KrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
+            let GenelToplam = NakitToplam + KrediToplam
+            await GunSonuData(Data,NakitToplam,KrediToplam,GenelToplam)
         });
     }
 }
