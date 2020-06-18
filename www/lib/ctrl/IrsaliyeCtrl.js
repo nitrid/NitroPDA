@@ -198,7 +198,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {
                 $scope.CariListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
-            } 
+            }
         });
     }
     function InitIslemGrid()
