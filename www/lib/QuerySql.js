@@ -97,6 +97,7 @@ var QuerySql =
                 "DOVIZKUR2, " +
                 "ALTDOVIZKUR, " +
                 "RISK, " +
+                "RISKLIMIT, " +
                 "ODEMEPLANI, " +
                 "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE, " +
                 "BELGETARIH, " +
@@ -131,7 +132,8 @@ var QuerySql =
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(1,0),2)) AS ALTDOVIZKUR, " +
-                "ISNULL((SELECT sum(ct_tutari) FROM dbo.CARI_HESAP_TEMINATLARI WHERE ct_carikodu = cari_kod),0) AS RISK, " +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1475\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISK, " +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1479\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISKLIMIT, " +
                 "cari_odemeplan_no AS ODEMEPLANI, " +
                 "(SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)) AS BAKIYE, " +
                 "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH, " +
@@ -174,7 +176,8 @@ var QuerySql =
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1," +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2," +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(1,0),2)) AS ALTDOVIZKUR," +
-                "ISNULL((SELECT sum(ct_tutari) FROM dbo.CARI_HESAP_TEMINATLARI WHERE ct_carikodu = cari_kod),0) AS RISK," +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1475\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISK, " +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1479\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISKLIMIT, " +
                 "cari_odemeplan_no AS ODEMEPLANI," +
                 "ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS BAKIYE," +
                 "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH," +
@@ -289,6 +292,8 @@ var QuerySql =
                 "MAX(BIRIM) AS BIRIM," +
                 "MAX(DETAYTAKIP) AS DETAYTAKIP," +
                 "MAX(DEPOMIKTAR) AS DEPOMIKTAR," +
+                "BEDENMIKTAR AS BEDENMIKTAR," +
+                "RENKMIKTAR AS RENKMIKTAR," +
                 "MAX(KIRILIMMIKTAR) AS KIRILIMMIKTAR, " +
                 "MAX(SIPARISDURSUN) AS SIPARISDURSUN, " +
                 "MAX(MALKABULDURSUN) AS MALKABULDURSUN, " +
@@ -336,6 +341,8 @@ var QuerySql =
                 "(SELECT dbo.fn_StokBirimi (sto_kod,bar_birimpntr)) AS BIRIM, " +
                 "sto_detay_takip AS DETAYTAKIP, " +
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
+                "ISNULL((SELECT msg_S_0165 AS MIKTAR FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] (bar_stokkodu,@DEPONO,GETDATE()) WHERE msg_S_0062 = bar_renkpntr),0) AS RENKMIKTAR," +
+                "ISNULL((SELECT msg_S_0165 AS MIKTAR FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] (bar_stokkodu,@DEPONO,GETDATE()) WHERE msg_S_0062 = bar_bedenpntr),0) AS BEDENMIKTAR," +
                 "ISNULL(( SELECT  msg_S_0165  FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] (sto_kod,@DEPONO,GETDATE()) WHERE msg_S_0062=CASE WHEN bar_renkpntr=0 THEN bar_bedenpntr ELSE CASE WHEN bar_bedenpntr=0 THEN (bar_renkpntr-1)*40+1 ELSE (bar_renkpntr-1)*40+bar_bedenpntr END  END),0) AS KIRILIMMIKTAR, " +
                 "sto_siparis_dursun AS SIPARISDURSUN, " +
                 "sto_malkabul_dursun as MALKABULDURSUN, " +
@@ -349,7 +356,7 @@ var QuerySql =
                 "WHERE ((sto_kod LIKE  @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE '%' + @ADI + '%' ) OR (@ADI = '')) " +
                 "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
                 ") AS TMP " +
-                "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI ORDER BY KODU" ,
+                "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI,BEDENMIKTAR,RENKMIKTAR ORDER BY KODU" ,
         param : ['KODU',"ADI",'DEPONO','MKODU'],
         type : ['string|25','string|50','int','string|25']
     },    
