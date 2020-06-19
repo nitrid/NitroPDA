@@ -26,6 +26,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.Personel = "";
         $scope.PersonelAdi = "";
         $scope.TahsilatCinsi = "0";
+        $scope.GunSonuDizayn = "";
         $scope.KasaBanka = "0";
         $scope.SntckPoz = 0;
         $scope.KasTip = 0;
@@ -38,10 +39,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.Aciklama = "NAKİT KASASI";
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Saat = moment(new Date()).format("LTS");
-
         $scope.ChaCins = 0;
         $scope.ChaEvrakTip = 1;
         $scope.TrefNo = "";
+        $scope.DNakitToplam = 0;
+        $scope.DKrediToplam = 0;
+        $scope.DGenelToplam = 0;
        
         $scope.CariListe = [];
         $scope.SorumlulukListe = [];
@@ -49,6 +52,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.KasaListe = [];
         $scope.BankaListe = [];
         $scope.CariHarListe = [];
+        $scope.DizaynListe = [];
 
         $scope.Tutar = "";
 
@@ -184,6 +188,78 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             rowClick: function(args)
             {
                 $scope.IslemListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitDizaynGrid()
+    {
+        $("#TblDizayn").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.DizaynListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: 
+            [
+            {
+                name: "TIP",
+                title: "TIP",
+                type: "text",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "SERI",
+                title: "SERI",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "SIRA",
+                title: "SIRA",
+                type: "number",
+                align: "center",
+                width: 75
+            },
+            {
+                name: "CARIKOD",
+                title: "CARİ KODU",
+                type: "number",
+                align: "center",
+                width: 150
+            },
+            {
+                name: "CARIADI",
+                title: "CARİ ADI",
+                type: "number",
+                align: "center",
+                width: 200
+            },
+            {
+                name: "TUTAR",
+                title: "TUTAR",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "VADE",
+                title: "VADE",
+                type: "number",
+                align: "center",
+                width: 100
+            }
+           ],
+            rowClick: function(args)
+            {
+                $scope.CariListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -371,16 +447,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     {
             if($scope.DovizChangeKodu == 0)
             {
-                console.log($scope.CariAnaDovizCinsi)
                 $scope.CariDovizCinsi = $scope.CariAnaDovizCinsi;
                 $scope.CariDovizKuru = $scope.CariAnaDovizKuru
                 $scope.CariDovizAdi = $scope.DovizAnaSembol
-
             }
             else if($scope.DovizChangeKodu == 1)
             {
-                console.log(1)
-                console.log($scope.CariDovizCinsi1)
                 $scope.CariDovizCinsi = $scope.CariDovizCinsi1;
                 $scope.CariDovizKuru = $scope.CariDovizKuru1;
                 $scope.CariDovizAdi = $scope.DovizSembol1
@@ -399,7 +471,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         CariSelectedRow = $row;
 
-        console.log($scope.CariListe[pIndex])
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
         parseFloat($scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE).toFixed(2);
@@ -478,11 +549,11 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         InitCariGrid();
         InitIslemGrid();
         InitIslemDetayGrid();
+        InitDizaynGrid();
 
         if(pTip == 0)
         {
             ParamName = "TahsilatMakbuzu";
-            console.log(ParamName)
         }
         else
         {
@@ -492,7 +563,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
          
         $scope.MainClick();
 
-        console.log(UserParam[ParamName].Seri)
         $scope.Seri = UserParam[ParamName].Seri;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.ChaEvrakTip = UserParam[ParamName].ChaEvrakTip;
@@ -992,6 +1062,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $("#TbMeblagGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TbCariSec").removeClass('active');
+        $("#TbDizayn").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
     {
@@ -1007,8 +1078,8 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $("#TbCariSec").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbIslemSatirlari").removeClass('active');
+            $("#TbDizayn").removeClass('active');
             BarkodFocus();
-            console.log($scope.CariDovizCinsi)
         }
         else
         {
@@ -1023,6 +1094,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $("#TbMain").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbMeblagGiris").removeClass('active');
+            $("#TbDizayn").removeClass('active');
         }
         else
         {
@@ -1058,34 +1130,34 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             }
         });
     }
-    async function GunSonuData(pData,pNakit,pKredi,pToplam)
-    {
-        let FisDizayn = "";
+    //GÜN SONU RAPORU
+    $scope.BtnGunSonuYazdir = async function()
+    {  
         let FisDeger = "";
         $scope.GunSonuData = "";
 
         FisDeger = FisDeger + "                                  TAHSILAT GUN SONU " + "\n" 
         FisDeger = FisDeger + "                                                    Tarih : "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n";
 
-        for(let i=0; i < pData.length; i++)
+        for(let i=0; i < $scope.DizaynListe.length; i++)
         {
-            $scope.GunSonuData = $scope.GunSonuData + SpaceLength(pData[i].TIP,10) + " " + SpaceLength(pData[i].SERI,8) + " " +  SpaceLength(pData[i].SIRA,6) + " " + SpaceLength(pData[i].CARIKOD,8) + "  " + SpaceLength(pData[i].CARIADI,18) + SpaceLength(parseFloat(pData[i].TUTAR.toFixed(2)),7) + " " + SpaceLength(pData[i].VADE,10) + "\n";
+            $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].TIP,10) + " " + SpaceLength($scope.DizaynListe[i].SERI,8) + " " +  SpaceLength($scope.DizaynListe[i].SIRA,6) + " " + SpaceLength($scope.DizaynListe[i].CARIKOD,8) + "  " + SpaceLength($scope.DizaynListe[i].CARIADI,18) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),7) + " " + SpaceLength($scope.DizaynListe[i].VADE,10) + "\n";
         } 
 
-        FisDizayn = "                                             " + "\n" + 
+        $scope.GunSonuDizayn = "                                             " + "\n" + 
                     FisDeger + "\n" + "\n" +
-                    FisDizayn + "TAHSILAT   SERI    SIRA   CARI KODU    CARI ADI       TUTAR    VADE" + "\n" + 
+                    $scope.GunSonuDizayn + "TAHSILAT   SERI    SIRA   CARI KODU    CARI ADI       TUTAR    VADE" + "\n" + 
                     "                                              " + "\n" + 
                     $scope.GunSonuData + "\n"  +
                     "                                                                                                                                   - " + "\n " +
                     "                                                                                                                                   - " + "\n "
-        FisDizayn = FisDizayn + "                                                Nakit Toplam : " + pNakit + "\n " 
-        FisDizayn = FisDizayn + "                                          Kredi Kartı Toplam : " + pKredi + "\n "
-        FisDizayn = FisDizayn + "                                                      Toplam : " + pToplam.toFixed(2) + "\n "
-        FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                Nakit Toplam : " + $scope.DNakitToplam.toFixed(2) + "\n " 
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                          Kredi Kartı Toplam : " + $scope.DKrediToplam.toFixed(2) + "\n "
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                      Toplam : " + $scope.DGenelToplam.toFixed(2) + "\n "
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
         
-        console.log(FisDizayn)
-        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+        console.log($scope.GunSonuDizayn)
+        db.BTYazdir($scope.GunSonuDizayn,UserParam.Sistem,function(pStatus)
         {
             if(pStatus)
             {
@@ -1093,8 +1165,14 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             }
         });
     }
-    $scope.BtnGunSonuRapor = async function()
+    $scope.BtnGunSonuRaporClick = async function()
     {
+        $("#TbMeblagGiris").removeClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
@@ -1112,13 +1190,14 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                     "FROM CARI_HESAP_HAREKETLERI WHERE cha_tip = 1 AND cha_evrak_tip = 1 AND cha_tarihi = CONVERT(VARCHAR(10),GETDATE(),112) " +
                     "GROUP BY cha_evrakno_seri,cha_evrakno_sira,cha_cinsi " 
         }
-
         await db.GetPromiseQuery(TmpQuery,async function(Data)
         {
-            let NakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
-            let KrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
-            let GenelToplam = NakitToplam + KrediToplam
-            await GunSonuData(Data,NakitToplam,KrediToplam,GenelToplam)
+            $scope.DNakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
+            $scope.DKrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
+            $scope.DGenelToplam = $scope.DNakitToplam + $scope.DKrediToplam
+            $scope.DizaynListe = Data;
+            $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
+            $("#TbDizayn").addClass('active');
         });
     }
 }

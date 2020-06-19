@@ -25,7 +25,7 @@
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak(1)">Yeni Evrak</button>
                                 <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Evrak Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(1)">Evrak Sil</button>
-                                <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRapor()">Gün Sonu Raporu</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRaporClick()">Gün Sonu Raporu</button>
                                 <!-- <button class="dropdown-item" data-target="#RenkBeden" data-toggle="modal" role="menu-item">Renk Beden</a>
                                 <button class="dropdown-item" data-target="#PartiLot" data-toggle="modal" role="menu-item">PartiLot</a> -->
                             </div>
@@ -427,6 +427,26 @@
                     <div class="row py-1 px-1" ng-show="TblLoading">           
                         <div class="table-responsive">
                         <div class="table" id="TblStok"></div>                        
+                        </div>
+                    </div>
+                </div>
+                <div id="TbDizayn" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <div id="TblDizayn"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{DGenelToplam | number:2}}</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn btn-block btn-primary " ng-click="BtnGunSonuYazdir()">Yazdır</button>
                         </div>
                     </div>
                 </div>

@@ -138,6 +138,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.IskTplTutar = 0;
 
         $scope.TblLoading = true;
+
+        //DIZAYN
+        $scope.DGenelToplam = 0;
+        $scope.DizaynListe = [];
     }
     function InitCariGrid()
     {   
@@ -426,6 +430,64 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             rowClick: function(args)
             {
                 $scope.PartiLotListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitDizaynGrid()
+    {
+        $("#TblDizayn").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.DizaynListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: 
+            [
+            {
+                name: "SERI",
+                title: "SERI",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "SIRA",
+                title: "SIRA",
+                type: "number",
+                align: "center",
+                width: 75
+            },
+            {
+                name: "CARIKOD",
+                title: "CARİ KODU",
+                type: "number",
+                align: "center",
+                width: 150
+            },
+            {
+                name: "CARIADI",
+                title: "CARİ ADI",
+                type: "number",
+                align: "center",
+                width: 200
+            },
+            {
+                name: "TUTAR",
+                title: "TUTAR",
+                type: "number",
+                align: "center",
+                width: 100
+            }
+           ],
+            rowClick: function(args)
+            {
+                $scope.CariListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -981,6 +1043,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         InitIslemGrid();
         InitStokGrid();
         InitPartiLotGrid();
+        InitDizaynGrid();
 
         //ALIŞ = 0 SATIŞ = 1
         if(pAlisSatis == 0)
@@ -2180,6 +2243,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbCariSec").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
+        $("#TbDizayn").removeClass('active');
     }
     $scope.MainClick = function() 
     {
@@ -2189,11 +2253,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbIslemSatirlari").removeClass('active');
         $("#TbCariSec").removeClass('active');
         $("#TbStok").removeClass('active');
+        $("#TbDizayn").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
     {
         $("#TbBelgeBilgisi").addClass('active');
         $("#TbMain").removeClass('active');
+        $("#TbDizayn").removeClass('active');
     }
     $scope.BarkodGirisClick = function() 
     {   
@@ -2211,6 +2277,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbStok").removeClass('active');
+                $("#TbDizayn").removeClass('active');
                             
                 BarkodFocus();
             }
@@ -2229,6 +2296,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $("#TbBelgeBilgisi").removeClass('active');
             $("#TbBarkodGiris").removeClass('active');
             $("#TbStok").removeClass('active');
+            $("#TbDizayn").removeClass('active');
         }
         else
         {
@@ -2249,6 +2317,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
         $("#TbCariSec").addClass('active');
         $("#TbMain").removeClass('active');
+        $("#TbDizayn").removeClass('active');
         }
     }
     $scope.ScanBarkod = function()
@@ -2350,32 +2419,32 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
         });
     }
-    async function GunSonuData(pData,pToplam)
-    {
-        let FisDizayn = "";
+    //GÜN SONU RAPORU
+    $scope.BtnGunSonuYazdir = async function()
+    {  
         let FisDeger = "";
         $scope.GunSonuData = "";
 
         FisDeger = FisDeger + "                              IRSALIYE GUN SONU " + "\n" 
         FisDeger = FisDeger + "                                                   "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n";
 
-        for(let i=0; i < pData.length; i++)
+        for(let i=0; i < $scope.DizaynListe.length; i++)
         {
-            $scope.GunSonuData = $scope.GunSonuData +  SpaceLength(pData[i].SERI,10) + "  " +  SpaceLength(pData[i].SIRA,10) + "  " + SpaceLength(pData[i].CARIKOD,15) + "  " + SpaceLength(pData[i].CARIADI,20) + SpaceLength(parseFloat(pData[i].TUTAR.toFixed(2)),8) + "\n";
+            $scope.GunSonuData = $scope.GunSonuData +  SpaceLength($scope.DizaynListe[i].SERI,10) + "  " +  SpaceLength($scope.DizaynListe[i].SIRA,10) + "  " + SpaceLength($scope.DizaynListe[i].CARIKOD,15) + "  " + SpaceLength($scope.DizaynListe[i].CARIADI,20) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),8) + "\n";
         } 
 
-        FisDizayn = "                                             " + "\n" + 
+        $scope.GunSonuDizayn = "                                             " + "\n" + 
                     FisDeger + "\n" + "\n" +
-                    FisDizayn + "SERI        SIRA       CARI KODU            CARI ADI        TUTAR" + "\n" + 
+                    "SERI        SIRA       CARI KODU            CARI ADI        TUTAR" + "\n" + 
                     "                                              " + "\n" + 
                     $scope.GunSonuData + "\n"  +
                     "                                                                                                                                   - " + "\n " +
                     "                                                                                                                                   - " + "\n "
-        FisDizayn = FisDizayn + "                                                   TOPLAM : " + pToplam
-        FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                   TOPLAM : " + $scope.DGenelToplam
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
         
-        console.log(FisDizayn)
-        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+        console.log($scope.GunSonuDizayn)
+        db.BTYazdir($scope.GunSonuDizayn,UserParam.Sistem,function(pStatus)
         {
             if(pStatus)
             {
@@ -2383,8 +2452,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
         });
     }
-    $scope.BtnGunSonuRapor = async function()
+    $scope.BtnGunSonuRaporClick = async function()
     {
+        $("#TbStok").removeClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
@@ -2403,8 +2479,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         await db.GetPromiseQuery(TmpQuery,async function(Data)
         {
-            let Toplam = db.SumColumn(Data,"TUTAR");
-            await GunSonuData(Data,Toplam)
+            $scope.DGenelToplam = db.SumColumn(Data,"TUTAR");
+            $scope.DizaynListe = Data;
+            $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
+            $("#TbDizayn").addClass('active');
         });
     }
 }
