@@ -74,6 +74,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.AciklamaEvrTip = 0;
         $scope.AciklamaHarTip = 0;
         $scope.EvrakDovizTip = "";
+        $scope.Risk = 0;
+        $scope.RiskLimit = 0; 
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -179,6 +181,18 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     type: "number",
                     align: "center",
                     width: 75
+                },
+                {
+                    name: "RISK",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                },
+                {
+                    name: "RISKLIMIT",
+                    type: "number",
+                    align: "center",
+                    width: 90
                 },
                 {
                     name: "DOVIZSEMBOL",
@@ -1489,8 +1503,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.Adres2 = $scope.CariListe[pIndex].ADRES2;
         $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
         $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
-        $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
-        $scope.Risk = $scope.CariListe[0].RISK;
+        $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2        
+        $scope.Risk = $scope.CariListe[pIndex].RISK
+        $scope.RiskLimit = $scope.CariListe[pIndex].RISKLIMIT;
         $scope.DovizChangeKodu = "0"
         $scope.DovizChange()
         $scope.MainClick();
@@ -1712,7 +1727,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             {
                 if($scope.RiskParam != 0)
                 {
-                    let TmpRiskOran = ($scope.CariBakiye / $scope.Risk) * 100;
+                    let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
     
                     if(TmpRiskOran >= 100)
                     {
@@ -1846,8 +1861,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Adres2 = $scope.CariListe[0].ADRES2;
                     $scope.CariBakiye = $scope.CariListe[0].BAKIYE;
                     $scope.CariVDADI = $scope.CariListe[0].VDADI;
-                    $scope.CariVDNO = $scope.CariListe[0].VDNO;
-                    $scope.Risk = $scope.CariListe[0].RISK;
+                    $scope.CariVDNO = $scope.CariListe[0].VDNO;                    
+                    $scope.Risk = $scope.CariListe[0].RISK
+                    $scope.RiskLimit = $scope.CariListe[0].RISKLIMIT;
 
                     $("#TblCari").jsGrid({data : $scope.CariListe});
 

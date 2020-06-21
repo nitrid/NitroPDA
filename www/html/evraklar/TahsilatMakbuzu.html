@@ -22,6 +22,7 @@
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak(0)">Yeni Tahsilat</button>
                                 <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Tahsilat Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(0)">Tahsilat Sil</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRaporClick()">Gün Sonu Raporu</button>
                             </div>
                         </div>
                     </div>
@@ -56,7 +57,7 @@
                         <div class="col-6">
                             <button class="btn btn-block btn-primary h-50" ng-click="IslemSatirlariClick()">İşlem Satırları</button>
                         </div>
-                    </div> 
+                    </div>
                 </div>
                 <div id="TbBelgeBilgisi" class="tab-pane">
                     <div class="row pt-0 pb-1 pb-5">
@@ -252,6 +253,36 @@
                                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam :</span> {{Toplam | number:2}}</h5>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="TbDizayn" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <div id="TblDizayn"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-right my-1"><span style="color:dodgerblue;">Nakit Toplam :</span> {{DNakitToplam | number:2}}</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-right my-1"><span style="color:dodgerblue;">Kredi Toplam :</span> {{DKrediToplam | number:2}}</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{DGenelToplam | number:2}}</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn btn-block btn-primary " ng-click="BtnGunSonuYazdir()">Yazdır</button>
                         </div>
                     </div>
                 </div>
