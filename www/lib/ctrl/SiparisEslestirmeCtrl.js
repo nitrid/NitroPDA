@@ -577,7 +577,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.SipSeri,
             $scope.SipSira,
             pBarkod
-        ];
+        ]; 
         db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(BarkodData)
         {
             if(BarkodData.length > 0)
@@ -1151,12 +1151,10 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         ];
         db.ExecuteTag($scope.Firma,'BedenHarInsert',Data,function(data)
         {
-            console.log(3)
             if(typeof(data.result.err) == 'undefined')
             {
                 db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,9],function(BedenData)
                 {
-                    console.log(4)
                     $scope.BedenHarListe = BedenData;
                 });
             }

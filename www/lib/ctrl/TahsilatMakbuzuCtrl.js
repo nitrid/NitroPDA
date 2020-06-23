@@ -2,6 +2,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 {
     let CariSelectedRow = null;
     let IslemSelectedRow = null;
+    let Tip = 0;
 
     function Init()
     {
@@ -45,7 +46,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.DNakitToplam = 0;
         $scope.DKrediToplam = 0;
         $scope.DGenelToplam = 0;
-       
+
         $scope.CariListe = [];
         $scope.SorumlulukListe = [];
         $scope.PersonelListe = [];
@@ -344,7 +345,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                     DipToplamHesapla();
                     FisData(CariHarGetir)
                     $("#TblIslem").jsGrid({data : $scope.CariHarListe});  
-                    $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});           
+                    $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});   
+                    
+                    if($scope.TahsilatCinsi !=0)
+                    {
+                        OdemeEmirleriInsert();
+                    }
                 });
             });
         } 
@@ -379,11 +385,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.Tarih,        //SCKILKHAREKETTARİHİ
                 $scope.Seri,         //İLKEVRAKSERİ
                 $scope.Sira,         //İLKEVRAKSIRA
+                $scope.CariHarListe[$scope.CariHarListe.length - 1].cha_satir_no, //İLKEVRAKSATIRNO
                 $scope.Tarih,        //SONHAREKETTARİHİ
                 1,                   //DOVIZKUR
                 $scope.SntckPoz,      //SCKSONPOZ
                 $scope.Sorumluluk,    //SORUMLULUKMERKEZI
-                ""                   //PROJE
+                ""                    //PROJE 
                 ];
 
             db.ExecuteTag($scope.Firma,'CekHarInsert',InsertData,function(InsertResult)
@@ -551,7 +558,9 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         InitIslemDetayGrid();
         InitDizaynGrid();
 
-        if(pTip == 0)
+        Tip = pTip;
+
+        if(Tip == 0)
         {
             ParamName = "TahsilatMakbuzu";
         }
@@ -559,7 +568,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             ParamName = "TediyeMakbuzu";
         }
-         
          
         $scope.MainClick();
 
@@ -573,8 +581,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             $scope.CariKodu = JSON.parse(localStorage.FaturaParam).CariKodu
         }
-
-       
         if($scope.CariKodu != "")
         {       
             db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
@@ -592,7 +598,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.TblLoading = true;
             });
         }
-
         await db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
         {
             $scope.SorumlulukListe = data; 
@@ -726,11 +731,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             {
                 if($scope.KasaDoviz == $scope.CariDovizCinsi)
                 {
-                    CariHarInsert();
-                    if($scope.TahsilatCinsi !=0)
-                    {
-                        OdemeEmirleriInsert();
-                    }
+                    CariHarInsert();                    
                 }
                 else
                 {
@@ -856,8 +857,9 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                         }
                         else
                         {
+                            db.ExecuteTag($scope.Firma,'CekHarDelete',[$scope.Seri,$scope.Sira])
                             alertify.alert("<a style='color:#3e8ef7''>" + "Evrak Silme İşlemi Başarıyla Gerçekleşti !" + "</a>" );
-                            if(pTİp == 0)
+                            if(Tip == 0)
                             {
                                 ParamName = "TahsilatMakbuzu";
                                 $scope.YeniEvrak(0)
@@ -1144,13 +1146,8 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].TIP,10) + " " + SpaceLength($scope.DizaynListe[i].SERI,8) + " " +  SpaceLength($scope.DizaynListe[i].SIRA,6) + " " + SpaceLength($scope.DizaynListe[i].CARIKOD,8) + "  " + SpaceLength($scope.DizaynListe[i].CARIADI,18) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),7) + " " + SpaceLength($scope.DizaynListe[i].VADE,10) + "\n";
         } 
 
-        $scope.GunSonuDizayn = "                                             " + "\n" + 
-                    FisDeger + "\n" + "\n" +
-                    $scope.GunSonuDizayn + "TAHSILAT   SERI    SIRA   CARI KODU    CARI ADI       TUTAR    VADE" + "\n" + 
-                    "                                              " + "\n" + 
-                    $scope.GunSonuData + "\n"  +
-                    "                                                                                                                                   - " + "\n " +
-                    "                                                                                                                                   - " + "\n "
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                Senet Toplam : " + $scope.DSenetToplam.toFixed(2) + "\n " 
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                  Çek Toplam : " + $scope.DCekToplam.toFixed(2) + "\n "
         $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                Nakit Toplam : " + $scope.DNakitToplam.toFixed(2) + "\n " 
         $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                          Kredi Kartı Toplam : " + $scope.DKrediToplam.toFixed(2) + "\n "
         $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                      Toplam : " + $scope.DGenelToplam.toFixed(2) + "\n "
@@ -1194,7 +1191,9 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             $scope.DNakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
             $scope.DKrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
-            $scope.DGenelToplam = $scope.DNakitToplam + $scope.DKrediToplam
+            $scope.DSenetToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 2");
+            $scope.DCekToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 1");
+            $scope.DGenelToplam = $scope.DNakitToplam + $scope.DKrediToplam + $scope.DSenetToplam + $scope.DCekToplam;
             $scope.DizaynListe = Data;
             $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
             $("#TbDizayn").addClass('active');
