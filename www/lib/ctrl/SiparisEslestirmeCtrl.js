@@ -577,7 +577,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.SipSeri,
             $scope.SipSira,
             pBarkod
-        ];
+        ]; 
         db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(BarkodData)
         {
             if(BarkodData.length > 0)
