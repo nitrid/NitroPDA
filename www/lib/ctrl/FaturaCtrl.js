@@ -75,8 +75,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.DisTicaretTur;
         $scope.VergisizFl = 0;
         $scope.BirimAdi = "";
-        $scope.Risk = 0;
-        $scope.RiskLimit = 0; 
+
 
         //CARİHAREKET
         if(ParamName == "AlisFatura")
@@ -179,18 +178,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     type: "number",
                     align: "center",
                     width: 75
-                },
-                {
-                    name: "RISK",
-                    type: "number",
-                    align: "center",
-                    width: 75
-                },
-                {
-                    name: "RISKLIMIT",
-                    type: "number",
-                    align: "center",
-                    width: 90
                 },
                 {
                     name: "DOVIZSEMBOL",
@@ -1584,8 +1571,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         $scope.CariVDADI = $scope.CariListe[0].VDADI;
                         $scope.CariVDNO = $scope.CariListe[0].VDNO;
                         $scope.Risk = $scope.CariListe[0].RISK;
-                        $scope.RiskLimit = $scope.CariListe[0].RISKLIMIT;
-
                         $("#TblCari").jsGrid({data : $scope.CariListe});
 
                         let Obj = $("#TblCari").data("JSGrid");
@@ -1661,6 +1646,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 1) //Toptan Alıs Faturası
             {
+                console.log(1)
                 $scope.VergisizFl = 0
                 $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
@@ -1933,7 +1919,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             {
                 if($scope.RiskParam != 0)
                 {
-                    let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
+                    let TmpRiskOran = ($scope.CariBakiye / $scope.Risk) * 100;
     
                     if(TmpRiskOran >= 100)
                     {
@@ -1959,7 +1945,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 {   
                     if(pResult)
                     {
-                        StokHarInsert();                        
+                        StokHarInsert();     
                     }
                 });
                 $scope.InsertLock = false;
@@ -1975,7 +1961,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             CariHarUpdate(); 
                         }
                     });
-                    $scope.InsertLock = false;                    
+                    $scope.InsertLock = false;                
                 }
                 else
                 {   
@@ -2025,7 +2011,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                                 CariHarUpdate(); 
                             }
                         });
-                        $scope.InsertLock = false; 
+                        $scope.InsertLock = false;
                     }
                 }
             }
@@ -2109,7 +2095,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                                 {
                                     CariHarUpdate(function(data)
                                     {
-                                        console.log(data)
                                     });
                                 }
                                 else
@@ -2304,8 +2289,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.CariDovizCinsi =item.DOVIZCINSI;
                 $scope.CariDovizKuru = item.DOVIZKUR;
                 $scope.EvrakDovizTip = item.DOVIZSEMBOL
-                console.log($scope.CariDovizCinsi)
-                console.log($scope.CariDovizKuru)
 
             }
             
@@ -2424,7 +2407,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
             $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
             $scope.Risk = $scope.CariListe[pIndex].RISK
-            $scope.RiskLimit = $scope.CariListe[pIndex].RISKLIMIT
             $scope.DovizChangeKodu = "0"
             $scope.DovizChange()
             $scope.MainClick();
