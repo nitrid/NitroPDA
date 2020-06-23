@@ -1151,12 +1151,10 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         ];
         db.ExecuteTag($scope.Firma,'BedenHarInsert',Data,function(data)
         {
-            console.log(3)
             if(typeof(data.result.err) == 'undefined')
             {
                 db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,9],function(BedenData)
                 {
-                    console.log(4)
                     $scope.BedenHarListe = BedenData;
                 });
             }

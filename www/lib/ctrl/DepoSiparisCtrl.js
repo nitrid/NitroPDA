@@ -637,11 +637,6 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
                 $scope.Miktar = 1;
             
                 $scope.TOPMIKTAR = 1;
-
-                db.GetData($scope.Firma,'BedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,9],function(BedenData)
-                {
-                    $scope.BedenHarListe = BedenData;
-                });
                 
                 db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(e){$scope.CDepoListe = e; $scope.CDepo = data[0].ssip_girdepo.toString()});
                 db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(e){$scope.GDepoListe = e; $scope.GDepo = data[0].ssip_cikdepo.toString()});
