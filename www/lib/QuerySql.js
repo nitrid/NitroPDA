@@ -2323,7 +2323,7 @@ var QuerySql =
                 ",@sck_ilk_hareket_tarihi   --<sck_ilk_hareket_tarihi, datetime,> \n" + 
                 ",@sck_ilk_evrak_seri       --<sck_ilk_evrak_seri, [dbo].[evrakseri_str],> \n" + 
                 ",@sck_ilk_evrak_sira_no    --<sck_ilk_evrak_sira_no, int,> \n" + 
-                ",(SELECT ISNULL(MAX(sck_ilk_evrak_satir_no),-1) + 1 FROM ODEME_EMIRLERI WHERE sck_ilk_evrak_seri = @sck_ilk_evrak_seri AND sck_ilk_evrak_sira_no = @sck_ilk_evrak_sira_no)				                    --<sck_ilk_evrak_sira_no, int,> \n" +
+                ",@sck_ilk_evrak_satir_no   --<sck_ilk_evrak_satir_no, int,> \n" +
                 ",@sck_son_hareket_tarihi   --<sck_son_hareket_tarihi, datetime,> \n" + 
                 ",@sck_doviz_kur            --<sck_doviz_kur, float,> \n" + 
                 ",@sck_sonpoz               --<sck_sonpoz, tinyint,> \n" + 
@@ -2355,7 +2355,7 @@ var QuerySql =
         param : ['sck_create_user:int','sck_lastup_user:int','sck_firmano:int','sck_subeno:int','sck_tip:int','sck_refno:string|25','sck_borclu:string|25',
                  'sck_vade:date','sck_tutar:float','sck_doviz:int','sck_odenen:float','sck_sahip_cari_cins:int','sck_sahip_cari_kodu:string|25','sck_sahip_cari_grupno:int','sck_nerede_cari_cins:int',
                  'sck_nerede_cari_kodu:string|25','sck_nerede_cari_grupno:int','sck_ilk_hareket_tarihi:date','sck_ilk_evrak_seri:string|25','sck_ilk_evrak_sira_no:int',
-                 'sck_son_hareket_tarihi:date','sck_doviz_kur:float','sck_sonpoz:int','sck_srmmrk:string|25','sck_projekodu:string|25']
+                 'sck_ilk_evrak_satir_no:int','sck_son_hareket_tarihi:date','sck_doviz_kur:float','sck_sonpoz:int','sck_srmmrk:string|25','sck_projekodu:string|25']
     },
     CekHarUpdate:
     {
@@ -2366,9 +2366,9 @@ var QuerySql =
     },
     CekHarDelete:
     {
-        query:  "DELETE FROM ODEME_EMIRLERI WHERE sck_refno = @sck_refno" ,
-        param : ['sck_refno'],
-        type : ['string|50']
+        query:  "DELETE FROM ODEME_EMIRLERI WHERE sck_ilk_evrak_seri = @sck_ilk_evrak_seri AND sck_ilk_evrak_sira_no = @sck_ilk_evrak_sira_no" ,
+        param : ['sck_ilk_evrak_seri','sck_ilk_evrak_sira_no'],
+        type : ['string|20','int']
     },
     MaxCekRefNo : 
     {

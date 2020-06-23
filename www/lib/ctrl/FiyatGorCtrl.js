@@ -32,6 +32,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.StokGridText = "";
         $scope.Marka = "";
         $scope.Reyon = "";
+        $scope.ReyonStok = "";
 
         $scope.BasimTipi = 0;
         $scope.BasimAdet = 1;
@@ -310,11 +311,14 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             { 
                 if(BarkodData.length <= 0)
                 {
+                    $("#MdlReyonDegisikligi").modal('hide');
+                    $scope.ReyonStok = ""
                     alertify.okBtn('Evet');
                     alertify.cancelBtn('Hayır');
             
                     alertify.confirm('Barkod Bulunamadı ! Barkod Eklemek İstermisiniz ?',function()
                     { 
+                        
                         $('#MdlStokGetir').modal("show");
                     })
                 }
@@ -326,6 +330,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     $scope.Barkod = $scope.Stok[0].BARKOD;
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.BarkodLock = true;
+                    $scope.ReyonStok = $scope.Stok[0].BARKOD;
 
                     //Maliyet Getir
                     var Fiyat = 
@@ -439,6 +444,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         {
             console.log("Aradığınız Stok Bulunamamıştır.")
             alertify.alert("Stok Bulunamamıştır.");
+            $("#MdlReyonDegisikligi").modal('hide');
         }
     }
     function InsertData()
@@ -514,6 +520,15 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         if(keyEvent.which == 13)
         {
             StokBarkodGetir($scope.Barkod);
+        }
+    }
+    $scope.ReyonStokGetir = function(keyEvent)
+    {
+        if(keyEvent.which == 13)
+        {
+            StokBarkodGetir($scope.ReyonStok);
+            $window.document.getElementById("Reyon").focus();
+
         }
     }
     $scope.BtnStokGridGetir = function()
@@ -902,10 +917,12 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $("#TbMain").addClass('active');
     }
     $scope.ScanBarkod = function()
-    {
+    { 
         cordova.plugins.barcodeScanner.scan(
+            
             function (result) 
             {
+               
                 $scope.Barkod = result.text;
                 StokBarkodGetir($scope.Barkod);
             },
@@ -917,6 +934,25 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                 prompt : "Barkod Okutunuz",
                 orientation : "portrait"
             }
+        );
+    }
+    $scope.ScanReyon = function()
+    {
+        cordova.plugins.barcodeScanner.scan(
+            function (result) 
+            { 
+                $scope.Reyon = result.text;
+                $scope.BtnReyonUpdate()
+            },
+            function (error) 
+            {
+                //alert("Scanning failed: " + error);
+            },
+            {
+                prompt : "Barkod Okutunuz",
+                orientation : "portrait"
+            },
+            
         );
     }
     $scope.BtnReyonUpdate = function()
@@ -934,7 +970,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         {   
            $scope.Stok[0].REYON = $scope.Reyon;
            $scope.Reyon = "";
-           $("#MdlReyonDegisikligi").modal('hide');
+           $scope.ReyonStok = ""
+           $window.document.getElementById("ReyonStok").focus();
         });
     } 
     $scope.BtnBarkodEkleGridSec = function()
