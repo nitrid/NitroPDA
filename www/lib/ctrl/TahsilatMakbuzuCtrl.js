@@ -1146,13 +1146,8 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].TIP,10) + " " + SpaceLength($scope.DizaynListe[i].SERI,8) + " " +  SpaceLength($scope.DizaynListe[i].SIRA,6) + " " + SpaceLength($scope.DizaynListe[i].CARIKOD,8) + "  " + SpaceLength($scope.DizaynListe[i].CARIADI,18) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),7) + " " + SpaceLength($scope.DizaynListe[i].VADE,10) + "\n";
         } 
 
-        $scope.GunSonuDizayn = "                                             " + "\n" + 
-                    FisDeger + "\n" + "\n" +
-                    $scope.GunSonuDizayn + "TAHSILAT   SERI    SIRA   CARI KODU    CARI ADI       TUTAR    VADE" + "\n" + 
-                    "                                              " + "\n" + 
-                    $scope.GunSonuData + "\n"  +
-                    "                                                                                                                                   - " + "\n " +
-                    "                                                                                                                                   - " + "\n "
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                Senet Toplam : " + $scope.DSenetToplam.toFixed(2) + "\n " 
+        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                  Çek Toplam : " + $scope.DCekToplam.toFixed(2) + "\n "
         $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                Nakit Toplam : " + $scope.DNakitToplam.toFixed(2) + "\n " 
         $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                          Kredi Kartı Toplam : " + $scope.DKrediToplam.toFixed(2) + "\n "
         $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                      Toplam : " + $scope.DGenelToplam.toFixed(2) + "\n "
@@ -1196,7 +1191,9 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             $scope.DNakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
             $scope.DKrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
-            $scope.DGenelToplam = $scope.DNakitToplam + $scope.DKrediToplam
+            $scope.DSenetToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 2");
+            $scope.DCekToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 1");
+            $scope.DGenelToplam = $scope.DNakitToplam + $scope.DKrediToplam + $scope.DSenetToplam + $scope.DCekToplam;
             $scope.DizaynListe = Data;
             $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
             $("#TbDizayn").addClass('active');

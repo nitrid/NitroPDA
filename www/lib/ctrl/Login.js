@@ -75,6 +75,11 @@ function Login ($scope,$rootScope,$window,db)
         }
         else
         {
+            if(document.getElementById("BeniHatirla").checked == true)
+            {
+                localStorage.username = $scope.Kullanici
+                localStorage.Password = $scope.Password
+            }
             $window.sessionStorage.setItem('Firma', $scope.Firm);
             var url = "main.html";
             $window.location.href = url;
