@@ -48,6 +48,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.EtiketListe = [];
         $scope.FiyatDegisListe = [];
         $scope.MarkaListe = [];
+        $scope.FiyatSiraListe = [];
 
         $scope.Special = "1";
         $scope.SpecialListe = [];
@@ -62,7 +63,9 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.StokResim = false;
 
         $scope.Loading = false;
-        $scope.TblLoading = true;
+        $scope.TblLoading = true
+
+        $scope.ListeFiyatNo = 0;
     }
     function InitDepoMiktarGrid()
     {
@@ -359,62 +362,63 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
                     });
-                    //Fiyat Getir
-                    var Fiyat = 
-                    {
-                        db : '{M}.' + $scope.Firma,
-                        query : "SELECT TOP 1 " + 
-                                "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
-                                "ELSE " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
-                                "END AS FIYAT, " + 
-                                "sfiyat_doviz AS DOVIZ, " + 
-                                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
-                                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
-                                "(SELECT sto_standartmaliyet FROM STOKLAR WHERE sto_kod = sfiyat_stokkod) AS MALIYET, " +
-                                "sfiyat_iskontokod AS ISKONTOKOD " + 
-                                "FROM STOK_SATIS_FIYAT_LISTELERI " +
-                                "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = 2 AND sfiyat_deposirano IN (0,@DEPONO) " +
-                                "ORDER BY sfiyat_deposirano DESC", 
-                        param: ['STOKKODU','DEPONO'],
-                        type:  ['string|50','int'],
-                        value: [$scope.StokKodu,$scope.DepoNo]
-                    }
-                    db.GetDataQuery(Fiyat,function(pFiyat)
-                    {  
-                        console.log(pFiyat)
-                        $scope.SatisFiyatListe2 = pFiyat[0].FIYAT
-                        $scope.SatisFiyatListe2Sembol = pFiyat[0].DOVIZSEMBOL;
-                    });
-                     //Fiyat Getir
-                     var Fiyat = 
-                     {
-                         db : '{M}.' + $scope.Firma,
-                         query : "SELECT TOP 1 " + 
-                                 "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                 "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
-                                 "ELSE " + 
-                                 "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
-                                 "END AS FIYAT, " + 
-                                 "sfiyat_doviz AS DOVIZ, " + 
-                                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
-                                 "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
-                                 "(SELECT sto_standartmaliyet FROM STOKLAR WHERE sto_kod = sfiyat_stokkod) AS MALIYET, " +
-                                 "sfiyat_iskontokod AS ISKONTOKOD " + 
-                                 "FROM STOK_SATIS_FIYAT_LISTELERI " +
-                                 "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = 3 AND sfiyat_deposirano IN (0,@DEPONO) " +
-                                 "ORDER BY sfiyat_deposirano DESC", 
-                         param: ['STOKKODU','DEPONO'],
-                         type:  ['string|50','int'],
-                         value: [$scope.StokKodu,$scope.DepoNo]
-                     }
-                     db.GetDataQuery(Fiyat,function(pFiyat)
-                     {  
-                         console.log(pFiyat)
-                         $scope.SatisFiyatListe3 = pFiyat[0].FIYAT
-                         $scope.SatisFiyatListe3Sembol = pFiyat[0].DOVIZSEMBOL;
-                     });
+                    $scope.FiyatListeChange()
+                    // //Fiyat Getir
+                    // var Fiyat = 
+                    // {
+                    //     db : '{M}.' + $scope.Firma,
+                    //     query : "SELECT TOP 1 " + 
+                    //             "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                    //             "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                    //             "ELSE " + 
+                    //             "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                    //             "END AS FIYAT, " + 
+                    //             "sfiyat_doviz AS DOVIZ, " + 
+                    //             "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
+                    //             "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                    //             "(SELECT sto_standartmaliyet FROM STOKLAR WHERE sto_kod = sfiyat_stokkod) AS MALIYET, " +
+                    //             "sfiyat_iskontokod AS ISKONTOKOD " + 
+                    //             "FROM STOK_SATIS_FIYAT_LISTELERI " +
+                    //             "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = 2 AND sfiyat_deposirano IN (0,@DEPONO) " +
+                    //             "ORDER BY sfiyat_deposirano DESC", 
+                    //     param: ['STOKKODU','DEPONO'],
+                    //     type:  ['string|50','int'],
+                    //     value: [$scope.StokKodu,$scope.DepoNo]
+                    // }
+                    // db.GetDataQuery(Fiyat,function(pFiyat)
+                    // {  
+                    //     console.log(pFiyat)
+                    //     $scope.SatisFiyatListe2 = pFiyat[0].FIYAT
+                    //     $scope.SatisFiyatListe2Sembol = pFiyat[0].DOVIZSEMBOL;
+                    // });
+                    //  //Fiyat Getir
+                    //  var Fiyat = 
+                    //  {
+                    //      db : '{M}.' + $scope.Firma,
+                    //      query : "SELECT TOP 1 " + 
+                    //              "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                    //              "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                    //              "ELSE " + 
+                    //              "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                    //              "END AS FIYAT, " + 
+                    //              "sfiyat_doviz AS DOVIZ, " + 
+                    //              "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
+                    //              "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                    //              "(SELECT sto_standartmaliyet FROM STOKLAR WHERE sto_kod = sfiyat_stokkod) AS MALIYET, " +
+                    //              "sfiyat_iskontokod AS ISKONTOKOD " + 
+                    //              "FROM STOK_SATIS_FIYAT_LISTELERI " +
+                    //              "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = 3 AND sfiyat_deposirano IN (0,@DEPONO) " +
+                    //              "ORDER BY sfiyat_deposirano DESC", 
+                    //      param: ['STOKKODU','DEPONO'],
+                    //      type:  ['string|50','int'],
+                    //      value: [$scope.StokKodu,$scope.DepoNo]
+                    //  }
+                    //  db.GetDataQuery(Fiyat,function(pFiyat)
+                    //  {  
+                    //      console.log(pFiyat)
+                    //      $scope.SatisFiyatListe3 = pFiyat[0].FIYAT
+                    //      $scope.SatisFiyatListe3Sembol = pFiyat[0].DOVIZSEMBOL;
+                    //  });
                     
                     //Depo Miktar Getir
                     var DepoMiktar =
@@ -428,8 +432,11 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                    //Son Alış Getir
                     db.GetData($scope.Firma,'TumSonAlisGetir',[BarkodData[0].KODU],function(data)
                     {
-                        $scope.SonAlis = data[0].SONFIYAT
-                        $scope.SonAlisDoviz = data[0].DOVIZSEMBOL
+                        if(typeof(data) != 'undefined')
+                        {
+                            $scope.SonAlis = data[0].SONFIYAT
+                            $scope.SonAlisDoviz = data[0].DOVIZSEMBOL
+                        }
                     });
                     db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
                     {   
@@ -514,6 +521,32 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({data : $scope.EtiketListe});    
         $scope.BtnTemizle();
         $window.document.getElementById("Barkod").focus();
+    }
+    $scope.FiyatListeChange = function()
+    {
+        var Fiyat = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query : "SELECT " + 
+                    "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                    "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                    "ELSE " + 
+                    "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                    "END AS FIYAT, " + 
+                    "(SELECT sfl_aciklama AS ADI FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano = sfiyat_listesirano) AS SATISADI, " +
+                    "sfiyat_listesirano AS FIYATSIRALISTE " +
+                    "FROM STOK_SATIS_FIYAT_LISTELERI " +
+                    "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_deposirano IN (0,@DEPONO) " +
+                    "ORDER BY sfiyat_deposirano DESC", 
+            param: ['STOKKODU','DEPONO'],
+            type:  ['string|50','int'],
+            value: [$scope.StokKodu,$scope.DepoNo]
+        }
+        db.GetDataQuery(Fiyat,function(pFiyat)
+        {  
+            $scope.FiyatListeler = pFiyat;
+            $scope.DigerFiyat = $scope.ListeFiyatNo;
+        });
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {

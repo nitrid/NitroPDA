@@ -421,6 +421,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     function BedenHarInsert(pGuid)
     {   
+        console.log("BEDEN1")
         let Data =
         [   
             UserParam.MikroId, // KULLANICI
@@ -912,12 +913,20 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
             {
+                console.log(1)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Data)
                 {   
+                    console.log(2)
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
+                        console.log(3)
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
-                    } 
+                    }
+                    else
+                    {
+                        BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
+                    }
+                    console.log(4)
                     InsertAfterRefresh(Data);
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
@@ -1646,7 +1655,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 1) //Toptan Alıs Faturası
             {
-                console.log(1)
                 $scope.VergisizFl = 0
                 $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
@@ -2022,7 +2030,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             console.log("Barkod Okutunuz!");
             $scope.InsertLock = false;
         }     
-
         BarkodFocus();
     }
     $scope.IskontoValid = function(pTip,pIndex)
