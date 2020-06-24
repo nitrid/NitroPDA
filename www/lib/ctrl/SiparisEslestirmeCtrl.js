@@ -865,12 +865,12 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
 
         if(typeof($scope.Stok[0].RECNO) != 'undefined')
         {
-            TmpIskonto1 = ($scope.Stok[0].ISKONTO_1 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto2 = ($scope.Stok[0].ISKONTO_2 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto3 = ($scope.Stok[0].ISKONTO_3 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto4 = ($scope.Stok[0].ISKONTO_4 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto5 = ($scope.Stok[0].ISKONTO_5 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto6 = ($scope.Stok[0].ISKONTO_6 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
+            TmpIskonto1 = (($scope.Stok[0].ISKONTO_1 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN) * $scope.Stok[0].DOVIZKURU);
+            TmpIskonto2 = (($scope.Stok[0].ISKONTO_2 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN) * $scope.Stok[0].DOVIZKURU);
+            TmpIskonto3 = (($scope.Stok[0].ISKONTO_3 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN) * $scope.Stok[0].DOVIZKURU);
+            TmpIskonto4 = (($scope.Stok[0].ISKONTO_4 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN) * $scope.Stok[0].DOVIZKURU);
+            TmpIskonto5 = (($scope.Stok[0].ISKONTO_5 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN) * $scope.Stok[0].DOVIZKURU);
+            TmpIskonto6 = (($scope.Stok[0].ISKONTO_6 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN) * $scope.Stok[0].DOVIZKURU);
             
             TmpIskontoTip1 = $scope.Stok[0].ISKONTO1;
             TmpIskontoTip2 = $scope.Stok[0].ISKONTO2;
@@ -1653,7 +1653,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     {
         if(typeof($scope.Stok[0].RECNO) != 'undefined')
         {
-            $scope.Stok[0].INDIRIM = (($scope.Stok[0].ISKONTO_1+$scope.Stok[0].ISKONTO_2+$scope.Stok[0].ISKONTO_3+$scope.Stok[0].ISKONTO_4+$scope.Stok[0].ISKONTO_5+$scope.Stok[0].ISKONTO_6) 
+            $scope.Stok[0].INDIRIM = ((($scope.Stok[0].ISKONTO_1+$scope.Stok[0].ISKONTO_2+$scope.Stok[0].ISKONTO_3+$scope.Stok[0].ISKONTO_4+$scope.Stok[0].ISKONTO_5+$scope.Stok[0].ISKONTO_6) * $scope.Stok[0].DOVIZKURU)
             / $scope.Stok[0].SIPMIKTAR) * ($scope.Stok[0].CARPAN * $scope.Miktar);
         }
         else
