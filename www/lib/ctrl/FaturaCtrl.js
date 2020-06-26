@@ -75,6 +75,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.DisTicaretTur;
         $scope.VergisizFl = 0;
         $scope.BirimAdi = "";
+        $scope.RiskParam = UserParam.Sistem.RiskParam;
 
 
         //CARİHAREKET
@@ -702,6 +703,15 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
                     });
                     
+                    //Son Alış Getir
+                    db.GetData($scope.Firma,'TumSonAlisGetir',[BarkodData[0].KODU],function(data)
+                    {
+                        if(typeof(data) != 'undefined')
+                        {
+                            $scope.SonAlis = data[0].SONFIYAT
+                            $scope.SonAlisDoviz = data[0].DOVIZSEMBOL
+                        }
+                    });
                     //Depo Miktar Getir (Stok Detay)
                     var DepoMiktar =
                     {

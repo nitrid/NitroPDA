@@ -245,7 +245,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
             { 
                 if(pData != 0)
                 {
-                    db.GetData($scope.Firma,'NakliyeGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
+                    db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
                     {
                         InsertAfterRefresh(BosData)
                     });
@@ -267,9 +267,11 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                 db.StokBarkodGetir($scope.Firma,pBarkod,$scope.CDepo,function(BarkodData)
                 {
                     $scope.Stok1 = BarkodData;
+                    console.log(BarkodData)
                     let x = NakliyeStokKontrol($scope.Stok1[0].KODU,$scope.NakliyeOnayListe);
                     if(x)
                     {
+                        console.log($scope.NakliyeOnayListe)
                         if($scope.NakliyeOnayListe[NakliyeIndex].sth_special1 == "")
                             $scope.NakliyeOnayListe[NakliyeIndex].sth_special1 = 0
                         
@@ -314,6 +316,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
     }
     function NakliyeStokKontrol(pStokKodu,pDataListe)
     {
+        console.log(pDataListe)
         for(var i = 0; i < pDataListe.length; i++)
         {  
           if(pStokKodu == pDataListe[i].sth_stok_kod) 
@@ -469,8 +472,6 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
             $scope.Tarih = new Date($scope.NakliyeListeItem.TARIH).toLocaleDateString();
             $scope.Barkod = "";
 
-
-
            $scope.NakliyeListeItem.MIKTAR
 
             db.DepoGetir($scope.Firma,UserParam.NakliyeOnay.CDepoListe,function(e)
@@ -506,7 +507,6 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
             console.log($scope.NakliyeListeItem)
         $scope.MainClick();
         $scope.EvrakGetir();
-
       });
     }
     $scope.MiktarFiyatValid = function()
@@ -801,7 +801,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
             {
                 if(pData != 0)
                 {
-                    db.GetData($scope.Firma,'NakliyeGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
+                    db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
                     {
                         InsertAfterRefresh(BosData)
                     });
@@ -896,98 +896,102 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                     
                 ];
                 console.log(InsertData)
-                db.ExecuteTag($scope.Firma,'NakliyeInsert',InsertData)
+                db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData)
             }
         }
     }
     $scope.EvrakGetir = function()
     {
+        console.log(1)
+        db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
         {   
-            db.GetData($scope.Firma,'NakliyeGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
-            {   
-                if(data.length > 0)
-                {
-                    Init();
-                    InitIslemGrid()
-                    
-                    $scope.Seri = data[0].sth_evrakno_seri;
-                    $scope.Sira = data[0].sth_evrakno_sira;
-                    $scope.EvrakTip = data[0].sth_evraktip.toString();
-                    $scope.BelgeNo = data[0].sth_belge_no;
-                    $scope.Tarih = moment(new Date(data[0].sth_tarih)).format("DD.MM.YYYY");
-                    $scope.BelgeTarih = moment(new Date(data[0].sth_belge_tarih)).format("DD.MM.YYYY");
-                    console.log($scope.BelgeTarih)
-                    $scope.Barkod = "";
-                    $scope.Stok1 = 
-                    [
-                        {
-                            BIRIM : '',
-                            Miktar :0,
-                            Miktar2:0,
-                            BIRIMPNTR : 0, 
-                            TOPMIKTAR : 0
-                        }
-                    ];
-                    $scope.Miktar = 1;
+            console.log(data)
+            if(data.length > 0)
+            {
+                console.log(1)
+                Init();
+                InitIslemGrid()
                 
-                    $scope.ToplamMiktar1 = 0;
-    
-                    $scope.TOPMIKTAR = 1;
-    
-                   
-                    db.DepoGetir($scope.Firma,UserParam.DepoNakliye.CDepoListe,function(e)
+                $scope.Seri = data[0].sth_evrakno_seri;
+                $scope.Sira = data[0].sth_evrakno_sira;
+                $scope.EvrakTip = data[0].sth_evraktip.toString();
+                $scope.BelgeNo = data[0].sth_belge_no;
+                $scope.Tarih = moment(new Date(data[0].sth_tarih)).format("DD.MM.YYYY");
+                $scope.BelgeTarih = moment(new Date(data[0].sth_belge_tarih)).format("DD.MM.YYYY");
+                console.log($scope.BelgeTarih)
+                $scope.Barkod = "";
+                $scope.Stok1 = 
+                [
                     {
-                        $scope.CDepoListe = e; 
-                        $scope.CDepo = data[0].sth_cikis_depo_no.toString();
-                        $scope.CDepoListe.forEach(function(item) 
-                        {
-                            if(item.KODU == data[0].sth_cikis_depo_no)
-                                $scope.CDepoAdi = item.ADI;
-                        });          
-                    });
-                    db.DepoGetir($scope.Firma,UserParam.DepoNakliye.GDepoListe,function(e)
-                    {
-                        $scope.GDepoListe = e; 
-                        $scope.GDepo = data[0].sth_giris_depo_no.toString();
-                        $scope.GDepoListe.forEach(function(item) 
-                        {
-                            if(item.KODU == data[0].sth_giris_depo_no)
-                                $scope.GDepoAdi = item.ADI;
-                        });          
-                    });
-                    db.DepoGetir($scope.Firma,UserParam.DepoNakliye.NDepoListe,function(e)
-                    {
-                        $scope.NDepoListe = e; 
-                        $scope.NDepo = data[0].sth_nakliyedeposu.toString();
-                        $scope.NDepoListe.forEach(function(item) 
-                        {
-                            if(item.KODU == data[0].sth_nakliyedeposu)
-                                $scope.NDepoAdi = item.ADI;
-                        });          
-                    });
-                    db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sth_stok_srm_merkezi});
-                    db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sth_proje_kodu}); 
+                        BIRIM : '',
+                        Miktar :0,
+                        Miktar2:0,
+                        BIRIMPNTR : 0, 
+                        TOPMIKTAR : 0
+                    }
+                ];
+                $scope.Miktar = 1;
+            
+                $scope.ToplamMiktar1 = 0;
+
+                $scope.TOPMIKTAR = 1;
+
                 
-                    $scope.NakliyeOnayListe = data;
-                    $("#TblIslem").jsGrid({data : $scope.NakliyeOnayListe});  
-                  
-                    ToplamMiktarHesapla();
-    
-                    $scope.EvrakLock = true;
-                    $scope.BarkodLock = false;
-    
-                    angular.element('#MdlEvrakGetir').modal('hide');
-    
-                    BarkodFocus();
-                }
-                else
+                db.DepoGetir($scope.Firma,UserParam.DepoNakliye.CDepoListe,function(e)
                 {
-                    angular.element('#MdlEvrakGetir').modal('hide');
-                    alertify.okBtn("Ok");
-                    alertify.alert("No documents found !");
-                }
-            });
-        }
+                    $scope.CDepoListe = e; 
+                    $scope.CDepo = data[0].sth_cikis_depo_no.toString();
+                    $scope.CDepoListe.forEach(function(item) 
+                    {
+                        if(item.KODU == data[0].sth_cikis_depo_no)
+                            $scope.CDepoAdi = item.ADI;
+                    });          
+                });
+                db.DepoGetir($scope.Firma,UserParam.DepoNakliye.GDepoListe,function(e)
+                {
+                    $scope.GDepoListe = e; 
+                    $scope.GDepo = data[0].sth_giris_depo_no.toString();
+                    $scope.GDepoListe.forEach(function(item) 
+                    {
+                        if(item.KODU == data[0].sth_giris_depo_no)
+                            $scope.GDepoAdi = item.ADI;
+                    });          
+                });
+                db.DepoGetir($scope.Firma,UserParam.DepoNakliye.NDepoListe,function(e)
+                {
+                    $scope.NDepoListe = e; 
+                    $scope.NDepo = data[0].sth_nakliyedeposu.toString();
+                    $scope.NDepoListe.forEach(function(item) 
+                    {
+                        if(item.KODU == data[0].sth_nakliyedeposu)
+                            $scope.NDepoAdi = item.ADI;
+                    });          
+                });
+                db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sth_stok_srm_merkezi});
+                db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sth_proje_kodu}); 
+            
+                $scope.NakliyeOnayListe = data;
+                console.log($scope.NakliyeOnayListe)
+                $("#TblIslem").jsGrid({data : $scope.NakliyeOnayListe});  
+                
+                ToplamMiktarHesapla();
+
+                $scope.EvrakLock = true;
+                $scope.BarkodLock = false;
+
+                angular.element('#MdlEvrakGetir').modal('hide');
+
+                BarkodFocus();
+            }
+            else
+            {
+                console.log(1)
+                angular.element('#MdlEvrakGetir').modal('hide');
+                alertify.okBtn("Ok");
+                alertify.alert("No documents found !");
+            }
+        });
+        console.log(2)
     }
     $scope.ManuelAramaClick = function() 
     {
