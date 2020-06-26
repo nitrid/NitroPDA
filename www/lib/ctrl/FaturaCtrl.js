@@ -703,14 +703,16 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
                     });
                     
-                    //Son Alış Getir
-                    db.GetData($scope.Firma,'TumSonAlisGetir',[BarkodData[0].KODU],function(data)
+                    //Son Satış Getir
+                    db.GetData($scope.Firma,'SonSatisFiyatGetir',[$scope.CariKodu,BarkodData[0].KODU],function(data)
                     {
+                        console.log(data)
                         if(typeof(data) != 'undefined')
                         {
-                            $scope.SonAlis = data[0].SONFIYAT
-                            $scope.SonAlisDoviz = data[0].DOVIZSEMBOL
+                            $scope.SonSatis = data[0].SONFIYAT
+                            $scope.SonSonSatisDoviz = data[0].DOVIZSEMBOL
                         }
+                        console.log($scope.SonSatis)
                     });
                     //Depo Miktar Getir (Stok Detay)
                     var DepoMiktar =
@@ -1330,6 +1332,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     $scope.BtnTemizle = function()
     {
         $scope.Barkod = "";
+        $scope.SonSatis = "";
         $scope.Stok = null;
         $scope.Stok = 
         [
