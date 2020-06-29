@@ -27,7 +27,8 @@ var Param = [
 			"BTYaziciAdi": "DP321-BT",
 			"FirmaListe": "",
 			"RiskParam": "0",
-			"RiskLimitOran": "70"
+			"RiskLimitOran": "70",
+			"FisDizayn": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
