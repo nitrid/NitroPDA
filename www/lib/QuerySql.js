@@ -326,24 +326,24 @@ var QuerySql =
                 "sto_beden_kodu AS BEDENKODU, " +
                 "sto_renk_kodu AS RENKKODU, " +
                 "sto_pasif_fl AS AKTIFPASIF, " +
-                "bar_kodu AS BARKOD, " +
-                "bar_birimpntr AS BIRIMPNTR, " +
-                "bar_bedenpntr AS BEDENPNTR, " +
-                "bar_renkpntr AS RENKPNTR, " +
-                "bar_partikodu AS PARTI, " +
-                "bar_lotno AS LOT, " +
-                "bar_barkodtipi AS BARKODTIP, " +
-                "(SELECT dbo.fn_beden_kirilimi (bar_bedenpntr,sto_beden_kodu)) AS BEDEN, " +
-                "(SELECT dbo.fn_renk_kirilimi (bar_renkpntr,sto_renk_kodu)) AS RENK, " +
+                "'' AS BARKOD, " +
+                "1 AS BIRIMPNTR, " +
+                "0 AS BEDENPNTR, " +
+                "0 AS RENKPNTR, " +
+                "'' AS PARTI, " +
+                "0 AS LOT, " +
+                "0 AS BARKODTIP, " +
+                "'' AS BEDEN, " +
+                "'' AS RENK, " +
                 "(SELECT dbo.fn_VergiYuzde (sto_perakende_vergi)) AS PERAKENDEVERGI, " +
                 "(SELECT dbo.fn_VergiYuzde (sto_toptan_vergi)) AS TOPTANVERGI, " +
-                "ISNULL((SELECT dbo.fn_StokBirimHesapla (sto_kod,bar_birimpntr,1,1)),1) AS KATSAYI, " +
-                "(SELECT dbo.fn_StokBirimi (sto_kod,bar_birimpntr)) AS BIRIM, " +
+                "1 AS KATSAYI, " +
+                "'' AS BIRIM, " +
                 "sto_detay_takip AS DETAYTAKIP, " +
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
-                "ISNULL((SELECT msg_S_0165 AS MIKTAR FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] (bar_stokkodu,@DEPONO,GETDATE()) WHERE msg_S_0062 = bar_renkpntr),0) AS RENKMIKTAR," +
-                "ISNULL((SELECT msg_S_0165 AS MIKTAR FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] (bar_stokkodu,@DEPONO,GETDATE()) WHERE msg_S_0062 = bar_bedenpntr),0) AS BEDENMIKTAR," +
-                "ISNULL(( SELECT  msg_S_0165  FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] (sto_kod,@DEPONO,GETDATE()) WHERE msg_S_0062=CASE WHEN bar_renkpntr=0 THEN bar_bedenpntr ELSE CASE WHEN bar_bedenpntr=0 THEN (bar_renkpntr-1)*40+1 ELSE (bar_renkpntr-1)*40+bar_bedenpntr END  END),0) AS KIRILIMMIKTAR, " +
+                "0 AS RENKMIKTAR," +
+                "0 AS BEDENMIKTAR," +
+                "0 AS KIRILIMMIKTAR, " +
                 "sto_siparis_dursun AS SIPARISDURSUN, " +
                 "sto_malkabul_dursun as MALKABULDURSUN, " +
                 "sto_otvtutar AS OTVTUTAR, " +
@@ -351,8 +351,6 @@ var QuerySql =
                 " '' AS DOVIZSEMBOL,  " +
                 "1 AS DOVIZKUR  " +
                 "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
-                "LEFT JOIN BARKOD_TANIMLARI AS BARKOD WITH (NOLOCK,INDEX=NDX_BARKOD_TANIMLARI_02) ON " +
-                "STOK.sto_kod = BARKOD.bar_stokkodu " +
                 "WHERE ((sto_kod LIKE  @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE '%' + @ADI + '%' ) OR (@ADI = '')) " +
                 "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
                 ") AS TMP " +

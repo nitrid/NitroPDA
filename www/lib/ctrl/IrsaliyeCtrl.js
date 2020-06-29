@@ -899,11 +899,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         $scope.BarkodLock = true;
                         $scope.$apply();
                     });
-
                     if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
-                    {   
+                    {
                         if($scope.Stok[0].BEDENKODU != '' && $scope.Stok[0].RENKKODU != '')
-                        {   
+                        {                
                             $('#MdlRenkBeden').modal("show");
                             db.GetData($scope.Firma,'RenkGetir',[$scope.Stok[0].RENKKODU],function(pRenkData)
                             {
@@ -911,7 +910,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 $scope.Stok[0].RENKPNTR = "1";
                             });
                             db.GetData($scope.Firma,'BedenGetir',[$scope.Stok[0].BEDENKODU],function(pBedenData)
-                            {  
+                            {
                                 $scope.BedenListe = pBedenData;
                                 $scope.Stok[0].BEDENPNTR = "1";
                             });

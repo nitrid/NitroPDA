@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "",
+			"Firma": "TEST",
 			"SubeNo": "0",
 			"SatirBirlestir": "0",
 			"MalKabulEvrakTip": "0",
@@ -26,7 +26,7 @@ var Param = [
 			"BTYaziciTip": "CORDOVABT",
 			"BTYaziciAdi": "DP321-BT",
 			"FirmaListe": "",
-			"RiskParam": "1",
+			"RiskParam": "0",
 			"RiskLimitOran": "70"
 		},
 		"Sayim": {
@@ -260,7 +260,7 @@ var Param = [
 			"Sorumluluk": "",
 			"Personel": "",
 			"Proje": "",
-			"SonSatisFiyati": "0",
+			"SonSatisFiyati": "1",
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
