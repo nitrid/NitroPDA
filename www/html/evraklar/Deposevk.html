@@ -280,6 +280,7 @@
             </div>            
         </div>
     </div>
+    <audio id="audio" src="http://www.soundjay.com/button/beep-04.wav" autoplay="false" ></audio>
     <!-- MODALLAR -->
     <!-- Evrak Getir Modal Başlangıç-->
     <div class="modal fade" id="MdlEvrakGetir" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
@@ -479,5 +480,11 @@
     $("#ETarih").datepicker({
     language: "tr"
     });
+</script>
+<script>
+    function playSound() {
+          var sound = document.getElementById("audio");
+          sound.play();
+      }
 </script>
     

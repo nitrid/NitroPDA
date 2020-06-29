@@ -758,6 +758,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         CariFiyatListe : $scope.CariFiyatListe,
                         CariDovizKuru : $scope.CariDovizKuru,
                         DepoNo : $scope.DepoNo,
+                        FiyatListe : $scope.FiyatListeNo,
                         AlisSatis : ($scope.EvrakTip === 3 ? 0 : 1)
                     };
                     await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()

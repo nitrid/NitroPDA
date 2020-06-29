@@ -521,7 +521,6 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                         }
                     }
                 }
-
                 if(BarkodData.length > 0)
                 {   
                     $scope.Stok = BarkodData
@@ -606,6 +605,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                 }
                 else
                 {    
+                    var sound = document.getElementById("audio");
+                    sound.play();
                     alertify.alert("<a style='color:#3e8ef7''>" + "Stok Bulunamamıştır !" + "</a>" );                 
                     console.log("Stok Bulunamamıştır.");
                     Beep();

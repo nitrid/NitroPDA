@@ -892,6 +892,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         CariFiyatListe : $scope.CariFiyatListe,
                         CariDovizKuru : $scope.CariDovizKuru,
                         DepoNo : $scope.DepoNo,
+                        FiyatListe : $scope.FiyatListe,
                         AlisSatis : ($scope.EvrakTip === 13 ? 0 : 1)
                     };
                     
@@ -1874,7 +1875,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             if(ParamName == "SatisIrsaliye")
             {
-                if($scope.RiskParam != 0)
+                if(UserParam.Sistem.RiskParam != 0)
                 {
                     let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
 
