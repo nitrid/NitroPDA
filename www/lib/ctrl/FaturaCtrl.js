@@ -75,6 +75,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.DisTicaretTur;
         $scope.VergisizFl = 0;
         $scope.BirimAdi = "";
+        $scope.RiskParam = UserParam.Sistem.RiskParam;
 
 
         //CARİHAREKET
@@ -421,6 +422,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     function BedenHarInsert(pGuid)
     {   
+        console.log("BEDEN1")
         let Data =
         [   
             UserParam.MikroId, // KULLANICI
@@ -701,6 +703,17 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
                     });
                     
+                    //Son Satış Getir
+                    db.GetData($scope.Firma,'SonSatisFiyatGetir',[$scope.CariKodu,BarkodData[0].KODU],function(data)
+                    {
+                        console.log(data)
+                        if(typeof(data) != 'undefined')
+                        {
+                            $scope.SonSatis = data[0].SONFIYAT
+                            $scope.SonSonSatisDoviz = data[0].DOVIZSEMBOL
+                        }
+                        console.log($scope.SonSatis)
+                    });
                     //Depo Miktar Getir (Stok Detay)
                     var DepoMiktar =
                     {
@@ -912,12 +925,20 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
             {
+                console.log(1)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Data)
                 {   
+                    console.log(2)
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
+                        console.log(3)
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
-                    } 
+                    }
+                    else
+                    {
+                        BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
+                    }
+                    console.log(4)
                     InsertAfterRefresh(Data);
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
@@ -1311,6 +1332,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     $scope.BtnTemizle = function()
     {
         $scope.Barkod = "";
+        $scope.SonSatis = "";
         $scope.Stok = null;
         $scope.Stok = 
         [
@@ -1646,7 +1668,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             }
             else if($scope.CmbEvrakTip == 1) //Toptan Alıs Faturası
             {
-                console.log(1)
                 $scope.VergisizFl = 0
                 $scope.DisTicaretTur = 0;
                 $scope.EvrakTip = 3;
@@ -2022,7 +2043,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             console.log("Barkod Okutunuz!");
             $scope.InsertLock = false;
         }     
-
         BarkodFocus();
     }
     $scope.IskontoValid = function(pTip,pIndex)

@@ -70,7 +70,22 @@
                     </div>
                     <div class="row" ng-show = "FiyatGizle">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Birim Fiyatı:</label></div>
-                        <div class="col-7 px-0"><label class="form-control-label pl-10">{{Fiyat}}  {{Stok[0].DOVIZSEMBOL}}</label></div>
+                        <div class="col-2 px-0"><label class="form-control-label pl-10">{{Fiyat}}  {{Stok[0].DOVIZSEMBOL}}</label></div>
+                    </div>
+                    <div class="row" ng-show = "FiyatGizle">
+                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Diğer Fiyatlar:</label></div>
+                        <div class="col-2 px-0"><label class="form-control-label pl-10">{{DigerFiyat}}  {{Stok[0].DOVIZSEMBOL}}</label></div>
+                        <div class="col-3 text-info px-1">
+                            <div class="col-form-label px-1 float-right py-1">Fiyat Seç:</div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <!-- <select class="form-control form-control-sm" ng-model="FiyatSiraListe" ng-change="FiyatListeChange()">
+                                <option ng-repeat="option in FiyatListeler" value="{{option.FIYATSIRALISTE}}">{{option.SATISADI}}</option>
+                            </select> -->
+                            <select class="form-control" ng-model="ListeFiyatNo" ng-change="FiyatListeChange()">
+                                <option ng-repeat="option in FiyatListeler" value="{{option.FIYAT}}">{{option.SATISADI}}</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="row"  ng-show = "StokResim">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Stok Resmi:</label></div>
