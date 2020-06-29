@@ -890,6 +890,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         CariFiyatListe : $scope.CariFiyatListe,
                         CariDovizKuru : $scope.CariDovizKuru,
                         DepoNo : $scope.DepoNo,
+                        FiyatListe : $scope.FiyatListe,
                         AlisSatis : ($scope.EvrakTip === 13 ? 0 : 1)
                     };
                     

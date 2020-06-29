@@ -79,9 +79,6 @@
                             <div class="col-form-label px-1 float-right py-1">Fiyat Seç:</div>
                         </div>
                         <div class="col-4 px-1">
-                            <!-- <select class="form-control form-control-sm" ng-model="FiyatSiraListe" ng-change="FiyatListeChange()">
-                                <option ng-repeat="option in FiyatListeler" value="{{option.FIYATSIRALISTE}}">{{option.SATISADI}}</option>
-                            </select> -->
                             <select class="form-control" ng-model="ListeFiyatNo" ng-change="FiyatListeChange()">
                                 <option ng-repeat="option in FiyatListeler" value="{{option.FIYAT}}">{{option.SATISADI}}</option>
                             </select>

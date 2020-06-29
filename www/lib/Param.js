@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "TEST",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "0",
 			"MalKabulEvrakTip": "0",
@@ -50,7 +50,7 @@ var Param = [
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "1",
+			"FiyatListe": "6",
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": "0",

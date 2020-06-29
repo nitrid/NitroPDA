@@ -402,6 +402,10 @@ var QuerySql =
         param : ['KODU','LISTENO','DEPO'],
         type : ['string|25','int','int']
     },
+    FiyatListeGetir :
+    {
+        query : "SELECT  sfl_sirano AS LISTENO, sfl_aciklama AS LISTEADI FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI "
+    },
     IskontoMatrisGetir : 
     {
         query : "SELECT " + 
