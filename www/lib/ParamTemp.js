@@ -162,7 +162,8 @@ var ParamTemp =
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
-			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
 		},
 		"SatisIrsaliye" :
 		{
@@ -182,7 +183,8 @@ var ParamTemp =
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
-			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
 		},
 		"AlisFatura" :
 		{
@@ -202,7 +204,8 @@ var ParamTemp =
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
-			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""}
+			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""},
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
 		},
 		"SatisFatura" :
 		{
@@ -223,7 +226,8 @@ var ParamTemp =
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
-			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""}
+			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""},
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
 		},
 		"Fire" :
 		{

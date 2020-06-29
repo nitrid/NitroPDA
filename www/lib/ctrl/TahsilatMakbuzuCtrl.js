@@ -680,7 +680,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $scope.KasaHizmet = 4;
             $scope.KarsiGrupNo = 0;
             $scope.SckTip = 1; //ODEME EMİRLERİ TABLOSU
-            $scope.Aciklama = "ÇEK KASASI";
+            $scope.Aciklama = "SENET KASASI";
 
             await db.GetPromiseTag($scope.Firma,'MaxCekRefNo',[$scope.SckTip],function(data)
             {
