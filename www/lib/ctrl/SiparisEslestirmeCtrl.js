@@ -718,6 +718,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                         CariKodu : $scope.CariKodu,
                         CariFiyatListe : $scope.CariFiyatListe,
                         DepoNo : $scope.DepoNo,
+                        FiyatListe : 1,
                         AlisSatis : ($scope.EvrakTip === 0 ? 0 : 1)
                     };
                     await db.FiyatGetir($scope.Firma,pData,FiyatParam,UserParam[ParamName]);
@@ -2195,7 +2196,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#MdlStokGetir").modal('hide');
-                alertify.alert("Sipariş içeriği boş")                
+                alertify.alert("Sipariş tamamlandı")                
             }  
         });
     }
@@ -2576,7 +2577,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#MdlSiparisDetay").modal('hide');
-                alertify.alert("Sipariş içeriği boş")                
+                alertify.alert("Sipariş tamamlandı")                
             }  
         });
     }

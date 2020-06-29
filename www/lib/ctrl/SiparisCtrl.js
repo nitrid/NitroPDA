@@ -76,6 +76,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.EvrakDovizTip = "";
         $scope.Risk = 0;
         $scope.RiskLimit = 0; 
+        $scope.FiyatListe = [];
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -811,7 +812,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                                 "ORDER BY sfiyat_deposirano DESC", 
                         param: ['STOKKODU','FIYATLISTE','DEPONO'],
                         type:  ['string|50','int','int'],
-                        value: [$scope.StokKodu,$scope.FiyatListe,$scope.DepoNo]
+                        value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
                     }
                     db.GetDataQuery(Fiyat,function(pFiyat)
                     {                         
@@ -871,6 +872,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         CariDovizKuru : $scope.CariDovizKuru,
                         CariIskontoKodu : $scope.CariIskontoKodu,
                         OdemeNo : $scope.OdemeNo,
+                        FiyatListe : $scope.FiyatListeNo,
                         DepoNo : $scope.DepoNo,
                         AlisSatis : ($scope.EvrakTip === 0 ? 1 : 0)
                     };
@@ -1328,7 +1330,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         else
             ParamName = "VerilenSiparis";
 
-        $scope.FiyatListe = UserParam[ParamName].FiyatListe;
+        
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
@@ -1381,6 +1383,13 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     $scope.DepoAdi = item.ADI;
             });
         });
+        db.GetPromiseTag($scope.Firma,'FiyatListeGetir',[$scope.PersonelTip],function(data)
+        {
+            $scope.FiyatListe = data;
+            $scope.FiyatListeNo = UserParam[ParamName].FiyatListe;
+
+            
+        });      
         
         db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
        {
@@ -2319,4 +2328,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             alertify.alert("Etiket Yazdıralamadı.");
         }
     }
+    $scope.FiyatListeChange = function()
+    {
+
+    }
+    
 }

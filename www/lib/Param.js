@@ -27,7 +27,8 @@ var Param = [
 			"BTYaziciAdi": "DP321-BT",
 			"FirmaListe": "",
 			"RiskParam": "0",
-			"RiskLimitOran": "70"
+			"RiskLimitOran": "70",
+			"FisDizayn": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -50,7 +51,7 @@ var Param = [
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "1",
+			"FiyatListe": "6",
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": "0",
@@ -224,8 +225,8 @@ var Param = [
 			"Cari Listesi": "1",
 			"Cari Ekle": "0",
 			"Deposevk": "1",
-			"Depo Sipariş": "0",
-			"Depo Mal Kabul": "0",
+			"Depo Sipariş": "1",
+			"Depo Mal Kabul": "1",
 			"Depo Nakliye": "0",
 			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",

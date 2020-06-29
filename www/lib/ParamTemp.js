@@ -28,7 +28,8 @@ var ParamTemp =
 			"BTYaziciAdi" : {"Title" : "BT Yazıcı Adı","DefaultValue" : ""},
 			"FirmaListe" : {"Title" : "Firma Liste","DefaultValue" : ""},
 			"RiskParam": {"Title" : "Risk Param","DefaultValue" : ""},
-			"RiskLimitOran": {"Title" : "Risk Limit Oran","DefaultValue" : ""}
+			"RiskLimitOran": {"Title" : "Risk Limit Oran","DefaultValue" : ""},
+			"FisDizayn": {"Title" : "Fiş Dizayn","DefaultValue" : "0"}
 		},
 		"Sayim" :
 		{

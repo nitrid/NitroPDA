@@ -496,6 +496,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                         CariKodu : $scope.CariKodu,
                         CariFiyatListe : $scope.CariFiyatListe,
                         DepoNo : $scope.DepoNo,
+                        FiyatListe : 1,
                         AlisSatis : ($scope.EvrakTip === 0 ? 0 : 1)
                     };
                     await db.FiyatGetir($scope.Firma,pData,FiyatParam,UserParam[ParamName]);

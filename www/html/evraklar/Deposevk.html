@@ -261,7 +261,7 @@
                         </div>
                         <div class="col-8 px-1">
                             <div class="input-group">
-                                <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText" ng-disabled="EvrakLock">
+                                <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText" >
                                 <span class="input-group-append">
                                     <button type="submit" class="btn btn-primary" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
                                 </span>
@@ -280,6 +280,7 @@
             </div>            
         </div>
     </div>
+    <audio id="audio" src="http://www.soundjay.com/button/beep-04.wav" autoplay="false" ></audio>
     <!-- MODALLAR -->
     <!-- Evrak Getir Modal Başlangıç-->
     <div class="modal fade" id="MdlEvrakGetir" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
@@ -479,5 +480,11 @@
     $("#ETarih").datepicker({
     language: "tr"
     });
+</script>
+<script>
+    function playSound() {
+          var sound = document.getElementById("audio");
+          sound.play();
+      }
 </script>
     
