@@ -26,8 +26,8 @@ var Param = [
 			"BTYaziciTip": "CORDOVABT",
 			"BTYaziciAdi": "DP321-BT",
 			"FirmaListe": "",
-			"RiskParam": "1",
-			"RiskLimitOran": "70"
+			"RiskParam": "0",
+			"RiskLimitOran": ""
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -222,8 +222,8 @@ var Param = [
 			"Cari Listesi": "1",
 			"Cari Ekle": "0",
 			"Deposevk": "1",
-			"Depo Sipariş": "0",
-			"Depo Mal Kabul": "0",
+			"Depo Sipariş": "1",
+			"Depo Mal Kabul": "1",
 			"Depo Nakliye": "0",
 			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",
