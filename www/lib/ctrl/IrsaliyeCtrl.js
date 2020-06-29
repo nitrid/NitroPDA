@@ -1873,7 +1873,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             if(ParamName == "SatisIrsaliye")
             {
-                if($scope.RiskParam != 0)
+                if(UserParam.Sistem.RiskParam != 0)
                 {
                     let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
 

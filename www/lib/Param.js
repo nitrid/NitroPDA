@@ -27,7 +27,7 @@ var Param = [
 			"BTYaziciAdi": "DP321-BT",
 			"FirmaListe": "",
 			"RiskParam": "0",
-			"RiskLimitOran": "70"
+			"RiskLimitOran": ""
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -222,10 +222,10 @@ var Param = [
 			"Cari Listesi": "1",
 			"Cari Ekle": "0",
 			"Deposevk": "1",
-			"Depo Sipariş": "0",
-			"Depo Mal Kabul": "0",
-			"Depo Nakliye": "1",
-			"NakliyeOnay": "1",
+			"Depo Sipariş": "1",
+			"Depo Mal Kabul": "1",
+			"Depo Nakliye": "0",
+			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
 			"Satış Faturası": "1",
