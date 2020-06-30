@@ -3,6 +3,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     let FiyatDegisSelectedRow = null;
     let StokSelectedRow = null;
     let EklenecekStokSelectedRow= null;
+    let BarkodSelectedRow = null;
     
    
     function Init()
@@ -49,6 +50,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.FiyatDegisListe = [];
         $scope.MarkaListe = [];
         $scope.FiyatSiraListe = [];
+        $scope.BarkodListe = [];
 
         $scope.Special = "1";
         $scope.SpecialListe = [];
@@ -103,6 +105,32 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             rowClick: function(args)
             {
                 $scope.StokListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitBarkodlarGrid()
+    {
+        $("#TblBarkodlar").jsGrid
+        ({
+            width: "100%",
+            height: "150px",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.Barkodliste,
+            fields: [
+                {
+                    name: "BARKOD",
+                    title: "BARKOD",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                }, 
+            ],
+            rowClick: function(args)
+            {
+                $scope.BarkodListeRowClik(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -429,20 +457,40 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         type : ['string|50'],
                         value : [$scope.StokKodu]
                     }
-                   //Son Alış Getir
-                    db.GetData($scope.Firma,'TumSonAlisGetir',[BarkodData[0].KODU],function(data)
-                    {
-                        if(typeof(data) != 'undefined')
-                        {
-                            $scope.SonAlis = data[0].SONFIYAT
-                            $scope.SonAlisDoviz = data[0].DOVIZSEMBOL
-                        }
-                    });
                     db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
                     {   
                         $scope.DepoMiktarListe = pDepoMiktar
                         $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
                     });
+                     //Son Alış Getir
+                     db.GetData($scope.Firma,'TumSonAlisGetir',[BarkodData[0].KODU],function(data)
+                     {
+                         if(typeof(data) != 'undefined')
+                         {
+                             $scope.SonAlis = data[0].SONFIYAT
+                             $scope.SonAlisDoviz = data[0].DOVIZSEMBOL
+                         }
+                     });
+                    if($scope.Barkod == '')
+                    {
+                        console.log(1)
+                        var BarkodGetir =
+                        {
+                            db : '{M}.' + $scope.Firma,
+                            query : "SELECT bar_kodu AS BARKOD FROM BARKOD_TANIMLARI WHERE bar_stokkodu = @STOKKODU ",
+                            param : ['STOKKODU'],
+                            type : ['string|50'],
+                            value : [$scope.StokKodu]
+                        }
+                        db.GetDataQuery(BarkodGetir,function(data)
+                        {   
+                            if(data.length > 0)
+                            $scope.Barkodliste = data
+                            $("#TblBarkodlar").jsGrid({data : $scope.Barkodliste});
+                            $("#MdlBarkodlar").modal('show');
+                            
+                        });
+                    }
                     BarkodFocus()
                 }
             });
@@ -873,6 +921,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         BarkodFocus();
         InitStokGrid();
         InitBarkodOlusturGrid()
+        InitBarkodlarGrid();
         
         if(UserParam.FiyatGor.FiyatGizle == "1")
         {
@@ -924,6 +973,18 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
         $scope.BtnStokGridSec();
+    }
+    $scope.BarkodListeRowClik = function(pIndex,pItem,pObj)
+    {
+        console.log(13231)
+        if ( BarkodSelectedRow ) { BarkodSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        var $row = pObj.rowByItem(pItem);
+        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+        BarkodSelectedRow = $row;
+        
+        $scope.Barkod = $scope.Barkodliste[pIndex].BARKOD;
+        $("#MdlBarkodlar").modal('hide');
+
     }
     $scope.BarkodEkleListeRowClick = function(pIndex,pItem,pObj)
     {

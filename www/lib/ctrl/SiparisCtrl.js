@@ -1732,23 +1732,22 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
        
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {   
-            if(ParamName == "AlinanSiparis")
-            {
-                if($scope.RiskParam != 0)
-                {
-                    let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
-    
-                    if(TmpRiskOran >= 100)
-                    {
-                        alertify.alert("Risk limitini aştınız");
-                        return;
-                    }
-                    if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
-                    {
-                        alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
-                    }
-                }
-            }
+          if(ParamName == "AlinanSiparis")
+          {
+              if($scope.RiskParam != 0)
+              {
+                  let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
+                 if(TmpRiskOran >= 100)
+                  {
+                      alertify.alert("Risk limitini aştınız");
+                      return;
+                  }
+                  if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
+                  {
+                      alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
+                  }
+              }
+          }
             if(UserParam.AlinanSiparis.EksiyeDusme == 1 &&  $scope.EvrakTip == 0 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
             {
                 alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
