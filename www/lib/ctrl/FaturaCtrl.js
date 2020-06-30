@@ -2566,7 +2566,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     $scope.BtnFisYazdir = async function()
     {
-        console.log($scope.FisDizaynTip)
         if($scope.FisDizaynTip == 0)
         {
             let FisDizayn = "";
@@ -2611,6 +2610,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         Satır
             FisDizayn = FisDizayn + "                         Ara Toplam : " + parseFloat($scope.AraToplam).toFixed(2) + "\n" +  "                     Toplam Iskonto : " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n"
             FisDizayn = FisDizayn + "                         Toplam Kdv : "  + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
+            "                                             -" + "\n" + 
+            "                                             -" + "\n" + 
+            "                                             -" + "\n" + 
             "                                             -" + "\n" + 
             "                                             -" + "\n" + 
             "                                             -" + "\n" + 

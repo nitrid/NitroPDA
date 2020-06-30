@@ -2352,35 +2352,95 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnFisYazdir = async function()
     {
-        if($scope.FisDizaynTip == "0")
+        let FisDizayn = "";
+        let FisGenelToplam = "";
+
+        if(typeof ($scope.TahToplam) == 'undefined')
         {
+            $scope.TahToplam = 0;
+            $scope.FatSeri = "";
+            $scope.FatSira = 0;
+        }
+
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
+                    "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
+            param:  ['CARIKODU'], 
+            type:   ['string|25'], 
+            value:  [$scope.CariKodu]
+        }
+    
+        await db.GetPromiseQuery(TmpQuery,function(Data)
+        {
+            $scope.CariBakiye = Data[0].BAKIYE
+        });
+
+        $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
+        FisGenelToplam = $scope.GenelToplam + $scope.CariBakiye
+        FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
+        let i = 20 - $scope.FisLength.length;
+        let Satır = "";
+
+        for(let x = 0; x <= i; x++)
+        {    
+            Satır = Satır + "                                             -"+ "\n"; 
+        } 
+
+        FisDizayn = "                                             -" + "\n" + 
+                    $scope.FisDeger + "-\n" + "\n" +
+                    $scope.FisData + "-\n" + //İÇERİK
+                    Satır
+                    FisDizayn = FisDizayn + "                         Ara Toplam : " + parseFloat($scope.AraToplam).toFixed(2) + "\n" +  "                     Toplam Iskonto : " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n"
+                    FisDizayn = FisDizayn + "                         Toplam Kdv : "  + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
+                    "                                             -" + "\n" + 
+                    "                                             -" + "\n" + 
+                    "                                             -" + "\n" + 
+                    "                                             -" + "\n" + 
+                    "                                             -" + "\n" + 
+                    "                                             -" + "\n" + 
+                    "                                             -" + "\n" + 
+                    "                                             -" + "\n"
+                    FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+
+        console.log(FisDizayn)
+        
+       
+        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+        {
+            if(pStatus)
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
+            }
+        });
+    }
+    //GÜN SONU RAPORU
+    $scope.BtnGunSonuYazdir = async function()
+    {  
+        if($scope.FisDizaynTip == "0")
+        {   
+            let FisDeger = "";
             let FisDizayn = "";
+            $scope.GunSonuData = "";
 
-            if(typeof ($scope.TahToplam) == 'undefined')
+            for(let i=0; i < $scope.DizaynListe.length; i++)
             {
-                $scope.TahToplam = 0;
-                $scope.FatSeri = "";
-                $scope.FatSira = 0;
-            }
-            let i = 18 - $scope.FisLength.length;
-            let Satır = "";
+                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI,15) + SpaceLength($scope.DizaynListe[i].SAAT,5) + " " +SpaceLength($scope.DizaynListe[i].SERI,5) + SpaceLength($scope.DizaynListe[i].SIRA,5) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),8) + "\n";
+            } 
 
-            for(let x = 0; x <= i; x++)
-            {
-                Satır = Satır + "                                             "+ "\n"; 
-            }
+            FisDeger = "RAGIP GOKYAR                        "+ $scope.Tarih;
 
             FisDizayn = "                                             " + "\n" + 
-                        $scope.FisDeger + "\n" + "\n" +
-                        $scope.FisData + "\n" + //İÇERİK
-                        Satır
-            FisDizayn = FisDizayn + "                         Ara Toplam : " + parseFloat($scope.AraToplam).toFixed(2) + "\n" +  "                     Toplam Iskonto : " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n"
-            FisDizayn = FisDizayn + "                         Toplam Kdv : "  + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
+                        FisDeger + "\n" +
+                        "           CARI SATIŞ DURUM RAPORU              " + "\n" +
+                        "CARIADI        F.SAAT   F.SERI    F.TUTAR" + "\n" +
+                        $scope.GunSonuData + "\n" + //İÇERİK
                         "                                              " + "\n" + 
                         "                                              " + "\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-
             
+          console.log(FisDizayn)  
             
             db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
             {
@@ -2401,7 +2461,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             for(let i=0; i < $scope.DizaynListe.length; i++)
             {
                 $scope.GunSonuData = $scope.GunSonuData +  SpaceLength($scope.DizaynListe[i].SERI,10) + "  " +  SpaceLength($scope.DizaynListe[i].SIRA,10) + "  " + SpaceLength($scope.DizaynListe[i].CARIKOD,15) + "  " + SpaceLength($scope.DizaynListe[i].CARIADI,20) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),8) + "\n";
-            } 
+            }
     
             $scope.GunSonuDizayn = "                                             " + "\n" + 
                         FisDeger + "\n" + "\n" +
@@ -2423,39 +2483,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             });
         }
     }
-    //GÜN SONU RAPORU
-    $scope.BtnGunSonuYazdir = async function()
-    {  
-        let FisDeger = "";
-        $scope.GunSonuData = "";
-
-        FisDeger = FisDeger + "                              IRSALIYE GUN SONU " + "\n" 
-        FisDeger = FisDeger + "                                                   "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n";
-
-        for(let i=0; i < $scope.DizaynListe.length; i++)
-        {
-            $scope.GunSonuData = $scope.GunSonuData +  SpaceLength($scope.DizaynListe[i].SERI,10) + "  " +  SpaceLength($scope.DizaynListe[i].SIRA,10) + "  " + SpaceLength($scope.DizaynListe[i].CARIKOD,15) + "  " + SpaceLength($scope.DizaynListe[i].CARIADI,20) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),8) + "\n";
-        }
-
-        $scope.GunSonuDizayn = "                                             " + "\n" + 
-                    FisDeger + "\n" + "\n" +
-                    "SERI        SIRA       CARI KODU            CARI ADI        TUTAR" + "\n" + 
-                    "                                              " + "\n" + 
-                    $scope.GunSonuData + "\n"  +
-                    "                                                                                                                                   - " + "\n " +
-                    "                                                                                                                                   - " + "\n "
-        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                   TOPLAM : " + $scope.DGenelToplam
-        $scope.GunSonuDizayn = $scope.GunSonuDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-        
-        console.log($scope.GunSonuDizayn)
-        db.BTYazdir($scope.GunSonuDizayn,UserParam.Sistem,function(pStatus)
-        {
-            if(pStatus)
-            {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
-            }
-        });
-    }
     $scope.BtnGunSonuRaporClick = async function()
     {
         $("#TbStok").removeClass('active');
@@ -2471,6 +2498,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             query:  "SELECT " +
                     "sth_evrakno_seri AS SERI, " +
                     "sth_evrakno_sira AS SIRA, " +
+                    "CONVERT(NVARCHAR, sth_create_date, 108) AS SAAT, " +
                     "MAX(sth_cari_kodu) AS CARIKOD, " +
                     "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) + ' ' +" +
                     "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) " +
@@ -2478,7 +2506,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     "ROUND(SUM(sth_tutar),2) TUTAR " +
                     "FROM STOK_HAREKETLERI  " +
                     "WHERE sth_tip = 1 AND sth_evraktip = 1 AND sth_cins = 0 AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
-                    "GROUP BY sth_evrakno_seri,sth_evrakno_sira " 
+                    "GROUP BY sth_evrakno_seri,sth_evrakno_sira,sth_create_date " 
         }
 
         await db.GetPromiseQuery(TmpQuery,async function(Data)
