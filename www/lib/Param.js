@@ -24,11 +24,11 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "DP321-BT",
+			"BTYaziciAdi": "HC05",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "70",
-			"FisDizayn": "1"
+			"FisDizayn": "0"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
