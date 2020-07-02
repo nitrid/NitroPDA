@@ -677,7 +677,7 @@ angular.module('app.db', []).service('db',function($rootScope)
         if(pEvrParam.FiyatListe  == 0)
             FiyatParam[1] = pFiyatParam.CariFiyatListe;
         else
-            FiyatParam[1] = pEvrParam.FiyatListe;
+            FiyatParam[1] = pFiyatParam.FiyatListe;
 
         // FİYAT GETİR
         await _GetPromiseTag(pFirma,'FiyatGetir',FiyatParam,function(FiyatData)

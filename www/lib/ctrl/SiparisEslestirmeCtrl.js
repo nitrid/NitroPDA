@@ -718,6 +718,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                         CariKodu : $scope.CariKodu,
                         CariFiyatListe : $scope.CariFiyatListe,
                         DepoNo : $scope.DepoNo,
+                        FiyatListe : 1,
                         AlisSatis : ($scope.EvrakTip === 0 ? 0 : 1)
                     };
                     await db.FiyatGetir($scope.Firma,pData,FiyatParam,UserParam[ParamName]);
@@ -963,7 +964,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.Stok[0].RECNO, //sth_sip_uid
             '00000000-0000-0000-0000-000000000000', //sth_fat_uid,
             $scope.DepoNo, //GİRİSDEPO
-            $scope.DepoNo,             //CİKİS
+            $scope.DepoNo, //CİKİSDEPO
             $scope.Tarih, //MALKABULSEVKTARİHİ
             $scope.Sorumluluk, // CARİSORUMLULUKMERKEZİ
             $scope.Sorumluluk, // STOKSORUMLULUKMERKEZİ
@@ -1369,7 +1370,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.Stok[0].RECNO, //sth_sip_uid
             ChaGuid, //sth_fat_uid,
             $scope.DepoNo, //GİRİSDEPONO
-            0,             //CİKİSDEPONO
+            $scope.DepoNo, //CİKİSDEPONO
             $scope.Tarih, //MALKABULSEVKTARİHİ
             '', // CARİSORUMLULUKMERKEZİ
             $scope.Sorumluluk,

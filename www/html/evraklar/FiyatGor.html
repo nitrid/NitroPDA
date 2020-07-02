@@ -79,9 +79,6 @@
                             <div class="col-form-label px-1 float-right py-1">Fiyat Seç:</div>
                         </div>
                         <div class="col-4 px-1">
-                            <!-- <select class="form-control form-control-sm" ng-model="FiyatSiraListe" ng-change="FiyatListeChange()">
-                                <option ng-repeat="option in FiyatListeler" value="{{option.FIYATSIRALISTE}}">{{option.SATISADI}}</option>
-                            </select> -->
                             <select class="form-control" ng-model="ListeFiyatNo" ng-change="FiyatListeChange()">
                                 <option ng-repeat="option in FiyatListeler" value="{{option.FIYAT}}">{{option.SATISADI}}</option>
                             </select>
@@ -265,6 +262,22 @@
             </div>
                 <div class="modal-body">
                     <div id="TblIslem" class="pt-10"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Barkod Liste -->
+    <div class="modal fade" id="MdlBarkodlar" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">X</span>
+                </button>
+                <h4 class="modal-title">Yazdırılacak Barkod</h4>
+            </div>
+                <div class="modal-body">
+                    <div id="TblBarkodlar" class="pt-10"></div>
                 </div>
             </div>
         </div>
