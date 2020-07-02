@@ -46,6 +46,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.DNakitToplam = 0;
         $scope.DKrediToplam = 0;
         $scope.DGenelToplam = 0;
+        $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
 
         $scope.CariListe = [];
         $scope.SorumlulukListe = [];
@@ -1002,40 +1003,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             } 
         });
     }
-    $scope.BtnFisYazdir = function()
-    {
-        let FisDizayn = "";
-        let OncekiBakiye = 0;
-        let NakitAlinan = 0;
-        let KalanBakiye = 0;
-
-        if($scope.TahKontrol == 1)
-        {
-            OncekiBakiye = $scope.CariBakiye + $scope.Toplam
-            KalanBakiye = OncekiBakiye - $scope.Toplam
-            NakitAlinan = $scope.Toplam
-        }
-        else
-        {
-            OncekiBakiye = $scope.CariBakiye
-            NakitAlinan = $scope.Toplam
-            KalanBakiye = $scope.CariBakiye - $scope.Toplam
-        }
-
-        FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" + $scope.FisDeger + "\n"
-        FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Nakit Alinan  : " + parseFloat(NakitAlinan).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" 
-        FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-
-        console.log(FisDizayn)
-        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
-        {
-            if(pStatus)
-            {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );    
-                $scope.TahKontrol = 0;
-            }
-        });
-    }
     $scope.BtnFatClick = function()
     {
         if(typeof (localStorage.FaturaParam) != 'undefined')
@@ -1132,35 +1099,104 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             }
         });
     }
-    //GÜN SONU RAPORU
-    $scope.BtnGunSonuYazdir = async function()
-    {  
-        let FisDeger = "";
-        $scope.GunSonuData = "";
+    $scope.BtnFisYazdir = function()
+    {
+        let FisDizayn = "";
+        let OncekiBakiye = 0;
+        let NakitAlinan = 0;
+        let KalanBakiye = 0;
 
-        FisDeger = FisDeger + "                                  TAHSILAT GUN SONU " + "\n" 
-        FisDeger = FisDeger + "                                                    Tarih : "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n";
-
-        for(let i=0; i < $scope.DizaynListe.length; i++)
+        if($scope.TahKontrol == 1)
         {
-            $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].TIP,10) + " " + SpaceLength($scope.DizaynListe[i].SERI,8) + " " +  SpaceLength($scope.DizaynListe[i].SIRA,6) + " " + SpaceLength($scope.DizaynListe[i].CARIKOD,8) + "  " + SpaceLength($scope.DizaynListe[i].CARIADI,18) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),7) + " " + SpaceLength($scope.DizaynListe[i].VADE,10) + "\n";
-        } 
+            OncekiBakiye = $scope.CariBakiye + $scope.Toplam
+            KalanBakiye = OncekiBakiye - $scope.Toplam
+            NakitAlinan = $scope.Toplam
+        }
+        else
+        {
+            OncekiBakiye = $scope.CariBakiye
+            NakitAlinan = $scope.Toplam
+            KalanBakiye = $scope.CariBakiye - $scope.Toplam
+        }
 
-        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                Senet Toplam : " + $scope.DSenetToplam.toFixed(2) + "\n " 
-        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                  Çek Toplam : " + $scope.DCekToplam.toFixed(2) + "\n "
-        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                Nakit Toplam : " + $scope.DNakitToplam.toFixed(2) + "\n " 
-        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                          Kredi Kartı Toplam : " + $scope.DKrediToplam.toFixed(2) + "\n "
-        $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                      Toplam : " + $scope.DGenelToplam.toFixed(2) + "\n "
-        $scope.GunSonuDizayn = $scope.GunSonuDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-        
-        console.log($scope.GunSonuDizayn)
-        db.BTYazdir($scope.GunSonuDizayn,UserParam.Sistem,function(pStatus)
+        FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" + $scope.FisDeger + "\n"
+        FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Nakit Alinan  : " + parseFloat(NakitAlinan).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" 
+        FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+
+        console.log(FisDizayn)
+        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
         {
             if(pStatus)
             {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );    
+                $scope.TahKontrol = 0;
             }
         });
+    }
+    //GÜN SONU RAPORU
+    $scope.BtnGunSonuYazdir = async function()
+    {  
+        if($scope.FisDizaynTip == "0")
+        {   
+            let FisDeger = "";
+            let FisDizayn = "";
+            $scope.GunSonuData = "";
+
+            for(let i=0; i < $scope.DizaynListe.length; i++)
+            {
+                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI,15) + "   " + SpaceLength(parseFloat( $scope.DNakitToplam.toFixed(2)),8) + "  " + SpaceLength(parseFloat( $scope.DKrediToplam.toFixed(2)),8) + "\n";
+            } 
+
+            FisDeger = "RAGIP GOKYAR                        "+ $scope.Tarih;
+
+            FisDizayn = "                                             " + "\n" + 
+                        FisDeger + "\n" +
+                        "CARIADI                    NAKİT   KREDİ KARTI" + "\n" +
+                        $scope.GunSonuData + 
+                        "-----------------------------------------" + "\n" + 
+                        "                                  " + $scope.DGenelToplam + "\n" + 
+                        "                                              " + "\n" 
+            FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+
+            console.log(FisDizayn)
+            
+            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+            {
+                if(pStatus)
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                }
+            });
+        }
+        else if($scope.FisDizaynTip == "1")
+        {
+            let FisDeger = "";
+            $scope.GunSonuData = "";
+    
+            FisDeger = FisDeger + "                                  TAHSILAT GUN SONU " + "\n" 
+            FisDeger = FisDeger + "                                                    Tarih : "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n";
+    
+            for(let i=0; i < $scope.DizaynListe.length; i++)
+            {
+                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].TIP,10) + " " + SpaceLength($scope.DizaynListe[i].SERI,8) + " " +  SpaceLength($scope.DizaynListe[i].SIRA,6) + " " + SpaceLength($scope.DizaynListe[i].CARIKOD,8) + "  " + SpaceLength($scope.DizaynListe[i].CARIADI,18) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),7) + " " + SpaceLength($scope.DizaynListe[i].VADE,10) + "\n";
+            } 
+    
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                Senet Toplam : " + $scope.DSenetToplam.toFixed(2) + "\n " 
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                  Çek Toplam : " + $scope.DCekToplam.toFixed(2) + "\n "
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                Nakit Toplam : " + $scope.DNakitToplam.toFixed(2) + "\n " 
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                          Kredi Kartı Toplam : " + $scope.DKrediToplam.toFixed(2) + "\n "
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                      Toplam : " + $scope.DGenelToplam.toFixed(2) + "\n "
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+            
+            console.log($scope.GunSonuDizayn)
+            db.BTYazdir($scope.GunSonuDizayn,UserParam.Sistem,function(pStatus)
+            {
+                if(pStatus)
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                }
+            });
+        }
     }
     $scope.BtnGunSonuRaporClick = async function()
     {

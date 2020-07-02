@@ -1086,11 +1086,11 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
        try 
        {
             $scope.FisDeger = "";
-            $scope.FisDeger = "                                    "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n" +"             " + SpaceLength($scope.CariAdi,35) + SpaceLength($scope.Adres1,60) +  SpaceLength($scope.Adres,20) + "-\n" + "-\n" + "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "-\n";
+            $scope.FisDeger = "                                    "+ $scope.Tarih + "\n" +"\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" +"             " + SpaceLength($scope.CariAdi,35) + SpaceLength($scope.Adres1,60) +  SpaceLength($scope.Adres,20) + "-\n" + "-\n" + "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "-\n";
 
             for(let i=0; i < pData.length; i++)
             {
-                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,20) + "    " +  SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),8) + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)) + pData[i].BIRIMADI,6) + SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),8) + "\n";
+                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,20) + " " +   SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)) + pData[i].BIRIMADI,6) + " " + SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),6) + SpaceLength(parseFloat($scope.ToplamIndirim.toFixed(2)),4) + " "+SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),6) + "\n";
             } 
        } 
        catch (error) 
@@ -2594,6 +2594,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             });
     
             $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
+            OncekiBakiye = $scope.CariBakiye + $scope.GenelToplam
+            KalanBakiye = OncekiBakiye - $scope.GenelToplam
+
             FisGenelToplam = $scope.GenelToplam + $scope.CariBakiye
             FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
             let i = 20 - $scope.FisLength.length;
@@ -2606,10 +2609,11 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     
             FisDizayn = "                                             -" + "\n" + 
                         $scope.FisDeger + "-\n" + "\n" +
-                        $scope.FisData + "-\n" + //İÇERİK
+                        SpaceLength("Ürün Adı",20) +    SpaceLength("Mik" + "BRM",4) + " " + SpaceLength("FIYAT",5) + " " + SpaceLength("ISK",3) + " " + SpaceLength("NET TUT",5) + "\n" + 
+                        $scope.FisData + "\n" + //İÇERİK
                         Satır
-            FisDizayn = FisDizayn + "                         Ara Toplam : " + parseFloat($scope.AraToplam).toFixed(2) + "\n" +  "                     Toplam Iskonto : " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n"
-            FisDizayn = FisDizayn + "                         Toplam Kdv : "  + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
+            FisDizayn = FisDizayn + "Önceki Bakiye: " + SpaceLength(parseFloat(OncekiBakiye).toFixed(2),5) + "  Ara Top.   : " + parseFloat($scope.AraToplam).toFixed(2) + "\n" + "                        Top. Isk.  : " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n"
+            FisDizayn = FisDizayn + "Kalan Bakiye:  " + SpaceLength(parseFloat(KalanBakiye).toFixed(2),5) + "  Top. Kdv   : "  + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                        Genel Top. : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
             "                                             -" + "\n" + 
             "                                             -" + "\n" + 
             "                                             -" + "\n" + 
