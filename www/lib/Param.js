@@ -51,7 +51,7 @@ var Param = [
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "6",
+			"FiyatListe": "1",
 			"EvrakSil": "0",
 			"PartiSec": "0",
 			"FiyatLock": "0",
