@@ -198,7 +198,7 @@ function CariHesapHareketCtrl($scope,$window,db)
                         "(select ROUND(dbo.fn_CariHesapOrjinalDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,@ILKTARIH,@SONTARIH ,0,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS ORJINALDOVIZBAKIYE, " +
                         "(select ROUND(dbo.fn_CariHesapAlternatifDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,@ILKTARIH,@SONTARIH ,0,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS ALTERNATIFDOVIZBAKIYE, " +
                         "[msg_S_0112] AS ORJINALDOVIZ " +
-                        "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 DESC " ,
+                        "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
                 param:  ['KODU','ILKTARIH','SONTARIH'],
                 type:   ['string|25','date','date',],
                 value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
@@ -206,15 +206,22 @@ function CariHesapHareketCtrl($scope,$window,db)
     
             db.GetDataQuery(TmpQuery,function(Data)
             {
-                console.log(Data)
-                $scope.CariFoyListe = Data;
-                $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
+                $scope.CariFoyListe = Data;                
                 $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
                 $scope.AnaDovizBakiye = $scope.CariFoyListe[0].ANADOVIZBAKIYE1
                 $scope.OrjDovizBakiye = $scope.CariFoyListe[0].ORJINALDOVIZBAKIYE
                 $scope.OrjDoviz = $scope.CariFoyListe[0].ORJINALDOVIZ
                 $scope.AltDovizBakiye = $scope.CariFoyListe[0].ALTERNATIFDOVIZBAKIYE
 
+                let TmpBakiye = 0;
+                for (let i = 0; i < $scope.CariFoyListe.length; i++) 
+                {
+                    TmpBakiye += $scope.CariFoyListe[i].ANADOVIZBAKIYE;
+                    console.log($scope.CariFoyListe[i].ANADOVIZBAKIYE);
+                    $scope.CariFoyListe[i].ANADOVIZBAKIYE = TmpBakiye.toFixed(2);
+                }
+
+                $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
             });
 
         }
