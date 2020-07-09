@@ -756,10 +756,12 @@ var QuerySql =
         "NAKLIYE.sth_evrakno_sira AS SIRA, " +              
         "NAKLIYE.sth_giris_depo_no AS   GDEPO, " +
         "NAKLIYE.sth_cikis_depo_no AS   CDEPO, " +
-        "NAKLIYE.sth_nakliyedeposu AS   NDEPO    " +           
+        "NAKLIYE.sth_nakliyedeposu AS   NDEPO,    " +   
+        "(SELECT dep_adi FROM DEPOLAR WHERE dep_no =  NAKLIYE.sth_giris_depo_no) AS   GDEPOADI ,"  +       
+        "(SELECT dep_adi FROM DEPOLAR WHERE dep_no =  NAKLIYE.sth_cikis_depo_no) AS   CDEPOADI ,"  +       
+        "(SELECT dep_adi FROM DEPOLAR WHERE dep_no =  NAKLIYE.sth_nakliyedeposu) AS   NDEPOADI "  +       
         "FROM STOK_HAREKETLERI AS NAKLIYE  " +
-
-        "WHERE NAKLIYE.sth_tarih>=@ILKTARIH AND  NAKLIYE.sth_tarih<=@SONTARIH and NAKLIYE.sth_evraktip = 17 AND NAKLIYE.sth_evraktip=@TIP " +
+        "WHERE NAKLIYE.sth_tarih>=@ILKTARIH AND  NAKLIYE.sth_tarih<=@SONTARIH and NAKLIYE.sth_evraktip = 17 AND NAKLIYE.sth_evraktip=@TIP and NAKLIYE.sth_nakliyedurumu = 0 " +
         "GROUP BY NAKLIYE.sth_tarih,NAKLIYE.sth_evrakno_seri, NAKLIYE.sth_evrakno_sira," +
         "NAKLIYE.sth_giris_depo_no,NAKLIYE.sth_cikis_depo_no,NAKLIYE.sth_nakliyedeposu,NAKLIYE.sth_evraktip,NAKLIYE.sth_birim_pntr " ,
         param : ['ILKTARIH','SONTARIH','TIP'],
@@ -1236,6 +1238,11 @@ var QuerySql =
         query : "UPDATE SIPARISLER SET sip_teslim_miktar = sip_teslim_miktar + @sip_teslim_miktar WHERE sip_Guid = @sip_Guid " +  
                 "UPDATE BEDEN_HAREKETLERI SET BdnHar_TesMik = BdnHar_TesMik + @sip_teslim_miktar WHERE BdnHar_Har_uid = @sip_Guid AND BdnHar_BedenNo = @BdnHar_BedenNo",
         param : ['sip_teslim_miktar:int','sip_Guid:string|50','BdnHar_BedenNo:int']
+    },
+    StokHarDepoSiparisUpdate :
+    {
+        query : "UPDATE DEPOLAR_ARASI_SIPARISLER SET ssip_teslim_miktar = ssip_teslim_miktar + @sip_teslim_miktar WHERE ssip_Guid = @sip_Guid " ,
+        param : ['sip_teslim_miktar:int','sip_Guid:string|50']
     },
     SiparisDeleteUpdate :
     {
@@ -2819,7 +2826,10 @@ var QuerySql =
                  "DEPOSIPARIS.ssip_stok_kod=BARKOD.bar_stokkodu " +
                  "AND DEPOSIPARIS.ssip_birim_pntr=BARKOD.bar_birimpntr " +
                  "AND DEPOSIPARIS.ssip_teslim_miktar < DEPOSIPARIS.ssip_miktar " +
-                 "INNER JOIN STOKLAR AS STOK ON STOK.sto_kod = DEPOSIPARIS.ssip_stok_kod"
+                 "INNER JOIN STOKLAR AS STOK ON STOK.sto_kod = DEPOSIPARIS.ssip_stok_kod " +
+                 "WHERE DEPOSIPARIS.ssip_girdepo = @GDEPO AND DEPOSIPARIS.ssip_cikdepo = @CDEPO AND DEPOSIPARIS.ssip_evrakno_seri =@SERI AND DEPOSIPARIS.ssip_evrakno_sira = @SIRA AND BARKOD.bar_kodu = @BARKOD",
+                 param : ['GDEPO','CDEPO','SERI','SIRA','BARKOD'],
+                 type : ['int','int','string|10','int','string|25']
     },
     FiyatTbl :
      {

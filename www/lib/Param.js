@@ -362,6 +362,8 @@ var Param = [
 			"CDepoListe": "",
 			"GDepo": "1",
 			"GDepoListe": "",
+			"NDepo": "0",
+			"NDepoListe": "",
 			"Sorumluluk": "",
 			"EvrakSil": "0",
 			"EksiyeDusme": "0"

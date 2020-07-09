@@ -927,13 +927,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
             {
-                console.log(1)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Data)
                 {   
-                    console.log(2)
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
-                        console.log(3)
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     }
                     else
@@ -1971,7 +1968,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         StokHarInsert();     
                     }
                 });
-                $scope.InsertLock = false;
             }
             else
             {   
@@ -1984,7 +1980,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             CariHarUpdate(); 
                         }
                     });
-                    $scope.InsertLock = false;                
                 }
                 else
                 {   
@@ -2034,7 +2029,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                                 CariHarUpdate(); 
                             }
                         });
-                        $scope.InsertLock = false;
                     }
                 }
             }
