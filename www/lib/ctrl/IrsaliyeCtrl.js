@@ -836,7 +836,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 "ORDER BY sfiyat_deposirano DESC", 
                         param: ['STOKKODU','FIYATLISTE','DEPONO'],
                         type:  ['string|50','int','int'],
-                        value: [$scope.StokKodu,$scope.FiyatListe,$scope.DepoNo]
+                        value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
                     }
                     db.GetDataQuery(Fiyat,function(pFiyat)
                     {                         
@@ -892,7 +892,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         CariFiyatListe : $scope.CariFiyatListe,
                         CariDovizKuru : $scope.CariDovizKuru,
                         DepoNo : $scope.DepoNo,
-                        FiyatListe : $scope.FiyatListe,
+                        FiyatListe : $scope.FiyatListeNo,
                         AlisSatis : ($scope.EvrakTip === 13 ? 0 : 1)
                     };
                     
@@ -1005,24 +1005,46 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }
     }
     function FisData(pData)
-    {
+    { 
         $scope.FisLength = pData;
-        $scope.FisDeger = "";
-        $scope.FisData = "";
-       try 
-       {
+        if($scope.FisDizaynTip == "0")
+        {
             $scope.FisDeger = "";
-            $scope.FisDeger =  "                                    "+ $scope.Tarih + "\n" +"\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" +"             " + SpaceLength($scope.CariAdi,35) + SpaceLength($scope.Adres1,60) +  SpaceLength($scope.Adres,20) + "-\n" + "-\n" + "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "-\n";
-
-            for(let i=0; i < pData.length; i++)
-            {
-                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,20) + "    " +  SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),8) + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)) + pData[i].BIRIMADI,6) + SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),8) + "\n";
-            } 
-       } 
-       catch (error) 
-       {
-           console.log(error)
-       }
+            $scope.FisData = "";
+           try 
+           {
+                $scope.FisDeger = "";
+                $scope.FisDeger = "                                    " + $scope.Tarih + "\n" + "                                    " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,10) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
+    
+                for(let i=0; i < pData.length; i++)
+                {
+                    $scope.FisData = $scope.FisData + SpaceLength(pData[i].ADI.substring(0,20),20) + "          " +   SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),4) + " " + SpaceLength(pData[i].BIRIMADI,4) + "\n";
+                } 
+           } 
+           catch (error) 
+           {
+               console.log(error)
+           }
+        }
+        else if($scope.FisDizaynTip == "1")
+        {
+            $scope.FisDeger = "";
+            $scope.FisData = "";
+           try 
+           {
+                $scope.FisDeger = "";
+                $scope.FisDeger = "                                    "+ $scope.Tarih + "\n" + "                                    " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,25) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
+    
+                for(let i=0; i < pData.length; i++)
+                {
+                   $scope.FisData = $scope.FisData +  SpaceLength(pData[i].sth_stok_kod,15) + SpaceLength(pData[i].ADI.substring(0,20),22) + " " +   SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)) + " " +pData[i].BIRIMADI,16) +  SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),13) + " " +SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),11) + "\n";       
+                } 
+           } 
+           catch (error) 
+           {
+               console.log(error)
+           }
+        }
     }
     function SpaceLength(pData,pLength)
     {
@@ -1030,7 +1052,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         if(pData.toString().length > pLength)
         {
-            pData = pData.substring(0,25);
+            pData = pData.toString().substring(0,pLength);
         }
 
         Space = "";
@@ -1060,7 +1082,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             ParamName = "AlisIrsaliye";
         else
             ParamName = "SatisIrsaliye";
-        $scope.FiyatListe = UserParam[ParamName].FiyatListe;
+        $scope.FiyatListeNo = UserParam[ParamName].FiyatListe;
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
@@ -1967,7 +1989,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 Init();
                 InitCariGrid();
                 InitIslemGrid(); 
-
+                console.log(data)
                 $scope.CariFiyatListe = data[0].sth_fiyat_liste_no;
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
@@ -2352,8 +2374,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnFisYazdir = async function()
     {
-        if($scope.FisDizaynTip == 0)
+        console.log($scope.FisDizaynTip)
+        if($scope.FisDizaynTip == "0")
         {
+            console.log(1)
             let FisDizayn = "";
             let FisGenelToplam = "";
     
@@ -2363,7 +2387,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.FatSeri = "";
                 $scope.FatSira = 0;
             }
-    
+            console.log(1.2)
             var TmpQuery = 
             {
                 db : '{M}.' + $scope.Firma,
@@ -2373,46 +2397,33 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 type:   ['string|25'], 
                 value:  [$scope.CariKodu]    
             }
-        
-            await db.GetPromiseQuery(TmpQuery,function(Data)
+            db.GetDataQuery(TmpQuery,function(Data)
             {
-                $scope.CariBakiye = Data[0].BAKIYE
+                $scope.CariBakiye = Data[0].BAKIYE;
+                $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
             });
-    
-            $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
-            OncekiBakiye = $scope.CariBakiye + $scope.GenelToplam
-            KalanBakiye = OncekiBakiye - $scope.GenelToplam
+            console.log(1.3)
+
+            KalanBakiye = $scope.CariBakiye + $scope.GenelToplam
+            OncekiBakiye = KalanBakiye - $scope.GenelToplam
 
             FisGenelToplam = $scope.GenelToplam + $scope.CariBakiye
             FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
-            let i = 20 - $scope.FisLength.length;
+            let i = 36 - $scope.FisLength.length;
             let Satır = "";
-    
+            console.log(1.4)
             for(let x = 0; x <= i; x++)
             {    
                 Satır = Satır + "                                             -"+ "\n"; 
-            }
-    
+            } 
             FisDizayn = "                                             -" + "\n" + 
-            $scope.FisDeger + "-\n" + "\n" + 
-            SpaceLength("Ürün Adı",20) +    SpaceLength("Mik" + "BRM",4) + " " + SpaceLength("FIYAT",5) + " " + SpaceLength("ISK",3) + " " + SpaceLength("NET TUT",5) + "\n" + 
+            $scope.FisDeger + "\n" + "\n" +
+            SpaceLength("ÜRÜN ADI",20) + "          " +SpaceLength("MIK",4) + " " + SpaceLength("BRM",4) + "\n" + 
             $scope.FisData + "\n" + //İÇERİK
-            Satır 
-            FisDizayn = FisDizayn + "                         Ara Toplam : " + parseFloat($scope.AraToplam).toFixed(2) + "\n" +  "                     Toplam Iskonto : " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n" 
-            FisDizayn = FisDizayn + "                         Toplam Kdv : "  + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
-            "                                             -" + "\n" + 
-            "                                             -" + "\n" + 
-            "                                             -" + "\n" + 
-            "                                             -" + "\n" + 
-            "                                             -" + "\n" + 
-            "                                             -" + "\n" + 
-            "                                             -" + "\n" + 
-            "                                             -" + "\n" + 
-            "                                             -" + "\n" + 
-            "                                             -" + "\n" + 
-            "                                             -" + "\n"
+            Satır +
+            "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n"
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-    
+            console.log(3)
             console.log(FisDizayn)
             
            
@@ -2425,70 +2436,39 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 }
             });
         }
-        else if($scope.FisDizaynTip = "1")
+        else if($scope.FisDizaynTip == "1")
         {
-            let FisDizayn = "";
-            let FisGenelToplam = "";
+            console.log(1)
+            let FisDeger = "";
     
-            if(typeof ($scope.TahToplam) == 'undefined')
-            {
-                $scope.TahToplam = 0;
-                $scope.FatSeri = "";
-                $scope.FatSira = 0;
-            }
+            FisDeger = FisDeger + "                                 IRSALIYE GUN SONU " + "\n" 
+            FisDeger = FisDeger + "                                                                     "+ $scope.Tarih + "\n" +"                                                                     "+ $scope.Tarih + "\n" + "                                                                     "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,25) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
     
-            var TmpQuery = 
-            {
-                db : '{M}.' + $scope.Firma,
-                query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
-                        "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
-                param:  ['CARIKODU'], 
-                type:   ['string|25'], 
-                value:  [$scope.CariKodu]
-            }
-        
-            await db.GetPromiseQuery(TmpQuery,function(Data)
-            {
-                $scope.CariBakiye = Data[0].BAKIYE
-            });
-    
-            $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
-            FisGenelToplam = $scope.GenelToplam + $scope.CariBakiye
-            FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
-            let i = 20 - $scope.FisLength.length;
-            let Satır = "";
-    
-            for(let x = 0; x <= i; x++)
-            {    
-                Satır = Satır + "                                             -"+ "\n"; 
-            } 
-    
-            FisDizayn = "                                             -" + "\n" + 
-                        $scope.FisDeger + "-\n" + "\n" +
-                        $scope.FisData + "-\n" + //İÇERİK
-                        Satır
-                        FisDizayn = FisDizayn + "                         Ara Toplam : " + parseFloat($scope.AraToplam).toFixed(2) + "\n" +  "                     Toplam Iskonto : " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n"
-                        FisDizayn = FisDizayn + "                         Toplam Kdv : "  + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Toplam : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
-                        "                                             -" + "\n" + 
-                        "                                             -" + "\n" + 
-                        "                                             -" + "\n" + 
-                        "                                             -" + "\n" + 
-                        "                                             -" + "\n" + 
-                        "                                             -" + "\n" + 
-                        "                                             -" + "\n" + 
-                        "                                             -" + "\n"
-                        FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-    
-            console.log(FisDizayn)
+            console.log($scope.FisData)
+            $scope.GunSonuDizayn = "                                             " + "\n" + 
+                        FisDeger + "\n" + "\n" +                                         
+                        "STOKKOD             STOKAD             MIKTAR       BIRIM FIYAT     TUTAR" + "\n" + 
+                        "                                              " + "\n" + 
+                        $scope.FisData + "\n"  +
+                        "                                                                    - " + "\n " +
+                        "                                                                   - " + "\n "
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                          ARA TOPLAM : " + $scope.AraToplam.toFixed(2) + "\n"
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                           KDV TOPLAM : " + $scope.ToplamKdv.toFixed(2) + "\n"
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                         GENEL TOPLAM : " + $scope.GenelToplam.toFixed(2) + "\n"
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u").split("ı").join("i");
             
-           
-            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+            console.log($scope.GunSonuDizayn)
+            db.BTYazdir($scope.GunSonuDizayn,UserParam.Sistem,function(pStatus)
             {
                 if(pStatus)
                 {
-                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
                 }
             });
+        }
+        else
+        {
+            alertify.alert("Reis parametreni kontrol et ya yazamıyorum bir şey")
         }
     }
     //GÜN SONU RAPORU
@@ -2502,7 +2482,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
             for(let i=0; i < $scope.DizaynListe.length; i++)
             {
-                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI.substring(0,13),15) + SpaceLength($scope.DizaynListe[i].SAAT,1) + " " +SpaceLength($scope.DizaynListe[i].SERI,5) + SpaceLength($scope.DizaynListe[i].SIRA,5) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),8) + "\n";
+                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI,30) + " " + SpaceLength($scope.DizaynListe[i].SAAT,5) + " " +SpaceLength($scope.DizaynListe[i].SERI + "-" + $scope.DizaynListe[i].SIRA,10) + " " + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),10) + "\n";
             } 
 
             FisDeger = "RAGIP GOKYAR                        "+ $scope.Tarih;
@@ -2510,20 +2490,20 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             FisDizayn = "                                             " + "\n" + 
                         FisDeger + "\n" +
                         "           CARI SATIŞ DURUM RAPORU              " + "\n" +
-                        "CARIADI        F.SAAT   F.SERI    F.TUTAR" + "\n" +
+                        "CARIADI                        SAAT F.SERI    F.TUTAR" + "\n" +
                         $scope.GunSonuData + 
-                        "---------------------------------------" + "\n" + 
-                        "                                  " + $scope.DGenelToplam + "\n" + 
+                        "------------------------------------------------------------" + "\n" + 
+                        "                                                  " + $scope.DGenelToplam.toFixed(2) + "\n" + 
                         "                                              " + "\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
-          console.log(FisDizayn)  
+            console.log(FisDizayn)  
             
             db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
             {
                 if(pStatus)
                 {
-                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
                 }
             });
         }
@@ -2532,23 +2512,23 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             let FisDeger = "";
             $scope.GunSonuData = "";
     
-            FisDeger = FisDeger + "                              IRSALIYE GUN SONU " + "\n" 
-            FisDeger = FisDeger + "                                                   "+ $scope.Tarih + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n";
+            FisDeger = FisDeger + "                            IRSALIYE GUN SONU " + "\n" 
+            FisDeger = FisDeger + "                                                            "+ $scope.Tarih + "\n" + "                                                            " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                                            "+ $scope.Tarih + "\n" + "                                                            "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,10) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
     
             for(let i=0; i < $scope.DizaynListe.length; i++)
             {
                 $scope.GunSonuData = $scope.GunSonuData +  SpaceLength($scope.DizaynListe[i].SERI,10) + "  " +  SpaceLength($scope.DizaynListe[i].SIRA,10) + "  " + SpaceLength($scope.DizaynListe[i].CARIKOD,15) + "  " + SpaceLength($scope.DizaynListe[i].CARIADI,20) + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),8) + "\n";
             }
-    
+            console.log($scope.FisData)
             $scope.GunSonuDizayn = "                                             " + "\n" + 
                         FisDeger + "\n" + "\n" +
                         "SERI        SIRA       CARI KODU            CARI ADI        TUTAR" + "\n" + 
                         "                                              " + "\n" + 
-                        $scope.GunSonuData + "\n"  +
-                        "                                                                                                                                   - " + "\n " +
-                        "                                                                                                                                   - " + "\n "
-            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                   TOPLAM : " + $scope.DGenelToplam
-            $scope.GunSonuDizayn = $scope.GunSonuDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+                        $scope.FisData + "\n"  +
+                        "                                                                    - " + "\n " +
+                        "                                                                   - " + "\n "
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                   TOPLAM : " + $scope.DGenelToplam.toFixed(2)
+            $scope.GunSonuDizayn = $scope.GunSonuDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u").split("ı").join("i");
             
             console.log($scope.GunSonuDizayn)
             db.BTYazdir($scope.GunSonuDizayn,UserParam.Sistem,function(pStatus)
@@ -2575,7 +2555,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             query:  "SELECT " +
                     "sth_evrakno_seri AS SERI, " +
                     "sth_evrakno_sira AS SIRA, " +
-                    "CONVERT(NVARCHAR, sth_create_date, 108) AS SAAT, " +
+                    "LEFT(CONVERT(VARCHAR(8),MAX(sth_create_date),108),5) AS SAAT, " +
                     "MAX(sth_cari_kodu) AS CARIKOD, " +
                     "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) + ' ' +" +
                     "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) " +
@@ -2583,7 +2563,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     "ROUND(SUM(sth_tutar),2) TUTAR " +
                     "FROM STOK_HAREKETLERI  " +
                     "WHERE sth_tip = 1 AND sth_evraktip = 1 AND sth_cins = 0 AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
-                    "GROUP BY sth_evrakno_seri,sth_evrakno_sira,sth_create_date " 
+                    "GROUP BY sth_evrakno_seri,sth_evrakno_sira " 
         }
 
         await db.GetPromiseQuery(TmpQuery,async function(Data)

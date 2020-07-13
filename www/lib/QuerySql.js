@@ -3798,13 +3798,13 @@ var QuerySql =
             ",@CARIUNVAN1                          --<cari_unvan1, nvarchar(127),>\n" +
             ",@CARIUNVAN2                                   --<cari_unvan2, nvarchar(127),>\n" +
             ",0                                    --<cari_hareket_tipi, tinyint,>\n" +
-            ",5                                    --<cari_baglanti_tipi, tinyint,>\n" +
+            ",0                                    --<cari_baglanti_tipi, tinyint,>\n" +
             ",0                                    --<cari_stok_alim_cinsi, tinyint,>\n" +
             ",0                                    --<cari_stok_satim_cinsi, tinyint,>\n" +
             ",''                                   --<cari_muh_kod, nvarchar(40),>\n" +
             ",''                                   --<cari_muh_kod1, nvarchar(40),>\n" +
             ",''                                   --<cari_muh_kod2, nvarchar(40),>\n" +
-            ",0                                    --<cari_doviz_cinsi, tinyint,>\n" +
+            ",1                                    --<cari_doviz_cinsi, tinyint,>\n" +
             ",255                                  --<cari_doviz_cinsi1, tinyint,>\n" +
             ",255                                  --<cari_doviz_cinsi2, tinyint,>\n" +
             ",25                                   --<cari_vade_fark_yuz, float,>\n" +

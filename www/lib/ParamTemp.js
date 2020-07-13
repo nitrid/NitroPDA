@@ -321,6 +321,10 @@ var ParamTemp =
 			"ChaTip" : {"Title" : "ChaTip","DefaultValue" : "0"},
 
 		},
+		"CariEkle" :
+		{
+			"CariHarfEkle" : {"Title" : "Cari Harf Ekle","DefaultValue" : "EKR"},
+		},
 		"Menu" :
 		{
 			"Stok Detay" : {"Title" : "Stok Detay","DefaultValue" : "1"},
