@@ -37,7 +37,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.Birim = "0";
         $scope.NormalIade = "0"
         $scope.StokGridTip = "0";
-        $scope.CmbEvrakTip = "0";
+        $scope.CmbEvrakTip = UserParam.DepoMalKabul.EvrakTip
         $scope.ToplamSatir = 0;
         $scope.Miktar2 = 0;
         $scope.StokTip = 0;
@@ -664,7 +664,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.Seri = UserParam.DepoMalKabul.Seri;
         
         $scope.BelgeNo = UserParam.DepoMalKabul.BelgeNo;
-        $scope.EvrakTip = UserParam.DepoMalKabul.EvrakTip;
         $scope.Personel =  ''
 
         $scope.Stok = 
