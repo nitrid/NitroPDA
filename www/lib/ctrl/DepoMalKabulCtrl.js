@@ -406,10 +406,10 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                 }
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Data)
                 {   
-                    if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
-                    {
-                        BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
-                    } 
+                  //  if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
+                  //  {
+                  //      BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
+                  //  } 
                     InsertAfterRefresh(Data);
                     $scope.InsertLock = false;
                     
@@ -440,6 +440,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({data : $scope.DepoSiparisListe});    
         $scope.BtnTemizle();
         ToplamMiktarHesapla();
+        $scope.BtnSiparisListeGetir();
         
         $window.document.getElementById("Barkod").focus();
     } 
@@ -647,7 +648,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'EslestirmeOtukmaSayı',[$scope.Seri,$scope.Sira,$scope.Stok[0].KODU],function(data)
         {
             $scope.Okutulan = data;
-            console.loh(data)
         });
     }
     $scope.YeniEvrak = async function()
@@ -911,7 +911,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                     "BEDENHAR.[BdnHar_Tipi] = 1 AND BdnHar_Guid = DEPOSIPARIS.ssip_Guid " +
                     "INNER JOIN STOKLAR AS STOK ON " +
                     "STOK.sto_kod = DEPOSIPARIS.ssip_stok_kod " +
-                    "WHERE DEPOSIPARIS.ssip_evrakno_seri = @SIPSERI AND DEPOSIPARIS.ssip_evrakno_sira = @SIPSIRA " +
+                    "WHERE DEPOSIPARIS.ssip_evrakno_seri = @SIPSERI AND DEPOSIPARIS.ssip_evrakno_sira = @SIPSIRA AND  DEPOSIPARIS.ssip_miktar > DEPOSIPARIS.ssip_teslim_miktar  " +
                     "GROUP BY " +
                     "DEPOSIPARIS.ssip_stok_kod, " +
                     "STOK.sto_isim, " +
@@ -952,7 +952,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             else
             {
                 angular.element('#MdlSiparisListeGetir').modal('hide');
-                alertify.alert("Seçilen " + $scope.SipIlkTarih + " - " + $scope.SipSonTarih + " Tarih Aralığında Sipariş Bulunamamıştır.");
+                alertify.alert("Seçilen  Sipariş Tamamlanmıştır.");
                 $scope.Loading = false;
                 $scope.TblLoading = true;
             }

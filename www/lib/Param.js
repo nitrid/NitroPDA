@@ -363,7 +363,7 @@ var Param = [
 			"GDepo": "1",
 			"GDepoListe": "",
 			"NDepo": "0",
-			"NDepoListe": "",
+			"NDepoListe": "3",
 			"Sorumluluk": "",
 			"EvrakSil": "0",
 			"EksiyeDusme": "0"
