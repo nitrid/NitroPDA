@@ -96,8 +96,8 @@ var QuerySql =
                 "DOVIZKUR1, " +
                 "DOVIZKUR2, " +
                 "ALTDOVIZKUR, " +
-                "RISK, " +
-                "RISKLIMIT, " +
+                //"RISK, " +
+                //"RISKLIMIT, " +
                 "ODEMEPLANI, " +
                 "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE, " +
                 "BELGETARIH, " +
