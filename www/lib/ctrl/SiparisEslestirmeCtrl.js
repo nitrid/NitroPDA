@@ -104,7 +104,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = "";
         $scope.MiktarLock = false;
-        $scope.OtoEkle = false;
+        $scope.OtoEkle = true;
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
         $scope.IslemListeSelectedIndex = -1;
@@ -268,6 +268,27 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 width: 100
             },
             {
+                name: "BIRIM1",
+                title: "BIRIM1",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "BIRIM",
+                title: "BIRIM2",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "BIRIMADI",
+                title: "BIRIM2ADI",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
                 name: "FIYAT",
                 title: "FIYAT",
                 type: "number",
@@ -286,7 +307,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 title: "IND1",
                 type: "number",
                 align: "center",
-                width: 200
+                width: 100
             },
             {
                 name: "sth_iskonto2",
