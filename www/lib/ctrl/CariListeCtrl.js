@@ -5,6 +5,7 @@ function CariListeCtrl($scope,$window,db)
     function Init()
     {
         $scope.Firma = $window.sessionStorage.getItem('Firma');
+        UserParam = Param[$window.sessionStorage.getItem('User')];
 
         $scope.CariKodu = "";
         $scope.CariAdi = "";
@@ -16,6 +17,7 @@ function CariListeCtrl($scope,$window,db)
         $scope.CariEkleKodu = "";
         $scope.CariEkleUnvan1 = "";
         $scope.CariEkleUnvan2 = "";
+        $scope.CariHarfEkle = "";
 
         InitCariGrid();
         $scope.MainClick();
@@ -76,12 +78,17 @@ function CariListeCtrl($scope,$window,db)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "SELECT REPLACE(STR(ISNULL(MAX(CONVERT(int,SUBSTRING(cari_kod,3,LEN(cari_kod)))),0) + 1, 5), SPACE(1), '0') AS MAXCARIKOD FROM CARI_HESAPLAR WHERE cari_kod LIKE 'C%' "
+            query:  "SELECT REPLACE(STR(ISNULL(MAX(CONVERT(int,SUBSTRING(cari_kod,3,LEN(cari_kod)))),0) + 1, 5), SPACE(1), '0') AS MAXCARIKOD FROM CARI_HESAPLAR WHERE cari_kod LIKE @CARIHARF + '%' ",
+            param:  ['CARIHARF'], 
+            type:   ['string|25'], 
+            value:  [$scope.CariHarfEkle]    
         }
 
         await db.GetPromiseQuery(TmpQuery,async function(Data)
         {
-            $scope.CariEkleKodu = "C" + Data[0].MAXCARIKOD;
+            $scope.CariHarfEkle = UserParam.CariEkle.CariHarfEkle;
+            console.log($scope.CariHarfEkle)
+            $scope.CariEkleKodu = $scope.CariHarfEkle + Data[0].MAXCARIKOD;
         });
     }
     $scope.EvrakGetir = function ()
@@ -208,6 +215,7 @@ function CariListeCtrl($scope,$window,db)
                     $scope.CariEkleUnvan2 = "";
                 }
             });
+            $scope.YeniEvrak()
         }
         else
         {

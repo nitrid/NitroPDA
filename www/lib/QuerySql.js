@@ -788,7 +788,7 @@ var QuerySql =
                 "SIPARIS.sip_musteri_kod AS CARI, " +
                 "ROUND(SIPARIS.sip_b_fiyat * SIPARIS.sip_doviz_kuru,2)  AS FIYAT, " +
                 "ISNULL(BEDENHAR.BdnHar_HarGor,SIPARIS.sip_miktar) AS SIPMIKTAR, " +
-                "SIPARIS.sip_birim_pntr AS BIRIMPNTR, " +
+                "BARKOD.bar_birimpntr AS BIRIMPNTR, " +
                 "ISNULL(BEDENHAR.BdnHar_TesMik,SIPARIS.sip_teslim_miktar) AS TESLIMMIKTAR, " +
                 "SIPARIS.sip_tutar AS TUTAR, " +
                 "SIPARIS.sip_iskonto_1 AS ISKONTO_1, " +
@@ -1491,6 +1491,7 @@ var QuerySql =
                 "ROUND(sth_tutar,2) AS TUTAR, " + 
                 "(SELECT dbo.fn_StokBirimi(sth_stok_kod,sth_birim_pntr)) AS BIRIMADI, " +
                 "(SELECT dbo.fn_StokBirimHesapla(sth_stok_kod,1,sth_miktar,sth_birim_pntr)) AS BIRIM," +
+                "ISNULL((SELECT sto_birim1_ad as ADET FROM STOKLAR WHERE sto_kod = sth_stok_kod),'') AS BIRIM1, " +
                 "ROW_NUMBER() OVER(ORDER BY sth_Guid) AS NO, " +
                 "(SELECT dbo.fn_VergiYuzde (sth_vergi_pntr)) AS TOPTANVERGI, " +
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0) AS RENKPNTR , " +
@@ -3808,13 +3809,13 @@ var QuerySql =
             ",@CARIUNVAN1                          --<cari_unvan1, nvarchar(127),>\n" +
             ",@CARIUNVAN2                                   --<cari_unvan2, nvarchar(127),>\n" +
             ",0                                    --<cari_hareket_tipi, tinyint,>\n" +
-            ",5                                    --<cari_baglanti_tipi, tinyint,>\n" +
+            ",0                                    --<cari_baglanti_tipi, tinyint,>\n" +
             ",0                                    --<cari_stok_alim_cinsi, tinyint,>\n" +
             ",0                                    --<cari_stok_satim_cinsi, tinyint,>\n" +
             ",''                                   --<cari_muh_kod, nvarchar(40),>\n" +
             ",''                                   --<cari_muh_kod1, nvarchar(40),>\n" +
             ",''                                   --<cari_muh_kod2, nvarchar(40),>\n" +
-            ",0                                    --<cari_doviz_cinsi, tinyint,>\n" +
+            ",1                                    --<cari_doviz_cinsi, tinyint,>\n" +
             ",255                                  --<cari_doviz_cinsi1, tinyint,>\n" +
             ",255                                  --<cari_doviz_cinsi2, tinyint,>\n" +
             ",25                                   --<cari_vade_fark_yuz, float,>\n" +

@@ -1,3 +1,5 @@
+const { Console } = require("console");
+
 function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 {
     let CariSelectedRow = null;
@@ -418,12 +420,13 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         try 
         {
             $scope.FisDeger = "";
-            $scope.FisDeger = "TARIH      : " + $scope.Tarih + " " +$scope.Saat + "\n" + "FIRMA ADI  : " + SpaceLength($scope.CariAdi,35) + "\n" + "EVRAK NO   : " + $scope.Seri + "-" + $scope.Sira + "\n"
+            $scope.FisDeger = SpaceLength($scope.CariAdi,40) + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n"+ "                                    " + $scope.Seri + " - " + $scope.Sira + "\n"+ $scope.Adres1 + " " + $scope.Adres +"\n" + "\n";
         } 
         catch (error) 
         {
             console.log(error)
         }
+        console.log($scope.Fisdeger)
     }
     function SpaceLength(pData,pLength)
     {
@@ -433,7 +436,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 
             if(pData.toString().length > pLength)
             {
-                pData = pData.substring(0,25);
+                pData = pData.substring(0,pLength);
             }
 
             Space = "";
@@ -817,7 +820,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                         let Item = Obj.rowByItem(data[0]);
                         
                         $scope.CariListeRowClick(0,Item,Obj);
-                        
+                        FisData(data);
                         $scope.Loading = false;
                         $scope.TblLoading = true;
                     });
@@ -826,8 +829,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].cha_srmrkkodu});
                 db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = data[0].cha_satici_kodu});
                 
-                DipToplamHesapla();
-                FisData(data)
+                DipToplamHesapla();                
                 angular.element('#MdlEvrakGetir').modal('hide');
                 alertify.alert($scope.Seri + " - " + $scope.Sira + " " +"Başarılıyla Getirildi.");
             }
@@ -1099,39 +1101,114 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             }
         });
     }
-    $scope.BtnFisYazdir = function()
+    $scope.BtnFisYazdir = async function()
     {
-        let FisDizayn = "";
-        let OncekiBakiye = 0;
-        let NakitAlinan = 0;
-        let KalanBakiye = 0;
-
-        if($scope.TahKontrol == 1)
+        if($scope.FisDizaynTip == "0")
         {
-            OncekiBakiye = $scope.CariBakiye + $scope.Toplam
-            KalanBakiye = OncekiBakiye - $scope.Toplam
-            NakitAlinan = $scope.Toplam
-        }
-        else
-        {
-            OncekiBakiye = $scope.CariBakiye
-            NakitAlinan = $scope.Toplam
-            KalanBakiye = $scope.CariBakiye - $scope.Toplam
-        }
+            let FisDizayn = "";
+            let OncekiBakiye = 0;
+            let NakitAlinan = 0;
+            let KalanBakiye = 0;
 
-        FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" + $scope.FisDeger + "\n"
-        FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Nakit Alinan  : " + parseFloat(NakitAlinan).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" 
-        FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-
-        console.log(FisDizayn)
-        db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
-        {
-            if(pStatus)
+            let TmpQuery = 
             {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );    
-                $scope.TahKontrol = 0;
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT " +
+                        "cha_cinsi AS EVRAKTIP, " +
+                        "CONVERT(VARCHAR(10),MAX(cha_vade),112) AS VADE, " +
+                        "CASE WHEN cha_cinsi = 0 THEN 'NAKIT' WHEN cha_cinsi = 19 THEN 'K.KARTI'  " +
+                        "WHEN cha_cinsi = 1 THEN 'M. ÇEKİ' WHEN cha_cinsi = 2 THEN 'M. SENEDİ' END AS TIP, " +
+                        "cha_evrakno_seri AS SERI,  " +
+                        "cha_evrakno_sira AS SIRA,  " +
+                        "MAX(cha_kod) AS CARIKOD, " +
+                        "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) + ' ' +  " +
+                        "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) AS CARIADI, " +
+                        "ROUND(SUM(cha_meblag),2) AS TUTAR " +
+                        "FROM CARI_HESAP_HAREKETLERI WHERE cha_evrak_tip = @cha_evrak_tip AND cha_evrakno_seri = @cha_evrakno_seri AND cha_evrakno_sira = @cha_evrakno_sira " +
+                        "GROUP BY cha_evrakno_seri,cha_evrakno_sira,cha_cinsi ",
+                param : ['cha_evrak_tip:int','cha_evrakno_seri:string|20','cha_evrakno_sira:int'],
+                value : [$scope.ChaEvrakTip,$scope.Seri,$scope.Sira] 
             }
-        });
+            let Data = await db.GetPromiseQuery(TmpQuery);
+
+            $scope.DNakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
+            console.log(Data)
+            console.log($scope.DNakitToplam)
+            $scope.DKrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
+            $scope.DSenetToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 2");
+            $scope.DCekToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 1");
+            $scope.DizaynListe2 = Data;
+            
+            if($scope.TahKontrol == 1)
+            {
+                OncekiBakiye = $scope.CariBakiye + $scope.Toplam
+                KalanBakiye = OncekiBakiye - $scope.Toplam
+                NakitAlinan = $scope.Toplam
+            }
+            else
+            {
+                OncekiBakiye = $scope.CariBakiye
+                NakitAlinan = $scope.Toplam
+                KalanBakiye = $scope.CariBakiye - $scope.Toplam
+            }
+            let i = 49 - $scope.DizaynListe2.length;
+            let Satır = "";
+    
+            for(let x = 0; x <= i; x++)
+            {    
+                Satır = Satır + "                                             -"+ "\n"; 
+            } 
+
+            FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" +
+            $scope.FisDeger + "\n" +
+            "Nakit = " + $scope.DNakitToplam + "\n" + "K.Kartı = " + $scope.DKrediToplam + "\n" 
+            FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" +
+            Satır 
+            FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+            console.log(FisDizayn)
+            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+            {
+                if(pStatus)
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );    
+                    $scope.TahKontrol = 0;
+                }
+            });
+        }
+        else if($scope.FisDizaynTip == "1")
+        {
+            let FisDizayn = "";
+            let OncekiBakiye = 0;
+            let NakitAlinan = 0;
+            let KalanBakiye = 0;
+
+            if($scope.TahKontrol == 1)
+            {
+                OncekiBakiye = $scope.CariBakiye + $scope.Toplam
+                KalanBakiye = OncekiBakiye - $scope.Toplam
+                NakitAlinan = $scope.Toplam
+            }
+            else
+            {
+                OncekiBakiye = $scope.CariBakiye
+                NakitAlinan = $scope.Toplam
+                KalanBakiye = $scope.CariBakiye - $scope.Toplam
+            }
+
+            FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" + $scope.FisDeger + "\n"
+            FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Nakit Alinan  : " + parseFloat(NakitAlinan).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" 
+            FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+
+            console.log(FisDizayn)
+            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+            {
+                if(pStatus)
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );    
+                    $scope.TahKontrol = 0;
+                }
+            });
+        }
     }
     //GÜN SONU RAPORU
     $scope.BtnGunSonuYazdir = async function()
@@ -1141,21 +1218,49 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             let FisDeger = "";
             let FisDizayn = "";
             $scope.GunSonuData = "";
-
+            
             for(let i=0; i < $scope.DizaynListe.length; i++)
             {
-                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI,15) + "   " + SpaceLength(parseFloat( $scope.DNakitToplam.toFixed(2)),8) + "  " + SpaceLength(parseFloat( $scope.DKrediToplam.toFixed(2)),8) + "\n";
+                let TmpNakit = 0;
+                let TmpKKarti = 0;
+                if($scope.DizaynListe[i].EVRAKTIP == 0)
+                {
+                    TmpNakit = $scope.DizaynListe[i].TUTAR;
+                }
+                if($scope.DizaynListe[i].EVRAKTIP == 19)
+                {
+                    TmpKKarti = $scope.DizaynListe[i].TUTAR
+                }
+                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI,25) + " " + SpaceLength(TmpNakit.toString(),8) + " " + SpaceLength(TmpKKarti.toString(),8) + "\n";
             } 
-
-            FisDeger = "RAGIP GOKYAR                        "+ $scope.Tarih;
-
-            FisDizayn = "                                             " + "\n" + 
+            let i = 46 - $scope.DizaynListe.length;
+            let Satır = "";
+    
+            for(let x = 0; x <= i; x++)
+            {    
+                Satır = Satır + "                                          -"+ "\n"; 
+            }
+            
+            FisDeger = "PLASIYER : " + SpaceLength($scope.DizaynListe[0].PERSONEL,15) + "        "+ $scope.Tarih + "\n" + "                                  " + $scope.Saat + "\n";
+            //FisDeger = FisDeger + "\n"
+            FisDizayn = "                                             " + "\n" +
+                        "            TAHSILAT DURUM RAPORU            " + "\n" +
                         FisDeger + "\n" +
-                        "CARIADI                    NAKİT   KREDİ KARTI" + "\n" +
+                        "CARIADI                   NAKIT    K.KARTI" + "\n" +
                         $scope.GunSonuData + 
                         "-----------------------------------------" + "\n" + 
-                        "                                  " + $scope.DGenelToplam + "\n" + 
-                        "                                              " + "\n" 
+                        "                          NAKIT : " + $scope.DNakitToplam.toFixed(2) + "\n" + 
+                        "                        K.KARTI : " + $scope.DKrediToplam.toFixed(2) + "\n" + 
+                        "                         TOPLAM : " + $scope.DGenelToplam.toFixed(2) + "\n" + 
+                        Satır +
+                        "                                         --" + "\n" +
+                        "                                         --" + "\n" +
+                        "                                         --" + "\n" +
+                        "                                         --" + "\n" +
+                        "                                         --" + "\n" +
+                        "                                         --" + "\n" +
+                        "                                         --" + "\n" +
+                        "                                         --" + "\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
             console.log(FisDizayn)
@@ -1219,8 +1324,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                     "MAX(cha_kod) AS CARIKOD, " +
                     "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) + ' ' +  " +
                     "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) AS CARIADI, " +
+                    "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = MAX(cha_satici_kodu)),'') AS PERSONEL, " +
                     "ROUND(SUM(cha_meblag),2) AS TUTAR " +
                     "FROM CARI_HESAP_HAREKETLERI WHERE cha_tip = 1 AND cha_evrak_tip = 1 AND cha_tarihi = CONVERT(VARCHAR(10),GETDATE(),112) " +
+                    "AND cha_satici_kodu = '" + $scope.Personel + "'" + 
                     "GROUP BY cha_evrakno_seri,cha_evrakno_sira,cha_cinsi " 
         }
         await db.GetPromiseQuery(TmpQuery,async function(Data)
