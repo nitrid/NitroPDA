@@ -182,21 +182,21 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                     width: 100
                 }, 
                 {
-                    name: "CDEPO",
+                    name: "CDEPOADI",
                     title: "CIKIS DEPO",
                     type: "number",
                     align: "center",
                     width: 150
                 } , 
                 {
-                    name: "NDEPO",
+                    name: "NDEPOADI",
                     title: "NAKLIYE DEPO",
                     type: "number",
                     align: "center",
                     width: 150
                 } , 
                 {
-                    name: "GDEPO",
+                    name: "GDEPOADI",
                     title: "GIRIS DEPO",
                     type: "number",
                     align: "center",
@@ -791,7 +791,8 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                 [
                     $scope.NakliyeOnayListe[i].sth_special1,
                     1, // NAKLIYE DURUMU
-                    1, //TERMİNALDEN YAPILDIĞINA DAİR DURUM
+                    $scope.NakliyeOnayListe[i].sth_giris_depo_no,
+                    $scope.NakliyeOnayListe[i].sth_nakliyedeposu, //TERMİNALDEN YAPILDIĞINA DAİR DURUM
                     $scope.NakliyeOnayListe[i].sth_Guid
                 ],
                 Miktar : $scope.Miktar * $scope.Stok1[0].CARPAN
@@ -799,6 +800,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
             };
             db.ExecuteTag($scope.Firma,'NakliyeOnayKaydet',pData.Param,function(pData)
             {
+                console.log(112)
                 if(pData != 0)
                 {
                     db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
@@ -807,7 +809,7 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                     });
                 }
             });
-            if($scope.NakliyeOnayListe[i].MIKTAR != $scope.NakliyeOnayListe[i].sth_special1)
+            if($scope.NakliyeOnayListe[i].MIKTAR != $scope.NakliyeOnayListe[i].sth_special1 && $scope.NakliyeOnayListe[i].sth_special1 > 0)
             {
                 var InsertData = 
                 [
@@ -897,12 +899,17 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                 ];
                 console.log(InsertData)
                 db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData)
+                {
+                    db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
+                    {
+                        InsertAfterRefresh(BosData)
+                    });
+                }
             }
         }
     }
     $scope.EvrakGetir = function()
     {
-        console.log(1)
         db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
         {   
             console.log(data)

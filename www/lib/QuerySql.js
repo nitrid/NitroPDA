@@ -756,10 +756,12 @@ var QuerySql =
         "NAKLIYE.sth_evrakno_sira AS SIRA, " +              
         "NAKLIYE.sth_giris_depo_no AS   GDEPO, " +
         "NAKLIYE.sth_cikis_depo_no AS   CDEPO, " +
-        "NAKLIYE.sth_nakliyedeposu AS   NDEPO    " +           
+        "NAKLIYE.sth_nakliyedeposu AS   NDEPO,    " +   
+        "(SELECT dep_adi FROM DEPOLAR WHERE dep_no =  NAKLIYE.sth_giris_depo_no) AS   GDEPOADI ,"  +       
+        "(SELECT dep_adi FROM DEPOLAR WHERE dep_no =  NAKLIYE.sth_cikis_depo_no) AS   CDEPOADI ,"  +       
+        "(SELECT dep_adi FROM DEPOLAR WHERE dep_no =  NAKLIYE.sth_nakliyedeposu) AS   NDEPOADI "  +       
         "FROM STOK_HAREKETLERI AS NAKLIYE  " +
-
-        "WHERE NAKLIYE.sth_tarih>=@ILKTARIH AND  NAKLIYE.sth_tarih<=@SONTARIH and NAKLIYE.sth_evraktip = 17 AND NAKLIYE.sth_evraktip=@TIP " +
+        "WHERE NAKLIYE.sth_tarih>=@ILKTARIH AND  NAKLIYE.sth_tarih<=@SONTARIH and NAKLIYE.sth_evraktip = 17 AND NAKLIYE.sth_evraktip=@TIP and NAKLIYE.sth_nakliyedurumu = 0 " +
         "GROUP BY NAKLIYE.sth_tarih,NAKLIYE.sth_evrakno_seri, NAKLIYE.sth_evrakno_sira," +
         "NAKLIYE.sth_giris_depo_no,NAKLIYE.sth_cikis_depo_no,NAKLIYE.sth_nakliyedeposu,NAKLIYE.sth_evraktip,NAKLIYE.sth_birim_pntr " ,
         param : ['ILKTARIH','SONTARIH','TIP'],
@@ -786,7 +788,7 @@ var QuerySql =
                 "SIPARIS.sip_musteri_kod AS CARI, " +
                 "ROUND(SIPARIS.sip_b_fiyat * SIPARIS.sip_doviz_kuru,2)  AS FIYAT, " +
                 "ISNULL(BEDENHAR.BdnHar_HarGor,SIPARIS.sip_miktar) AS SIPMIKTAR, " +
-                "SIPARIS.sip_birim_pntr AS BIRIMPNTR, " +
+                "BARKOD.bar_birimpntr AS BIRIMPNTR, " +
                 "ISNULL(BEDENHAR.BdnHar_TesMik,SIPARIS.sip_teslim_miktar) AS TESLIMMIKTAR, " +
                 "SIPARIS.sip_tutar AS TUTAR, " +
                 "SIPARIS.sip_iskonto_1 AS ISKONTO_1, " +
@@ -1237,6 +1239,11 @@ var QuerySql =
                 "UPDATE BEDEN_HAREKETLERI SET BdnHar_TesMik = BdnHar_TesMik + @sip_teslim_miktar WHERE BdnHar_Har_uid = @sip_Guid AND BdnHar_BedenNo = @BdnHar_BedenNo",
         param : ['sip_teslim_miktar:int','sip_Guid:string|50','BdnHar_BedenNo:int']
     },
+    StokHarDepoSiparisUpdate :
+    {
+        query : "UPDATE DEPOLAR_ARASI_SIPARISLER SET ssip_teslim_miktar = ssip_teslim_miktar + @sip_teslim_miktar WHERE ssip_Guid = @sip_Guid " ,
+        param : ['sip_teslim_miktar:int','sip_Guid:string|50']
+    },
     SiparisDeleteUpdate :
     {
         query : "UPDATE SIPARISLER SET sip_teslim_miktar = sip_teslim_miktar - @sip_teslim_miktar WHERE sip_Guid = @sip_Guid " +
@@ -1484,6 +1491,7 @@ var QuerySql =
                 "ROUND(sth_tutar,2) AS TUTAR, " + 
                 "(SELECT dbo.fn_StokBirimi(sth_stok_kod,sth_birim_pntr)) AS BIRIMADI, " +
                 "(SELECT dbo.fn_StokBirimHesapla(sth_stok_kod,1,sth_miktar,sth_birim_pntr)) AS BIRIM," +
+                "ISNULL((SELECT sto_birim1_ad as ADET FROM STOKLAR WHERE sto_kod = sth_stok_kod),'') AS BIRIM1, " +
                 "ROW_NUMBER() OVER(ORDER BY sth_Guid) AS NO, " +
                 "(SELECT dbo.fn_VergiYuzde (sth_vergi_pntr)) AS TOPTANVERGI, " +
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0) AS RENKPNTR , " +
@@ -2819,7 +2827,10 @@ var QuerySql =
                  "DEPOSIPARIS.ssip_stok_kod=BARKOD.bar_stokkodu " +
                  "AND DEPOSIPARIS.ssip_birim_pntr=BARKOD.bar_birimpntr " +
                  "AND DEPOSIPARIS.ssip_teslim_miktar < DEPOSIPARIS.ssip_miktar " +
-                 "INNER JOIN STOKLAR AS STOK ON STOK.sto_kod = DEPOSIPARIS.ssip_stok_kod"
+                 "INNER JOIN STOKLAR AS STOK ON STOK.sto_kod = DEPOSIPARIS.ssip_stok_kod " +
+                 "WHERE DEPOSIPARIS.ssip_girdepo = @GDEPO AND DEPOSIPARIS.ssip_cikdepo = @CDEPO AND DEPOSIPARIS.ssip_evrakno_seri =@SERI AND DEPOSIPARIS.ssip_evrakno_sira = @SIRA AND BARKOD.bar_kodu = @BARKOD",
+                 param : ['GDEPO','CDEPO','SERI','SIRA','BARKOD'],
+                 type : ['int','int','string|10','int','string|25']
     },
     FiyatTbl :
      {
@@ -3798,13 +3809,13 @@ var QuerySql =
             ",@CARIUNVAN1                          --<cari_unvan1, nvarchar(127),>\n" +
             ",@CARIUNVAN2                                   --<cari_unvan2, nvarchar(127),>\n" +
             ",0                                    --<cari_hareket_tipi, tinyint,>\n" +
-            ",5                                    --<cari_baglanti_tipi, tinyint,>\n" +
+            ",0                                    --<cari_baglanti_tipi, tinyint,>\n" +
             ",0                                    --<cari_stok_alim_cinsi, tinyint,>\n" +
             ",0                                    --<cari_stok_satim_cinsi, tinyint,>\n" +
             ",''                                   --<cari_muh_kod, nvarchar(40),>\n" +
             ",''                                   --<cari_muh_kod1, nvarchar(40),>\n" +
             ",''                                   --<cari_muh_kod2, nvarchar(40),>\n" +
-            ",0                                    --<cari_doviz_cinsi, tinyint,>\n" +
+            ",1                                    --<cari_doviz_cinsi, tinyint,>\n" +
             ",255                                  --<cari_doviz_cinsi1, tinyint,>\n" +
             ",255                                  --<cari_doviz_cinsi2, tinyint,>\n" +
             ",25                                   --<cari_vade_fark_yuz, float,>\n" +

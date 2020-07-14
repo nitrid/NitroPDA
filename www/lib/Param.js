@@ -7,7 +7,7 @@ var Param = [
 			"FirmaNo": "0",
 			"Firma": "",
 			"SubeNo": "0",
-			"SatirBirlestir": "0",
+			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
@@ -24,11 +24,11 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "HC05",
+			"BTYaziciAdi": "DP321-BT",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "70",
-			"FisDizayn": "0"
+			"FisDizayn": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -362,9 +362,14 @@ var Param = [
 			"CDepoListe": "",
 			"GDepo": "1",
 			"GDepoListe": "",
+			"NDepo": "0",
+			"NDepoListe": "3",
 			"Sorumluluk": "",
 			"EvrakSil": "0",
 			"EksiyeDusme": "0"
+		},
+		"CariEkle": {
+			"CariHarfEkle": "E"
 		}
 	}
 ]

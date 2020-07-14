@@ -14,6 +14,7 @@
                         <div class="col-8 px-1">
                             <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
                                 <option value="0">Depolar Arası Sevk</option>
+                                <option value="1">Depolar Arası Nakliye</option>
                             </select>
                         </div>
                         <div class="col-4 px-1">
@@ -146,6 +147,14 @@
                         </div>
                     </div>
                     <div class="row my-0 py-0">
+                        <div class="col-4 text-info px-1 py-0 my-0"><div class="col-form-label float-right py-2" ng-disabled="EvrakLock">Nakliye Depo:</div></div>
+                        <div class="col-8 px-1">
+                            <select class="form-control" ng-model="NDepo" ng-disabled="EvrakLock" ng-change="NDepoChange()">
+                                    <option ng-repeat="option in NDepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2" >Tarih:</div></div>
                         <div class="col-8 px-1">
                             <div class="input-group input-group-icon">
@@ -223,14 +232,14 @@
                             <div class="col-form-label float-right py-1">Miktar:</div>
                         </div>
                         <div class="col-4 px-1">
-                            <input type="text" class="form-control form-control-sm" ng-model="Miktar" ng-disabled="MiktarLock" ng-change="MiktarFiyatValid()" id="Miktar" ng-keydown="MiktarPress($event)">
-                            
+                            <input disabled type="number" class="form-control form-control-sm" ng-disabled="MiktarLock" ng-model="Stok[0].CARPAN">
                         </div>
                         <div class="col-1 text-info px-1">
                             <div class="col-form-label text-center py-1">X</div>
                         </div>
                         <div class="col-4 px-1">
-                            <input disabled type="text" class="form-control form-control-sm" ng-disabled="MiktarLock" ng-model="Stok[0].CARPAN">
+                            <input type="number" class="form-control form-control-sm" ng-model="Miktar" ng-disabled="MiktarLock" ng-change="MiktarFiyatValid()" id="Miktar" ng-keydown="MiktarPress($event)">
+                            
                         </div>
                     </div>
                     <div class="row my-0">
@@ -267,7 +276,6 @@
                         <div id="TblIslem"></div>
                     </div>
                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Satır :</span> {{ToplamSatir | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Miktar 2 :</span> {{Miktar2 | number:2}}</h5>
                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Miktar :</span> {{ToplamMiktar | number:2}}</h5>
                 </div>
             </div>            

@@ -259,7 +259,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 type: "text",
                 align: "center",
                 width: 200
-            }, 
+            },
             {
                 name: "sth_miktar",
                 title: "MIKTAR",
@@ -286,7 +286,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 title: "IND1",
                 type: "number",
                 align: "center",
-                width: 200
+                width: 100
             },
             {
                 name: "sth_iskonto2",

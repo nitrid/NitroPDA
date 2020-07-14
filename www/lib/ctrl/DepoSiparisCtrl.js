@@ -454,7 +454,8 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
         BarkodFocus();
     }
     $scope.Insert = function()
-    { $scope.InsertLock = true
+    { 
+        $scope.InsertLock = true
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         { 
             if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
@@ -638,8 +639,26 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
             
                 $scope.TOPMIKTAR = 1;
                 
-                db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(e){$scope.CDepoListe = e; $scope.CDepo = data[0].ssip_girdepo.toString()});
-                db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(e){$scope.GDepoListe = e; $scope.GDepo = data[0].ssip_cikdepo.toString()});
+                db.DepoGetir($scope.Firma,UserParam.DepoSiparis.CDepoListe,function(data)
+                {
+                    $scope.CDepoListe = data; 
+                    $scope.CDepo = data[0].ssip_cikdepo;
+                    $scope.CDepoListe.forEach(function(item) 
+                    {
+                        if(item.KODU == $scope.CDepo)
+                            $scope.CDepoAdi = item.ADI;
+                    });          
+                });
+                db.DepoGetir($scope.Firma,UserParam.DepoSiparis.GDepoListe,function(data)
+                {
+                    $scope.GDepoListe = data; 
+                    $scope.GDepo = data[0].ssip_girdepo;
+                    $scope.GDepoListe.forEach(function(item) 
+                    {
+                        if(item.KODU == $scope.GDepo)
+                            $scope.GDepoAdi = item.ADI;
+                    });     
+                });
                 db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].ssip_sormerkezi});
 
                 $scope.DepoSiparisListe = data;
