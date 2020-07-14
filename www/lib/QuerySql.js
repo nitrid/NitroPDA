@@ -351,7 +351,7 @@ var QuerySql =
                 " '' AS DOVIZSEMBOL,  " +
                 "1 AS DOVIZKUR  " +
                 "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
-                "WHERE ((sto_kod LIKE  @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE '%' + @ADI + '%' ) OR (@ADI = '')) " +
+                "WHERE ((sto_kod LIKE  @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE @ADI + '%' ) OR (@ADI = '')) " +
                 "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
                 ") AS TMP " +
                 "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI,BEDENMIKTAR,RENKMIKTAR ORDER BY KODU" ,

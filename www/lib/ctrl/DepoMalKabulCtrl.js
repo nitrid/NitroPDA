@@ -962,6 +962,8 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         angular.element('#MdlSiparisListeGetir').modal('hide');
         StokBarkodGetir($scope.Barkod);
         $scope.BtnStokGridGetir();
+        $window.document.getElementById("Miktar").focus();
+        $window.document.getElementById("Miktar").select();
     }
     $scope.BtnTemizle = function()
     {
