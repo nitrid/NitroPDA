@@ -117,8 +117,11 @@ angular.module('app.db', []).service('db',function($rootScope)
                 
                 TmpQuery.value = pParam.param;
                 TmpQuery.db = pParam.db;
+
+                $rootScope.LoadingShow();
                 _Socket.emit('QMikroDb', TmpQuery, function (data) 
                 {
+                    $rootScope.LoadingHide();
                     if(typeof(data.result.err) == 'undefined')
                     {
                         var args = arguments;
@@ -131,7 +134,8 @@ angular.module('app.db', []).service('db',function($rootScope)
                         });
                     }
                     else
-                    {                        
+                    {     
+                        $rootScope.MessageBox(data.result.err);                 
                         console.log("Mikro Sql Query Çalıştırma Hatası : " + data.result.err);
                     }
                 });
@@ -238,8 +242,10 @@ angular.module('app.db', []).service('db',function($rootScope)
         {
             if(_Socket.connected)
             {
+                $rootScope.LoadingShow();
                 _Socket.emit('QMikroDb', pQuery, function(data) 
                 {     
+                    $rootScope.LoadingHide();
                     if(typeof(data.result.err) == 'undefined')
                     {
                         var args = arguments;

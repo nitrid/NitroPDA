@@ -2,7 +2,19 @@
 {
     $scope.Firma = $window.sessionStorage.getItem('Firma');
     $scope.User = $window.sessionStorage.getItem('User');
-
+    $rootScope.LoadingShow = function() 
+    {
+        console.log($("#loading"))
+        $("#loading").show();
+    }
+    $rootScope.LoadingHide = function() 
+    {
+        $("#loading").hide();
+    }
+    $rootScope.MessageBox = function(pMsg)
+    {
+        alertify.alert(pMsg);
+    }
     function MenuOlustur(MenuData)
     {   
         let HtmlText = "<li class='site-menu-category'>" + MenuData.Menu.Name + "</li>";
