@@ -3986,5 +3986,3 @@ var QuerySql =
 
     //#endregion "AKTARIM"
 };
-
-

@@ -118,6 +118,16 @@ angular.module('app.db', []).service('db',function($rootScope)
                 TmpQuery.value = pParam.param;
                 TmpQuery.db = pParam.db;
 
+                //PARAMETRE UNDEFINED KONTROLÜ (17.07.2020 - ALI KEMAL KARACA)
+                for (let i = 0; i < TmpQuery.value.length; i++) 
+                {
+                    if(typeof TmpQuery.value[i] == 'undefined')
+                    {
+                        $rootScope.MessageBox("Parametre değerlerinde problem oluştu ! " + pParam.tag); 
+                        return;
+                    }
+                }
+                /********************************************************** */
                 $rootScope.LoadingShow();
                 _Socket.emit('QMikroDb', TmpQuery, function (data) 
                 {
@@ -483,8 +493,7 @@ angular.module('app.db', []).service('db',function($rootScope)
             db : '{M}.' + pFirma,
             tag : pQueryTag,
             param : pQueryParam
-        }
-        
+        }        
         _SqlExecute(m,function(data)
         {
             if(pCallback)

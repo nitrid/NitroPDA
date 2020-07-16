@@ -54,7 +54,6 @@
 </head>
 
 <body class="animaition page-login-v3 layout-full">
-    TEST TEST
     <div class="page-content py-5" data-animsition-in="fade-in" data-animsition-out="fade-out" id="page-update" style="visibility: hidden;"> 
         <div class="page-content animation-slide-top animation-duration-1 mx--20 py-0">
             <div class="panel modal-center"> 
@@ -251,63 +250,41 @@
         },
         update : function(Host,Port,Callback)
         {
-            downloader.init({folder: "lib"});
+            downloader.init({folder: "../lib"});
             downloader.get("http://" + Host + ':' + Port + "/lib/Param.js");
-            document.addEventListener('DOWNLOADER_downloadSuccess', function(event){
+            document.addEventListener('DOWNLOADER_downloadSuccess', function(event)
+            {
                 var data = event.data;
-                console.log(data);
+
+                window.resolveLocalFileSystemURL("file:///data/user/0/com.tone.nitro/files/files/lib/Param.js", 
+                function(fileEntry)
+                {
+                    window.resolveLocalFileSystemURL("file:///data/user/0/com.tone.nitro/files/nitro/www/lib",
+                    function(targetEntry)
+                    {
+                        fileEntry.moveTo(targetEntry, "Param.js", 
+                        function() 
+                        {
+                            Callback(true);
+                        }, 
+                        function()
+                        {
+                            Callback(false);
+                        });
+                    },
+                    function()
+                    {
+                        Callback(false);
+                    });
+                },
+                function()
+                {
+                    if(Callback)
+                    {
+                        Callback(false);
+                    }
+                });
             });
-            
-            // var TmpHost = Host;
-
-            // if (Port !== '') 
-            // {
-            //     TmpHost = Host + ':' + Port;
-            // }
-
-            // var url = "http://" + TmpHost + "/_terminal";
-            // var sync = ContentSync.sync({ src: url, id: 'nitro', copyCordovaAssets: true, copyRootApp: true, manifest: 'manifest.json',type: 'replace' });
-
-            // var setProgress = this.setProgress; 
-
-            // sync.on('progress', function(progress) 
-            // {
-            //     console.log("Progress event", setProgress);
-            //     app.setProgress(progress);
-            // });
-
-            // sync.on('complete', function(data) 
-            // {
-            //     window.resolveLocalFileSystemURL("file://" + data.localPath + "/www/_terminal/index.html", 
-            //     function()
-            //     {
-            //         console.log("complated", data);
-            //         ContentSync.loadUrl("file://" + data.localPath + "/www/_terminal/index.html");
-            //         //document.location = data.localPath + "/www/_terminal/index.html";    
-            //     },
-            //     function()
-            //     {
-            //         if(Callback)
-            //         {
-            //             Callback(false);
-            //         }
-            //     });
-                
-            //     if(Callback)
-            //     {
-            //         Callback(true);
-            //     }
-            // });
-
-            // sync.on('error', function(e) 
-            // {
-            //     document.getElementById('page-update').style.visibility = "visible";
-
-            //     if(Callback)
-            //     {
-            //         Callback(false);
-            //     }
-            // });            
         }
     };
     app.initialize();
