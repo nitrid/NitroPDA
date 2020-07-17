@@ -78,7 +78,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
 
-
         //CARİHAREKET
         if(ParamName == "AlisFatura")
         {
@@ -117,7 +116,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.KasaListe = [];
         $scope.StokHarListe = [];
         $scope.CariHarListe = [];
-        DepoMiktarListe = [];
+        $scope.StokDetay = [];
 
         $scope.IslemListeSelectedIndex = -1;
 
@@ -481,7 +480,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     function BedenHarInsert(pGuid)
     {   
-        console.log("BEDEN1")
         let Data =
         [   
             UserParam.MikroId, // KULLANICI
@@ -562,7 +560,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.ChaCins,
             $scope.ChaNormalIade,
             $scope.Tpoz, //TPOZ
-            0, //CHATICARETTURU
+            $scope.ChaTicaretTuru, //CHATICARETTURU
             $scope.BelgeNo,
             $scope.Tarih,
             "", //ACIKLAMA
@@ -616,7 +614,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             0 //EISLEMTURU
         ];
 
-        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
         {   
             if(typeof InsertResult.result.err == 'undefined')
@@ -709,8 +706,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 if(BarkodData.length > 0)
                 { 
                     $scope.Stok = BarkodData;
-                    $scope.StokKodu = $scope.Stok[0].KODU;
-                    if(UserParam.Sistem.PartiLotKontrol == 1)
+                    $scope.Stok[0].FIYAT = 0;
+                    $scope.Stok[0].TUTAR = 0;
+                    $scope.Stok[0].INDIRIM = 0;
+                    $scope.Stok[0].KDV = 0;
+                    $scope.Stok[0].TOPTUTAR = 0;
+                    if(UserParam.Sistem.PartiLotKontrol == 1)//PARTI-LOT KONTROL
                     {
                         for(i = 0;i < $scope.StokHarListe.length;i++)
                         {   
@@ -726,69 +727,11 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             }
                         }
                     }
-
-                    $scope.Stok[0].FIYAT = 0;
-                    $scope.Stok[0].TUTAR = 0;
-                    $scope.Stok[0].INDIRIM = 0;
-                    $scope.Stok[0].KDV = 0;
-                    $scope.Stok[0].TOPTUTAR = 0;
-                    // Fiyat Getir (Stok Detay)
-                    var Fiyat = 
-                    {
-                        db : '{M}.' + $scope.Firma,
-                        query : "SELECT TOP 1 " + 
-                                "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
-                                "ELSE " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
-                                "END AS FIYAT, " + 
-                                "sfiyat_doviz AS DOVIZ, " + 
-                                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
-                                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
-                                "sfiyat_iskontokod AS ISKONTOKOD " + 
-                                "FROM STOK_SATIS_FIYAT_LISTELERI " +
-                                "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
-                                "ORDER BY sfiyat_deposirano DESC", 
-                        param: ['STOKKODU','FIYATLISTE','DEPONO'],
-                        type:  ['string|50','int','int'],
-                        value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
-                    }
-                    db.GetDataQuery(Fiyat,function(pFiyat)
-                    {                         
-                        
-                        console.log(pFiyat)
-                        $scope.Fiyat = pFiyat[0].FIYAT
-                        $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
-                        $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
-                    });
-                    
-                    //Son Satış Getir
-                    db.GetData($scope.Firma,'SonSatisFiyatGetir',[$scope.CariKodu,BarkodData[0].KODU],function(data)
-                    {
-                        console.log(data)
-                        if(typeof(data) != 'undefined')
-                        {
-                            $scope.SonSatis = data[0].SONFIYAT
-                            $scope.SonSonSatisDoviz = data[0].DOVIZSEMBOL
-                        }
-                        console.log($scope.SonSatis)
-                    });
-                    //Depo Miktar Getir (Stok Detay)
-                    var DepoMiktar =
-                    {
-                        db : '{M}.' + $scope.Firma,
-                        query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
-                        param : ['STOKKODU'],
-                        type : ['string|50'],
-                        value : [$scope.StokKodu]
-                    }
-                    db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
+                    await db.GetPromiseTag($scope.Firma,'StokDetay',[$scope.Stok[0].KODU],function(Data) //STOK DETAY
                     {   
-                        $scope.DepoMiktarListe = pDepoMiktar
-                        $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
+                        $scope.StokDetay = Data
                     });
-
-                    await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
+                    await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)//BIRIM GETİR
                     {   
                         $scope.BirimListe = data; 
                         $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
@@ -808,8 +751,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             $scope.MiktarFiyatValid();
                         }
                     });
-
-                    //****** FİYAT GETİR */
                     let FiyatParam = 
                     { 
                         CariKodu : $scope.CariKodu,
@@ -819,34 +760,35 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         FiyatListe : $scope.FiyatListeNo,
                         AlisSatis : ($scope.EvrakTip === 3 ? 0 : 1)
                     };
-                    await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()
+                    await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()//FİYAT GETİR
                     {   
                         $scope.MiktarFiyatValid();
                         $scope.BarkodLock = true;
                         $scope.$apply();
                     });
-                    if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
+
+                    if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)//RENK-BEDEN
                     {   
-                        if($scope.Stok[0].BEDENKODU != '' && $scope.Stok[0].RENKKODU != '')
+                        if($scope.Stok[0].BEDENKODU != '' || $scope.Stok[0].RENKKODU != '')
                         {   
-                            $('#MdlRenkBeden').modal("show");
-                            db.GetData($scope.Firma,'RenkGetir',[$scope.Stok[0].RENKKODU],function(pRenkData)
+                            await db.GetPromiseTag($scope.Firma,'RenkGetir',[$scope.Stok[0].RENKKODU],function(pRenkData)
                             {
                                 $scope.RenkListe = pRenkData;
                                 $scope.Stok[0].RENKPNTR = "1";
                             });
-                            db.GetData($scope.Firma,'BedenGetir',[$scope.Stok[0].BEDENKODU],function(pBedenData)
+                            await db.GetPromiseTag($scope.Firma,'BedenGetir',[$scope.Stok[0].BEDENKODU],function(pBedenData)
                             {  
                                 $scope.BedenListe = pBedenData;
                                 $scope.Stok[0].BEDENPNTR = "1";
-                            });
+                            })
+                            $('#MdlRenkBeden').modal("show");
                         }
                     } 
                     if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     {
                         if($scope.Stok[0].PARTI !='')
                         {
-                            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.Stok[0].PARTI,$scope.Stok[0].LOT],function(data)
+                            await db.GetPromiseTag($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.Stok[0].PARTI,$scope.Stok[0].LOT],function(data)
                             {   
                                 $scope.PartiLotListe = data;
 
@@ -863,16 +805,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             PartiLotEkran();
                         }
                     }
-
-                    if($scope.Stok[0].RENKPNTR != 0) // MAHİR TARAFINDAN GEÇİCİ OLARAK YAPILDI
-                    {
-                        $scope.Stok[0].BEDENPNTR = "1";
-                    }
-                    else if($scope.Stok[0].BEDENPNTR != 0)
-                    {
-                        $scope.Stok[0].RENKPNTR = "1";
-                    }
-
                     if($scope.OtoEkle == true)
                     {
                         $scope.Insert()
@@ -1389,7 +1321,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     $scope.BtnTemizle = function()
     {
         $scope.Barkod = "";
-        $scope.SonSatis = "";
         $scope.Stok = null;
         $scope.Stok = 
         [
@@ -2365,30 +2296,27 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.CariDovizCinsi =item.DOVIZCINSI;
                 $scope.CariDovizKuru = item.DOVIZKUR;
                 $scope.EvrakDovizTip = item.DOVIZSEMBOL
-
             }
-            
         });
     }
     $scope.DovizChange = function()
     {
-            if($scope.DovizChangeKodu == 0)
-            {
-               $scope.EvrakDovizTip = $scope.DovizSembol
-            }
-            else if($scope.DovizChangeKodu == 1)
-            {
-                console.log(1)
-                $scope.CariDovizCinsi = $scope.CariDovizCinsi1;
-                $scope.CariDovizKuru = $scope.CariDovizKuru1;
-                $scope.EvrakDovizTip = $scope.DovizSembol1
-            }
-            else if($scope.DovizChangeKodu == 2)
-            {
-                $scope.CariDovizCinsi = $scope.CariDovizCinsi2
-                $scope.CariDovizKuru =  $scope.CariDovizKuru2
-                $scope.EvrakDovizTip = $scope.DovizSembol2
-            }
+        if($scope.DovizChangeKodu == 0)
+        {
+            $scope.EvrakDovizTip = $scope.DovizSembol
+        }
+        else if($scope.DovizChangeKodu == 1)
+        {
+            $scope.CariDovizCinsi = $scope.CariDovizCinsi1;
+            $scope.CariDovizKuru = $scope.CariDovizKuru1;
+            $scope.EvrakDovizTip = $scope.DovizSembol1
+        }
+        else if($scope.DovizChangeKodu == 2)
+        {
+            $scope.CariDovizCinsi = $scope.CariDovizCinsi2
+            $scope.CariDovizKuru =  $scope.CariDovizKuru2
+            $scope.EvrakDovizTip = $scope.DovizSembol2
+        }
     }
     $scope.Update = function(pIndex)
     {   
@@ -2529,7 +2457,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         }
         else
         {
-            if($scope.CariAdi != "" || $scope.KasaKodu != "")
+            if($scope.EvrakTip == 4 && $scope.KasaKodu != "")
             {
                 $("#TbBarkodGiris").addClass('active');
                 $("#TbMain").removeClass('active');
@@ -2540,9 +2468,18 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             
                 BarkodFocus();
             }
+            else if($scope.CariKodu != "")
+            {
+                $("#TbBarkodGiris").addClass('active');
+                $("#TbMain").removeClass('active');
+                $("#TbCariSec").removeClass('active');
+                $("#TbBelgeBilgisi").removeClass('active');
+                $("#TbIslemSatirlari").removeClass('active');
+                $("#TbStok").removeClass('active');
+            }              
             else
             {
-                alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Cari Seçiniz !" + "</a>" );
+                alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Gerekli Alanları Doldurunuz. !" + "</a>" );
             }
         }
     }
