@@ -223,7 +223,7 @@ var ParamTemp =
 			"SonAlisFiyati" : {"Title" : "Son Alış Fiyatı","DefaultValue" : "0"},
 			"SatisSarti" : {"Title" : "Satış Şartı","DefaultValue" : "0"},
 			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
-			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
+			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "1"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},

@@ -398,7 +398,7 @@ var QuerySql =
                 "sfiyat_iskontokod AS ISKONTOKOD " + 
                 "FROM STOK_SATIS_FIYAT_LISTELERI " +
                 "WHERE sfiyat_stokkod = @KODU AND sfiyat_listesirano = @LISTENO AND sfiyat_deposirano IN (0,@DEPO) " +
-                "ORDER BY sfiyat_deposirano DESC", 
+                "ORDER BY sfiyat_deposirano DESC " , 
         param : ['KODU','LISTENO','DEPO'],
         type : ['string|25','int','int']
     },
@@ -447,19 +447,24 @@ var QuerySql =
         param : ['sth_stok_kod'],
         type  : ['string|25']
     },
-    SonSatisFiyatGetir : 
+    StokDetay : 
     {
         query : "SELECT sth_cari_kodu AS CARI,sth_stok_kod AS STOK, " + 
                 "sth_tutar / sth_miktar  AS SONFIYAT, " +
                 "sth_har_doviz_cinsi AS DOVIZ, " + 
                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sth_har_doviz_cinsi,0))),'TL') AS DOVIZSEMBOL, " + 
-                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sth_har_doviz_cinsi,0),2)),1) AS DOVIZKUR " +  
+                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sth_har_doviz_cinsi,0),2)),1) AS DOVIZKUR, " +
+                "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=2) = 0 THEN " +
+                "dbo.fn_StokSatisFiyati(sth_stok_kod,2,sth_giris_depo_no,0) " +
+                "ELSE  " +
+                "dbo.fn_StokSatisFiyati(sth_stok_kod,2,sth_giris_depo_no,0) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sth_stok_kod)) / 100) + 1) " +
+                "END AS FIYAT " +
                 "FROM STOK_HAREKETLERI AS Hesaplama WHERE sth_evraktip IN (1,4) AND  " + 
                 "sth_Guid = (SELECT TOP 1 sth_Guid FROM STOK_HAREKETLERI AS Hesaplama1  " + 
-                "WHERE Hesaplama1.sth_evraktip IN (1,4) AND Hesaplama1.sth_cari_kodu = Hesaplama.sth_cari_kodu AND Hesaplama1.sth_stok_kod = Hesaplama.sth_stok_kod  " + 
-                "ORDER BY sth_create_date DESC) AND Hesaplama.sth_cari_kodu  = @sth_cari_kodu AND Hesaplama.sth_stok_kod  = @sth_stok_kod" , 
-        param : ['sth_cari_kodu','sth_stok_kod'],
-        type : ['string|25','string|25']
+                "WHERE Hesaplama1.sth_evraktip IN (1,4) AND Hesaplama1.sth_stok_kod = Hesaplama.sth_stok_kod  " + 
+                "ORDER BY sth_create_date DESC)" , 
+        param : ['1'],
+        type : ['string|25']
     },
     SatisSartiGetir : 
     {

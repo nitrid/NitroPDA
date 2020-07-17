@@ -840,7 +840,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     }
                     db.GetDataQuery(Fiyat,function(pFiyat)
                     {                         
-                        
                         $scope.Fiyat = pFiyat[0].FIYAT
                         $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;

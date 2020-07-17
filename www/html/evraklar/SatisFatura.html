@@ -13,8 +13,8 @@
                     <div class="row pb-40">
                         <div class="col-8 px-1">
                             <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
-                                <option value="0">Perakende Satış Faturası</option>
-                                <option value="1">Toptan Satış Faturası</option>
+                                <option value="0">Perakende Yurtiçi Ticaret</option>
+                                <option value="1">Toptan Yurtiçi Ticaret</option>
                                 <option value="2">İhraç Kayıtlı Yurtiçi Ticaret</option>
                                 <option value="3">İhraç Kayıtlı Yurtdışı Ticaret</option>
                                 <option value="4">Kapalı Toptan Satış Faturası</option>
@@ -37,29 +37,29 @@
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Cari :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{CariAdi}}</label></div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Personel :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{PersonelAdi}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Sorumluluk :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{SorumlulukAdi}}</label></div>
-                    </div>
+                    </div> -->
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Depo :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{DepoAdi}}</label></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Toplam Satır :</label></div>
-                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
                     <div class="row" >
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Kasa Adı :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{KasaAdi}}</label></div>
                     </div>
-                    <div class="row pb-30" >
+                    <div class="row " >
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Evrak Döviz :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{EvrakDovizTip}}</label></div>
+                    </div>
+                    <div class="row pb-30">
+                        <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Toplam Satır :</label></div>
+                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-4 offset-1">
@@ -230,10 +230,8 @@
                             <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="IslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
                         </div>
                         <div class="col-4 px-1">
-                            <button type="button" class="btn btn-primary btn-block dropdown-toggle px-0 h-40" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
-                                <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Barkod Detay</a>
-                            </div>
+                            
+                            <button type="button" class="btn btn-primary btn-block px-0 h-40" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Detay</button>
                         </div>
                     </div>
                     <div class="row py-1">
@@ -262,22 +260,15 @@
                             <label class="mb-0 h4 text-primary">{{Stok[0].KODU}} - {{Stok[0].ADI}} - {{Stok[0].BEDEN}} - {{Stok[0].RENK}}</label> 
                         </div>                        
                     </div>
-                    <div class="row pt-5">
-                        <div class="col-lg-12" style="display: inline; text-align: left; overflow: hidden;">  
-                            <label class="mb-0 h6 text-danger">D.MIKTAR : {{Stok[0].DEPOMIKTAR}} - {{Stok[0].KIRILIMMIKTAR}}</label> 
-                        </div>                        
+                    <div class="row mb-20">
+                        <div class="col-4 px-1">
+                            <div class="checkbox-custom checkbox-info my-0">
+                            <input type="checkbox" name="inputCheckboxes" ng-model="OtoEkle" checked="">
+                            <label for="inputUnchecked"><div class="text-info"><div class="col-form-label py-0"><b>Oto. Ekle</b></div></div></label>
+                            </div>
+                        </div> 
                     </div>
-                    <div class="row pt-5">
-                        <div class="col-lg-12" style="display: inline; text-align: left; overflow: hidden;">  
-                            <label class="mb-0 h6 text-danger">S.S.F. : {{SonSatis}}  {{SonSatisDoviz}}</label> 
-                        </div>              
-                    </div>
-                    <div class="row pt-5">
-                        <div class="col-lg-12" style="display: inline; text-align: left; overflow: hidden;">  
-                            <label class="mb-0 h6 text-danger">DOVIZ : {{Stok[0].DOVIZSEMBOL}}</label> 
-                        </div>                        
-                    </div>
-                    <div class="row my-0 ">
+                    <div class="row my-0">
                         <div class="offset-6 col-2 text-info px-1">
                             <div class="col-form-label px-1 float-right py-1">Birim:</div>
                         </div>
@@ -302,13 +293,7 @@
                         </div>
                     </div>
                     <div class="row my-0">
-                        <div class="col-4 px-1">
-                            <div class="checkbox-custom checkbox-info my-0">
-                              <input type="checkbox" name="inputCheckboxes" ng-model="OtoEkle" checked="">
-                              <label for="inputUnchecked"><div class="text-info"><div class="col-form-label py-0"><b>Oto. Ekle</b></div></div></label>
-                            </div>
-                        </div> 
-                        <div class="col-4 text-info px-1">
+                        <div class="col-4 text-info px-1 offset-4">
                             <div class="col-form-label float-right py-1">Birim Fiyat:</div>
                         </div>
                         <div class="col-4 px-1">
@@ -423,7 +408,7 @@
                         </div>
                         <div class="col-8 px-1">
                             <div class="input-group">
-                                <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText" ng-disabled="EvrakLock">
+                                <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText">
                                 <span class="input-group-append">
                                     <button type="submit" class="btn btn-primary" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
                                 </span>
@@ -431,8 +416,8 @@
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading" >
-                            <div class="loader vertical-align-middle loader-circle"></div>
-                        </div>
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
                     <div class="row py-1 px-1" ng-show="TblLoading">           
                         <div class="table-responsive">
                         <div class="table" id="TblStok"></div>                        
@@ -713,28 +698,29 @@
                     <h4 class="modal-title">Stok Detay</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Son Satis Fiyat :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].SONFIYAT}}</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Kirilim Miktar :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].KIRILIMMIKTAR}}</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Depo Miktar :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].DEPOMIKTAR}}</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Döviz Sembol :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].DOVIZSEMBOL}}</label></div>
+                    </div>
                     <div class="row pt-5">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Ana Grup :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].ANAGRUP}} - {{Stok[0].ANAGRUPADI}}</label></div>
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat 2 :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].FIYAT}}</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Alt Grup :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].ALTGRUP}} - {{Stok[0].ALTGRUPADI}}</label></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Reyon :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].REYON}} - {{Stok[0].REYONADI}}</label></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat 1 :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Fiyat}}</label></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat 2 :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{SatisFiyatListe2}}</label></div>
-                    </div>
-                    <div class="row py-1 px-1">
-                        <div id="TblDepoMiktar"></div>
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Döviz :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].DOVIZ}}</label></div>
                     </div>
                 </div>
             </div>
