@@ -316,12 +316,13 @@
     <script>
         if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/))
         {
-            var body = document.getElementsByTagName('body')[0];
-            var js = document.createElement("script");
-            js.type = "text/javascript";
-            js.src = "cordova.js";
-            body.appendChild(js);
-            $("#btn-appupdate").show();
+          var body = document.getElementsByTagName('body')[0];
+          var js = document.createElement("script");
+          js.type = "text/javascript";
+          js.src = "cordova.js";
+          body.appendChild(js);
+
+          $("#btn-appupdate").show();
         }
         else
         {
