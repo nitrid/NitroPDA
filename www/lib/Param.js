@@ -189,7 +189,7 @@ var Param = [
 			"DovizTipi": "-1",
 			"Special": "1",
 			"FiyatGizle": "0",
-			"StokResmi": "0"
+			"StokResmi": "1"
 		},
 		"Etiket": {
 			"Etiket": [
