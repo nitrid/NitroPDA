@@ -121,62 +121,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             }
         });
     }
-    function InitStokGrid()
-    {
-        $("#TblStok").jsGrid
-        ({
-            width: "100%",
-            updateOnResize: true,
-            heading: true,
-            selecting: true,
-            data : $scope.StokListe,
-            pageSize: 10,
-            pageButtonCount: 3,
-            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
-            fields: [
-                {
-                    name: "KODU",
-                    title: "KODU",
-                    type: "text",
-                    align: "center",
-                    width: 125
-                }, 
-                {
-                    name: "ADI",
-                    title: "ADI",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                }, 
-                {
-                    name: "DEPOMIKTAR",
-                    title: "DEPO MIKTAR",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                },
-                {
-                    name: "BIRIM1",
-                    title: "BIRIM 1",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                },
-                {
-                    name: "DOVIZCINS",
-                    title: "DOVIZ",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                }
-            ],
-            rowClick: function(args)
-            {
-                $scope.StokListeRowClick(args.itemIndex,args.item,this);
-                $scope.$apply();
-            }
-        });
-    }
     function InitSiparisListeGrid()
     {
         $("#TblSiparisListe").jsGrid
@@ -522,10 +466,9 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                 }
                 else
                 {
-                    $window.document.getElementById("Miktar").focus();
-                    $window.document.getElementById("Miktar").select();
+                    $timeout( function(){$window.document.getElementById("Miktar").focus();},100);
+                    $timeout( function(){$window.document.getElementById("Miktar").select();},300);
                 }
-
                 $scope.MiktarFiyatValid();
                 $scope.BarkodLock = true;
                 $scope.$apply();
@@ -637,12 +580,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             }
         }
     }
-    function BeepAndConfirmation()
-    {
-        navigator.vibrate([100,100,200,100,300]);
-        navigator.notification.vibrate(1000);
-        document.getElementById("Beep").play();
-    }
     $scope.OkutulanSayı = function() //değişecek
     {
         db.GetData($scope.Firma,'EslestirmeOtukmaSayı',[$scope.Seri,$scope.Sira,$scope.Stok[0].KODU],function(data)
@@ -654,7 +591,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     {
         Init();
         InitIslemGrid();
-        InitStokGrid();
         InitSiparisListeGrid();
         InitSiparisListeGetirGrid();
         $scope.MainClick();
@@ -961,9 +897,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     {
         angular.element('#MdlSiparisListeGetir').modal('hide');
         StokBarkodGetir($scope.Barkod);
-        $scope.BtnStokGridGetir();
-        $window.document.getElementById("Miktar").focus();
-        $window.document.getElementById("Miktar").select();
     }
     $scope.BtnTemizle = function()
     {
@@ -1068,35 +1001,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         }     
         
         BarkodFocus();
-    }
-    $scope.BtnStokGridGetir = function()
-    {
-        $scope.Loading = true;
-        $scope.TblLoading = false;
-        let Kodu = '';
-        let Adi = '';
-
-        if($scope.StokGridTip == "0")
-        {   
-            Adi = $scope.StokGridText.replace("*","%").replace("*","%");
-        }
-        else
-        {
-            Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
-        }
-            
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
-        {
-            $scope.StokListe = StokData;
-            if($scope.StokListe.length > 0)
-            {
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-                $("#TblStok").jsGrid({data : $scope.StokListe});
-                $("#TblStok").jsGrid({data : $scope.StokListe});
-                $("#TblStok").jsGrid({pageIndex: true});
-            }
-        });
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {

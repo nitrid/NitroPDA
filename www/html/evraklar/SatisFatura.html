@@ -49,17 +49,17 @@
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Depo :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{DepoAdi}}</label></div>
                     </div>
-                    <div class="row">
-                        <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Toplam Satır :</label></div>
-                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
-                    </div>
                     <div class="row" >
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Kasa Adı :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{KasaAdi}}</label></div>
                     </div>
-                    <div class="row pb-30" >
+                    <div class="row " >
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Evrak Döviz :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{EvrakDovizTip}}</label></div>
+                    </div>
+                    <div class="row pb-30">
+                        <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Toplam Satır :</label></div>
+                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-4 offset-1">
@@ -83,7 +83,8 @@
                         <div class="col-6">
                             <button class="btn btn-block btn-primary h-50" ng-click="IslemSatirlariClick()">İşlem Satırları</button>
                         </div>
-                    </div> 
+                    </div>
+                 
                 </div>
                 <div id="TbBelgeBilgisi" class="tab-pane">
                     <div class="row pt-0 pb-1 pb-5">

@@ -1,5 +1,3 @@
-const { Console } = require("console");
-
 function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 {
     let CariSelectedRow = null;
