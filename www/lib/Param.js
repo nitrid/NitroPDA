@@ -24,11 +24,11 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "DP321-BT",
+			"BTYaziciAdi": "HC05",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "70",
-			"FisDizayn": "1"
+			"FisDizayn": "0"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -189,7 +189,7 @@ var Param = [
 			"DovizTipi": "-1",
 			"Special": "1",
 			"FiyatGizle": "0",
-			"StokResmi": "0"
+			"StokResmi": "1"
 		},
 		"Etiket": {
 			"Etiket": [
@@ -327,7 +327,7 @@ var Param = [
 			"BelgeNo": "",
 			"Cari": "",
 			"Sorumluluk": "",
-			"Personel": "",
+			"Personel": "01",
 			"NakitKasa": "KASA1",
 			"KrediKasa": "01",
 			"CekKasa": "CK01",

@@ -1130,6 +1130,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(data)
         {
             $scope.DepoListe = data; 
+            console.log($scope.DepoListe)
             $scope.DepoNo = UserParam[ParamName].DepoNo;
             $scope.DepoListe.forEach(function(item) 
             {
@@ -2402,7 +2403,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.CariBakiye = Data[0].BAKIYE;
                 $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
             });
-            console.log(1.3)
 
             KalanBakiye = $scope.CariBakiye + $scope.GenelToplam
             OncekiBakiye = KalanBakiye - $scope.GenelToplam
@@ -2411,17 +2411,22 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
             let i = 36 - $scope.FisLength.length;
             let Satır = "";
-            console.log(1.4)
             for(let x = 0; x <= i; x++)
             {    
                 Satır = Satır + "                                             -"+ "\n"; 
             } 
             FisDizayn = "                                             -" + "\n" + 
+            "                   ESER GIDA                  " + "\n" +
+            "        SÜT VE SÜT ÜRÜNLERİ PAZARLAMA         " + "\n" +
+            "Merkez: Vişnelik Mh. Atatürk Bulvari No:177/8 " + "\n" +
+            "TEL:0222 330 42 42 Odunpazari/ESKİŞEHİR     " + "\n" +
+            "Şube1 : Ortaköy Mh. TÜVTÜRK Yani No: 379 MUĞLA" + "\n" +
+            "Tel:0252 214 78 58 muglasutas@hotmail.com    " + "\n" +
             $scope.FisDeger + "\n" + "\n" +
             SpaceLength("ÜRÜN ADI",20) + "          " +SpaceLength("MIK",4) + " " + SpaceLength("BRM",4) + "\n" + 
             $scope.FisData + "\n" + //İÇERİK
             Satır +
-            "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n"
+            "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n"
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
             console.log(3)
             console.log(FisDizayn)
