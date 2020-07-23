@@ -1148,7 +1148,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 
             for(let i=0; i < pData.length; i++)
             {
-                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI.substring(0,17),18) + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),4) + " " + SpaceLength(pData[i].BIRIMADI,4) + " " + SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),6) + SpaceLength(parseFloat(pData[i].ISKYUZDE.toFixed(2)),3) + " " + SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),7) + "\n";                
+                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI.substring(0,17),18) + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),4) + " " + SpaceLength(pData[i].BIRIMADI,4) + " " + SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),6) + SpaceLength(parseFloat(pData[i].sth_iskonto1.toFixed(2)),3) + " " + SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),7) + "\n";                
             } 
        } 
        catch (error) 
