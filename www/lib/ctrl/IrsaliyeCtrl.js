@@ -2403,7 +2403,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.CariBakiye = Data[0].BAKIYE;
                 $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
             });
-            console.log(1.3)
 
             KalanBakiye = $scope.CariBakiye + $scope.GenelToplam
             OncekiBakiye = KalanBakiye - $scope.GenelToplam
@@ -2412,7 +2411,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
             let i = 36 - $scope.FisLength.length;
             let Satır = "";
-            console.log(1.4)
             for(let x = 0; x <= i; x++)
             {    
                 Satır = Satır + "                                             -"+ "\n"; 

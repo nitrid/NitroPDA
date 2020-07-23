@@ -84,6 +84,7 @@ function Login ($scope,$rootScope,$window,db)
     }    
     $scope.FirmaClick = function()
     {
+        console.log(1)
          for(i = 0;i < Param.length;i++)
         {
             console.log($scope.Kullanici )
@@ -353,10 +354,10 @@ function Login ($scope,$rootScope,$window,db)
      $(document).ready(function(){
      $("sifreleave").mouseleave(function()
       {
-        //   if(typeof($scope.Password) != 'undefined')
-        //   {
-        //        $scope.FirmaClick()
-        //   }
+       if(typeof($scope.Password) != 'undefined')
+       {
+            $scope.FirmaClick()
+       }
       });
     });
 }
