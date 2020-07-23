@@ -2283,7 +2283,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             FisDizayn = "                                             -" + "\n" + 
             FisBilgi + "\n" +
             $scope.FisDeger + "\n" +
-            SpaceLength("ÜRÜN ADI",19) +    SpaceLength("MIK" + "BRM",5) + "     " + SpaceLength("FIYAT",9) + SpaceLength("NET TUTAR",5) + "\n" + 
+            SpaceLength("ÜRÜN ADI",19) +    SpaceLength("MIK" + " " + "BRM",7) + "   " + SpaceLength("FIYAT",9) + SpaceLength("NET TUTAR",5) + "\n" + 
             $scope.FisData + "\n" + //İÇERİK
             Satır
             FisDizayn = FisDizayn + SpaceLength("Onceki Bak.:",12) + " " + SpaceLength(parseFloat(OncekiBakiye).toFixed(2),10) + "   "+SpaceLength("Ara Top.:",10) + parseFloat($scope.AraToplam).toFixed(2) + "\n" + "                         Top. Isk.: " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n" + "                           %1 KDV : " + parseFloat(db.SumColumn($scope.FisLength,"sip_vergi","sip_vergi_pntr = 2").toFixed(2)) + "\n" + "                           %8 KDV : " + parseFloat(db.SumColumn($scope.FisLength,"sip_vergi","sip_vergi_pntr = 3").toFixed(2)) + "\n" 
