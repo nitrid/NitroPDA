@@ -1149,7 +1149,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 NakitAlinan = $scope.Toplam
                 KalanBakiye = $scope.CariBakiye - $scope.Toplam
             }
-            let i = 49 - $scope.DizaynListe2.length;
+            let i = 43 - $scope.DizaynListe2.length;
             let Satır = "";
     
             for(let x = 0; x <= i; x++)
@@ -1157,7 +1157,14 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 Satır = Satır + "                                             -"+ "\n"; 
             } 
 
-            FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" +
+            FisDizayn = 
+            "                   ESER GIDA                  " + "\n" +
+            "        SÜT VE SÜT ÜRÜNLERİ PAZARLAMA         " + "\n" +
+            "Merkez: Vişnelik Mh. Atatürk Bulvari No:177/8 " + "\n" +
+            "TEL:0222 330 42 42 Odunpazari/ESKİŞEHİR     " + "\n" +
+            "Şube1:Ortaköy Mh. TÜVTÜRK Yani No: 379 MUĞLA" + "\n" +
+            "Tel:0252 214 78 58 muglasutas@hotmail.com    " + "\n" +
+            "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" +
             $scope.FisDeger + "\n" +
             "Nakit = " + $scope.DNakitToplam + "\n" + "K.Kartı = " + $scope.DKrediToplam + "\n" 
             FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" +

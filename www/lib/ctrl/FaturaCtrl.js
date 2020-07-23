@@ -985,10 +985,13 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
             {
+                console.log(1)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Data)
                 {   
+                    console.log(2)
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
+                        console.log(3)
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     }
                     else
@@ -1141,11 +1144,11 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
        try 
        {
             $scope.FisDeger = "";
-            $scope.FisDeger = "                                    "+ $scope.Tarih + "\n" + "                                  " + $scope.Seri + " - " + $scope.Sira + "\n" +"                                  "+ $scope.Tarih + "\n" + "                                  "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,10) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
+            $scope.FisDeger = "                                  "+ $scope.Tarih + "\n" + "                                  " + $scope.Seri + " - " + $scope.Sira + "\n" +"                                  "+ $scope.Tarih + "\n" + "                                  "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,35) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
 
             for(let i=0; i < pData.length; i++)
             {
-                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI.substring(0,20),20) + " " +   SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)) + pData[i].BIRIMADI,6) + " " + SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),6) + SpaceLength(parseFloat(pData[i].ISKYUZDE.toFixed(2)),5) + " " +SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),6) + "\n";                
+                $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI.substring(0,17),18) + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),4) + " " + SpaceLength(pData[i].BIRIMADI,4) + " " + SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),6) + SpaceLength(parseFloat(pData[i].ISKYUZDE.toFixed(2)),3) + " " + SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),7) + "\n";                
             } 
        } 
        catch (error) 
@@ -2027,6 +2030,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         StokHarInsert();     
                     }
                 });
+                $scope.InsertLock = false;
             }
             else
             {   
@@ -2039,6 +2043,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             CariHarUpdate(); 
                         }
                     });
+                    $scope.InsertLock = false;                
                 }
                 else
                 {   
@@ -2088,6 +2093,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                                 CariHarUpdate(); 
                             }
                         });
+                        $scope.InsertLock = false;
                     }
                 }
             }
@@ -2654,7 +2660,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 
             FisGenelToplam = $scope.GenelToplam + $scope.CariBakiye
             FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
-            let i = 36 - $scope.FisLength.length;
+            let i = 31 - $scope.FisLength.length;
             let Satır = "";
     
             for(let x = 0; x <= i; x++)
@@ -2662,13 +2668,19 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 Satır = Satır + "                                             -"+ "\n"; 
             }
             FisDizayn = "                                             -" + "\n" + 
+                        "                   ESER GIDA                  " + "\n" +
+                        "        SÜT VE SÜT ÜRÜNLERİ PAZARLAMA         " + "\n" +
+                        "Merkez: Vişnelik Mh. Atatürk Bulvari No:177/8 " + "\n" +
+                        "TEL:0222 330 42 42 Odunpazari/ESKİŞEHİR     " + "\n" +
+                        "Şube1:Ortaköy Mh. TÜVTÜRK Yani No: 379 MUĞLA" + "\n" +
+                        "Tel:0252 214 78 58 muglasutas@hotmail.com    " + "\n" +
             $scope.FisDeger + "\n" + "\n" +
-            SpaceLength("ÜRÜN ADI",20) +    SpaceLength("MIK" + "BRM",4) + " " + SpaceLength("FIYAT",5) + " " + SpaceLength("ISK",3) + " " + SpaceLength("NET TUTAR",5) + "\n" + 
+            SpaceLength("ÜRÜN ADI",17) +    SpaceLength(" MIK" +"  " + "BRM",10) + " " + SpaceLength("FIYAT",5) + " " + SpaceLength("ISK",4) + SpaceLength("NET TUTAR",5) + "\n" + 
             $scope.FisData + "\n" + //İÇERİK
             Satır
-            FisDizayn = FisDizayn + SpaceLength("Önceki Bak.:",10) + " " + SpaceLength(parseFloat(OncekiBakiye).toFixed(2),10) + "   "+SpaceLength("Ara Top.:",10) + parseFloat($scope.AraToplam).toFixed(2) + "\n" + "                         Top. Isk.: " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n"
+            FisDizayn = FisDizayn + SpaceLength("Önceki Bak.:",10) + " " + SpaceLength(parseFloat(OncekiBakiye).toFixed(2),10) + "   " +SpaceLength("Ara Top.:",10) + parseFloat($scope.AraToplam).toFixed(2) + "\n" + "                         Top. Isk.: " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n" + "                           %1 KDV : " + parseFloat(db.SumColumn($scope.FisLength,"sth_vergi","sth_vergi_pntr = 2").toFixed(2)) + "\n" + "                           %8 KDV : " + parseFloat(db.SumColumn($scope.FisLength,"sth_vergi","sth_vergi_pntr = 3").toFixed(2)) + "\n" 
             FisDizayn = FisDizayn + "Kalan Bak.:  " + SpaceLength(parseFloat(KalanBakiye).toFixed(2),10) + "   " +SpaceLength("Top. KDV:",10) + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Top. : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
-            "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n"
+            "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
             console.log(FisDizayn)
             db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)

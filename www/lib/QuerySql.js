@@ -1490,6 +1490,7 @@ var QuerySql =
                 "sth_miktar AS MIKTAR , " +
                 "sth_miktar2 AS MIKTAR2 , " +
                 "ROUND(sth_tutar,2) AS TUTAR, " + 
+                "(100 * sth_iskonto1) / sth_tutar AS ISKYUZDE , " +
                 "(SELECT dbo.fn_StokBirimi(sth_stok_kod,sth_birim_pntr)) AS BIRIMADI, " +
                 "(SELECT dbo.fn_StokBirimHesapla(sth_stok_kod,1,sth_miktar,sth_birim_pntr)) AS BIRIM," +
                 "ISNULL((SELECT sto_birim1_ad as ADET FROM STOKLAR WHERE sto_kod = sth_stok_kod),'') AS BIRIM1, " +

@@ -4,7 +4,6 @@
     $scope.User = $window.sessionStorage.getItem('User');
     $rootScope.LoadingShow = function() 
     {
-        console.log($("#loading"))
         $("#loading").show();
     }
     $rootScope.LoadingHide = function() 
