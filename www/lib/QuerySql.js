@@ -1786,6 +1786,149 @@ var QuerySql =
             'sth_cari_srm_merkezi:string|25','sth_stok_srm_merkezi:string|25','sth_vergisiz_fl:bit','sth_adres_no:int','sth_parti_kodu:string|25','sth_lot_no:int','sth_proje_kodu:string|25',
             'sth_exim_kodu:string|25','sth_disticaret_turu:int','sth_otvvergisiz_fl:bit','sth_oivvergisiz_fl:bit','sth_fiyat_liste_no:int','sth_nakliyedeposu:int','sth_nakliyedurumu:int']
     },
+    StokHarEkInsert : 
+    {
+        query : "INSERT INTO [dbo].[STOK_HAREKETLERI_EK]  " +
+           "([sthek_Guid] " +
+            ",[sthek_DBCno] " +
+           ",[sthek_SpecRECno] " +
+           ",[sthek_iptal] " +
+           ",[sthek_fileid] " +
+           ",[sthek_hidden] " +
+           ",[sthek_kilitli] " +
+           ",[sthek_degisti] " +
+           ",[sthek_checksum] " +
+           ",[sthek_create_user] " +
+           ",[sthek_create_date] " +
+           ",[sthek_lastup_user] " +
+           ",[sthek_lastup_date] " +
+           ",[sthek_special1] " +
+           ",[sthek_special2] " +
+           ",[sthek_special3] " +
+           ",[sthek_related_uid] " +
+           ",[sth_subesip_uid] " +
+           ",[sth_bkm_uid] " +
+           ",[sth_karsikons_uid] " +
+           ",[sth_rez_uid] " +
+           ",[sth_optamam_uid] " +
+           ",[sth_iadeTlp_uid] " +
+           ",[sth_HalSatis_uid] " +
+           ",[sth_ciroprim_uid] " +
+           ",[sth_iade_evrak_seri] " +
+           ",[sth_iade_evrak_sira] " +
+           ",[sth_yat_tes_kodu] " +
+           ",[sth_ihracat_kredi_kodu] " +
+           ",[sth_diib_belge_no] " +
+           ",[sth_diib_satir_no] " +
+           ",[sth_mensey_ulke_tipi] " +
+           ",[sth_mensey_ulke_kodu] " +
+           ",[sth_halrehmiktari] " +
+           ",[sth_halrehfiyati] " +
+           ",[sth_halsandikmiktari] " +
+           ",[sth_halsandikfiyati] " +
+           ",[sth_halsandikkdvtutari] " +
+           ",[sth_HalKomisyonuKdv] " +
+           ",[sth_HalRusum] " +
+           ",[sth_satistipi] " +
+           ",[sth_vardiya_tarihi] " +
+           ",[sth_vardiya_no] " +
+           ",[sth_direkt_iscilik_1] " +
+           ",[sth_direkt_iscilik_2] " +
+           ",[sth_direkt_iscilik_3] " +
+           ",[sth_direkt_iscilik_4] " +
+           ",[sth_direkt_iscilik_5] " +
+           ",[sth_genel_uretim_1] " +
+           ",[sth_genel_uretim_2] " +
+           ",[sth_genel_uretim_3] " +
+           ",[sth_genel_uretim_4] " +
+           ",[sth_genel_uretim_5] " +
+           ",[sth_fis_tarihi2] " +
+           ",[sth_fis_sirano2] " +
+           ",[sth_fiyfark_esas_evrak_seri] " +
+           ",[sth_fiyfark_esas_evrak_sira] " +
+           ",[sth_fiyfark_esas_satir_no] " +
+           ",[sth_istisna] " +
+           ",[sth_otv_tevkifat_turu] " +
+           ",[sth_otv_tevkifat_tutari] " +
+           ",[sth_servishar_uid] " +
+           ",[sth_bakimsarf_uid] " +
+           ",[sth_utsbildirimturu] " +
+           ",[sth_utshekzayiatturu] " +
+           ",[sth_utsimhabertarafgerekcesi] " +
+           ",[sth_utsdigergerekceaciklamasi] "  +
+           ") " +
+            "VALUES " +
+           "(NEWID()                    --<sthek_Guid, uniqueidentifier,> \n" +
+           ",0                    --<sthek_DBCno, smallint,> \n" +
+           ",0                    --<sthek_SpecRECno, int,> \n" +
+           ",0                    --<sthek_iptal, bit,> \n" +
+           ",590                    --<sthek_fileid, smallint,> \n" +
+           ",0                  --<sthek_hidden, bit,> \n" +
+           ",0                    --<sthek_kilitli, bit,> \n" +
+           ",0                    --<sthek_degisti, bit,> \n" +
+           ",0                    --<sthek_checksum, int,> \n" +
+           ",@sthek_create_user                    --<sthek_create_user, smallint,> \n" +
+           ",GETDATE()                    --<sthek_create_date, datetime,> \n" +
+           ",@sthek_lastup_user                    --<sthek_lastup_user, smallint,> \n" +
+           ",GETDATE()                    --<sthek_lastup_date, datetime,> \n" +
+           ",''                    --<sthek_special1, nvarchar(4),> \n" +
+           ",''                    --<sthek_special2, nvarchar(4),> \n" +
+           ",''                    --<sthek_special3, nvarchar(4),> \n" +
+           ",@sthek_related_uid                    --<sthek_related_uid, uniqueidentifier,> \n" +
+           ",@sth_subesip_uid                    --<sth_subesip_uid, uniqueidentifier,> \n" +
+           ",'00000000-0000-0000-0000-000000000000'                    --<sth_bkm_uid, uniqueidentifier,> \n" +
+           ",'00000000-0000-0000-0000-000000000000'                    --<sth_karsikons_uid, uniqueidentifier,> \n" +
+           ",'00000000-0000-0000-0000-000000000000'                    --<sth_rez_uid, uniqueidentifier,> \n" +
+           ",'00000000-0000-0000-0000-000000000000'                    --<sth_optamam_uid, uniqueidentifier,> \n" +
+           ",'00000000-0000-0000-0000-000000000000'                    --<sth_iadeTlp_uid, uniqueidentifier,> \n" +
+           ",'00000000-0000-0000-0000-000000000000'                    --<sth_HalSatis_uid, uniqueidentifier,> \n" +
+           ",'00000000-0000-0000-0000-000000000000'                    --<sth_ciroprim_uid, uniqueidentifier,> \n" +
+           ",''                    --<sth_iade_evrak_seri, [dbo].[evrakseri_str],> \n" +
+           ",0                    --<sth_iade_evrak_sira, int,> \n" +
+           ",''                    --<sth_yat_tes_kodu, nvarchar(25),> \n" +
+           ",''                    --<sth_ihracat_kredi_kodu, nvarchar(4),> \n" +
+           ",''                    --<sth_diib_belge_no, nvarchar(25),> \n" +
+           ",0                    --<sth_diib_satir_no, tinyint,> \n" +
+           ",0                    --<sth_mensey_ulke_tipi, tinyint,> \n" +
+           ",''                    --<sth_mensey_ulke_kodu, nvarchar(4),> \n" +
+           ",0                    --<sth_halrehmiktari, float,> \n" +
+           ",0                    --<sth_halrehfiyati, float,> \n" +
+           ",0                    --<sth_halsandikmiktari, float,> \n" +
+           ",0                    --<sth_halsandikfiyati, float,> \n" +
+           ",0                    --<sth_halsandikkdvtutari, float,> \n" +
+           ",0                    --<sth_HalKomisyonuKdv, float,> \n" +
+           ",0                    --<sth_HalRusum, float,> \n" +
+           ",0                    --<sth_satistipi, tinyint,> \n" +
+           ",'1899-12-30 00:00:00.000'                    --<sth_vardiya_tarihi, datetime,> \n" +
+           ",0                    --<sth_vardiya_no, tinyint,> \n" +
+           ",0                    --<sth_direkt_iscilik_1, float,> \n" +
+           ",0                    --<sth_direkt_iscilik_2, float,> \n" +
+           ",0                    --<sth_direkt_iscilik_3, float,> \n" +
+           ",0                    --<sth_direkt_iscilik_4, float,> \n" +
+           ",0                    --<sth_direkt_iscilik_5, float,> \n" +
+           ",0                    --<sth_genel_uretim_1, float,> \n" +
+           ",0                    --<sth_genel_uretim_2, float,> \n" +
+           ",0                    --<sth_genel_uretim_3, float,> \n" +
+           ",0                    --<sth_genel_uretim_4, float,> \n" +
+           ",0                    --<sth_genel_uretim_5, float,> \n" +
+           ",'1899-12-30 00:00:00.000'                    --<sth_fis_tarihi2, datetime,> \n" +
+           ",0                    --<sth_fis_sirano2, int,> \n" +
+           ",''                    --<sth_fiyfark_esas_evrak_seri, [dbo].[evrakseri_str],> \n" +
+           ",0                    --<sth_fiyfark_esas_evrak_sira, int,> \n" +
+           ",0                    --<sth_fiyfark_esas_satir_no, int,> \n" +
+           ",''                    --<sth_istisna, nvarchar(5),> \n" +
+           ",0                    --<sth_otv_tevkifat_turu, tinyint,> \n" +
+           ",0                    --<sth_otv_tevkifat_tutari, float,> \n" +
+           ",'00000000-0000-0000-0000-000000000000'                    --<sth_servishar_uid, uniqueidentifier,> \n" +
+           ",'00000000-0000-0000-0000-000000000000'                    --<sth_bakimsarf_uid, uniqueidentifier,> \n" +
+           ",0                    --<sth_utsbildirimturu, tinyint,> \n" +
+           ",0                    --<sth_utshekzayiatturu, tinyint,> \n" +
+           ",0                    --<sth_utsimhabertarafgerekcesi, tinyint,> \n" +
+           ",''                   --<sth_utsdigergerekceaciklamasi, nvarchar(50),> \n" +
+           " ) ",
+           param : ['sthek_create_user','sthek_lastup_user','sthek_related_uid','sth_subesip_uid'],
+           type : ['int','int','string|50','string|50']
+    },                  
     StokHarEvrDelete : 
     {
         query : "DELETE FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = @sth_evrakno_seri AND " +

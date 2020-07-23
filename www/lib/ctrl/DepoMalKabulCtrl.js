@@ -341,11 +341,14 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
 
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
-
+            
             if(typeof(InsertResult.result.err) == 'undefined')
             {
+                console.log(InsertResult.result.recordsets[0][0].sth_Guid)
+               
                 if(typeof($scope.Stok[0].RECNO) != 'undefined')
                 {
+                    db.ExecuteTag($scope.Firma,'StokHarEkInsert',[UserParam.MikroId,UserParam.MikroId,InsertResult.result.recordsets[0][0].sth_Guid,$scope.Stok[0].RECNO]);
                     db.ExecuteTag($scope.Firma,'StokHarDepoSiparisUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].RECNO]);
                 }
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Data)
@@ -354,6 +357,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                   //  {
                   //      BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                   //  } 
+                  
                     InsertAfterRefresh(Data);
                     $scope.InsertLock = false;
                     
