@@ -1,7 +1,7 @@
 var Param = [
 	{
 		"Kullanici": "Admin",
-		"Sifre": "2",
+		"Sifre": "1",
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",

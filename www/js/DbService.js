@@ -119,12 +119,15 @@ angular.module('app.db', []).service('db',function($rootScope)
                 TmpQuery.db = pParam.db;
 
                 //PARAMETRE UNDEFINED KONTROLÜ (17.07.2020 - ALI KEMAL KARACA)
-                for (let i = 0; i < TmpQuery.value.length; i++) 
+                if(typeof(TmpQuery.value) != 'undefined')
                 {
-                    if(typeof TmpQuery.value[i] == 'undefined')
+                    for (let i = 0; i < TmpQuery.value.length; i++) 
                     {
-                        $rootScope.MessageBox("Parametre değerlerinde problem oluştu ! " + pParam.tag); 
-                        return;
+                        if(typeof TmpQuery.value[i] == 'undefined')
+                        {
+                            $rootScope.MessageBox("Parametre değerlerinde problem oluştu ! " + pParam.tag); 
+                            return;
+                        }
                     }
                 }
                 /********************************************************** */
