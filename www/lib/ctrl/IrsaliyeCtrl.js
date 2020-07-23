@@ -1130,6 +1130,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(data)
         {
             $scope.DepoListe = data; 
+            console.log($scope.DepoListe)
             $scope.DepoNo = UserParam[ParamName].DepoNo;
             $scope.DepoListe.forEach(function(item) 
             {
