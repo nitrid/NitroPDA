@@ -760,6 +760,10 @@
             </div>
         </div>
     </div>
+    <form>
+        <input type="button" onclick="directPrintBytes(printSocket, [0x1b, 0x40, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x0a, 0x1d, 0x56, 0x41, 0x03]);" value="Print test string"/>
+        <input type="button" onclick="directPrintFile(printSocket, 'example.bin');" value="Load and print 'example.bin'" />
+    </form>
 <script>
     $("#BTarih").datepicker({
     language: "tr"
