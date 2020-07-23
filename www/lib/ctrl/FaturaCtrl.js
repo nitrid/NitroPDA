@@ -2193,7 +2193,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 
         db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(data)
         {
-            console.log(1)
             $scope.DepoListe = data; 
             $scope.DepoNo = UserParam[ParamName].DepoNo;
             $scope.DepoListe.forEach(function(item) 
@@ -2202,10 +2201,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     $scope.DepoAdi = item.ADI;
             });     
         });
-        console.log($scope.Firma)
         db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
         {
-            console.log(11)
             $scope.SorumlulukListe = data; 
             $scope.Sorumluluk = UserParam[ParamName].Sorumluluk;
             $scope.SorumlulukListe.forEach(function(item)
@@ -2214,10 +2211,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     $scope.SorumlulukAdi = item.ADI;
             });
         });
-        console.log(11)
        db.GetPromiseTag($scope.Firma,'PersonelTipGetir',[$scope.PersonelTip],function(data)
         {
-            console.log(3)
             $scope.PersonelListe = data;
             $scope.Personel = UserParam[ParamName].Personel;
             $scope.PersonelListe.forEach(function(item)
