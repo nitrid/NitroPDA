@@ -146,7 +146,7 @@ var QuerySql =
                 "cari_efatura_fl AS EFATURA  " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE ((CARI.cari_kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((CARI.cari_unvan1 LIKE  @ADI + '%' ) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu IN(SELECT value FROM STRING_SPLIT(@PLASIYERKODU,','))) OR (@PLASIYERKODU = ''))) AS TBL ORDER BY KODU " ,
+                "WHERE ((CARI.cari_kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((CARI.cari_unvan1 LIKE  @ADI + '%' or cari_unvan2 LIKE @ADI + '%' ) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu IN(SELECT value FROM STRING_SPLIT(@PLASIYERKODU,','))) OR (@PLASIYERKODU = ''))) AS TBL ORDER BY KODU " ,
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
     },
@@ -3806,18 +3806,18 @@ var QuerySql =
             ",GETDATE()                            --<cari_lastup_date, datetime,>\n" +
             ",''                                   --<cari_special1, nvarchar(4),>\n" +
             ",''                                   --<cari_special2, nvarchar(4),>\n" +
-            ", ''                                  --<cari_special3, nvarchar(4),>\n" +
+            ",''                                   --<cari_special3, nvarchar(4),>\n" +
             ",@CARIKOD                             --<cari_kod, nvarchar(25),>\n" +
             ",@CARIUNVAN1                          --<cari_unvan1, nvarchar(127),>\n" +
-            ",@CARIUNVAN2                                   --<cari_unvan2, nvarchar(127),>\n" +
+            ",@CARIUNVAN2                          --<cari_unvan2, nvarchar(127),>\n" +
             ",0                                    --<cari_hareket_tipi, tinyint,>\n" +
-            ",0                                    --<cari_baglanti_tipi, tinyint,>\n" +
+            ",@CARITIP                             --<cari_baglanti_tipi, tinyint,>\n" +
             ",0                                    --<cari_stok_alim_cinsi, tinyint,>\n" +
             ",0                                    --<cari_stok_satim_cinsi, tinyint,>\n" +
             ",''                                   --<cari_muh_kod, nvarchar(40),>\n" +
             ",''                                   --<cari_muh_kod1, nvarchar(40),>\n" +
             ",''                                   --<cari_muh_kod2, nvarchar(40),>\n" +
-            ",1                                    --<cari_doviz_cinsi, tinyint,>\n" +
+            ",@DOVIZ                               --<cari_doviz_cinsi, tinyint,>\n" +
             ",255                                  --<cari_doviz_cinsi1, tinyint,>\n" +
             ",255                                  --<cari_doviz_cinsi2, tinyint,>\n" +
             ",25                                   --<cari_vade_fark_yuz, float,>\n" +
@@ -3892,7 +3892,7 @@ var QuerySql =
             ",''                                   --<cari_sektor_kodu, nvarchar(25),> \n" +
             ",''                                   --<cari_bolge_kodu, nvarchar(25),> \n" +
             ",''                                   --<cari_grup_kodu, nvarchar(25),> \n" +
-            ",''                                   --<cari_temsilci_kodu, nvarchar(25),> \n" +
+            ",@TEMSILCI                            --<cari_temsilci_kodu, nvarchar(25),> \n" +
             ",''                                   --<cari_muhartikeli, nvarchar(10),> \n" +
             ",0                                    --<cari_firma_acik_kapal, bit,> \n" +
             ",0                                    --<cari_BUV_tabi_fl, bit,> \n" +
@@ -3909,7 +3909,7 @@ var QuerySql =
             ",0                                    --<cari_HalKomYuzdesi, float,> \n" +
             ",0                                    --<cari_TeslimSuresi, smallint,> \n" +
             ",''                                   --<cari_wwwadresi, nvarchar(30),> \n" +
-            ",''                                   --<cari_EMail, nvarchar(127),> \n" +
+            ",@EMAIL                               --<cari_EMail, nvarchar(127),> \n" +
             ",''                                   --<cari_CepTel, nvarchar(20),> \n" +
             ",0                                    --<cari_VarsayilanGirisDepo, int,> \n" +
             ",0                                    --<cari_VarsayilanCikisDepo, int,> \n" +
@@ -3980,9 +3980,118 @@ var QuerySql =
             ",''                                   --<cari_uts_kurum_no, nvarchar(15),> \n" +
             ",0                                    --<cari_kamu_kurumu_fl, bit,> \n" +
             ",''                                   --<cari_earsiv_xslt_dosya, nvarchar(127),> \n" +
-            ",0                                    --<cari_Perakende_fl, bit,>\n" +
-            ") ",
-        param : ['CARIKOD:string|127','CARIUNVAN1:string|127','CARIUNVAN2:string|127','VDAIREADI:string|127','VDAIRENO:string|127']
+            ",0                                    --<cari_Perakende_fl, bit,> \n" +
+            ") " +
+          "INSERT INTO [dbo].[CARI_HESAP_ADRESLERI] " +
+          " ([adr_DBCno] " +
+          " ,[adr_SpecRECno] " +
+          " ,[adr_iptal] " +
+          " ,[adr_fileid] " +
+          " ,[adr_hidden] " +
+          " ,[adr_kilitli] " +
+          " ,[adr_degisti] " +
+          " ,[adr_checksum] " +
+          " ,[adr_create_user] " +
+          " ,[adr_create_date] " +
+          " ,[adr_lastup_user] " +
+          " ,[adr_lastup_date] " +
+          " ,[adr_special1] " +
+          " ,[adr_special2] " +
+          " ,[adr_special3] " +
+          " ,[adr_cari_kod] " +
+          " ,[adr_adres_no] " +
+          " ,[adr_aprint_fl] " +
+          " ,[adr_cadde] " +
+          " ,[adr_mahalle] " +
+          " ,[adr_sokak] " +
+          " ,[adr_Semt] " +
+          " ,[adr_Apt_No] " +
+          " ,[adr_Daire_No] " +
+          " ,[adr_posta_kodu] " +
+          " ,[adr_ilce] " +
+          " ,[adr_il] " +
+          " ,[adr_ulke] " +
+          " ,[adr_Adres_kodu] " +
+          " ,[adr_tel_ulke_kodu] " +
+          " ,[adr_tel_bolge_kodu] " +
+          " ,[adr_tel_no1] " +
+          " ,[adr_tel_no2] " +
+          " ,[adr_tel_faxno] " +
+          " ,[adr_tel_modem] " +
+          " ,[adr_yon_kodu] " +
+          " ,[adr_uzaklik_kodu] " +
+          " ,[adr_temsilci_kodu] " +
+          " ,[adr_ozel_not] " +
+          " ,[adr_ziyaretperyodu] " +
+          " ,[adr_ziyaretgunu] " +
+          " ,[adr_gps_enlem] " +
+          " ,[adr_gps_boylam] " +
+          " ,[adr_ziyarethaftasi] " +
+          " ,[adr_ziygunu2_1] " +
+          " ,[adr_ziygunu2_2] " +
+          " ,[adr_ziygunu2_3] " +
+          " ,[adr_ziygunu2_4] " +
+          " ,[adr_ziygunu2_5] " +
+          " ,[adr_ziygunu2_6] " +
+          " ,[adr_ziygunu2_7] " +
+          " ,[adr_efatura_alias] " +
+          " ,[adr_eirsaliye_alias]) " +
+         "VALUES " + 
+           "(0                                      --<adr_DBCno, smallint,> \n " + 
+           ",0                                      --<adr_SpecRECno, int,> \n " + 
+           ",0                                      --<adr_iptal, bit,> \n " + 
+           ",32                                     --<adr_fileid, smallint,> \n " + 
+           ",0                                      --<adr_hidden, bit,> \n " + 
+           ",0                                      --<adr_kilitli, bit,> \n " + 
+           ",0                                      --<adr_degisti, bit,> \n " + 
+           ",0                                      --<adr_checksum, int,> \n " + 
+           ",1                                      --<adr_create_user, smallint,> \n " + 
+           ",GETDATE()                               --<adr_create_date, datetime,> \n " + 
+           ",1                                      --<adr_lastup_user, smallint,> \n " + 
+           ",GETDATE()                               --<adr_lastup_date, datetime,> \n " + 
+           ",''                                      --<adr_special1, nvarchar(4),> \n " + 
+           ",''                                      --<adr_special2, nvarchar(4),> \n " + 
+           ",''                                      --<adr_special3, nvarchar(4),> \n " + 
+           ",@CARIKOD1                               --<adr_cari_kod, nvarchar(25),> \n " + 
+           ",1                                      --<adr_adres_no, int,> \n " + 
+           ",0                                      --<adr_aprint_fl, bit,> \n " + 
+           ",@ADRES1                                  --<adr_cadde, nvarchar(50),> \n " + 
+           ",''                                      --<adr_mahalle, nvarchar(50),> \n " + 
+           ",@ADRES2                                 --<adr_sokak, nvarchar(50),> \n " + 
+           ",''                                      --<adr_Semt, nvarchar(25),> \n " + 
+           ",''                                      --<adr_Apt_No, nvarchar(10),> \n " + 
+           ",''                                      --<adr_Daire_No, nvarchar(10),> \n " + 
+           ",''                                      --<adr_posta_kodu, nvarchar(8),> \n " + 
+           ",@ILCE                                   --<adr_ilce, nvarchar(50),> \n " + 
+           ",@IL                                     --<adr_il, nvarchar(50),> \n " + 
+           ",''                                      --<adr_ulke, nvarchar(50),> \n " + 
+           ",''                                      --<adr_Adres_kodu, nvarchar(10),> \n " + 
+           ",''                                      --<adr_tel_ulke_kodu, nvarchar(5),> \n " + 
+           ",''                                      --<adr_tel_bolge_kodu, nvarchar(5),> \n " + 
+           ",@TELEFON                                --<adr_tel_no1, nvarchar(10),> \n " + 
+           ",''                                      --<adr_tel_no2, nvarchar(10),> \n " + 
+           ",''                                      --<adr_tel_faxno, nvarchar(10),> \n " + 
+           ",''                                      --<adr_tel_modem, nvarchar(10),> \n " + 
+           ",''                                      --<adr_yon_kodu, nvarchar(4),> \n " + 
+           ",0                                       --<adr_uzaklik_kodu, smallint,> \n " + 
+           ",''                                      --<adr_temsilci_kodu, nvarchar(25),> \n " + 
+           ",''                                      --<adr_ozel_not, nvarchar(50),> \n " + 
+           ",0                                      --<adr_ziyaretperyodu, tinyint,> \n " + 
+           ",0                                      --<adr_ziyaretgunu, float,> \n " + 
+           ",0                                      --<adr_gps_enlem, float,> \n " + 
+           ",0                                      --<adr_gps_boylam, float,> \n " + 
+           ",0                                      --<adr_ziyarethaftasi, tinyint,> \n " + 
+           ",0                                      --<adr_ziygunu2_1, bit,> \n " + 
+           ",0                                      --<adr_ziygunu2_2, bit,> \n " + 
+           ",0                                      --<adr_ziygunu2_3, bit,> \n " + 
+           ",0                                      --<adr_ziygunu2_4, bit,> \n " + 
+           ",0                                      --<adr_ziygunu2_5, bit,> \n " + 
+           ",0                                      --<adr_ziygunu2_6, bit,> \n " + 
+           ",0                                      --<adr_ziygunu2_7, bit,> \n " + 
+           ",''                                      --<adr_efatura_alias, nvarchar(120),> \n " + 
+           ",''                                      --<adr_eirsaliye_alias, nvarchar(120),>\n" +
+           " )",
+        param : ['CARIKOD:string|127','CARIUNVAN1:string|127','CARIUNVAN2:string|127','CARITIP:int','DOVIZ:int','VDAIREADI:string|127','VDAIRENO:string|127','TEMSILCI:string|25','EMAIL:string|50','CARIKOD1:string|127','ADRES1:string|50','ADRES2:string|50','ILCE:string|30','IL:string|25','TELEFON:string|10']
     },
     
 

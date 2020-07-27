@@ -2409,7 +2409,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
             FisGenelToplam = $scope.GenelToplam + $scope.CariBakiye
             FisKalanBakiye = $scope.CariBakiye + $scope.GenelToplam - $scope.TahToplam
-            let i = 36 - $scope.FisLength.length;
+            let i = 35 - $scope.FisLength.length;
             let Satır = "";
             for(let x = 0; x <= i; x++)
             {    
@@ -2425,7 +2425,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.FisDeger + "\n" + "\n" +
             SpaceLength("ÜRÜN ADI",20) + "          " +SpaceLength("MIK",4) + " " + SpaceLength("BRM",4) + "\n" + 
             $scope.FisData + "\n" + //İÇERİK
-            Satır +
+            Satır + "SÜTAŞ A.Ş TARAFINDAN FATURA EDİLECEKTİR." + "\n" +
             "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n"
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
             console.log(3)
@@ -2436,14 +2436,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {
                 if(pStatus)
                 {
-                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
-                   
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
                 }
             });
         }
         else if($scope.FisDizaynTip == "1")
         {
-            console.log(1)
             let FisDeger = "";
     
             FisDeger = FisDeger + "                                 IRSALIYE GUN SONU " + "\n" 
@@ -2460,6 +2458,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                          ARA TOPLAM : " + $scope.AraToplam.toFixed(2) + "\n"
             $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                           KDV TOPLAM : " + $scope.ToplamKdv.toFixed(2) + "\n"
             $scope.GunSonuDizayn = $scope.GunSonuDizayn + "                                                         GENEL TOPLAM : " + $scope.GenelToplam.toFixed(2) + "\n"
+            $scope.GunSonuDizayn += "SÜTAŞ A.Ş TARAFINDAN FATURA EDİLECEKTİR."
             $scope.GunSonuDizayn = $scope.GunSonuDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u").split("ı").join("i");
             
             console.log($scope.GunSonuDizayn)

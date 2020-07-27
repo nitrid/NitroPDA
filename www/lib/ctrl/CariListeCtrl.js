@@ -18,6 +18,17 @@ function CariListeCtrl($scope,$window,db)
         $scope.CariEkleUnvan1 = "";
         $scope.CariEkleUnvan2 = "";
         $scope.CariHarfEkle = "";
+        $scope.Mail = "";
+        $scope.Telefon = "";
+        $scope.Adres1 = "";
+        $scope.Adres2 = "";
+        $scope.Il = "";
+        $scope.Ilce = "";
+        $scope.CariTip = '0';
+        $scope.DovizTip = '0';
+        $scope.Temsilci = "";
+        $scope.TemsilciAdi;
+        $scope.CariListe = [];
 
         InitCariGrid();
         $scope.MainClick();
@@ -50,6 +61,12 @@ function CariListeCtrl($scope,$window,db)
                     width: 300
                 },
                 {
+                    name: "UNVAN2",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                },
+                {
                     name: "BAKIYE",
                     type: "number",
                     align: "center",
@@ -70,15 +87,15 @@ function CariListeCtrl($scope,$window,db)
             } 
         });
     }
-    $scope.YeniEvrak =async function ()
+    $scope.YeniEvrak = async function ()
     {
         Init();
-        $scope.BtnCariListele();
+        console.log(1)       
 
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "SELECT REPLACE(STR(ISNULL(MAX(CONVERT(int,SUBSTRING(cari_kod,3,LEN(cari_kod)))),0) + 1, 5), SPACE(1), '0') AS MAXCARIKOD FROM CARI_HESAPLAR WHERE cari_kod LIKE @CARIHARF + '%' ",
+            query:  "SELECT REPLACE(STR(ISNULL(MAX(CONVERT(int,SUBSTRING(cari_kod,3,LEN(cari_kod)))),0) + 1, 5), SPACE(1), '0') AS MAXCARIKOD FROM CARI_HESAPLAR WHERE cari_kod LIKE  @CARIHARF +  '%' ",
             param:  ['CARIHARF'], 
             type:   ['string|25'], 
             value:  [$scope.CariHarfEkle]    
@@ -90,6 +107,7 @@ function CariListeCtrl($scope,$window,db)
             console.log($scope.CariHarfEkle)
             $scope.CariEkleKodu = $scope.CariHarfEkle + Data[0].MAXCARIKOD;
         });
+        console.log(1)  
     }
     $scope.EvrakGetir = function ()
     {
@@ -122,6 +140,7 @@ function CariListeCtrl($scope,$window,db)
         db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,''],function(data)
         {
             $scope.CariListe = data;
+            console.log(data)
             if($scope.CariListe.length > 0)
             {
                 $scope.Loading = false;
@@ -187,39 +206,79 @@ function CariListeCtrl($scope,$window,db)
     }
     $scope.CariEkleClick = function()
     {
-        $("#TbCariEkle").addClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbDetay").removeClass('active');
+        var Temsilci =
+        {
+            db : '{M}.' + $scope.Firma,
+            query : "SELECT cari_per_kod AS TEMSILCI, cari_per_adi AS TEMSILCIADI FROM CARI_PERSONEL_TANIMLARI ",
+        }
+        db.GetDataQuery(Temsilci,function(Data)
+        {   
+            $scope.TemsilciListe = Data
+            $scope.Temsilci = $scope.TemsilciListe[0].TEMSILCI
+            $("#TbCariEkle").addClass('active');
+            $("#TbMain").removeClass('active');
+            $("#TbDetay").removeClass('active');
+        });
+        
     }
     $scope.CariEkleInsert = function()
     {
-        if($scope.CariEkleKodu != '' || $scope.CariEkleUnvan1 != '')
+        console.log($scope.CariTip)
+        if($scope.Telefon.length > 10)
         {
-            var InsertData = 
-            [
-                $scope.CariEkleKodu,
-                $scope.CariEkleUnvan1,
-                $scope.CariEkleUnvan2,
-                $scope.VergiDaire,
-                $scope.VergiNo
-            ]
-            db.ExecuteTag($scope.Firma,'CariInsert',InsertData,function(InsertResult)
-            {
-                if(typeof(InsertResult.result.err) == 'undefined')
-                {
-                    alertify.alert("Cari Kayıt İşlemi Gerçekleşti.")
-                    $scope.VergiDaire = "";
-                    $scope.VergiNo = "";
-                    $scope.CariEkleKodu = "";
-                    $scope.CariEkleUnvan1 = "";
-                    $scope.CariEkleUnvan2 = "";
-                }
-            });
-            $scope.YeniEvrak()
+            alertify.alert(" Telefona sadece 10 karakter girilebilir")
         }
         else
         {
-            alertify.alert("CariKodu ve CariAdı Boş Geçilemez.")
+            if($scope.CariEkleKodu != '' || $scope.CariEkleUnvan1 != '')
+            {
+                var InsertData = 
+                [
+                    $scope.CariEkleKodu,
+                    $scope.CariEkleUnvan1,
+                    $scope.CariEkleUnvan2,
+                    $scope.CariTip,
+                    $scope.DovizTip,
+                    $scope.VergiDaire,
+                    $scope.VergiNo,
+                    $scope.Temsilci,
+                    $scope.Mail,
+                    $scope.CariEkleKodu,
+                    $scope.Adres1,
+                    $scope.Adres2,
+                    $scope.Ilce,
+                    $scope.Il,
+                    $scope.Telefon
+                ]
+                db.ExecuteTag($scope.Firma,'CariInsert',InsertData,function(InsertResult)
+                {
+                    if(typeof(InsertResult.result.err) == 'undefined')
+                    {
+                        console.log($scope.Adres1)
+                        alertify.alert("Cari Kayıt İşlemi Gerçekleşti.")
+                        $scope.VergiDaire = "";
+                        $scope.VergiNo = "";
+                        $scope.CariEkleKodu = "";
+                        $scope.CariEkleUnvan1 = "";
+                        $scope.CariEkleUnvan2 = "";
+                    }
+                });
+                $scope.YeniEvrak()
+            }
+            else
+            {
+                alertify.alert("CariKodu ve CariAdı Boş Geçilemez.")
+            }
         }
+    }
+    $scope.TemsilciChange = function()
+    {
+        $scope.TemsilciListe.forEach(function(item) 
+        {
+            if(item.TEMSILCI == $scope.Temsilci)
+                $scope.TemsilciAdi = item.TEMSILCIADI;
+        });
+        console.log( $scope.TemsilciListe)
+        console.log($scope.Temsilci)
     }
 }
