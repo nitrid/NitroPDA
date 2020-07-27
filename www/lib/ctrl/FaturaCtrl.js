@@ -4,7 +4,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     let IslemSelectedRow = null;
     let StokSelectedRow = null;
     let ParamName = "";
-    
+
     $('#MdlPartiLot').on('hide.bs.modal', function () 
     {
         if($scope.TxtParti == "" && $scope.TxtLot == 0)
@@ -1173,6 +1173,54 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         }
 
         return pData + Space
+    }
+    function directPrint(socket, printData) 
+    {
+        // Type check
+        if (!(printData instanceof Uint8Array)) {
+          console.log("directPrint(): Argument type must be Uint8Array.")
+          return false;
+        }
+        if(printSocket.readyState !== printSocket.OPEN) {
+          console.log("directPrint(): Socket is not open!");
+          return false;
+        }
+        // Serialise, send.
+        var payloadString = JSON.stringify(Array.apply(null, printData));
+        console.log("Sending " + printData.length + " bytes of print data.");
+        printSocket.send(payloadString);
+        return true;
+    }
+    $scope.directPrintFile = function(socket, path)
+    {
+        // Get binary data
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", path, true);
+        oReq.responseType = "arraybuffer";
+        console.log("directPrintFile(): Making request for binary file");
+        
+        oReq.onload = function (oEvent) {
+            console.log("directPrintFile(): Response received");
+            var arrayBuffer = oReq.response; // Note: not oReq.responseText
+            if (arrayBuffer) {
+            var byteArray = new Uint8Array(arrayBuffer);
+            var result = directPrint(socket, byteArray);
+            if(!result) {
+                alert('Failed, check the console for more info.');
+            }
+            }
+        };
+        oReq.send(null);
+    }
+    $scope.directPrintBytes = function(socket, bytes)
+    {
+        var data = new ArrayBuffer(bytes.length);
+        var dataView = new Uint8Array(data, 0, bytes.length);
+        dataView.set(bytes, 0);
+        var result = directPrint(socket, dataView);
+        if(!result) {
+          alert('Failed, check the console for more info.');
+        }
     }
     $scope.BtnPartiLotGetir = function()
     {   
