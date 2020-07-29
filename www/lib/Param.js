@@ -265,14 +265,14 @@ var Param = [
 			"IskontoMatris": "0"
 		},
 		"SatisFatura": {
-			"EvrakTip": "1",
+			"EvrakTip": "0",
 			"Seri": "FTR",
 			"BelgeNo": "",
 			"Cari": "",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
-			"Personel": "01",
+			"Personel": "",
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",

@@ -17,7 +17,7 @@
                                 <option value="1">Toptan Yurtiçi Ticaret</option>
                                 <option value="2">İhraç Kayıtlı Yurtiçi Ticaret</option>
                                 <option value="3">İhraç Kayıtlı Yurtdışı Ticaret</option>
-                                <option value="4">Kapalı Toptan Satış Faturası</option>
+                                <option value="4">Kapalı Toptan Yurtiçi Ticaret</option>
                             </select>
                         </div>
                         <div class="col-4 px-1">
@@ -636,7 +636,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group row my-1">
                         <div class="col-12">
                             <button class="form-group btn btn-block btn-primary my-1" ng-click="BtnPartiLotOlustur()">Oluştur Ve Seç</button>
@@ -753,6 +752,9 @@
     language: "tr"
     });
     $("#ETarih").datepicker({
+    language: "tr"
+    });
+    $("#PTarih").datepicker({
     language: "tr"
     });
 </script>

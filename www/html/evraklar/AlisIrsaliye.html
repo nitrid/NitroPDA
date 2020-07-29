@@ -134,7 +134,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row my-0 py-0">
+                    <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Proje:</div></div>
                         <div class="col-8 px-1">
                             <select class="form-control" ng-model="Proje" ng-disabled="EvrakLock">
@@ -142,13 +142,21 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row my-0 py-0">
+                    <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">DovizTip:</div></div>
                         <div class="col-8 px-1">
                             <select class="form-control" ng-model="DovizChangeKodu" ng-disabled="EvrakLock" ng-change="DovizChange()">
                                 <option value="0">{{DovizSembol}}</option>
                                 <option value="1">{{DovizSembol1}}</option>
                                 <option value="2">{{DovizSembol2}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Adres No:</div></div>
+                        <div class="col-8 px-1">
+                            <select class="form-control" ng-model="AdresNo" ng-disabled="EvrakLock">
+                                <option ng-repeat="option in AdresNoListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
                     </div>
