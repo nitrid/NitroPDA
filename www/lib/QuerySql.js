@@ -70,6 +70,16 @@ var QuerySql =
     {
         query : "SELECT ban_kod AS KODU,ban_ismi AS ADI FROM BANKALAR " ,
     },
+    CmbAdresNo : 
+    {
+        query : "SELECT " +
+                "adr_adres_no AS KODU, " +
+                "adr_cadde AS ADI  " +
+                "FROM CARI_HESAP_ADRESLERI " +
+                "WHERE adr_cari_kod = @adr_cari_kod" ,
+        param : ['adr_cari_kod'],
+        type : ['string|25']
+    },
     CariListeGetir : 
     {
         query : "SELECT " +
@@ -601,7 +611,8 @@ var QuerySql =
             ",[pl_kod7] " +
             ",[pl_kod8] " +
             ",[pl_kod9] " +
-            ",[pl_kod10]) " +
+            ",[pl_kod10] " +
+            ",[pl_uretim_tar]) " +
             "VALUES " +
             "(0 \n" +
             ",0 \n" +
@@ -659,6 +670,7 @@ var QuerySql =
             ",''									--<pl_kod8, nvarchar(25),> \n" +
             ",''									--<pl_kod9, nvarchar(25),> \n" +
             ",''									--<pl_kod10, nvarchar(25),> \n" +
+            ",CONVERT(VARCHAR(10),GETDATE(),112)									--<pl_uretim_tar, datetime,> \n" +
             ")",
         param : ['pl_create_user:int','pl_lastup_user:int','pl_partikodu:string|25','pl_lotno:int','pl_stokkodu:string|25','pl_son_kullanim_tar:date']
     },

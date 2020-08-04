@@ -75,6 +75,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.Special = "1";
         $scope.Aciklama = "";
         $scope.BelgeNo = "";
+        $scope.AdresNo = "0";
         $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.Risk = 0;
         $scope.RiskLimit = 0; 
@@ -93,7 +94,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.PartiLotListe = [];
         $scope.RenkListe = [];
         $scope.BedenListe = [];
-        DepoMiktarListe = [];
+        $scope.DepoMiktarListe = [];
+        $scope.AdresNoListe = [];
 
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -675,7 +677,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             '', // CARİSORUMLULUKMERKEZİ
             $scope.Sorumluluk,
             0,  //VERGİSİZFL
-            0,  // ADRESNO
+            $scope.AdresNo,  // ADRESNO
             $scope.Stok[0].PARTI,
             $scope.Stok[0].LOT,
             $scope.Proje,
@@ -1062,6 +1064,14 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }
 
         return pData + Space
+    }
+    function AdresNoGetir()
+    {
+        db.GetData($scope.Firma,'CmbAdresNo',[$scope.CariKodu],function(data)
+        {
+            $scope.AdresNoListe = data;
+            console.log($scope.AdresNoListe)
+        });
     }
     $scope.MaxSira = async function()
     {   
@@ -1460,6 +1470,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.DovizChangeKodu = "0"
             $scope.DovizChange()
             $scope.MainClick();
+            AdresNoGetir();
         }
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
