@@ -158,7 +158,11 @@ angular.module("app",
     .when("/AmbarFisi",
     {
         templateUrl : "html/evraklar/AmbarFisi.html"
-    });
+    })
+    .when("/DepoDurumRaporu",
+    {
+        templateUrl : "html/rapor/DepoDurumRaporu.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

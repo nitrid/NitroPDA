@@ -342,7 +342,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(CariHarGetir)
                 {
                     $scope.CariHarListe = CariHarGetir;
-                    $scope.Tutar = 0;
+                    //$scope.Tutar = 0; ALİ KEMAL KARACA TARAFINDAN ONAYLANDI :)
                     DipToplamHesapla();
                     FisData(CariHarGetir)
                     $("#TblIslem").jsGrid({data : $scope.CariHarListe});  
@@ -362,6 +362,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     function OdemeEmirleriInsert()
     {
+        console.log($scope.Tutar)
         try 
         {
             var InsertData = 
@@ -396,6 +397,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 
             db.ExecuteTag($scope.Firma,'CekHarInsert',InsertData,function(InsertResult)
             {   
+                console.log(InsertData)
                 //$scope.TahsilatCinsi = "0"
                 $scope.TahsilatCinsiChange();
             });

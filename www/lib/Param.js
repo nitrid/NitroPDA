@@ -251,7 +251,8 @@ var Param = [
 			"Cari Secimli Siparis Durum Raporu": "1",
 			"Durağan Cariler Raporu": "1",
 			"Kasa Rapor": "1",
-			"Stok Hareket Rapor": "1"
+			"Stok Hareket Rapor": "1",
+			"Depo Durum Raporu": "1",
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -370,6 +371,9 @@ var Param = [
 		},
 		"CariEkle": {
 			"CariHarfEkle": "E"
+		},
+		"DepoDurumRaporu": {
+			"Depo": "E"
 		}
 	}
 ]
