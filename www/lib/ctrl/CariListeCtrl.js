@@ -9,6 +9,7 @@ function CariListeCtrl($scope,$window,db)
 
         $scope.CariKodu = "";
         $scope.CariAdi = "";
+        $scope.CariUnvan2 = "";
         $scope.CariAdres = "";
         $scope.TxtCariAra = "";
         $scope.CmbCariAra = "0";
@@ -170,6 +171,7 @@ function CariListeCtrl($scope,$window,db)
             
             $scope.CariKodu = $scope.CariListe[pIndex].KODU;
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
+            $scope.CariUnvan2 = $scope.CariListe[pIndex].UNVAN2;
             $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
             $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
             $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;

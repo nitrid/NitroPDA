@@ -345,8 +345,8 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                     //$scope.Tutar = 0; ALİ KEMAL KARACA TARAFINDAN ONAYLANDI :)
                     DipToplamHesapla();
                     FisData(CariHarGetir)
-                    $("#TblIslem").jsGrid({data : $scope.CariHarListe});  
-                    $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});   
+                    $("#TblIslem").jsGrid({data : $scope.CariHarListe});
+                    $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});
                     
                     if($scope.TahsilatCinsi !=0)
                     {
@@ -369,30 +369,30 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             [
                 UserParam.MikroId,
                 UserParam.MikroId,
-                0, //FİRMA NO
-                0, //ŞUBE NO
-                $scope.SckTip,     //TIP
-                $scope.TrefNo,     //REFNO
+                0,                   //FİRMA NO
+                0,                   //ŞUBE NO
+                $scope.SckTip,       //TIP
+                $scope.TrefNo,       //REFNO
                 $scope.CariAdi,      //BORCLU
-                $scope.Tarih,         //VADE
+                $scope.Tarih,        //VADE
                 $scope.Tutar,        //TUTAR
                 0,                   //DOVIZ
-                0,                   //ODENEN            
+                0,                   //ODENEN
                 0,                   //SAHIPCARİCİNS
                 $scope.CariKodu,     //SAHİPCARİKODU
                 0,                   //CARİGRUPNO
-                $scope.KasaHizmet ,//NEREDECARİCİNS
+                $scope.KasaHizmet ,  //NEREDECARİCİNS
                 $scope.KasaBanka,    //NEREDECARİKODU
-                $scope.KarsiGrupNo, //NEREDECARİGRUPNO
+                $scope.KarsiGrupNo,  //NEREDECARİGRUPNO
                 $scope.Tarih,        //SCKILKHAREKETTARİHİ
                 $scope.Seri,         //İLKEVRAKSERİ
                 $scope.Sira,         //İLKEVRAKSIRA
                 $scope.CariHarListe[$scope.CariHarListe.length - 1].cha_satir_no, //İLKEVRAKSATIRNO
                 $scope.Tarih,        //SONHAREKETTARİHİ
                 1,                   //DOVIZKUR
-                $scope.SntckPoz,      //SCKSONPOZ
-                $scope.Sorumluluk,    //SORUMLULUKMERKEZI
-                ""                    //PROJE 
+                $scope.SntckPoz,     //SCKSONPOZ
+                $scope.Sorumluluk,   //SORUMLULUKMERKEZI
+                ""                   //PROJE
                 ];
 
             db.ExecuteTag($scope.Firma,'CekHarInsert',InsertData,function(InsertResult)
@@ -504,12 +504,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
         $scope.Adres = $scope.CariListe[pIndex].ADRES;
         $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
-        $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+        $scope.Adres2 = $scope.CariListe[pIndex].ADRES2;
         $scope.CariDovizAdi = $scope.CariListe[pIndex].DOVIZSEMBOL; 
-        $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
-        $scope.DovizAnaSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
-        $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
-        $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
+        $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL;
+        $scope.DovizAnaSembol = $scope.CariListe[pIndex].DOVIZSEMBOL;
+        $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1;
+        $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2;
         $scope.DovizChangeKodu = "0"
         $scope.DovizChange()
     }
@@ -736,6 +736,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.Insert = function()
     { 
+        $scope.CariBakiye -= $scope.Tutar;
         if($scope.KasaBanka != "")
         {
             if($scope.Tutar != "")

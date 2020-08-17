@@ -182,6 +182,7 @@ var QuerySql =
                 "ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS BAKIYE," +
                 "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH," +
                 "ISNULL((SELECT adr_ilce + '-' + adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES," +
+                "ISNULL((SELECT adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS IL," +
                 "ISNULL((SELECT adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES1, " +
                 "ISNULL((SELECT adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES2, " +
                 "cari_BUV_tabi_fl AS VERGISIZ," +
@@ -1483,14 +1484,14 @@ var QuerySql =
     {
         query:  "SELECT CONVERT(VARCHAR(10),GETDATE(),112) AS sth_kur_tarihi , " +
                 "ISNULL((SELECT sto_isim from STOKLAR WHERE sto_kod=sth_stok_kod),'') AS ADI , " +
-                "ROUND((sth_tutar / sth_miktar),2) AS FIYAT, " +
+                "CASE WHEN sth_tutar <> 0 AND sth_miktar <> 0 THEN ROUND((sth_tutar / sth_miktar),2) ELSE 0 END AS FIYAT, " +
                 "(select cari_unvan1 from CARI_HESAPLAR WHERE cari_kod=sth_cari_kodu) AS CARIADI, " +
                 "(select som_isim from SORUMLULUK_MERKEZLERI where som_kod=sth_stok_srm_merkezi) AS SORUMLUMERADI, " +
                 "(select cari_per_adi from CARI_PERSONEL_TANIMLARI where cari_per_kod=sth_plasiyer_kodu) AS PERSONELADI," +
                 "sth_miktar AS MIKTAR , " +
                 "sth_miktar2 AS MIKTAR2 , " +
                 "ROUND(sth_tutar,2) AS TUTAR, " + 
-                "(100 * sth_iskonto1) / sth_tutar AS ISKYUZDE , " +
+                "CASE WHEN sth_iskonto1 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto1) / sth_tutar ELSE 0 END AS ISKYUZDE , " +
                 "(SELECT dbo.fn_StokBirimi(sth_stok_kod,sth_birim_pntr)) AS BIRIMADI, " +
                 "(SELECT dbo.fn_StokBirimHesapla(sth_stok_kod,1,sth_miktar,sth_birim_pntr)) AS BIRIM," +
                 "ISNULL((SELECT sto_birim1_ad as ADET FROM STOKLAR WHERE sto_kod = sth_stok_kod),'') AS BIRIM1, " +
@@ -3117,7 +3118,7 @@ var QuerySql =
            ",''                                      --<adr_efatura_alias, nvarchar(120),> \n " + 
            ",''                                      --<adr_eirsaliye_alias, nvarchar(120),>\n" +
            " )",
-        param : ['CARIKOD:string|127','CARIUNVAN1:string|127','CARIUNVAN2:string|127','CARITIP:int','DOVIZ:int','VDAIREADI:string|127','VDAIRENO:string|127','TEMSILCI:string|25','EMAIL:string|50','CARIKOD1:string|127','ADRES1:string|50','ADRES2:string|50','ILCE:string|30','IL:string|25','TELEFON:string|10']
+        param : ['CARIKOD:string|127','CARIUNVAN1:string|127','CARIUNVAN2:string|127','CARITIP:int','DOVIZ:int','VDAIREADI:string|127','VDAIRENO:string|15','TEMSILCI:string|25','EMAIL:string|50','CARIKOD1:string|127','ADRES1:string|50','ADRES2:string|50','ILCE:string|30','IL:string|25','TELEFON:string|10']
     },
     //#region "AKTARIM"
     AdresTbl : 

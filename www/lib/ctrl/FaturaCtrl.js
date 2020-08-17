@@ -2518,7 +2518,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             
             $scope.CariKodu = $scope.CariListe[pIndex].KODU;
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
-            $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
+            $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;
             $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
             $scope.CariDovizCinsi1 = $scope.CariListe[pIndex].DOVIZCINSI1;
             $scope.CariDovizCinsi2 = $scope.CariListe[pIndex].DOVIZCINSI2;
@@ -2850,7 +2850,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             ]
             db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
             {
-
+                
             });
         }
         if(i == $scope.StokHarListe.length)

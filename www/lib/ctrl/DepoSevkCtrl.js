@@ -445,13 +445,15 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
-            {                                 
+            {                              
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(DepoSevkData)
                 {  
+                    console.log("2")
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {   
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
+                    console.log("3")
                     InsertAfterRefresh(DepoSevkData);   
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)

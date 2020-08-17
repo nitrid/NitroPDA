@@ -2243,24 +2243,16 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         if($scope.FisDizaynTip == 0)
         {
             let FisDizayn = "";
-    
-            if(typeof ($scope.TahToplam) == 'undefined')
-            {
-                $scope.TahToplam = 0;
-                $scope.FatSeri = "";
-                $scope.FatSira = 0;
-            }
-    
+
             var TmpQuery = 
             {
                 db : '{M}.' + $scope.Firma,
                 query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
                         "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
-                param:  ['CARIKODU'], 
-                type:   ['string|25'], 
+                param:  ['CARIKODU'],
+                type:   ['string|25'],
                 value:  [$scope.CariKodu]    
             }
-        
             db.GetDataQuery(TmpQuery,function(Data)
             {
                 $scope.CariBakiye = Data[0].BAKIYE
@@ -2369,8 +2361,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         }
     }
     $scope.AciklamaGetir = function()
-    {
-        
+    {   
         db.GetData($scope.Firma,'AciklamaGetir',[0,0,$scope.Seri,$scope.Sira],function(pData)
         {
 
@@ -2427,9 +2418,4 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             alertify.alert("Etiket Yazdıralamadı.");
         }
     }
-    $scope.FiyatListeChange = function()
-    {
-
-    }
-    
 }
