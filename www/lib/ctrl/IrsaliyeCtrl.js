@@ -1935,6 +1935,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
             else
             {
+                console.log($scope.Stok[0].RENKPNTR )
+                console.log($scope.Stok[0].BEDENPNTR)
                 if( $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0)
                 {
                     var TmpQuery = 
@@ -1970,9 +1972,54 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                         type:   ['int','string|50'], 
                                         value:  [$scope.Miktar * $scope.Stok[0].CARPAN,Data.BdnHar_Guid]    
                                     }
-                                    db.ExecuteTag($scope.Firma,'StokHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
+                                    db.GetDataQuery(TmpQuery,function(Data)
                                     {
-                                        
+                                        let UpdateStatus = false;
+
+                                        angular.forEach($scope.IrsaliyeListe,function(value)
+                                        {
+                                            if(value.sth_stok_kod == $scope.Stok[0].KODU)
+                                            {   
+                                                let TmpFiyat  = value.sth_tutar / value.sth_miktar
+                                                let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+                                                let Data = 
+                                                {
+                                                    Param :
+                                                    [
+                                                        TmpMiktar,
+                                                        0,
+                                                        TmpFiyat * TmpMiktar,
+                                                        $scope.Stok[0].TOPTANVERGIPNTR,
+                                                        0, //ISKONTO TUTAR 1
+                                                        0, //ISKONTO TUTAR 2
+                                                        0, //ISKONTO TUTAR 3
+                                                        0, //ISKONTO TUTAR 4
+                                                        0, //ISKONTO TUTAR 5
+                                                        0, //ISKONTO TUTAR 6
+                                                        0, //SATIR ISKONTO TİP 1
+                                                        0, //SATIR ISKONTO TİP 2
+                                                        0, //SATIR ISKONTO TİP 3
+                                                        0, //SATIR ISKONTO TİP 4
+                                                        0, //SATIR ISKONTO TİP 5
+                                                        0, //SATIR ISKONTO TİP 6
+                                                        value.sth_Guid,
+                                                        '00000000-0000-0000-0000-000000000000' //Fat Uid
+                                                    ],
+                                                    BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                                    RenkPntr : $scope.Stok[0].RENKPNTR,
+                                                    Miktar : TmpMiktar,
+                                                    Guid : value.sth_Guid
+                                                };
+                        
+                                                UpdateStatus = true;
+                                                UpdateData(Data);
+                                            }                        
+                                        });
+                        
+                                        if(!UpdateStatus)
+                                        {
+                                            InsertData();
+                                        } 
                                     });
                                 }   
                                 else
