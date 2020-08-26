@@ -538,7 +538,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             0,  // REZERVASYON MİKTAR
             0  // REZERVASYON TESLİM MİKTAR
         ];
-        
+        console.log(Data)
         db.ExecuteTag($scope.Firma,'BedenHarInsert',Data,function(data)
         {   
             if(typeof(data.result.err) == 'undefined')
@@ -1929,110 +1929,66 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 return;
             } 
             $scope.InsertLock = true
-            if(UserParam.Sistem.SatirBirlestir == 0  )
+            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2 )
             {          
                 InsertData();
             }
             else
             {
-                console.log($scope.Stok[0].RENKPNTR )
-                console.log($scope.Stok[0].BEDENPNTR)
-                if( $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0)
+                if($scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0)
                 {
-                    var TmpQuery = 
-                    {
-                        db : '{M}.' + $scope.Firma,
-                        query:  "SELECT sth_Guid FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = @sth_evrakno_seri AND sth_evrakno_sira = @sth_evrakno_sira and sth_stok_kod = @sth_stok_kod ",
-                        param:  ['sth_evrakno_seri','sth_evrakno_sira','sth_stok_kod'], 
-                        type:   ['string|10','int','string|50'], 
-                        value:  [$scope.Seri,$scope.Sira,$scope.Stok[0].KODU]    
-                    }
-                    db.GetDataQuery(TmpQuery,function(Data)
-                    {
+                    let UpdateStatus = false;
 
-                        if(Data.length > 0)
-                        {
-                            var TmpQuery = 
-                            {
-                                db : '{M}.' + $scope.Firma,
-                                query:  "SELECT BdnHar_Guid FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = @BdnHar_Har_uid AND BdnHar_BedenNo = @BdnHar_BedenNo ",
-                                param:  ['BdnHar_Har_uid','BdnHar_BedenNo'], 
-                                type:   ['string|50','int'], 
-                                value:  [Data[0].sth_Guid,Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR)]    
-                            }
-                            db.GetDataQuery(TmpQuery,function(Data)
-                            {
-                                if(Data.length > 0)
-                                {
-                                    var TmpQuery = 
-                                    {
-                                        db : '{M}.' + $scope.Firma,
-                                        query:  "UPDATE BEDEN_HAREKETLERI SET BdnHar_HarGor = BdnHar_HarGor + @BdnHar_HarGor WHERE BdnHar_Guid = @BdnHar_Guid ",
-                                        param:  ['BdnHar_HarGor','BdnHar_Guid'], 
-                                        type:   ['int','string|50'], 
-                                        value:  [$scope.Miktar * $scope.Stok[0].CARPAN,Data.BdnHar_Guid]    
-                                    }
-                                    db.GetDataQuery(TmpQuery,function(Data)
-                                    {
-                                        let UpdateStatus = false;
+                    angular.forEach($scope.IrsaliyeListe,function(value)
+                    {
+                        if(value.sth_stok_kod == $scope.Stok[0].KODU && value.BEDENPNTR == $scope.Stok[0].BEDENPNTR && value.RENKPNTR == $scope.Stok[0].RENKPNTR)
+                        {   
 
-                                        angular.forEach($scope.IrsaliyeListe,function(value)
-                                        {
-                                            if(value.sth_stok_kod == $scope.Stok[0].KODU)
-                                            {   
-                                                let TmpFiyat  = value.sth_tutar / value.sth_miktar
-                                                let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-                                                let Data = 
-                                                {
-                                                    Param :
-                                                    [
-                                                        TmpMiktar,
-                                                        0,
-                                                        TmpFiyat * TmpMiktar,
-                                                        $scope.Stok[0].TOPTANVERGIPNTR,
-                                                        0, //ISKONTO TUTAR 1
-                                                        0, //ISKONTO TUTAR 2
-                                                        0, //ISKONTO TUTAR 3
-                                                        0, //ISKONTO TUTAR 4
-                                                        0, //ISKONTO TUTAR 5
-                                                        0, //ISKONTO TUTAR 6
-                                                        0, //SATIR ISKONTO TİP 1
-                                                        0, //SATIR ISKONTO TİP 2
-                                                        0, //SATIR ISKONTO TİP 3
-                                                        0, //SATIR ISKONTO TİP 4
-                                                        0, //SATIR ISKONTO TİP 5
-                                                        0, //SATIR ISKONTO TİP 6
-                                                        value.sth_Guid,
-                                                        '00000000-0000-0000-0000-000000000000' //Fat Uid
-                                                    ],
-                                                    BedenPntr : $scope.Stok[0].BEDENPNTR,
-                                                    RenkPntr : $scope.Stok[0].RENKPNTR,
-                                                    Miktar : TmpMiktar,
-                                                    Guid : value.sth_Guid
-                                                };
-                        
-                                                UpdateStatus = true;
-                                                UpdateData(Data);
-                                            }                        
-                                        });
-                        
-                                        if(!UpdateStatus)
-                                        {
-                                            InsertData();
-                                        } 
-                                    });
-                                }   
-                                else
-                                {
-                                    InsertData()
-                                }                             
+                            db.ExecuteTag($scope.Firma,'BedenHarGorUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,value.Stok[0].BEDENGUID],function(data)
+                            {
+                                console.log(data)
                             });
-                        }
-                        else
-                        {
-                            InsertData()
-                        }
+
+                            let TmpFiyat  = value.sth_tutar / value.sth_miktar
+                            let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+                            let Data = 
+                            {
+                                Param :
+                                [
+                                    TmpMiktar,
+                                    0,
+                                    TmpFiyat * TmpMiktar,
+                                    $scope.Stok[0].TOPTANVERGIPNTR,
+                                    0, //ISKONTO TUTAR 1
+                                    0, //ISKONTO TUTAR 2
+                                    0, //ISKONTO TUTAR 3
+                                    0, //ISKONTO TUTAR 4
+                                    0, //ISKONTO TUTAR 5
+                                    0, //ISKONTO TUTAR 6
+                                    0, //SATIR ISKONTO TİP 1
+                                    0, //SATIR ISKONTO TİP 2
+                                    0, //SATIR ISKONTO TİP 3
+                                    0, //SATIR ISKONTO TİP 4
+                                    0, //SATIR ISKONTO TİP 5
+                                    0, //SATIR ISKONTO TİP 6
+                                    value.sth_Guid,
+                                    '00000000-0000-0000-0000-000000000000' //Fat Uid
+                                ],
+                                BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                RenkPntr : $scope.Stok[0].RENKPNTR,
+                                Miktar : TmpMiktar,
+                                Guid : value.sth_Guid
+                            };
+    
+                            UpdateStatus = true;
+                            UpdateData(Data);
+                        }                        
                     });
+    
+                    if(!UpdateStatus)
+                    {
+                        InsertData();
+                    } 
                 }
                 else
                 {
@@ -2101,6 +2057,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             if(data.length > 0)
             {
+                console.log(data)
                 Init();
                 InitCariGrid();
                 InitIslemGrid(); 

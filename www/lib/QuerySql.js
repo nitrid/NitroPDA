@@ -1,3 +1,5 @@
+const { type } = require("os");
+
 var QuerySql = 
 {
     Firma : 
@@ -1366,6 +1368,12 @@ var QuerySql =
         query:  "DELETE BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = @BdnHar_Har_uid AND BdnHar_Tipi = @BdnHar_Tipi",
         param:  ['BdnHar_Har_uid','BdnHar_Tipi'],
         type:   ['string|50','int']
+    },
+    BedenHarGorUpdate :
+    {
+        query: "UPDATE BEDEN_HAREKETLERI SET BdnHar_HarGor = BdnHar_HarGor + @BdnHar_HarGor WHERE BdnHar_Guid = @BdnHar_Guid ",
+        param: ['BdnHar_HarGor','BdnHar_Guid'],
+        type: ['int','string|50']
     },
     //Sayım
     SayimGetir : 
