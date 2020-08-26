@@ -123,7 +123,8 @@ function StokRaporCtrl($scope,$window,db)
         $scope.CmbDepoAra = "0";
         $scope.TxtDepoAra = "";
         $scope.DepoAdi = "";
-        $scope.DepoNo = 0;
+        $scope.DepoNo = UserParam.StokRaporu.DepoNo;
+        $scope.DepoDongu();
         $scope.StokAdi = "";
         $scope.StokKodu = "";
         $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
@@ -203,7 +204,7 @@ function StokRaporCtrl($scope,$window,db)
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
-                $scope.DepoListe = data;   
+                $scope.DepoListe = data
                 $("#TblDepo").jsGrid({data : $scope.DepoListe});
             }
             else
@@ -224,7 +225,7 @@ function StokRaporCtrl($scope,$window,db)
             DepoSelectedRow = $row;
 
             $scope.DepoAdi = $scope.DepoListe[pIndex].ADI;
-            $scope.DepoNo =$scope.DepoListe[pIndex].KODU;
+            $scope.DepoNo = $scope.DepoListe[pIndex].KODU;
             $scope.BtnGetir();
             $scope.MainClick();
         }
@@ -250,5 +251,40 @@ function StokRaporCtrl($scope,$window,db)
     {
         $scope.DepoAdi = "";
         $scope.DepoNo = 0;
+    }
+    $scope.DepoDongu = function()
+    {
+        db.GetData($scope.Firma,'DepoAra',['','',$scope.DepoNo,''],function(data)
+        {
+            console.log(data)
+            for (let i = 0; i < data.length; i++)
+            {
+                if($scope.DepoNo == data[i].KODU)
+                {
+                    $scope.DepoAdi = data[i].ADI;
+                }
+            }
+            $scope.BtnGetir()
+            // if(data.length > 0)
+            // {
+            //     $scope.Loading = false;
+            //     $scope.TblLoading = true;
+            //     $scope.DepoListe = data
+            //     console.log(data)
+            //     for(i = 0; i < $scope.DepoListe.length; i++)
+            //     {
+            //         for(x = 0; x < $scope.DepoListe[i].KODU; x++)
+            //         {
+            //             if($scope.DepoNo == $scope.DepoListe[i].KODU)
+            //             {
+            //                 console.log($scope.DepoListe[x].ADI)
+            //                 $scope.DepoAdi = $scope.DepoListe[x].ADI
+            //             }
+            //         }
+            //     }
+
+            //     $("#TblDepo").jsGrid({data : $scope.DepoListe});
+            // }
+        });
     }
 }

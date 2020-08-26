@@ -30,6 +30,9 @@ var Param = [
 			"RiskLimitOran": "70",
 			"FisDizayn": "1"
 		},
+		"StokRaporu": {
+			"DepoNo": "4",
+		},
 		"Sayim": {
 			"EvrakNo": "1",
 			"DepoNo": "1",
@@ -228,6 +231,7 @@ var Param = [
 			"Depo Sipariş": "1",
 			"Depo Mal Kabul": "1",
 			"Depo Nakliye": "0",
+			"Depo Durum Raporu": "0",
 			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
