@@ -275,29 +275,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 width: 100
             },
             {
-                name: "sth_iskonto2",
-                title: "IND2",
+                name: "RENK",
+                title: "RENK",
                 type: "number",
                 align: "center",
                 width: 100
             },
             {
-                name: "sth_iskonto3",
-                title: "IND3",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sth_iskonto4",
-                title: "IND4",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "sth_iskonto5",
-                title: "IND5",
+                name: "BEDEN",
+                title: "BEDEN",
                 type: "number",
                 align: "center",
                 width: 100
@@ -1289,7 +1275,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             return Item.PNTR == $scope.Stok[0].RENKPNTR;
         })[0].KIRILIM;
-        
+
         $scope.Stok[0].BEDEN = $.grep($scope.BedenListe, function (Item) 
         {
             return Item.PNTR == $scope.Stok[0].BEDENPNTR;
@@ -2055,6 +2041,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     {
         db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],async function(data)
         {
+            console.log(data)
             if(data.length > 0)
             {
                 console.log(data)

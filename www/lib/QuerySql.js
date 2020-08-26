@@ -1520,6 +1520,8 @@ var QuerySql =
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0) AS RENKPNTR , " +
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0) AS BEDENPNTR , " +
                 "ISNULL((SELECT TOP 1 BdnHar_Guid FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),'00000000-0000-0000-0000-000000000000') AS BEDENGUID , " +
+                "(SELECT dbo.fn_renk_kirilimi(ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0),(SELECT TOP 1 sto_renk_kodu FROM STOKLAR WHERE sto_kod = sth_stok_kod))) AS RENK ," +
+                "(SELECT dbo.fn_beden_kirilimi(ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0),(SELECT TOP 1 sto_beden_kodu FROM STOKLAR WHERE sto_kod = sth_stok_kod))) AS BEDEN ," +
                 "ISNULL((SELECT sip_evrakno_seri from SIPARISLER WHERE sip_Guid = sth_sip_uid),'') AS SIPSERI ," +
                 "ISNULL((SELECT sip_evrakno_sira from SIPARISLER WHERE sip_Guid = sth_sip_uid),0) AS SIPSIRA ," +
                 "* FROM STOK_HAREKETLERI " +
