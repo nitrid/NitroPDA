@@ -1944,7 +1944,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         if(value.sth_stok_kod == $scope.Stok[0].KODU && value.BEDENPNTR == $scope.Stok[0].BEDENPNTR && value.RENKPNTR == $scope.Stok[0].RENKPNTR)
                         {   
 
-                            db.ExecuteTag($scope.Firma,'BedenHarGorUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,value.Stok[0].BEDENGUID],function(data)
+                            db.ExecuteTag($scope.Firma,'BedenHarGorUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,value.BEDENGUID],function(data)
                             {
                                 console.log(data)
                             });

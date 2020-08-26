@@ -1,5 +1,3 @@
-const { type } = require("os");
-
 var QuerySql = 
 {
     Firma : 
@@ -241,8 +239,8 @@ var QuerySql =
                 "bar_partikodu AS PARTI, " +
                 "bar_lotno AS LOT, " +
                 "bar_barkodtipi AS BARKODTIP, " +
-                "(SELECT dbo.fn_beden_kirilimi (bar_bedenpntr,sto_beden_kodu)) AS BEDEN, " +
-                "(SELECT dbo.fn_renk_kirilimi (bar_renkpntr,sto_renk_kodu)) AS RENK, " +
+                "ISNULL((SELECT dbo.fn_beden_kirilimi (bar_bedenpntr,sto_beden_kodu)),0) AS BEDEN, " +
+                "ISNULL((SELECT dbo.fn_renk_kirilimi (bar_renkpntr,sto_renk_kodu)),0) AS RENK, " +
                 "(SELECT dbo.fn_VergiYuzde (sto_perakende_vergi)) AS PERAKENDEVERGI, " +
                 "(SELECT dbo.fn_VergiYuzde (sto_toptan_vergi)) AS TOPTANVERGI, " +
                 "ISNULL((SELECT dbo.fn_StokBirimHesapla (sto_kod,bar_birimpntr,1,1)),1) AS KATSAYI, " +
