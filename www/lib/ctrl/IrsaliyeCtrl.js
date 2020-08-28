@@ -532,6 +532,11 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,11],function(BedenData)
                 {
                     $scope.BedenHarListe = BedenData;
+                    db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(IrsaliyeData)
+                    {
+                        InsertAfterRefresh(IrsaliyeData);
+                    });
+
                 });
             }
             else
