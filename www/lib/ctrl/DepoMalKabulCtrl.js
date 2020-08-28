@@ -208,6 +208,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             updateOnResize: true,
             heading: true,
             selecting: true,
+            editing: true,
             data : $scope.SiparisListeGetir,
             paging : true,
             pageSize: 10,
