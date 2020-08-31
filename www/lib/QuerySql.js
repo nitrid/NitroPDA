@@ -239,8 +239,8 @@ var QuerySql =
                 "bar_partikodu AS PARTI, " +
                 "bar_lotno AS LOT, " +
                 "bar_barkodtipi AS BARKODTIP, " +
-                "(SELECT dbo.fn_beden_kirilimi (bar_bedenpntr,sto_beden_kodu)) AS BEDEN, " +
-                "(SELECT dbo.fn_renk_kirilimi (bar_renkpntr,sto_renk_kodu)) AS RENK, " +
+                "ISNULL((SELECT dbo.fn_beden_kirilimi (bar_bedenpntr,sto_beden_kodu)),0) AS BEDEN, " +
+                "ISNULL((SELECT dbo.fn_renk_kirilimi (bar_renkpntr,sto_renk_kodu)),0) AS RENK, " +
                 "(SELECT dbo.fn_VergiYuzde (sto_perakende_vergi)) AS PERAKENDEVERGI, " +
                 "(SELECT dbo.fn_VergiYuzde (sto_toptan_vergi)) AS TOPTANVERGI, " +
                 "ISNULL((SELECT dbo.fn_StokBirimHesapla (sto_kod,bar_birimpntr,1,1)),1) AS KATSAYI, " +
@@ -1367,6 +1367,12 @@ var QuerySql =
         param:  ['BdnHar_Har_uid','BdnHar_Tipi'],
         type:   ['string|50','int']
     },
+    BedenHarGorUpdate :
+    {
+        query: "UPDATE BEDEN_HAREKETLERI SET BdnHar_HarGor = BdnHar_HarGor + @BdnHar_HarGor WHERE BdnHar_Guid = @BdnHar_Guid ",
+        param: ['BdnHar_HarGor','BdnHar_Guid'],
+        type: ['int','string|50']
+    },
     //Sayım
     SayimGetir : 
     {
@@ -1514,6 +1520,8 @@ var QuerySql =
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0) AS RENKPNTR , " +
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0) AS BEDENPNTR , " +
                 "ISNULL((SELECT TOP 1 BdnHar_Guid FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),'00000000-0000-0000-0000-000000000000') AS BEDENGUID , " +
+                "(SELECT dbo.fn_renk_kirilimi(ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0),(SELECT TOP 1 sto_renk_kodu FROM STOKLAR WHERE sto_kod = sth_stok_kod))) AS RENK ," +
+                "(SELECT dbo.fn_beden_kirilimi(ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0),(SELECT TOP 1 sto_beden_kodu FROM STOKLAR WHERE sto_kod = sth_stok_kod))) AS BEDEN ," +
                 "ISNULL((SELECT sip_evrakno_seri from SIPARISLER WHERE sip_Guid = sth_sip_uid),'') AS SIPSERI ," +
                 "ISNULL((SELECT sip_evrakno_sira from SIPARISLER WHERE sip_Guid = sth_sip_uid),0) AS SIPSIRA ," +
                 "* FROM STOK_HAREKETLERI " +
