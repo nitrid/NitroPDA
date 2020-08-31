@@ -3,6 +3,7 @@ const admzip = require('adm-zip');
 const md5 = require('md5');
 const fastparser = require("fast-xml-parser").j2xParser;
 const soap = require('soap');
+const sql = require('./sqllib');
 
 let SemaObj =
 {
@@ -16,7 +17,7 @@ let SemaObj =
                 UUID : "8B746B7D-48D6-462B-AAA8-1CB7BE3E8E99",
                 TransactionType : 1,
                 TransactionSerial : "IRSA",
-                TransactionNumber : 3,
+                TransactionNumber : 4,
                 TransactionDate : "2020-08-04",
                 TransactionUserId : 1,
                 DocumentDate : "2020-08-04",
@@ -357,24 +358,49 @@ function eIrsValid(pArgs)
         });
     });
 }
+function SqlQuery(pQuery)
+{
+    return new Promise(resolve => 
+    {
+        let msql = new sql(pQuery.db.server,pQuery.db.db,pQuery.db.uid,pQuery.db.pwd,false);
+        msql.QueryPromise(pQuery.collection,function(result)
+        {
+            resolve(JSON.parse(result))
+            console.log(JSON.parse(result).recordset[0]);
+        });
+    });
+}
 
 eIrsGonder();
 
 async function eIrsGonder()
 {
-    let TmpUid = uuidv4().toString().toUpperCase();
+    let pQuery =
+    {
+        db: {server:"192.168.100.12",db:"MikroDB_V16_TESTALI",uid:"beka",pwd:"1122334455"},
+        collection : 
+        {
+            query : "SELECT * FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = 'TST' AND sth_evrakno_sira = 1 AND sth_evraktip = 1"
+        }
+    }
+    
+    let TmpData = await SqlQuery(pQuery);
+    
+    if(typeof TmpData.recordset != 'undefined')
+    {
+        let TmpUid = uuidv4().toString().toUpperCase();
 
-    let sessionId = await Login();
-    let TmpXml = await eIrsXml(TmpUid);
-    let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
-
-    // if(typeof TmpSend != 'undefined')
-    // {
-    //     console.log(TmpSend);
-    // }
-    //console.log(await eIrsDurum(sessionId,"0FA9370B-9820-4E38-9B1A-92CFE45DE97E"))
-    await Logout(sessionId);
+        let sessionId = await Login();
+        let TmpXml = await eIrsXml(TmpUid,TmpData);
+        // let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
+    
+        // if(typeof TmpSend != 'undefined')
+        // {
+        //     console.log(TmpSend);
+        // }
+        
+        //console.log(await eIrsDurum(sessionId,"A3ED0B46-10F6-41FF-9875-C41A53419D52"));
+        await Logout(sessionId);
+    }
+    
 }
-
-
-
