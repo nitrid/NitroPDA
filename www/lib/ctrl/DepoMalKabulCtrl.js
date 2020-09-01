@@ -428,7 +428,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     {
         $timeout( function(){$window.document.getElementById("Barkod").focus();},100);
     }
-    function StokBarkodGetir(pBarkod)
+    function  StokBarkodGetir(pBarkod)
     {
         if(pBarkod != '')
         {
