@@ -1987,7 +1987,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             {   
                 CariHarInsert(function(pResult)
                 {   
-                    if(pResult)
+                    if(pResult == true && $scope.ChaGuid != null)
                     {
                         StokHarInsert();     
                     }
@@ -1997,8 +1997,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             {   
                 if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                 {
+                    console.log(2)
                     StokHarInsert(function(pResult)
                     {
+                        console.log(3)
                         if(pResult)
                         {
                             CariHarUpdate(); 
