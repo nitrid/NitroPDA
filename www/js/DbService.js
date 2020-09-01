@@ -848,5 +848,12 @@ angular.module('app.db', []).service('db',function($rootScope)
             pCallback(true);
         }
     }
+    this.EIrsGonder = function()
+    {
+        _Socket.emit('EIrsGonder', {t:"mahir"}, function (data) 
+        {
+            console.log(data);
+        });
+    }
      //#endregion "PUBLIC"
 });

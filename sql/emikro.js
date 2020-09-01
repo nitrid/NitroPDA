@@ -374,7 +374,7 @@ function SqlQuery(pQuery)
     });
 }
 
-eIrsGonder();
+//eIrsGonder();
 
 async function eIrsGonder()
 {
@@ -395,7 +395,7 @@ async function eIrsGonder()
         let TmpUid = uuidv4().toString().toUpperCase();
 
         let sessionId = await Login();
-        let TmpXml = await eIrsXml(TmpUid,TmpData.recordset);
+        //let TmpXml = await eIrsXml(TmpUid,TmpData.recordset);
         // let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
     
         // if(typeof TmpSend != 'undefined')
@@ -403,8 +403,10 @@ async function eIrsGonder()
         //     console.log(TmpSend);
         // }
         
-        //console.log(await eIrsDurum(sessionId,"A3ED0B46-10F6-41FF-9875-C41A53419D52"));
+        console.log(await eIrsDurum(sessionId,"1AFA00B1-39C9-4843-BEF4-4D9E52DC0591"));
         await Logout(sessionId);
     }
     
 }
+
+module.exports.eIrsGonder =  eIrsGonder;

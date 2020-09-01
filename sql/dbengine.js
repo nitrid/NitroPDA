@@ -2,6 +2,7 @@ var fs = require('fs');
 var _sql = require("./sqllib");
 var io = require('socket.io')();
 var lic = require('./license');
+var emikro = require('./emikro');
 
 var msql;
 var tsql;
@@ -295,6 +296,12 @@ io.on('connection', function(socket)
     socket.on("ConfigRead",function(pParam,fn)
     {
         fn(config);
+    });
+    socket.on('EIrsGonder',function(pParam,fn)
+    {
+        console.log(pParam)
+        emikro.eIrsGonder();
+        fn("reco")
     });
 });
 
