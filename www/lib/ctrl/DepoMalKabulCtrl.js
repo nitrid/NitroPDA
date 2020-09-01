@@ -215,12 +215,32 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
+                { 
+                    itemTemplate: function(_, item) 
+                    {
+                        
+                        return $("<button type='submit' class='btn btn-primary btn-block btn-sm'></button>").text("D")
+                            .on("click", function() 
+                            {
+                                $scope.ManuelGiris(item);
+                            });
+                    },
+                    width: 45
+                },
+                { type: "control" },
                 {
                     name: "ADI",
                     title: "ADI",
                     type: "text",
                     align: "center",
                     width: 200
+                },
+                {
+                    name: "MIKTAR",
+                    title: "MİKTAR",
+                    type: "number",
+                    align: "center",
+                    width: 100
                 },
                 {
                     name: "SIPMIKTAR",
@@ -245,11 +265,11 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                 }
              
             ],
-            rowClick: function(args)
-            {
-                $scope.SiparisListeGetirRowClick(args.itemIndex,args.item,this);
-                $scope.$apply();
-            }
+          //  rowClick: function(args)
+          //  {
+          //      $scope.SiparisListeGetirRowClick(args.itemIndex,args.item,this);
+          //      $scope.$apply();
+          //  }
         });
     }
     function InsertData(pCallback)
@@ -1119,4 +1139,11 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     {
         $("#TbBarkodGiris").removeClass('active');
     }
+    $scope.ManuelGiris = function(pItem)
+     {
+         $scope.Barkod = pItem.BARKOD
+        StokBarkodGetir(pItem.BARKOD)
+        $scope.Miktar = pItem.MIKTAR
+        $scope.Insert()
+     }
 }
