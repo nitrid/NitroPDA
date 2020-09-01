@@ -245,12 +245,14 @@ function Logout(pSessionId)
         });
     });
 }
-function eIrsXml(pUid)
+function eIrsXml(pUid,pData)
 {
     return new Promise(resolve => 
     {
         let TmpSema = {...SemaObj};
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.UUID = pUid;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionSerial = pData[0].SERI;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionNumber = pData[0].SIRA;
 
         var defaultOptions = 
         {
@@ -261,6 +263,7 @@ function eIrsXml(pUid)
         var parser = new fastparser(defaultOptions);
         var xml = "<?xml version='1.0' encoding='UTF-8'?>" + parser.parse(TmpSema);
         parser.Xrite
+        
         resolve(xml);
     });
     
@@ -380,24 +383,25 @@ async function eIrsGonder()
         db: {server:"192.168.100.12",db:"MikroDB_V16_TESTALI",uid:"beka",pwd:"1122334455"},
         collection : 
         {
-            query : "SELECT * FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = 'TST' AND sth_evrakno_sira = 1 AND sth_evraktip = 1"
+            query : "SELECT sth_evrakno_seri AS SERI, " +
+                    "sth_evrakno_sira AS SIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = 'TST' AND sth_evrakno_sira = 1 AND sth_evraktip = 1"
         }
     }
     
     let TmpData = await SqlQuery(pQuery);
     
     if(typeof TmpData.recordset != 'undefined')
-    {
+    {        
         let TmpUid = uuidv4().toString().toUpperCase();
 
         let sessionId = await Login();
-        let TmpXml = await eIrsXml(TmpUid,TmpData);
-        let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
+        let TmpXml = await eIrsXml(TmpUid,TmpData.recordset);
+        // let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
     
-        if(typeof TmpSend != 'undefined')
-        {
-            console.log(TmpSend);
-        }
+        // if(typeof TmpSend != 'undefined')
+        // {
+        //     console.log(TmpSend);
+        // }
         
         //console.log(await eIrsDurum(sessionId,"A3ED0B46-10F6-41FF-9875-C41A53419D52"));
         await Logout(sessionId);
