@@ -17,10 +17,10 @@ let SemaObj =
                 UUID : "8B746B7D-48D6-462B-AAA8-1CB7BE3E8E99",
                 TransactionType : 1,
                 TransactionSerial : "IRSA",
-                TransactionNumber : 4,
-                TransactionDate : "2020-08-04",
+                TransactionNumber : 6,
+                TransactionDate : "2020-08-31",
                 TransactionUserId : 1,
-                DocumentDate : "2020-08-04",
+                DocumentDate : "2020-08-31",
                 DocumentTime : "10:00:35",
                 ProfileID : "TEMELIRSALIYE",
                 CopyIndicator : false,
@@ -143,7 +143,7 @@ let SemaObj =
                         },
                         Despatch : 
                         {
-                            ActualDespatchDate : "2020-06-27",
+                            ActualDespatchDate : "2020-08-31",
                             ActualDespatchTime : "00:00:00"
                         }
                     }
@@ -366,7 +366,7 @@ function SqlQuery(pQuery)
         msql.QueryPromise(pQuery.collection,function(result)
         {
             resolve(JSON.parse(result))
-            console.log(JSON.parse(result).recordset[0]);
+            //console.log(JSON.parse(result).recordset[0]);
         });
     });
 }
@@ -392,12 +392,12 @@ async function eIrsGonder()
 
         let sessionId = await Login();
         let TmpXml = await eIrsXml(TmpUid,TmpData);
-        // let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
+        let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
     
-        // if(typeof TmpSend != 'undefined')
-        // {
-        //     console.log(TmpSend);
-        // }
+        if(typeof TmpSend != 'undefined')
+        {
+            console.log(TmpSend);
+        }
         
         //console.log(await eIrsDurum(sessionId,"A3ED0B46-10F6-41FF-9875-C41A53419D52"));
         await Logout(sessionId);
