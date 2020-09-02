@@ -378,7 +378,7 @@
                                 <button class="dropdown-item"  ng-click="BtnVergiDuzenle()" data-toggle="modal" role="menu-item">Vergi Düzenle</button>
                                 <button class="dropdown-item"  ng-click="BtnOnlineYazdir()"  role="menu-item">Online Yazdır</button>
                                 <button class="dropdown-item" ng-click="BtnEtiketBas()" role="menu-item">Etiket Bas</button>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                     <div class="row py-1 px-1">
@@ -388,7 +388,7 @@
                         <div class="col-4">
                             <div class="row">
                                 <div class="col-12">
-                                    <button class="btn btn-block btn-primary h-60" ng-click="BtnFisYazdir()">
+                                    <button class="btn btn-block btn-primary h-60" ng-click="DizaynSec()">
                                         <span class="glyphicon glyphicon-print"  aria-hidden="true" ></span>
                                     </button>
                                 </div>
@@ -707,6 +707,32 @@
                     </div>
                     <div class="row px-10">
                         <button type="submit" class="btn btn-primary btn-block col-12" ng-click="BtnDuzenleKaydet(this.IslemListeSelectedIndex)">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fiş Dizayn Seç Modal-->
+    <div class="modal fade" id="MdlDizaynEkran" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Dizayn Seç</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row my-5">
+                        <div class="col-8 px-1">
+                            <select class="form-control form-control" ng-model="FisDizaynTip" ng-change="DizaynChange()">
+                                <option value="0">Dizayn 1</option>
+                                <option value="1">Dizayn 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row px-10">
+                        <button type="submit" class="btn btn-primary btn-block col-12" ng-click="BtnFisYazdir()">Yazdır</button>
                     </div>
                 </div>
             </div>

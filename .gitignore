@@ -5,3 +5,4 @@ log/
 www/theme/base/html/
 daemon/
 *.zip
+package-lock
