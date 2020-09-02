@@ -264,27 +264,6 @@ function StokRaporCtrl($scope,$window,db)
                     $scope.DepoAdi = data[i].ADI;
                 }
             }
-            $scope.BtnGetir()
-            // if(data.length > 0)
-            // {
-            //     $scope.Loading = false;
-            //     $scope.TblLoading = true;
-            //     $scope.DepoListe = data
-            //     console.log(data)
-            //     for(i = 0; i < $scope.DepoListe.length; i++)
-            //     {
-            //         for(x = 0; x < $scope.DepoListe[i].KODU; x++)
-            //         {
-            //             if($scope.DepoNo == $scope.DepoListe[i].KODU)
-            //             {
-            //                 console.log($scope.DepoListe[x].ADI)
-            //                 $scope.DepoAdi = $scope.DepoListe[x].ADI
-            //             }
-            //         }
-            //     }
-
-            //     $("#TblDepo").jsGrid({data : $scope.DepoListe});
-            // }
         });
     }
 }

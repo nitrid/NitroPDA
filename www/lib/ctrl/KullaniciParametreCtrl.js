@@ -162,7 +162,7 @@ function KullaniciParametreCtrl($scope,$window,db)
         function()
         {             
             db.Emit('ParamSave',[Param,File]);
-            $("#Modal1").show();
+            $("#Grup2").show();
             alertify.okBtn('Tamam');
             alertify.alert('Ayarlar kaydedildi');
         }
