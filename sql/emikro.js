@@ -258,10 +258,18 @@ function eIrsXml(pUid,pData)
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PartyName.Name = pData[0].FIRMAUNVAN
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.StreetName = pData[0].SUBESOKAK  +'/' + pData[0].SUBECADDE
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.CitySubdivisionName = pData[0].SUBEILCE
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.CityName = pData[0].SUBEILCE
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.CityName = pData[0].SUBEIL
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.Country.IdentificationCode = 'TR'
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.Country.Name = pData[0].SUBEULKE
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PartyTaxScheme.TaxScheme.Name = pData[0].VDADI
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PartyIdentification.ID = pData[0].CARIVKNO
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PartyName.Name = pData[0].CARIUNVAN1
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.StreetName = pData[0].CARISOKAK  +'/' + pData[0].CARICADDE
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.CitySubdivisionName = pData[0].CARIILCE
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.CityName = pData[0].CARIIL
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.Country.IdentificationCode = 'TR'
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.Country.Name = pData[0].SUBEULKE
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PartyTaxScheme.TaxScheme.Name = pData[0].CARIVDADI
 
         var defaultOptions = 
         {
