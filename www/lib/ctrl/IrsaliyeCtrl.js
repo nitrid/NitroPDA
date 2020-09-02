@@ -2051,10 +2051,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     {
         db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],async function(data)
         {
-            console.log(data)
             if(data.length > 0)
             {
-                console.log(data)
+                
                 Init();
                 InitCariGrid();
                 InitIslemGrid(); 
