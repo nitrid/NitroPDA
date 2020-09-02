@@ -96,8 +96,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.RenkListe = [];
         $scope.BedenListe = [];
         DepoMiktarListe = [];
-        $scope.FisListe = [];
-
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
         $scope.NetToplam = 0;
@@ -1018,11 +1016,11 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
            try 
            {
                 $scope.FisDeger = "";
-                $scope.FisDeger = "                                    " + $scope.Tarih + "\n" + "                                    " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,30) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
+                $scope.FisDeger = "                                    " + $scope.Tarih + "\n" + "                                    " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,10) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
     
                 for(let i=0; i < pData.length; i++)
                 {
-                    $scope.FisData = $scope.FisData + SpaceLength(pData[i].ADI.substring(0,20),20) + "          " + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),4) + " " + SpaceLength(pData[i].BIRIMADI,4) + "\n";
+                    $scope.FisData = $scope.FisData + SpaceLength(pData[i].ADI.substring(0,20),20) + "          " +   SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),4) + " " + SpaceLength(pData[i].BIRIMADI,4) + "\n";
                 } 
            } 
            catch (error) 
@@ -1041,7 +1039,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     
                 for(let i=0; i < pData.length; i++)
                 {
-                   $scope.FisData = $scope.FisData + SpaceLength(pData[i].ADI.substring(0,44),46) + " " + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),10) + " " + SpaceLength(pData[i].FIYAT,10) + SpaceLength(pData[i].TUTAR,6) + "\n";       
+                   $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI.substring(0,28),30) + SpaceLength(pData[i].RENK + " " + pData[i].BEDEN,20) + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),6) +  SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),7) + " " +SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),7) + "\n";       
                 } 
            } 
            catch (error) 
@@ -2495,29 +2493,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         if($scope.FisDizaynTip == "0")
         {
             let FisDizayn = "";
-            if($scope.FisLength.length <= 4)
-            {
-                for(let x = 0; x <= 1; x++)
-                {
-                    console.log($scope.FisLength[x])
-                    console.log($scope.FisLength.length)
-                    if($scope.FisLength[1])
-                    {
-                        console.log(2)
-                        let Satır = "";
-                        for(let x; x <= 3; x++)
-                        {
-                            Satır += "                                                                    -" + "\n"; 
-                        }
-                    }
-                }
-            }
 
-            let i = 2 - $scope.FisLength.length;
+            let i = 35 - $scope.FisLength.length;
             let Satır = "";
             for(let x = 0; x <= i; x++)
             {    
-                Satır += "                                                                    -" + "\n"; 
+                Satır = Satır + "                                             -"+ "\n"; 
             } 
             FisDizayn = "                                             -" + "\n" + 
             "                   ESER GIDA                  " + "\n" +
@@ -2547,23 +2528,20 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             let FisDizayn = "";
             let FisDeger = "";
-            let i = 53 - $scope.FisLength.length;
+            let i = 51 - $scope.FisLength.length;
             let Satır = "";
-            let Satır2 = "";
             for(let x = 0; x <= i; x++)
             {    
-                Satır += "                                                                    -" + "\n"; 
-            } 
+                Satır += "                                                                   -" + "\n"; 
+            }
             FisDeger = FisDeger + "                                " + "\n" 
             FisDeger = FisDeger + SpaceLength($scope.CariAdi.substring(0,61),63) + $scope.Seri + "-" +  $scope.Sira + "\n" + SpaceLength($scope.CariSoyAdi.substring(0,43),45) + SpaceLength($scope.Il.substring(0,16),18) +  $scope.Tarih + "\n" + "                                                               " + $scope.Saat + "\n";
             FisDizayn = "                                             " + "\n" + 
             FisDeger +                                       
             "        " + "\n" + 
             "                                              " + "\n" +
-            $scope.FisData + "\n" + Satır + Satır2 
-            FisDizayn = FisDizayn + "MIKTAR TOPLAM : " + db.SumColumn($scope.FisLength,"MIKTAR") + "\n" + "                                        ARA TOPLAM     : " +$scope.AraToplam + "\n" +"                                        TOPLAM KDV     : " + parseFloat($scope.ToplamKdv.toFixed(2),7) + "\n" +"                                        TOPLAM INDIRIM : " + $scope.ToplamIndirim + "\n" + "                                        GENEL TOPLAM   : "+ parseFloat($scope.GenelToplam.toFixed(2),7) +
-            "                                                                      " + "\n" +
-            "                                                                    - " + "\n "
+            $scope.FisData + "\n"  
+            FisDizayn = FisDizayn + "MIKTAR TOPLAM : " + db.SumColumn($scope.FisLength,"MIKTAR") + "\n" + "                                               ARA TOPLAM     : " +$scope.AraToplam + "\n" +"                                               TOPLAM KDV     : " + parseFloat($scope.ToplamKdv.toFixed(2),7) + "\n" +"                                               TOPLAM INDIRIM : " + $scope.ToplamIndirim + "\n" + "                                               GENEL TOPLAM   : "+ parseFloat($scope.GenelToplam.toFixed(2),7)+"\n" + Satır
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u").split("ı").join("i");
             
             console.log(FisDizayn)
