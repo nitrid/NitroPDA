@@ -2,7 +2,7 @@ var fs = require('fs');
 var _sql = require("./sqllib");
 var io = require('socket.io')();
 var lic = require('./license');
-var emikro = require('./emikro');
+//var emikro = require('./emikro');
 
 var msql;
 var tsql;
