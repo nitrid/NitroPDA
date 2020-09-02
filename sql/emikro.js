@@ -253,7 +253,7 @@ function eIrsXml(pUid,pData)
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.UUID = pUid;
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionSerial = pData[0].SERI;
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionNumber = pData[0].SIRA;
-
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionType  = pData[0].EVRAKTIP
         var defaultOptions = 
         {
             attributeNamePrefix : "@_",
@@ -384,7 +384,14 @@ async function eIrsGonder()
         collection : 
         {
             query : "SELECT sth_evrakno_seri AS SERI, " +
-                    "sth_evrakno_sira AS SIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = 'TST' AND sth_evrakno_sira = 1 AND sth_evraktip = 1"
+                    "sth_evrakno_sira AS SIRA" +
+                    "sth_evraktip AS EVRAKTIP" +
+                    "sth_evrakno_sira AS SIRA" +
+                    "CONVERT(VARCHAR,sth_tarih, 23) AS TARIH" +
+                    "CONVERT(VARCHAR,sth_belge_tarih, 23) AS BELGETARIH" +
+                    "CONVERT(VARCHAR, sth_lastup_date, 8) AS BELGEZAMAN" +
+                    " FROM STOK_HAREKETLERI " +
+                    " WHERE sth_evrakno_seri = 'TST' AND sth_evrakno_sira = 1 AND sth_evraktip = 1"
         }
     }
     
