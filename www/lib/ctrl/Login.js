@@ -38,7 +38,6 @@ function Login ($scope,$rootScope,$window,db)
         }
         
         $scope.DepoNo = "";
-        
 
         if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
         {
@@ -48,7 +47,7 @@ function Login ($scope,$rootScope,$window,db)
         if (typeof localStorage.host == 'undefined')
         {
             localStorage.mode = "true";
-            $scope.server_adress = window.location.hostname;            
+            $scope.server_adress = window.location.hostname;
             $scope.HostSettingSave();
         }
          db.Connection(function(data)
@@ -85,6 +84,7 @@ function Login ($scope,$rootScope,$window,db)
     }    
     $scope.FirmaClick = function()
     {
+        console.log(1)
          for(i = 0;i < Param.length;i++)
         {
             console.log($scope.Kullanici )
@@ -354,11 +354,10 @@ function Login ($scope,$rootScope,$window,db)
      $(document).ready(function(){
      $("sifreleave").mouseleave(function()
       {
-          if(typeof($scope.Password) != 'undefined')
-          {
-               $scope.FirmaClick()
-          }
-         
+       if(typeof($scope.Password) != 'undefined')
+       {
+            $scope.FirmaClick()
+       }
       });
     });
 }

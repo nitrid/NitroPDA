@@ -423,6 +423,7 @@ var LocalDb =
                 console.log("No listeners found for " + evt);
             }
         }
+        
         LocalDb.prototype.On = function(evt, callback) 
         {
             //console.log("Listener added: " + evt);

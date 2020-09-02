@@ -467,14 +467,14 @@
                     </div>
                     <div class="form-group row my-1">
                         <div class="col-4 px-1">
-                            <select class="form-control" ng-model="StokGridTip" ng-disabled="EvrakLock">
+                            <select class="form-control" ng-model="StokGridTip" >
                                 <option value="0">ADI</option>
                                 <option value="1">KODU</option>
                             </select>
                         </div>
                         <div class="col-8 px-1">
                             <div class="input-group">
-                                <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText" ng-disabled="EvrakLock">
+                                <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText">
                                 <span class="input-group-append">
                                     <button type="submit" class="btn btn-primary" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
                                 </span>
@@ -493,7 +493,14 @@
             </div>
         </div>
     </div>
-    
+    <div id = "FisBilgi" style="display: none;">
+                ESER GIDA<br>
+        SÜT VE SÜT ÜRÜNLERİ PAZARLAMA<br>
+Merkez: Vişnelik Mh. Atatürk Bulvari No:177/8 <br>
+TEL:0222 330 42 42 Odunpazari/ESKİŞEHİR <br>  
+Şube1 : Ortaköy Mh. TÜVTÜRK Yani No: 379 MUĞLA<br>
+Tel:0252 214 78 58 muglasutas@hotmail.com<br>
+    </div>
     <!-- MODALLAR -->
     <!-- Evrak Getir Modal Başlangıç-->
     <div class="modal fade" id="MdlEvrakGetir" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">

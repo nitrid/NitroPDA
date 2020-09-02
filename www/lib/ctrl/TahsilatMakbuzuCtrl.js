@@ -342,11 +342,11 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(CariHarGetir)
                 {
                     $scope.CariHarListe = CariHarGetir;
-                    $scope.Tutar = 0;
+                    //$scope.Tutar = 0; ALİ KEMAL KARACA TARAFINDAN ONAYLANDI :)
                     DipToplamHesapla();
                     FisData(CariHarGetir)
-                    $("#TblIslem").jsGrid({data : $scope.CariHarListe});  
-                    $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});   
+                    $("#TblIslem").jsGrid({data : $scope.CariHarListe});
+                    $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});
                     
                     if($scope.TahsilatCinsi !=0)
                     {
@@ -362,40 +362,42 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     function OdemeEmirleriInsert()
     {
+        console.log($scope.Tutar)
         try 
         {
             var InsertData = 
             [
                 UserParam.MikroId,
                 UserParam.MikroId,
-                0, //FİRMA NO
-                0, //ŞUBE NO
-                $scope.SckTip,     //TIP
-                $scope.TrefNo,     //REFNO
+                0,                   //FİRMA NO
+                0,                   //ŞUBE NO
+                $scope.SckTip,       //TIP
+                $scope.TrefNo,       //REFNO
                 $scope.CariAdi,      //BORCLU
-                $scope.Tarih,         //VADE
+                $scope.Tarih,        //VADE
                 $scope.Tutar,        //TUTAR
                 0,                   //DOVIZ
-                0,                   //ODENEN            
+                0,                   //ODENEN
                 0,                   //SAHIPCARİCİNS
                 $scope.CariKodu,     //SAHİPCARİKODU
                 0,                   //CARİGRUPNO
-                $scope.KasaHizmet ,//NEREDECARİCİNS
+                $scope.KasaHizmet ,  //NEREDECARİCİNS
                 $scope.KasaBanka,    //NEREDECARİKODU
-                $scope.KarsiGrupNo, //NEREDECARİGRUPNO
+                $scope.KarsiGrupNo,  //NEREDECARİGRUPNO
                 $scope.Tarih,        //SCKILKHAREKETTARİHİ
                 $scope.Seri,         //İLKEVRAKSERİ
                 $scope.Sira,         //İLKEVRAKSIRA
                 $scope.CariHarListe[$scope.CariHarListe.length - 1].cha_satir_no, //İLKEVRAKSATIRNO
                 $scope.Tarih,        //SONHAREKETTARİHİ
                 1,                   //DOVIZKUR
-                $scope.SntckPoz,      //SCKSONPOZ
-                $scope.Sorumluluk,    //SORUMLULUKMERKEZI
-                ""                    //PROJE 
+                $scope.SntckPoz,     //SCKSONPOZ
+                $scope.Sorumluluk,   //SORUMLULUKMERKEZI
+                ""                   //PROJE
                 ];
 
             db.ExecuteTag($scope.Firma,'CekHarInsert',InsertData,function(InsertResult)
             {   
+                console.log(InsertData)
                 //$scope.TahsilatCinsi = "0"
                 $scope.TahsilatCinsiChange();
             });
@@ -415,10 +417,17 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     function FisData(pData)
     {
+        $scope.Fisdeger = pData;
+        console.log(pData)
+        $scope.FisData = "";
         try 
         {
             $scope.FisDeger = "";
-            $scope.FisDeger = SpaceLength($scope.CariAdi,40) + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n"+ "                                    " + $scope.Seri + " - " + $scope.Sira + "\n"+ $scope.Adres1 + " " + $scope.Adres +"\n" + "\n";
+            $scope.FisDeger = SpaceLength($scope.CariAdi,40) + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n"+ "                                    " + $scope.Seri + " - " + $scope.Sira + "\n"+ $scope.Adres1 + "\n" + $scope.Adres +"\n" + "\n";
+            for(let i=0; i < pData.length; i++)
+            {
+                $scope.FisData = $scope.FisData + "\n";                
+            } 
         } 
         catch (error) 
         {
@@ -495,12 +504,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.CariVDNO = $scope.CariListe[pIndex].VDNO;
         $scope.Adres = $scope.CariListe[pIndex].ADRES;
         $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
-        $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+        $scope.Adres2 = $scope.CariListe[pIndex].ADRES2;
         $scope.CariDovizAdi = $scope.CariListe[pIndex].DOVIZSEMBOL; 
-        $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
-        $scope.DovizAnaSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
-        $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
-        $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
+        $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL;
+        $scope.DovizAnaSembol = $scope.CariListe[pIndex].DOVIZSEMBOL;
+        $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1;
+        $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2;
         $scope.DovizChangeKodu = "0"
         $scope.DovizChange()
     }
@@ -727,6 +736,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     $scope.Insert = function()
     { 
+        $scope.CariBakiye -= $scope.Tutar;
         if($scope.KasaBanka != "")
         {
             if($scope.Tutar != "")
@@ -1107,7 +1117,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             let OncekiBakiye = 0;
             let NakitAlinan = 0;
             let KalanBakiye = 0;
-
+            $scope.DizaynListe2 = [];
             let TmpQuery = 
             {
                 db : '{M}.' + $scope.Firma,
@@ -1127,16 +1137,15 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 param : ['cha_evrak_tip:int','cha_evrakno_seri:string|20','cha_evrakno_sira:int'],
                 value : [$scope.ChaEvrakTip,$scope.Seri,$scope.Sira] 
             }
-            let Data = await db.GetPromiseQuery(TmpQuery);
-
-            $scope.DNakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
-            console.log(Data)
-            console.log($scope.DNakitToplam)
-            $scope.DKrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
-            $scope.DSenetToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 2");
-            $scope.DCekToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 1");
-            $scope.DizaynListe2 = Data;
-            
+           await db.GetPromiseQuery(TmpQuery,function(Data)
+            {
+                console.log(Data)
+                $scope.DNakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
+                $scope.DKrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
+                $scope.DSenetToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 2");
+                $scope.DCekToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 1");
+                $scope.DizaynListe2 = Data;
+            });
             if($scope.TahKontrol == 1)
             {
                 OncekiBakiye = $scope.CariBakiye + $scope.Toplam
@@ -1149,19 +1158,24 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 NakitAlinan = $scope.Toplam
                 KalanBakiye = $scope.CariBakiye - $scope.Toplam
             }
-            let i = 49 - $scope.DizaynListe2.length;
+            let i = 36 - $scope.DizaynListe2.length;
             let Satır = "";
-    
+            console.log(1)
             for(let x = 0; x <= i; x++)
             {    
                 Satır = Satır + "                                             -"+ "\n"; 
             } 
-
-            FisDizayn = "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" +
+            FisDizayn = 
+            "                   ESER GIDA                  " + "\n" +
+            "        SÜT VE SÜT ÜRÜNLERİ PAZARLAMA         " + "\n" +
+            "Merkez: Vişnelik Mh. Atatürk Bulvari No:177/8 " + "\n" +
+            "TEL:0222 330 42 42 Odunpazari/ESKİŞEHİR     " + "\n" +
+            "Şube1:Ortaköy Mh. TÜVTÜRK Yani No: 379 MUĞLA" + "\n" +
+            "Tel:0252 214 78 58 muglasutas@hotmail.com    " + "\n" +
+            "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" +
             $scope.FisDeger + "\n" +
-            "Nakit = " + $scope.DNakitToplam + "\n" + "K.Kartı = " + $scope.DKrediToplam + "\n" 
-            FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "\n" +
-            Satır 
+            "Nakit = " + $scope.DNakitToplam + "\n" + "K.Kartı = " + $scope.DKrediToplam + "\n" + "Toplam = " +$scope.Toplam.toFixed(2) + "\n" + Satır 
+            FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
             console.log(FisDizayn)
             db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)

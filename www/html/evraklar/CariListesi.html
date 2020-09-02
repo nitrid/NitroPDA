@@ -54,7 +54,7 @@
                             <button class="form-group btn btn-block btn-primary" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
-                    <div class="text-primary"><h4 class="text-center text-primary">{{CariKodu}} - {{CariAdi}}</h4></div>
+                    <div class="text-primary"><h4 class="text-center text-primary">{{CariKodu}} - {{CariAdi}} - {{CariUnvan2}}</h4></div>
                     <div class="row">
                         <div class="col-6 text-info"><label class="form-control-label float-right">V.D Adı - No :</label></div>
                         <div class="col-6 px-0"><label class="form-control-label pl-10">{{CariVDADI}} - {{CariVDNO}}</label></div>
@@ -145,11 +145,97 @@
                     </div>
                     <div class="form-group row my-1 pb-10">
                         <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Mail Adresi :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Mail" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Cep Telefonu :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Telefon" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Adres-1 :</label> 
+                        </div>
+                        <div class="col-lg-5 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Adres1" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Adres-2 :</label> 
+                        </div>
+                        <div class="col-lg-5 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Adres2" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">İl :</label> 
+                        </div>
+                        <div class="col-lg-5 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Il" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">İlçe :</label> 
+                        </div>
+                        <div class="col-lg-5 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Ilce" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
                             <label class="mb-0 h5 text-primary">Cari Tipi :</label> 
                         </div>
                         <div class="col-lg-10 col-sm-6 px-1">
-                            <select class="form-control" ng-disabled="EvrakLock">
+                            <select class="form-control" ng-model="CariTip" ng-disabled="EvrakLock">
                                 <option value="0">Müşteri</option>
+                                <option value="1">Satıcı</option>
+                                <option value="2">Diğer Cari</option>
+                                <option value="3">Dağıtıcı</option>
+                                <option value="4">Bayi</option>
+                                <option value="5">Hedef Müşteri</option>
+                                <option value="6">Hedef Bayi</option>
+                                <option value="7">Alt Bayi</option>
+                                <option value="8">Bağlı ortaklık</option>  
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Döviz Tipi :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <select class="form-control" ng-model="DovizTip" ng-disabled="EvrakLock">
+                                <option value="0">Türk Lirası</option>
+                                <option value="1">Dolar</option>
+                                <option value="2">Euro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Temsilci Kodu :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <select class="form-control" ng-model="Temsilci" ng-disabled="EvrakLock" ng-change="TemsilciChange()">
+                                <option ng-repeat="option in TemsilciListe" value="{{option.TEMSILCI}}">{{option.TEMSILCIADI}}</option>
                             </select>
                         </div>
                     </div>

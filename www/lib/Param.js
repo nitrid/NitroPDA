@@ -30,6 +30,9 @@ var Param = [
 			"RiskLimitOran": "70",
 			"FisDizayn": "1"
 		},
+		"StokRaporu": {
+			"DepoNo": "4",
+		},
 		"Sayim": {
 			"EvrakNo": "1",
 			"DepoNo": "1",
@@ -189,7 +192,7 @@ var Param = [
 			"DovizTipi": "-1",
 			"Special": "1",
 			"FiyatGizle": "0",
-			"StokResmi": "0"
+			"StokResmi": "1"
 		},
 		"Etiket": {
 			"Etiket": [
@@ -223,8 +226,9 @@ var Param = [
 			"Deposevk": "1",
 			"Depo Sipariş": "1",
 			"Depo Mal Kabul": "1",
-			"Depo Nakliye": "1",
-			"NakliyeOnay": "1",
+			"Depo Nakliye": "0",
+			"Depo Durum Raporu": "0",
+			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
 			"Satış Faturası": "1",
@@ -242,7 +246,8 @@ var Param = [
 			"Cari Secimli Siparis Durum Raporu": "1",
 			"Durağan Cariler Raporu": "1",
 			"Kasa Rapor": "1",
-			"Stok Hareket Rapor": "1"
+			"Stok Hareket Rapor": "1",
+			"Depo Durum Raporu": "1",
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -318,7 +323,7 @@ var Param = [
 			"BelgeNo": "",
 			"Cari": "",
 			"Sorumluluk": "",
-			"Personel": "",
+			"Personel": "01",
 			"NakitKasa": "KASA1",
 			"KrediKasa": "01",
 			"CekKasa": "CK01",
@@ -361,6 +366,9 @@ var Param = [
 		},
 		"CariEkle": {
 			"CariHarfEkle": "E"
+		},
+		"DepoDurumRaporu": {
+			"Depo": "4"
 		}
 	},
 	{
