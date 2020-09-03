@@ -253,23 +253,43 @@ function eIrsXml(pUid,pData)
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.UUID = pUid;
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionSerial = pData[0].SERI;
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionNumber = pData[0].SIRA;
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionType  = pData[0].EVRAKTIP
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PartyIdentification.ID = pData[0].VKNNO
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PartyName.Name = pData[0].FIRMAUNVAN
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.StreetName = pData[0].SUBESOKAK  +'/' + pData[0].SUBECADDE
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.CitySubdivisionName = pData[0].SUBEILCE
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.CityName = pData[0].SUBEIL
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.Country.IdentificationCode = 'TR'
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.Country.Name = pData[0].SUBEULKE
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PartyTaxScheme.TaxScheme.Name = pData[0].VDADI
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PartyIdentification.ID = pData[0].CARIVKNO
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PartyName.Name = pData[0].CARIUNVAN1
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.StreetName = pData[0].CARISOKAK  +'/' + pData[0].CARICADDE
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.CitySubdivisionName = pData[0].CARIILCE
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.CityName = pData[0].CARIIL
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.Country.IdentificationCode = 'TR'
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.Country.Name = pData[0].SUBEULKE
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PartyTaxScheme.TaxScheme.Name = pData[0].CARIVDADI
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionDate = pData[0].TARIH;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DocumentDate = pData[0].BELGETARIH;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DocumentTime = pData[0].BELGEZAMAN;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionType  = pData[0].EVRAKTIP;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PartyIdentification.ID = {"#text":pData[0].VKNNO,"@_schemeID": "VKN"};
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PartyName.Name = pData[0].FIRMAUNVAN;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.StreetName = pData[0].SUBESOKAK  +'/' + pData[0].SUBECADDE;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.CitySubdivisionName = pData[0].SUBEILCE;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.CityName = pData[0].SUBEIL;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.Country.IdentificationCode = 'TR';
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PostalAddress.Country.Name = pData[0].SUBEULKE;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.PartyTaxScheme.TaxScheme.Name = pData[0].VDADI;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PartyIdentification.ID = pData[0].CARIVKNO;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PartyName.Name = pData[0].CARIUNVAN1;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.StreetName = pData[0].CARISOKAK  +'/' + pData[0].CARICADDE;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.CitySubdivisionName = pData[0].CARIILCE;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.CityName = pData[0].CARIIL;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.Country.IdentificationCode = 'TR';
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PostalAddress.Country.Name = pData[0].CARIULKE;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DeliveryCustomerParty.PartyTaxScheme.TaxScheme.Name = pData[0].CARIVDADI;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.Shipment.GoodsItem.ValueAmount = {"#text" : pData[0].TUTAR,"@_currencyID":pData[0].DOVIZ};
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.Shipment.Delivery.DeliveryAddress.StreetName =  pData[0].CARISOKAK  +'/' + pData[0].CARICADDE;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.Shipment.Delivery.DeliveryAddress.CitySubdivisionName =  pData[0].CARIILCE;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.Shipment.Delivery.DeliveryAddress.CityName =  pData[0].CARIIL;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.Shipment.Delivery.DeliveryAddress.Country.IdentificationCode = 'TR';
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.Shipment.Delivery.DeliveryAddress.Country.Name = pData[0].CARIULKE;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.Shipment.Delivery.Despatch.ActualDespatchDate = pData[0].BELGETARIH
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.Shipment.Delivery.Despatch.ActualDespatchTime = pData[0].BELGEZAMAN
+        TmpSema.MikroDocument.DespatchAdvices.DespatchLine.ID =  pData[0].SATIR
+        TmpSema.MikroDocument.DespatchAdvices.DespatchLine.DeliveredQuantity =  {"#text" : pData[0].MIKTAR, "@_unitCode" : "C62"}
+        TmpSema.MikroDocument.DespatchAdvices.DespatchLine.Item.Name =  pData[0].STOKADI
+        TmpSema.MikroDocument.DespatchAdvices.DespatchLine.Item.SellersItemIdentification.ID = pData[0].STOKKODU
+        TmpSema.MikroDocument.DespatchAdvices.DespatchLine.Shipment.GoodsItem.InvoiceLine.LineExtensionAmount = {"#text" : pData[0].TUTAR,"@_currencyID":pData[0].DOVIZ};
+        TmpSema.MikroDocument.DespatchAdvices.DespatchLine.Shipment.GoodsItem.InvoiceLine.Item.Name = pData[0].STOKADI ;
+        TmpSema.MikroDocument.DespatchAdvices.DespatchLine.Shipment.GoodsItem.InvoiceLine.Price.PriceAmount =    {"#text" : pData[0].BFIYAT, "@_currencyID" : pData[0].DOVIZ};
+
+
 
         var defaultOptions = 
         {
@@ -391,7 +411,7 @@ function SqlQuery(pQuery)
     });
 }
 
-//eIrsGonder();
+eIrsGonder();
 
 async function eIrsGonder()
 {
@@ -407,36 +427,39 @@ async function eIrsGonder()
                     "CONVERT(VARCHAR,sth_tarih, 23) AS TARIH, " +
                     "CONVERT(VARCHAR,sth_belge_tarih, 23) AS BELGETARIH, " +
                     "CONVERT(VARCHAR, sth_lastup_date, 8) AS BELGEZAMAN, " +
-                    "(SELECT TOP 1 fir_FVergiNo FROM FIRMALAR WHERE fir_sirano = 0) AS VKNNO, " +
-                    "(SELECT  TOP 1  fir_unvan FROM FIRMALAR WHERE fir_sirano = 0) AS FIRMAUNVAN, " +
-                    "(SELECT TOP 1  fir_unvan2 FROM FIRMALAR WHERE fir_sirano = 0) AS FIRMAUNVAN2, " +
-                    "(SELECT TOP 1  sube_Cadde FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0) AS SUBECADDE, " +
-                    "(SELECT TOP 1  sube_Mahalle FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0) AS SUBEMAHALLE, " +
-                    "(SELECT TOP 1  sube_Sokak FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0) AS SUBESOKAK, " +
-                    "(SELECT TOP 1  sube_Semt FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0) AS SUBESEMT, " +
-                    "(SELECT TOP 1  sube_Apt_No FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0) AS SUBEAPTNO, " +
-                    "(SELECT TOP 1  sube_Daire_No FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0) AS SUBEDAIRENO, " +
-                    "(SELECT TOP 1  sube_Ilce FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0) AS SUBEILCE, " +
-                    "(SELECT TOP 1  sube_Il FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0) AS SUBEIL, " +
-                    "(SELECT TOP 1  sube_Ulke FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0) AS SUBEULKE, " +
-                    "(SELECT TOP 1 Vgd_adi FROM MikroDB_V16..VERGI_DAIRELERI WHERE Vgd_orj_kod = (SELECT TOP 1 fir_FVergiNo FROM FIRMALAR WHERE fir_sirano = 0)) AS VDADI, " +
-                    "(SELECT TOP 1 cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu) AS CARIUNVAN1, " +
-                    "(SELECT TOP 1 cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu) AS CARIUNVAN2, " +
-                    "(SELECT TOP 1 cari_vdaire_adi FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu) AS CARIVDADI, " +
-                    "(SELECT TOP 1 cari_vdaire_no FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu) AS CARIVKNO, " +
-                    "(SELECT TOP 1 adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1) AS CARICADDE, " +
-                    "(SELECT TOP 1 adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1) AS CARISOKAK, " +
-                    "(SELECT TOP 1 adr_mahalle FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1) AS CARIMAH, " +
-                    "(SELECT TOP 1 adr_Semt FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1) AS CARISEMT, " +
-                    "(SELECT TOP 1 adr_Apt_No FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1) AS CARIAPTNO, " +
-                    "(SELECT TOP 1 adr_Daire_No FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1) AS CARIDAIRENO, " +
-                    "(SELECT TOP 1 adr_ilce FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1) AS CARIILCE, " +
-                    "(SELECT TOP 1 adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1) AS CARIIL, " +
-                    "(SELECT TOP 1 adr_ulke FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1) AS CARIULKE, " +
+                    "ISNULL((SELECT TOP 1 fir_FVergiNo FROM FIRMALAR WHERE fir_sirano = 0),'') AS VKNNO, " +
+                    "ISNULL((SELECT  TOP 1  fir_unvan FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN, " +
+                    "ISNULL((SELECT TOP 1  fir_unvan2 FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN2, " +
+                    "ISNULL((SELECT TOP 1  sube_Cadde FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBECADDE, " +
+                    "ISNULL((SELECT TOP 1  sube_Mahalle FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEMAHALLE, " +
+                    "ISNULL((SELECT TOP 1  sube_Sokak FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBESOKAK, " +
+                    "ISNULL((SELECT TOP 1  sube_Semt FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBESEMT, " +
+                    "ISNULL((SELECT TOP 1  sube_Apt_No FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEAPTNO, " +
+                    "ISNULL((SELECT TOP 1  sube_Daire_No FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEDAIRENO, " +
+                    "ISNULL((SELECT TOP 1  sube_Ilce FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEILCE, " +
+                    "ISNULL((SELECT TOP 1  sube_Il FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEIL, " +
+                    "ISNULL((SELECT TOP 1  sube_Ulke FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEULKE, " +
+                    "ISNULL((SELECT TOP 1 Vgd_adi FROM MikroDB_V16..VERGI_DAIRELERI WHERE Vgd_orj_kod = (SELECT TOP 1 fir_FVergiDaire FROM FIRMALAR WHERE fir_sirano = 0)),'') AS VDADI, " +
+                    "ISNULL((SELECT TOP 1 cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN1, " +
+                    "ISNULL((SELECT TOP 1 cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN2, " +
+                    "ISNULL((SELECT TOP 1 cari_vdaire_adi FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVDADI, " +
+                    "ISNULL((SELECT TOP 1 cari_vdaire_no FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVKNO, " +
+                    "ISNULL((SELECT TOP 1 adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARICADDE, " +
+                    "ISNULL((SELECT TOP 1 adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARISOKAK, " +
+                    "ISNULL((SELECT TOP 1 adr_mahalle FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIMAH, " +
+                    "ISNULL((SELECT TOP 1 adr_Semt FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARISEMT, " +
+                    "ISNULL((SELECT TOP 1 adr_Apt_No FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIAPTNO, " +
+                    "ISNULL((SELECT TOP 1 adr_Daire_No FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIDAIRENO, " +
+                    "ISNULL((SELECT TOP 1 adr_ilce FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIILCE, " +
+                    "ISNULL((SELECT TOP 1 adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIIL, " +
+                    "ISNULL((SELECT TOP 1 adr_ulke FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIULKE, " +
                     "sth_tutar AS TUTAR, " +
                     "sth_miktar AS MIKTAR, " +
-                    "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = sth_stok_kod) AS STOKADI ," +
+                    "sth_tutar / sth_miktar AS BFIYAT, " +
+                    "ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = sth_stok_kod),'') AS STOKADI ," +
                     "sth_stok_kod AS STOKKODU ," +
+                    "sth_satirno AS SATIR," +
+                    "CASE sth_har_doviz_cinsi WHEN 0 THEN 'TRY' WHEN 1 THEN 'USD' WHEN 2 THEN 'EUR' END AS DOVIZ " +
                     " FROM STOK_HAREKETLERI " +
                     " WHERE sth_evrakno_seri = 'TST' AND sth_evrakno_sira = 1 AND sth_evraktip = 1"
         }
@@ -449,13 +472,13 @@ async function eIrsGonder()
         let TmpUid = uuidv4().toString().toUpperCase();
 
         let sessionId = await Login();
-        //let TmpXml = await eIrsXml(TmpUid,TmpData.recordset);
-        // let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
+        let TmpXml = await eIrsXml(TmpUid,TmpData.recordset);
+        let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
     
-        // if(typeof TmpSend != 'undefined')
-        // {
-        //     console.log(TmpSend);
-        // }
+        if(typeof TmpSend != 'undefined')
+        {
+            console.log(TmpSend);
+        }
         
         console.log(await eIrsDurum(sessionId,"1AFA00B1-39C9-4843-BEF4-4D9E52DC0591"));
         await Logout(sessionId);
