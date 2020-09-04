@@ -380,6 +380,6 @@ var ParamTemp =
 			"Kasa Rapor" : {"Title" : "Kasa Rapor","DefaultValue" : "1"},
 			"Stok Hareket Rapor" : {"Title" : "Stok Hareket Rapor","DefaultValue" : "1"},
 			"Depo Durum Raporu" : {"Title" : "Depo Durum Raporu","DefaultValue" : "1"},
-			"Gelen Havale" : {"Title" : "Gelen Havale","DefaultValue" : "1"}
+			"Gelen Havale" : {"Title" : "Gelen Havale","DefaultValue" : "1"},
 		}
 	}

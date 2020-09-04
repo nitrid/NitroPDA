@@ -362,7 +362,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     function OdemeEmirleriInsert()
     {
-        console.log($scope.Tutar)
         try 
         {
             var InsertData = 
@@ -397,7 +396,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 
             db.ExecuteTag($scope.Firma,'CekHarInsert',InsertData,function(InsertResult)
             {   
-                console.log(InsertData)
                 //$scope.TahsilatCinsi = "0"
                 $scope.TahsilatCinsiChange();
             });
@@ -418,7 +416,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     function FisData(pData)
     {
         $scope.Fisdeger = pData;
-        console.log(pData)
+        (pData)
         $scope.FisData = "";
         try 
         {
@@ -433,7 +431,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             console.log(error)
         }
-        console.log($scope.Fisdeger)
     }
     function SpaceLength(pData,pLength)
     {
@@ -716,7 +713,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                     {
                         $scope.KasaAdi = item.ADI;
                         $scope.KasaDoviz = item.DOVIZCINSI;
-                        console.log($scope.KasaDoviz)
                         $scope.KasaKuru = item.DOVIZKUR;
                         $scope.KasaDovizAdi = item.DOVIZSEMBOL
                     }

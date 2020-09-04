@@ -31,7 +31,7 @@ var Param = [
 			"FisDizayn": "1"
 		},
 		"StokRaporu": {
-			"DepoNo": "4",
+			"DepoNo": "4"
 		},
 		"GelenHavale": {
 			"Seri": "DNM",
@@ -41,9 +41,7 @@ var Param = [
 			"Cari": "",
 			"Sorumluluk": "",
 			"Personel": "01",
-			"NakitKasa": "KASA1",
-			"KrediKasa": "01",
-			"HavaleKasa": "H01",
+			"BankaKodu": "01",
 			"EvrakSil": "0",
 			"EvrakTip": "0"
 		},
@@ -241,7 +239,7 @@ var Param = [
 			"Depo Sipariş": "1",
 			"Depo Mal Kabul": "1",
 			"Depo Nakliye": "0",
-			"Depo Durum Raporu": "0",
+			"Depo Durum Raporu": "1",
 			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
@@ -261,8 +259,17 @@ var Param = [
 			"Durağan Cariler Raporu": "1",
 			"Kasa Rapor": "1",
 			"Stok Hareket Rapor": "1",
-			"Depo Durum Raporu": "1",
 			"GelenHavale": "1",
+			"Ambar Fişi": "1",
+			"Stok Virman Fişi": "1",
+			"Stok Listesi": "1",
+			"Stok Ekle": "1",
+			"Ürün Giriş Çıkış": "1",
+			"Fason Giriş Çıkış": "1",
+			"Planlı Üretim": "1",
+			"Aktarim": "1",
+			"EvrakGonder": "1",
+			"Gelen Havale": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",

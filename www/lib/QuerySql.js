@@ -68,7 +68,7 @@ var QuerySql =
     }, 
     CmbBankaGetir : 
     {
-        query : "SELECT ban_kod AS KODU,ban_ismi AS ADI FROM BANKALAR " ,
+        query : "SELECT ban_kod AS KODU,ban_ismi AS ADI, ban_doviz_cinsi AS DOVIZCINSI,(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(ban_doviz_cinsi,0),2)) AS DOVIZKUR FROM BANKALAR " ,
     },
     CmbAdresNo : 
     {
@@ -2026,6 +2026,7 @@ var QuerySql =
         query:  "SELECT *, " +
                 "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod=cha_kod) AS CARIADI, " +
                 "ROUND(cha_meblag,2) AS TUTAR, " +
+                "CASE cha_evrak_tip WHEN 34 THEN ISNULL((SELECT ban_ismi FROM BANKALAR WHERE ban_kod = cha_kasa_hizkod),'') END AS BANKAADI, " +
                 "CASE cha_cinsi WHEN 19 THEN ISNULL((SELECT ban_ismi FROM BANKALAR WHERE ban_kod = cha_kasa_hizkod),'') " +
                 "ELSE ISNULL((SELECT kas_isim FROM KASALAR WHERE kas_kod = cha_kasa_hizkod),'') END AS KASAADI, " +
                 "CONVERT(VARCHAR(10),GETDATE(),112) AS cha_d_kurtar " +
@@ -2322,7 +2323,7 @@ var QuerySql =
                 ",@cha_e_islem_turu								--<cha_e_islem_turu, tinyint,> \n" + 
                 ",0												--<cha_fatura_belge_turu, tinyint,> \n" + 
                 ",''											--<cha_diger_belge_adi, nvarchar(50),> \n" + 
-                ",NEWID()									    --<cha_uuid, nvarchar(40),> \n" + 
+                ",NEWID() 									    --<cha_uuid, nvarchar(40),> \n" + 
                 ",1												--<cha_adres_no, int,> \n" + 
                 ",0												--<cha_vergifon_toplam, float,> \n" + 
                 ",'18991230'									--<cha_ilk_belge_tarihi> \n" + 

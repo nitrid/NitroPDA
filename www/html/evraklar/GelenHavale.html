@@ -158,8 +158,8 @@
                     <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right py-2">Kasa Banka :</div></div>
                         <div class="col-8 px-1">
-                            <select class="form-control"  ng-model="KasaBanka" ng-change="KasaChange()">
-                                <option ng-repeat="option in KasaBankaListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            <select class="form-control"  ng-model="BankaKodu">
+                                <option ng-repeat="option in BankaListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
                     </div>
@@ -181,10 +181,6 @@
                         <div class="col-8 px-1">
                             <input type="number" class="form-control" ng-model="Tutar" id="Tutar">
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Ref No :</label></div>
-                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{TrefNo}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Bakiye :</label></div>
@@ -311,7 +307,7 @@
                 <div class="modal-body">
                     <div class="col-12 p-10">
                     <button class="btn btn-block btn-primary" ng-click="BtnCariDoviz()">{{KasaDovizAdi}}</button>
-                    <button class="btn btn-block btn-primary" ng-click="BtnKasaDoviz()">{{CariDovizAdi}}</button>
+                    <button class="btn btn-block btn-primary" ng-click="BtnBankaDoviz()">{{CariDovizAdi}}</button>
                     </div>
                 </div>
             </div>
