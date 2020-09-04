@@ -329,6 +329,18 @@ var ParamTemp =
 		{
 			"Depo" : {"Title" : "Cari Harf Ekle","DefaultValue" : "EKR"},
 		},
+		"GelenHavale" :
+		{
+			"ChaEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "1"},
+			"Seri" : {"Title" : "Seri","DefaultValue" : "THS"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
+			"NakitKasa" : {"Title" : "Nakit Kasa Kodu","DefaultValue" : ""},
+			"KrediKasa" : {"Title" : "Kredi Kasa Kodu","DefaultValue" : ""},
+			"HavaleKasa" : {"Title" : "Havale Kasa Kodu","DefaultValue" : ""},
+		},
 		"Menu" :
 		{
 			"Stok Detay" : {"Title" : "Stok Detay","DefaultValue" : "1"},
@@ -367,6 +379,7 @@ var ParamTemp =
 			"Durağan Cariler Raporu" : {"Title" : "Durağan Cariler Raporu","DefaultValue" : "1"},
 			"Kasa Rapor" : {"Title" : "Kasa Rapor","DefaultValue" : "1"},
 			"Stok Hareket Rapor" : {"Title" : "Stok Hareket Rapor","DefaultValue" : "1"},
-			"Depo Durum Raporu" : {"Title" : "Depo Durum Raporu","DefaultValue" : "1"}
+			"Depo Durum Raporu" : {"Title" : "Depo Durum Raporu","DefaultValue" : "1"},
+			"Gelen Havale" : {"Title" : "Gelen Havale","DefaultValue" : "1"}
 		}
 	}

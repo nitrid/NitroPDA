@@ -33,6 +33,20 @@ var Param = [
 		"StokRaporu": {
 			"DepoNo": "4",
 		},
+		"GelenHavale": {
+			"Seri": "DNM",
+			"ChaEvrakTip": "34",
+			"ChaTip": "1",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "01",
+			"NakitKasa": "KASA1",
+			"KrediKasa": "01",
+			"HavaleKasa": "H01",
+			"EvrakSil": "0",
+			"EvrakTip": "0"
+		},
 		"Sayim": {
 			"EvrakNo": "1",
 			"DepoNo": "1",
@@ -248,6 +262,7 @@ var Param = [
 			"Kasa Rapor": "1",
 			"Stok Hareket Rapor": "1",
 			"Depo Durum Raporu": "1",
+			"GelenHavale": "1",
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",

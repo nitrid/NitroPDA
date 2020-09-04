@@ -220,8 +220,7 @@ function CariListeCtrl($scope,$window,db)
             $("#TbCariEkle").addClass('active');
             $("#TbMain").removeClass('active');
             $("#TbDetay").removeClass('active');
-        });
-        
+        });  
     }
     $scope.CariEkleInsert = function()
     {
