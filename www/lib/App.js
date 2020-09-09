@@ -163,6 +163,10 @@ angular.module("app",
     {
         templateUrl : "html/rapor/DepoDurumRaporu.html"
     })
+    .when("/GelenHavale",
+    {
+        templateUrl : "html/evraklar/GelenHavale.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

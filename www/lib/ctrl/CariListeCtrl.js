@@ -220,15 +220,18 @@ function CariListeCtrl($scope,$window,db)
             $("#TbCariEkle").addClass('active');
             $("#TbMain").removeClass('active');
             $("#TbDetay").removeClass('active');
-        });
-        
+        });  
     }
     $scope.CariEkleInsert = function()
     {
-        console.log($scope.CariTip)
+        console.log($scope.VergiNo.length)
         if($scope.Telefon.length > 10)
         {
-            alertify.alert(" Telefona sadece 10 karakter girilebilir")
+            alertify.alert("Telefona sadece 10 karakter girilebilir")
+        }
+        else if($scope.VergiNo.length > 15)
+        {
+            alertify.alert("Vergi Numarasına sadece 15 karakter girilebilir")
         }
         else
         {
@@ -256,16 +259,15 @@ function CariListeCtrl($scope,$window,db)
                 {
                     if(typeof(InsertResult.result.err) == 'undefined')
                     {
-                        console.log($scope.Adres1)
                         alertify.alert("Cari Kayıt İşlemi Gerçekleşti.")
                         $scope.VergiDaire = "";
                         $scope.VergiNo = "";
-                        $scope.CariEkleKodu = "";
                         $scope.CariEkleUnvan1 = "";
                         $scope.CariEkleUnvan2 = "";
+                        $scope.YeniEvrak()
                     }
                 });
-                $scope.YeniEvrak()
+                
             }
             else
             {

@@ -348,7 +348,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                     $("#TblIslem").jsGrid({data : $scope.CariHarListe});
                     $("#TblIslemSatirlari").jsGrid({data : $scope.CariHarListe});
                     
-                    if($scope.TahsilatCinsi !=0)
+                    if($scope.TahsilatCinsi != 0)
                     {
                         OdemeEmirleriInsert();
                     }
@@ -362,7 +362,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     }
     function OdemeEmirleriInsert()
     {
-        console.log($scope.Tutar)
         try 
         {
             var InsertData = 
@@ -397,7 +396,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 
             db.ExecuteTag($scope.Firma,'CekHarInsert',InsertData,function(InsertResult)
             {   
-                console.log(InsertData)
                 //$scope.TahsilatCinsi = "0"
                 $scope.TahsilatCinsiChange();
             });
@@ -638,7 +636,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 if(item.KODU == $scope.KasaBanka)
                 {
                     $scope.KasaAdi = item.ADI;
-                    $scope.KasaDoviz =item.DOVIZCINSI;
+                    $scope.KasaDoviz = item.DOVIZCINSI;
                     $scope.KasaKuru = item.DOVIZKUR;
                     $scope.KasaDovizAdi = item.DOVIZSEMBOL
                 }
@@ -657,11 +655,18 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $scope.KasaBankaListe = $scope.KasaListe;
             $scope.KasaBanka = UserParam[ParamName].NakitKasa;
             $scope.ChaCins = 0;
+            $scope.KasTip = 0
             $scope.TrefNo = "";
             $scope.SntckPoz = 0;
             $scope.KasaHizmet = 4;
             $scope.KarsiGrupNo = 0;
             $scope.Aciklama = "NAKİT KASASI";
+            await db.GetPromiseTag($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
+            {
+                $scope.KasaBankaListe = data;
+                $scope.KasaListe = data;
+                $scope.KasaBanka = UserParam[ParamName].NakitKasa;
+            }); 
         }
         else if($scope.TahsilatCinsi == "1")  //Çek
         {
@@ -680,6 +685,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             await db.GetPromiseTag($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
             {
                 $scope.KasaBankaListe = data;
+                $scope.KasaListe = data;
                 $scope.KasaBanka = UserParam[ParamName].CekKasa;
             });  
         }
@@ -700,7 +706,18 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             await db.GetPromiseTag($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
             {
                 $scope.KasaBankaListe = data;
+                $scope.KasaListe = data;
                 $scope.KasaBanka = UserParam[ParamName].SenetKasa;
+                $scope.KasaBankaListe.forEach(function(item)
+                {
+                    if(item.KODU == $scope.KasaBanka)
+                    {
+                        $scope.KasaAdi = item.ADI;
+                        $scope.KasaDoviz = item.DOVIZCINSI;
+                        $scope.KasaKuru = item.DOVIZKUR;
+                        $scope.KasaDovizAdi = item.DOVIZSEMBOL
+                    }
+                });
             });  
         }
         else if($scope.TahsilatCinsi == "3") //Kredi Kartı
@@ -764,7 +781,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     {
         $scope.Tutar = ($scope.Tutar * $scope.KasaKuru) / $scope.CariDovizKuru;
         CariHarInsert();
-        if($scope.TahsilatCinsi !=0)
+        if($scope.TahsilatCinsi != 0)
         {
             OdemeEmirleriInsert();
         }
@@ -773,7 +790,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
     $scope.BtnKasaDoviz = function()
     {
        CariHarInsert();
-       if($scope.TahsilatCinsi !=0)
+       if($scope.TahsilatCinsi != 0)
        {
            OdemeEmirleriInsert();
        }
@@ -1115,7 +1132,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             let FisDizayn = "";
             let OncekiBakiye = 0;
-            let NakitAlinan = 0;
             let KalanBakiye = 0;
             $scope.DizaynListe2 = [];
             let TmpQuery = 
@@ -1158,21 +1174,15 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 NakitAlinan = $scope.Toplam
                 KalanBakiye = $scope.CariBakiye - $scope.Toplam
             }
-            let i = 36 - $scope.DizaynListe2.length;
+            let i = 5 - $scope.DizaynListe2.length;
             let Satır = "";
             console.log(1)
             for(let x = 0; x <= i; x++)
             {    
-                Satır = Satır + "                                             -"+ "\n"; 
+                Satır = Satır + "                                             "+ "\n"; 
             } 
-            FisDizayn = 
-            "                   ESER GIDA                  " + "\n" +
-            "        SÜT VE SÜT ÜRÜNLERİ PAZARLAMA         " + "\n" +
-            "Merkez: Vişnelik Mh. Atatürk Bulvari No:177/8 " + "\n" +
-            "TEL:0222 330 42 42 Odunpazari/ESKİŞEHİR     " + "\n" +
-            "Şube1:Ortaköy Mh. TÜVTÜRK Yani No: 379 MUĞLA" + "\n" +
-            "Tel:0252 214 78 58 muglasutas@hotmail.com    " + "\n" +
-            "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" +
+            FisDizayn = "\n" +"\n" +"\n" +"\n" +"\n" +"\n" +
+            "                 TAHSILAT FISI" + "\n" + "                                            " + "\n" +
             $scope.FisDeger + "\n" +
             "Nakit = " + $scope.DNakitToplam + "\n" + "K.Kartı = " + $scope.DKrediToplam + "\n" + "Toplam = " +$scope.Toplam.toFixed(2) + "\n" + Satır 
             FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" 

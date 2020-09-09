@@ -9,4 +9,3 @@ npm install mssql
 npm install moment
 npm install node-machine-id
 npm install node-windows
-npm install msnodesqlv8

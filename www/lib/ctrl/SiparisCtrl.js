@@ -2243,6 +2243,54 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         if($scope.FisDizaynTip == 0)
         {
             let FisDizayn = "";
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
+                        "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
+                param:  ['CARIKODU'],
+                type:   ['string|25'],
+                value:  [$scope.CariKodu]    
+            }
+            db.GetDataQuery(TmpQuery,function(Data)
+            {
+                $scope.CariBakiye = Data[0].BAKIYE
+            });
+    
+            KalanBakiye = $scope.CariBakiye - $scope.GenelToplam
+            OncekiBakiye = KalanBakiye + $scope.GenelToplam
+            
+            let i = 5 - $scope.FisLength.length;
+            let Satır = "";
+    
+            for(let x = 0; x <= i; x++)
+            {    
+                Satır = Satır + "                                             "+ "\n"; 
+            }
+            //FİŞ DİZAYNI
+            FisDizayn = "                                             " + "\n" + 
+            "\n" + "\n" + "\n" + "\n" + "\n" + "\n" +"               SİPARİŞ FİŞİ " + "\n" +
+            $scope.FisDeger + "\n" +
+            SpaceLength("ÜRÜN ADI",19) +    SpaceLength("MIK" + " " + "BRM",7) + "   " + SpaceLength("FIYAT",9) + SpaceLength("NET TUTAR",5) + "\n" + 
+            $scope.FisData + "\n" + //İÇERİK
+            Satır
+            FisDizayn = FisDizayn + SpaceLength("Onceki Bak.:",12) + " " + SpaceLength(parseFloat(OncekiBakiye).toFixed(2),10) + "   "+SpaceLength("Ara Top.:",10) + parseFloat($scope.AraToplam).toFixed(2) + "\n" + "                         Top. Isk.: " +  parseFloat($scope.ToplamIndirim).toFixed(2) + "\n" + "                           %1 KDV : " + parseFloat(db.SumColumn($scope.FisLength,"sip_vergi","sip_vergi_pntr = 2").toFixed(2)) + "\n" + "                           %8 KDV : " + parseFloat(db.SumColumn($scope.FisLength,"sip_vergi","sip_vergi_pntr = 3").toFixed(2)) + "\n" 
+            FisDizayn = FisDizayn + "                         " + SpaceLength("Top. KDV : ",10) + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Top. : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
+            "\n" + "\n" + "\n" + "\n" + "\n"
+            FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+            console.log(FisDizayn)
+            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+            {
+                if(pStatus)
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                   
+                }
+            });
+        }
+        else if($scope.FisDizaynTip = 1)
+        {
+            let FisDizayn = "";
 
             var TmpQuery = 
             {
@@ -2289,23 +2337,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 {
                     alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
                    
-                }
-            });
-        }
-        else if($scope.FisDizaynTip = 1)
-        {
-            let FisDizayn = "";
-
-            FisDizayn = "              BRN SARAPCILIK" + "\n" + "       TEL : 0212 438 2580" + "\n" + "       EMAIL : muhasebe@baron.gen.tr" + "\n" + "      IBAN : TR51 0006200021100006298898" + "\n" + " " + $scope.FisDeger + "\n" + "                                            -" + "\n" + "URUN ADI              "+ " MIKTAR"+  " BIRIM" + " FIYAT" + " TUTAR" + "\n" + $scope.FisData + "\n" + "                                            -" + "\n" + " " + "\n"
-            FisDizayn = FisDizayn + "Toplam Miktar : "+ SpaceLength(db.SumColumn($scope.SiparisListe,"sip_miktar"),5) + "      Ara Toplam : " + parseFloat($scope.AraToplam.toFixed(4)) + "\n" +"                       Toplam Indirim : " + parseFloat($scope.ToplamIndirim.toFixed(4)) + "\n" + "                           Net Toplam : " + parseFloat($scope.NetToplam.toFixed(4)) + "\n" + "                            ToplamKdv : " + parseFloat($scope.ToplamKdv.toFixed(4))  + "\n" + "                         Genel Toplam : " + parseFloat($scope.GenelToplam.toFixed(4))   + "\n" + "\n" +"\n" + "Önceki Bakiye : " + parseFloat($scope.CariBakiye.toFixed(2)) + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n" + "                                            -" + "\n"
-            FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
-    
-            console.log(FisDizayn)
-            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
-            {
-                if(pStatus)
-                {
-                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
                 }
             });
         }

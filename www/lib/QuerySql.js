@@ -68,7 +68,7 @@ var QuerySql =
     }, 
     CmbBankaGetir : 
     {
-        query : "SELECT ban_kod AS KODU,ban_ismi AS ADI FROM BANKALAR " ,
+        query : "SELECT ban_kod AS KODU,ban_ismi AS ADI, ban_doviz_cinsi AS DOVIZCINSI,(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(ban_doviz_cinsi,0),2)) AS DOVIZKUR FROM BANKALAR " ,
     },
     CmbAdresNo : 
     {
@@ -461,7 +461,7 @@ var QuerySql =
     StokDetay : 
     {
         query : "SELECT sth_cari_kodu AS CARI,sth_stok_kod AS STOK, " + 
-                "sth_tutar / sth_miktar  AS SONFIYAT, " +
+                "IIF(sth_tutar = 0, 1,sth_tutar) / IIF(sth_miktar = 0,1,sth_miktar) AS SONFIYAT, " +
                 "sth_har_doviz_cinsi AS DOVIZ, " + 
                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sth_har_doviz_cinsi,0))),'TL') AS DOVIZSEMBOL, " + 
                 "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sth_har_doviz_cinsi,0),2)),1) AS DOVIZKUR, " +
@@ -2026,6 +2026,7 @@ var QuerySql =
         query:  "SELECT *, " +
                 "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod=cha_kod) AS CARIADI, " +
                 "ROUND(cha_meblag,2) AS TUTAR, " +
+                "CASE cha_evrak_tip WHEN 34 THEN ISNULL((SELECT ban_ismi FROM BANKALAR WHERE ban_kod = cha_kasa_hizkod),'') END AS BANKAADI, " +
                 "CASE cha_cinsi WHEN 19 THEN ISNULL((SELECT ban_ismi FROM BANKALAR WHERE ban_kod = cha_kasa_hizkod),'') " +
                 "ELSE ISNULL((SELECT kas_isim FROM KASALAR WHERE kas_kod = cha_kasa_hizkod),'') END AS KASAADI, " +
                 "CONVERT(VARCHAR(10),GETDATE(),112) AS cha_d_kurtar " +
@@ -2322,7 +2323,7 @@ var QuerySql =
                 ",@cha_e_islem_turu								--<cha_e_islem_turu, tinyint,> \n" + 
                 ",0												--<cha_fatura_belge_turu, tinyint,> \n" + 
                 ",''											--<cha_diger_belge_adi, nvarchar(50),> \n" + 
-                ",NEWID()									    --<cha_uuid, nvarchar(40),> \n" + 
+                ",NEWID() 									    --<cha_uuid, nvarchar(40),> \n" + 
                 ",1												--<cha_adres_no, int,> \n" + 
                 ",0												--<cha_vergifon_toplam, float,> \n" + 
                 ",'18991230'									--<cha_ilk_belge_tarihi> \n" + 
@@ -2568,232 +2569,6 @@ var QuerySql =
                 "(SELECT ISNULL(adr_sokak+' '+adr_cadde+' '+adr_ilce+' '+adr_il,+'') FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1) AS ADRES " +
                 "FROM CARI_HESAPLAR " 
     },
-    //Etiket
-    EtiketInsert :
-    {  
-        query : "INSERT INTO ETIKETBAS " +
-                "([Etkb_DBCno], " +
-                "[Etkb_SpecRECno], " + 
-                "[Etkb_iptal], " +
-                "[Etkb_fileid], " +
-                "[Etkb_hidden], " + 
-                "[Etkb_kilitli], " +
-                "[Etkb_degisti], " +
-                "[Etkb_checksum], " +
-                "[Etkb_create_user], " +
-                "[Etkb_create_date], " +
-                "[Etkb_lastup_user], " +
-                "[Etkb_lastup_date], " +
-                "[Etkb_special1], " +
-                "[Etkb_special2], " +
-                "[Etkb_special3], " +
-                "[Etkb_evrakno_seri], " +
-                "[Etkb_evrakno_sira], " +
-                "[Etkb_evrak_tarihi], " +
-                "[Etkb_aciklama], " +
-                "[Etkb_satirno], " +
-                "[Etkb_belge_no], " +
-                "[Etkb_belge_tarih], " +
-                "[Etkb_EtiketTip], " +
-                "[Etkb_BasimTipi], " +
-                "[Etkb_BasimAdet], " +
-                "[Etkb_DepoNo], " +
-                "[Etkb_StokKodu], " +
-                "[Etkb_RenkNo], " +
-                "[Etkb_BedenNo], " +
-                "[Etkb_Barkodu], " +
-                "[Etkb_BasilacakMiktar] " +
-                ") VALUES ( " + 
-                "0					--<Etkb_DBCno, int,> \n" +
-                ",0		 			--<Etkb_SpecRECno, int,> \n" +
-                ",0                 --<Etkb_iptal, bit,> \n" +
-                ",115                    --<Etkb_fileid, smallint,> \n" +
-                ",0                  --<Etkb_hidden, bit,> \n" +
-                ",0                  --<Etkb_kilitli, bit,> \n" +
-                ",0                  --<Etkb_degisti, bit,> \n" +
-                ",0                  --<Etkb_checksum, int,> \n" +
-                ",@Etkb_create_user 			--<Etkb_create_user, smallint,> \n" +
-                ",CONVERT(VARCHAR(10),GETDATE(),112) 		--<Etkb_create_date, datetime,> \n" +
-                ",@Etkb_lastup_user 				--<Etkb_lastup_user, smallint,> \n" +
-                ",CONVERT(VARCHAR(10),GETDATE(),112) 		--<Etkb_lastup_date, datetime,> \n" +
-                ",@Etkb_special1		 			--<Etkb_special1, varchar(4),> \n" +
-                ",''		 			--<Etkb_special2, varchar(4),> \n" +
-                ",''		 			--<Etkb_special3, varchar(4),> \n" +
-                ",@Etkb_evrakno_seri			--<Etkb_evrakno_seri, varchar(20),> \n" +
-                ",@Etkb_evrakno_sira			--<Etkb_evrakno_sira, int,> \n" +
-                ",CONVERT(VARCHAR(10),GETDATE(),112)			--<Etkb_evrak_tarihi, int,> \n" +
-                ",@Etkb_aciklama                            --<Etkb_aciklama, varchar(40),> \n" +
-                ",(SELECT ISNULL(MAX(Etkb_satirno),-1) + 1 FROM ETIKETBAS WHERE Etkb_evrakno_seri = @Etkb_evrakno_seri AND Etkb_evrakno_sira = @Etkb_evrakno_sira)				                    --<Etkb_satirno, int,> \n" +
-                ",@Etkb_belge_no                            --<Etkb_belge_no, varchar(50),> \n " +
-                ",CONVERT(VARCHAR(10),GETDATE(),112)       --<Etkb_belge_tarih, datetime,> \n " +
-                ",@Etkb_EtiketTip                            --<Etkb_EtiketTip, tinyint,> \n " +
-                ",@Etkb_BasimTipi                           --<Etkb_BasimTipi, tinyint,> \n " +
-                ",@Etkb_BasimAdet                            --<Etkb_BasimAdet, smallint,> \n " +
-                ",@Etkb_DepoNo                              --<Etkb_DepoNo, bit> \n " +
-                ",@Etkb_StokKodu                            --<Etkb_StokKodu, varchar(25),> \n " +
-                ",@Etkb_RenkNo                              --<Etkb_RenkNo, int,> \n " +
-                ",@Etkb_BedenNo                             --<Etkb_BedenNo, int,> \n" +
-                ",@Etkb_Barkodu                             --<Etkb_Barkodu, varchar(50),> \n" +
-                ",@Etkb_BasilacakMiktar                     --<Etkb_BasilacakMiktar smallint,> \n" + 
-                ")",               
-            param :['Etkb_create_user:int','Etkb_lastup_user:int','Etkb_special1:string|50','Etkb_evrakno_seri:string|50','Etkb_evrakno_sira:int','Etkb_aciklama:string|50',
-                    'Etkb_belge_no:string|50','Etkb_EtiketTip:int','Etkb_BasimTipi:int','Etkb_BasimAdet:int','Etkb_DepoNo:int','Etkb_StokKodu:string|50','Etkb_RenkNo:int','Etkb_BedenNo:int',
-                    'Etkb_Barkodu:string|50','Etkb_BasilacakMiktar:int']
-    },
-    EtiketGetir : 
-    {
-        query : "SELECT Etkb_evrakno_seri AS SERI, Etkb_evrakno_sira AS SIRA, Etkb_BasilacakMiktar AS BASIMMIKTAR, Etkb_StokKodu AS STOKKODU, Etkb_DepoNo AS DEPONO " +
-                "FROM ETIKETBAS WHERE Etkb_evrakno_seri = @Etkb_evrakno_seri AND Etkb_evrakno_sira = @Etkb_evrakno_sira ",
-        param : ['Etkb_evrakno_seri:string|50','Etkb_evrakno_sira:int']  
-    },
-    MaxEtiketSira : 
-    {
-        query : "SELECT ISNULL(MAX(Etkb_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM ETIKETBAS " +
-                "WHERE Etkb_evrakno_seri=@Etkb_evrakno_seri",
-        param : ['Etkb_evrakno_seri'],
-        type : ['string|50']
-    },
-    //DepoSiparis
-    DepoSiparisGetir :
-    {
-        query : "SELECT ssip_tutar AS TUTAR, ssip_b_fiyat AS FIYAT, ssip_miktar AS MIKTAR, " +
-                "ISNULL((SELECT sto_isim from STOKLAR WHERE sto_kod=ssip_stok_kod),'') AS ADI , " +
-                "ssip_stok_kod AS KODU, " +
-                "ssip_birim_pntr AS BIRIM, " + 
-                "ROW_NUMBER() OVER(ORDER BY ssip_Guid) AS NO, * " +
-                "FROM DEPOLAR_ARASI_SIPARISLER " +
-                "WHERE ssip_evrakno_seri=@ssip_evrakno_seri AND ssip_evrakno_sira=@ssip_evrakno_sira " +
-                "ORDER BY ssip_satirno ",
-        param : ['ssip_evrakno_seri','ssip_evrakno_sira'],
-        type : ['string|25','int']
-    },
-    DepoSiparisInsert :
-    {
-        query : "DECLARE @UIDTABLE table([ssip_Guid] [uniqueidentifier]) " +
-                "INSERT INTO [DEPOLAR_ARASI_SIPARISLER] " +
-                "([ssip_DBCno] " +
-                ",[ssip_SpecRECno] " +
-                ",[ssip_iptal] " +
-                ",[ssip_fileid] " +
-                ",[ssip_hidden] " +
-                ",[ssip_kilitli] " +
-                ",[ssip_degisti] " +
-                ",[ssip_checksum] " +
-                ",[ssip_create_user] " +
-                ",[ssip_create_date] " +
-                ",[ssip_lastup_user] " +
-                ",[ssip_lastup_date] " +
-                ",[ssip_special1] " +
-                ",[ssip_special2] " +
-                ",[ssip_special3] " +
-                ",[ssip_firmano] " +
-                ",[ssip_subeno] " +
-                ",[ssip_tarih] " +
-                ",[ssip_teslim_tarih] " +
-                ",[ssip_evrakno_seri] " +
-                ",[ssip_evrakno_sira] " +
-                ",[ssip_satirno] " +
-                ",[ssip_belgeno] " +
-                ",[ssip_belge_tarih] " +
-                ",[ssip_stok_kod] " +
-                ",[ssip_miktar] " +
-                ",[ssip_b_fiyat] " +
-                ",[ssip_tutar] " +
-                ",[ssip_teslim_miktar] " +
-                ",[ssip_aciklama] " +
-                ",[ssip_girdepo] " +
-                ",[ssip_cikdepo] " +
-                ",[ssip_kapat_fl] " +
-                ",[ssip_birim_pntr] " +
-                ",[ssip_fiyat_liste_no] " +
-                ",[ssip_stal_uid] " +
-                ",[ssip_paket_kod] " +
-                ",[ssip_kapatmanedenkod] " +
-                ",[ssip_projekodu] " +
-                ",[ssip_sormerkezi] " +
-                ",[ssip_gecerlilik_tarihi] " +
-                ",[ssip_rezervasyon_miktari] " +
-                ",[ssip_rezerveden_teslim_edilen] " +
-                ") " +
-                "OUTPUT INSERTED.[ssip_Guid] INTO @UIDTABLE " +
-                "VALUES " +
-                "(0							--<ssip_DBCno, smallint,> \n" +
-                ",0							--<ssip_SpecRECno, int,> \n" +
-                ",0							--<ssip_iptal, bit,> \n" +
-                ",86							--<ssip_fileid, smallint,> \n" +
-                ",0							--<ssip_hidden, bit,> \n" +
-                ",0							--<ssip_kilitli, bit,> \n" +
-                ",0							--<ssip_degisti, bit,> \n" +
-                ",0							--<ssip_checksum, int,> \n" +
-                ",@ssip_create_user							--<ssip_create_user, smallint,> \n" +
-                ",CONVERT(NVARCHAR(10),GETDATE(),112) 		--<ssip_create_date, datetime,> \n" +
-                ",@ssip_lastup_user					--<ssip_lastup_user, smallint,> \n" +
-                ",CONVERT(NVARCHAR(10),GETDATE(),112) 		--<ssip_lastup_date, datetime,> \n" +
-                ",''							--<ssip_special1, varchar(4),> \n" +
-                ",''							--<ssip_special2, varchar(4),> \n" +
-                ",''							--<ssip_special3, varchar(4),> \n" +
-                ",@ssip_firmano					--<ssip_firmano, int,> \n" +
-                ",@ssip_subeno					--<ssip_subeno, int,> \n" +
-                ",@ssip_tarih						--<ssip_tarih, datetime,> \n" +
-                ",@ssip_teslim_tarih					--<ssip_teslim_tarih, datetime,> \n" +
-                ",@ssip_evrakno_seri					--<ssip_evrakno_seri, varchar(4),> \n" +
-                ",@ssip_evrakno_sira					--<ssip_evrakno_sira, int,> \n" +
-                ",(SELECT ISNULL(MAX(ssip_satirno),-1) + 1 AS SATIRNO FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri = @ssip_evrakno_seri AND ssip_evrakno_sira = @ssip_evrakno_sira)	--<ssip_satirno, int,> \n" +
-                ",@ssip_belgeno					--<ssip_belgeno, varchar(15),> \n" +
-                ",@ssip_belge_tarih					--<ssip_belge_tarih, datetime,> \n" +
-                ",@ssip_stok_kod					--<ssip_stok_kod, varchar(25),> \n" +
-                ",@ssip_miktar					--<ssip_miktar, float,> \n" +
-                ",@ssip_b_fiyat					--<ssip_b_fiyat, float,> \n" +
-                ",@ssip_tutar						--<ssip_tutar, float,> \n" +
-                ",@ssip_teslim_miktar					--<ssip_teslim_miktar, float,> \n" +
-                ",''							--<ssip_aciklama, varchar(50),> \n" +
-                ",@ssip_girdepo					--<ssip_girdepo, int,> \n" +
-                ",@ssip_cikdepo					--<ssip_cikdepo, int,> \n" +
-                ",0							--<ssip_kapat_fl, bit,> \n" +
-                ",@ssip_birim_pntr					--<ssip_birim_pntr, tinyint,> \n" +
-                ",@ssip_fiyat_liste_no				--<ssip_fiyat_liste_no, int,> \n" +
-                ",cast(cast(0 as binary) as uniqueidentifier)		--<ssip_stal_uid, smallint,> \n" +
-                ",''							--<ssip_paket_kod, varchar(25),> \n" +
-                ",''                           --<ssip_kapatmanedenkod, varchar(25),> \n" +
-                ",''                          --<ssip_projekodu, varchar(25),> \n" +
-                ",@ssip_sormerkezi                          --<ssip_sormerkezi, varchar(25),> \n" +
-                ",''                          --<ssip_gecerlilik_tarihi, datetime,> \n" +
-                ",0                           --<ssip_rezervasyon_miktari, float,> \n" +
-                ",0                          --<ssip_rezerveden_teslim_edilen, float,> \n" +
-                ") " +
-                "SELECT [ssip_Guid] FROM @UIDTABLE ",
-            param :['ssip_create_user:int','ssip_lastup_user:int','ssip_firmano:int','ssip_subeno:int','ssip_tarih:date','ssip_teslim_tarih:date','ssip_evrakno_seri:string|25',
-                    'ssip_evrakno_sira:int','ssip_belgeno:string|25','ssip_belge_tarih:date','ssip_stok_kod:string|25','ssip_miktar:float','ssip_b_fiyat:float','ssip_tutar:float',
-                    'ssip_teslim_miktar:float','ssip_girdepo:int','ssip_cikdepo:int','ssip_birim_pntr:int','ssip_fiyat_liste_no:int','ssip_sormerkezi:string|25']
-    },
-    DepoSiparisEvrakDelete :
-    {
-        query : "DELETE FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri=@ssip_evrakno_seri AND ssip_evrakno_sira=@ssip_evrakno_sira ",
-        param : ['ssip_evrakno_seri:string|25','ssip_evrakno_sira:int']
-    },
-    DepoSiparisSatirDelete :
-    {
-        query : "DELETE FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_Guid=@ssip_Guid ",
-        param : ['ssip_Guid:string|50']
-    },
-    DepoSiparisUpdate :
-    {
-        query : "UPDATE DEPOLAR_ARASI_SIPARISLER SET ssip_miktar=@ssip_miktar WHERE ssip_Guid = @ssip_Guid ",
-        param :['ssip_miktar:float','ssip_Guid:string|50']
-    },
-    DepoSiparisMaxSira :
-    {
-        query : "SELECT ISNULL(MAX(ssip_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri=@ssip_evrakno_seri ",
-        param :['ssip_evrakno_seri:string|25']
-    },
-    //UrunGirisCikis
-    IsEmriGetir : 
-    {
-        query : "select is_Kod as KODU,is_Ismi AS ADI,CONVERT(NVARCHAR,is_BaslangicTarihi,104) AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1' AND " +
-        "((ISEMIRLERI.is_Kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((ISEMIRLERI.is_Ismi LIKE  @ADI + '%' ) OR (@ADI = ''))",
-        param : ['KODU','ADI'],
-        type : ['string|25','string|127']
-    }, 
     CariInsert : 
     {
         query : "INSERT INTO [dbo].[CARI_HESAPLAR] " +
@@ -3286,8 +3061,235 @@ var QuerySql =
            ",''                                      --<adr_efatura_alias, nvarchar(120),> \n " + 
            ",''                                      --<adr_eirsaliye_alias, nvarchar(120),>\n" +
            " )",
-        param : ['CARIKOD:string|127','CARIUNVAN1:string|127','CARIUNVAN2:string|127','CARITIP:int','DOVIZ:int','VDAIREADI:string|127','VDAIRENO:string|15','TEMSILCI:string|25','EMAIL:string|50','CARIKOD1:string|127','ADRES1:string|50','ADRES2:string|50','ILCE:string|30','IL:string|25','TELEFON:string|10']
+        param : ['CARIKOD:string|25','CARIUNVAN1:string|127','CARIUNVAN2:string|127','CARITIP:int','DOVIZ:int','VDAIREADI:string|50','VDAIRENO:string|15','TEMSILCI:string|25','EMAIL:string|50','CARIKOD1:string|25','ADRES1:string|50','ADRES2:string|50','ILCE:string|50','IL:string|50','TELEFON:string|10']
     },
+    //Etiket
+    EtiketInsert :
+    {  
+        query : "INSERT INTO ETIKETBAS " +
+                "([Etkb_DBCno], " +
+                "[Etkb_SpecRECno], " + 
+                "[Etkb_iptal], " +
+                "[Etkb_fileid], " +
+                "[Etkb_hidden], " + 
+                "[Etkb_kilitli], " +
+                "[Etkb_degisti], " +
+                "[Etkb_checksum], " +
+                "[Etkb_create_user], " +
+                "[Etkb_create_date], " +
+                "[Etkb_lastup_user], " +
+                "[Etkb_lastup_date], " +
+                "[Etkb_special1], " +
+                "[Etkb_special2], " +
+                "[Etkb_special3], " +
+                "[Etkb_evrakno_seri], " +
+                "[Etkb_evrakno_sira], " +
+                "[Etkb_evrak_tarihi], " +
+                "[Etkb_aciklama], " +
+                "[Etkb_satirno], " +
+                "[Etkb_belge_no], " +
+                "[Etkb_belge_tarih], " +
+                "[Etkb_EtiketTip], " +
+                "[Etkb_BasimTipi], " +
+                "[Etkb_BasimAdet], " +
+                "[Etkb_DepoNo], " +
+                "[Etkb_StokKodu], " +
+                "[Etkb_RenkNo], " +
+                "[Etkb_BedenNo], " +
+                "[Etkb_Barkodu], " +
+                "[Etkb_BasilacakMiktar] " +
+                ") VALUES ( " + 
+                "0					--<Etkb_DBCno, int,> \n" +
+                ",0		 			--<Etkb_SpecRECno, int,> \n" +
+                ",0                 --<Etkb_iptal, bit,> \n" +
+                ",115                    --<Etkb_fileid, smallint,> \n" +
+                ",0                  --<Etkb_hidden, bit,> \n" +
+                ",0                  --<Etkb_kilitli, bit,> \n" +
+                ",0                  --<Etkb_degisti, bit,> \n" +
+                ",0                  --<Etkb_checksum, int,> \n" +
+                ",@Etkb_create_user 			--<Etkb_create_user, smallint,> \n" +
+                ",CONVERT(VARCHAR(10),GETDATE(),112) 		--<Etkb_create_date, datetime,> \n" +
+                ",@Etkb_lastup_user 				--<Etkb_lastup_user, smallint,> \n" +
+                ",CONVERT(VARCHAR(10),GETDATE(),112) 		--<Etkb_lastup_date, datetime,> \n" +
+                ",@Etkb_special1		 			--<Etkb_special1, varchar(4),> \n" +
+                ",''		 			--<Etkb_special2, varchar(4),> \n" +
+                ",''		 			--<Etkb_special3, varchar(4),> \n" +
+                ",@Etkb_evrakno_seri			--<Etkb_evrakno_seri, varchar(20),> \n" +
+                ",@Etkb_evrakno_sira			--<Etkb_evrakno_sira, int,> \n" +
+                ",CONVERT(VARCHAR(10),GETDATE(),112)			--<Etkb_evrak_tarihi, int,> \n" +
+                ",@Etkb_aciklama                            --<Etkb_aciklama, varchar(40),> \n" +
+                ",(SELECT ISNULL(MAX(Etkb_satirno),-1) + 1 FROM ETIKETBAS WHERE Etkb_evrakno_seri = @Etkb_evrakno_seri AND Etkb_evrakno_sira = @Etkb_evrakno_sira)				                    --<Etkb_satirno, int,> \n" +
+                ",@Etkb_belge_no                            --<Etkb_belge_no, varchar(50),> \n " +
+                ",CONVERT(VARCHAR(10),GETDATE(),112)       --<Etkb_belge_tarih, datetime,> \n " +
+                ",@Etkb_EtiketTip                            --<Etkb_EtiketTip, tinyint,> \n " +
+                ",@Etkb_BasimTipi                           --<Etkb_BasimTipi, tinyint,> \n " +
+                ",@Etkb_BasimAdet                            --<Etkb_BasimAdet, smallint,> \n " +
+                ",@Etkb_DepoNo                              --<Etkb_DepoNo, bit> \n " +
+                ",@Etkb_StokKodu                            --<Etkb_StokKodu, varchar(25),> \n " +
+                ",@Etkb_RenkNo                              --<Etkb_RenkNo, int,> \n " +
+                ",@Etkb_BedenNo                             --<Etkb_BedenNo, int,> \n" +
+                ",@Etkb_Barkodu                             --<Etkb_Barkodu, varchar(50),> \n" +
+                ",@Etkb_BasilacakMiktar                     --<Etkb_BasilacakMiktar smallint,> \n" + 
+                ")",               
+            param :['Etkb_create_user:int','Etkb_lastup_user:int','Etkb_special1:string|50','Etkb_evrakno_seri:string|50','Etkb_evrakno_sira:int','Etkb_aciklama:string|50',
+                    'Etkb_belge_no:string|50','Etkb_EtiketTip:int','Etkb_BasimTipi:int','Etkb_BasimAdet:int','Etkb_DepoNo:int','Etkb_StokKodu:string|50','Etkb_RenkNo:int','Etkb_BedenNo:int',
+                    'Etkb_Barkodu:string|50','Etkb_BasilacakMiktar:int']
+    },
+    EtiketGetir : 
+    {
+        query : "SELECT Etkb_evrakno_seri AS SERI, Etkb_evrakno_sira AS SIRA, Etkb_BasilacakMiktar AS BASIMMIKTAR, Etkb_StokKodu AS STOKKODU, Etkb_DepoNo AS DEPONO " +
+                "FROM ETIKETBAS WHERE Etkb_evrakno_seri = @Etkb_evrakno_seri AND Etkb_evrakno_sira = @Etkb_evrakno_sira ",
+        param : ['Etkb_evrakno_seri:string|50','Etkb_evrakno_sira:int']  
+    },
+    MaxEtiketSira : 
+    {
+        query : "SELECT ISNULL(MAX(Etkb_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM ETIKETBAS " +
+                "WHERE Etkb_evrakno_seri=@Etkb_evrakno_seri",
+        param : ['Etkb_evrakno_seri'],
+        type : ['string|50']
+    },
+    //DepoSiparis
+    DepoSiparisGetir :
+    {
+        query : "SELECT ssip_tutar AS TUTAR, ssip_b_fiyat AS FIYAT, ssip_miktar AS MIKTAR, " +
+                "ISNULL((SELECT sto_isim from STOKLAR WHERE sto_kod=ssip_stok_kod),'') AS ADI , " +
+                "ssip_stok_kod AS KODU, " +
+                "ssip_birim_pntr AS BIRIM, " + 
+                "ROW_NUMBER() OVER(ORDER BY ssip_Guid) AS NO, * " +
+                "FROM DEPOLAR_ARASI_SIPARISLER " +
+                "WHERE ssip_evrakno_seri=@ssip_evrakno_seri AND ssip_evrakno_sira=@ssip_evrakno_sira " +
+                "ORDER BY ssip_satirno ",
+        param : ['ssip_evrakno_seri','ssip_evrakno_sira'],
+        type : ['string|25','int']
+    },
+    DepoSiparisInsert :
+    {
+        query : "DECLARE @UIDTABLE table([ssip_Guid] [uniqueidentifier]) " +
+                "INSERT INTO [DEPOLAR_ARASI_SIPARISLER] " +
+                "([ssip_DBCno] " +
+                ",[ssip_SpecRECno] " +
+                ",[ssip_iptal] " +
+                ",[ssip_fileid] " +
+                ",[ssip_hidden] " +
+                ",[ssip_kilitli] " +
+                ",[ssip_degisti] " +
+                ",[ssip_checksum] " +
+                ",[ssip_create_user] " +
+                ",[ssip_create_date] " +
+                ",[ssip_lastup_user] " +
+                ",[ssip_lastup_date] " +
+                ",[ssip_special1] " +
+                ",[ssip_special2] " +
+                ",[ssip_special3] " +
+                ",[ssip_firmano] " +
+                ",[ssip_subeno] " +
+                ",[ssip_tarih] " +
+                ",[ssip_teslim_tarih] " +
+                ",[ssip_evrakno_seri] " +
+                ",[ssip_evrakno_sira] " +
+                ",[ssip_satirno] " +
+                ",[ssip_belgeno] " +
+                ",[ssip_belge_tarih] " +
+                ",[ssip_stok_kod] " +
+                ",[ssip_miktar] " +
+                ",[ssip_b_fiyat] " +
+                ",[ssip_tutar] " +
+                ",[ssip_teslim_miktar] " +
+                ",[ssip_aciklama] " +
+                ",[ssip_girdepo] " +
+                ",[ssip_cikdepo] " +
+                ",[ssip_kapat_fl] " +
+                ",[ssip_birim_pntr] " +
+                ",[ssip_fiyat_liste_no] " +
+                ",[ssip_stal_uid] " +
+                ",[ssip_paket_kod] " +
+                ",[ssip_kapatmanedenkod] " +
+                ",[ssip_projekodu] " +
+                ",[ssip_sormerkezi] " +
+                ",[ssip_gecerlilik_tarihi] " +
+                ",[ssip_rezervasyon_miktari] " +
+                ",[ssip_rezerveden_teslim_edilen] " +
+                ") " +
+                "OUTPUT INSERTED.[ssip_Guid] INTO @UIDTABLE " +
+                "VALUES " +
+                "(0							--<ssip_DBCno, smallint,> \n" +
+                ",0							--<ssip_SpecRECno, int,> \n" +
+                ",0							--<ssip_iptal, bit,> \n" +
+                ",86							--<ssip_fileid, smallint,> \n" +
+                ",0							--<ssip_hidden, bit,> \n" +
+                ",0							--<ssip_kilitli, bit,> \n" +
+                ",0							--<ssip_degisti, bit,> \n" +
+                ",0							--<ssip_checksum, int,> \n" +
+                ",@ssip_create_user							--<ssip_create_user, smallint,> \n" +
+                ",CONVERT(NVARCHAR(10),GETDATE(),112) 		--<ssip_create_date, datetime,> \n" +
+                ",@ssip_lastup_user					--<ssip_lastup_user, smallint,> \n" +
+                ",CONVERT(NVARCHAR(10),GETDATE(),112) 		--<ssip_lastup_date, datetime,> \n" +
+                ",''							--<ssip_special1, varchar(4),> \n" +
+                ",''							--<ssip_special2, varchar(4),> \n" +
+                ",''							--<ssip_special3, varchar(4),> \n" +
+                ",@ssip_firmano					--<ssip_firmano, int,> \n" +
+                ",@ssip_subeno					--<ssip_subeno, int,> \n" +
+                ",@ssip_tarih						--<ssip_tarih, datetime,> \n" +
+                ",@ssip_teslim_tarih					--<ssip_teslim_tarih, datetime,> \n" +
+                ",@ssip_evrakno_seri					--<ssip_evrakno_seri, varchar(4),> \n" +
+                ",@ssip_evrakno_sira					--<ssip_evrakno_sira, int,> \n" +
+                ",(SELECT ISNULL(MAX(ssip_satirno),-1) + 1 AS SATIRNO FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri = @ssip_evrakno_seri AND ssip_evrakno_sira = @ssip_evrakno_sira)	--<ssip_satirno, int,> \n" +
+                ",@ssip_belgeno					--<ssip_belgeno, varchar(15),> \n" +
+                ",@ssip_belge_tarih					--<ssip_belge_tarih, datetime,> \n" +
+                ",@ssip_stok_kod					--<ssip_stok_kod, varchar(25),> \n" +
+                ",@ssip_miktar					--<ssip_miktar, float,> \n" +
+                ",@ssip_b_fiyat					--<ssip_b_fiyat, float,> \n" +
+                ",@ssip_tutar						--<ssip_tutar, float,> \n" +
+                ",@ssip_teslim_miktar					--<ssip_teslim_miktar, float,> \n" +
+                ",''							--<ssip_aciklama, varchar(50),> \n" +
+                ",@ssip_girdepo					--<ssip_girdepo, int,> \n" +
+                ",@ssip_cikdepo					--<ssip_cikdepo, int,> \n" +
+                ",0							--<ssip_kapat_fl, bit,> \n" +
+                ",@ssip_birim_pntr					--<ssip_birim_pntr, tinyint,> \n" +
+                ",@ssip_fiyat_liste_no				--<ssip_fiyat_liste_no, int,> \n" +
+                ",cast(cast(0 as binary) as uniqueidentifier)		--<ssip_stal_uid, smallint,> \n" +
+                ",''							--<ssip_paket_kod, varchar(25),> \n" +
+                ",''                           --<ssip_kapatmanedenkod, varchar(25),> \n" +
+                ",''                          --<ssip_projekodu, varchar(25),> \n" +
+                ",@ssip_sormerkezi                          --<ssip_sormerkezi, varchar(25),> \n" +
+                ",''                          --<ssip_gecerlilik_tarihi, datetime,> \n" +
+                ",0                           --<ssip_rezervasyon_miktari, float,> \n" +
+                ",0                          --<ssip_rezerveden_teslim_edilen, float,> \n" +
+                ") " +
+                "SELECT [ssip_Guid] FROM @UIDTABLE ",
+            param :['ssip_create_user:int','ssip_lastup_user:int','ssip_firmano:int','ssip_subeno:int','ssip_tarih:date','ssip_teslim_tarih:date','ssip_evrakno_seri:string|25',
+                    'ssip_evrakno_sira:int','ssip_belgeno:string|25','ssip_belge_tarih:date','ssip_stok_kod:string|25','ssip_miktar:float','ssip_b_fiyat:float','ssip_tutar:float',
+                    'ssip_teslim_miktar:float','ssip_girdepo:int','ssip_cikdepo:int','ssip_birim_pntr:int','ssip_fiyat_liste_no:int','ssip_sormerkezi:string|25']
+    },
+    DepoSiparisEvrakDelete :
+    {
+        query : "DELETE FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri=@ssip_evrakno_seri AND ssip_evrakno_sira=@ssip_evrakno_sira ",
+        param : ['ssip_evrakno_seri:string|25','ssip_evrakno_sira:int']
+    },
+    DepoSiparisSatirDelete :
+    {
+        query : "DELETE FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_Guid=@ssip_Guid ",
+        param : ['ssip_Guid:string|50']
+    },
+    DepoSiparisUpdate :
+    {
+        query : "UPDATE DEPOLAR_ARASI_SIPARISLER SET ssip_miktar=@ssip_miktar WHERE ssip_Guid = @ssip_Guid ",
+        param :['ssip_miktar:float','ssip_Guid:string|50']
+    },
+    DepoSiparisMaxSira :
+    {
+        query : "SELECT ISNULL(MAX(ssip_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri=@ssip_evrakno_seri ",
+        param :['ssip_evrakno_seri:string|25']
+    },
+    //UrunGirisCikis
+    IsEmriGetir : 
+    {
+        query : "select is_Kod as KODU,is_Ismi AS ADI,CONVERT(NVARCHAR,is_BaslangicTarihi,104) AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1' AND " +
+        "((ISEMIRLERI.is_Kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((ISEMIRLERI.is_Ismi LIKE  @ADI + '%' ) OR (@ADI = ''))",
+        param : ['KODU','ADI'],
+        type : ['string|25','string|127']
+    }, 
+
     //#region "AKTARIM"
     AdresTbl : 
     {

@@ -24,14 +24,29 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "DP321-BT",
+			"BTYaziciAdi": "SW_C58B",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "70",
-			"FisDizayn": "1"
+			"FisDizayn": "0"
 		},
 		"StokRaporu": {
-			"DepoNo": "4",
+			"DepoNo": "4"
+		},
+		"GelenHavale": {
+			"Seri": "DNM",
+			"ChaEvrakTip": "34",
+			"ChaTip": "1",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "01",
+			"BankaKodu": "01",
+			"EvrakSil": "0",
+			"EvrakTip": "0",
+			"NakitKasa": "",
+			"KrediKasa": "",
+			"HavaleKasa": ""
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -227,7 +242,7 @@ var Param = [
 			"Depo Sipariş": "1",
 			"Depo Mal Kabul": "1",
 			"Depo Nakliye": "0",
-			"Depo Durum Raporu": "0",
+			"Depo Durum Raporu": "1",
 			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
@@ -247,7 +262,17 @@ var Param = [
 			"Durağan Cariler Raporu": "1",
 			"Kasa Rapor": "1",
 			"Stok Hareket Rapor": "1",
-			"Depo Durum Raporu": "1",
+			"GelenHavale": "1",
+			"Ambar Fişi": "1",
+			"Stok Virman Fişi": "1",
+			"Stok Listesi": "1",
+			"Stok Ekle": "1",
+			"Ürün Giriş Çıkış": "1",
+			"Fason Giriş Çıkış": "1",
+			"Planlı Üretim": "1",
+			"Aktarim": "1",
+			"EvrakGonder": "1",
+			"Gelen Havale": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -369,6 +394,22 @@ var Param = [
 		},
 		"DepoDurumRaporu": {
 			"Depo": "4"
+		},
+		"TediyeMAkbuzu": {
+			"ChaEvrakTip": "64",
+			"Seri": "THS",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"NakitKasa": "",
+			"KrediKasa": "",
+			"CekKasa": "",
+			"SenetKasa": "",
+			"HavaleKasa": "",
+			"OdemeKasa": "",
+			"EvrakSil": "0",
+			"ChaTip": "0"
 		}
 	},
 	{
@@ -395,8 +436,8 @@ var Param = [
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
-			"BTYaziciTip": "RAWBT",
-			"BTYaziciAdi": "",
+			"BTYaziciTip": "CORDOVABT",
+			"BTYaziciAdi": "SW_D76E",
 			"FirmaListe": "",
 			"RiskParam": "",
 			"RiskLimitOran": "",
@@ -711,7 +752,23 @@ var Param = [
 			"Cari Secimli Siparis Durum Raporu": "1",
 			"Durağan Cariler Raporu": "1",
 			"Kasa Rapor": "1",
-			"Stok Hareket Rapor": "1"
+			"Stok Hareket Rapor": "1",
+			"Depo Durum Raporu": "1",
+			"Gelen Havale": "1"
+		},
+		"DepoDurumRaporu": {
+			"Depo": "EKR"
+		},
+		"GelenHavale": {
+			"ChaEvrakTip": "1",
+			"Seri": "THS",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"NakitKasa": "",
+			"KrediKasa": "",
+			"HavaleKasa": ""
 		}
 	}
 ]
