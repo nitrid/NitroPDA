@@ -411,7 +411,7 @@ function SqlQuery(pQuery)
     });
 }
 
-eIrsGonder();
+//eIrsGonder();
 
 async function eIrsGonder()
 {
