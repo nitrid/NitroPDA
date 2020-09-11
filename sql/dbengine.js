@@ -2,7 +2,7 @@ var fs = require('fs');
 var _sql = require("./sqllib");
 var io = require('socket.io')();
 var lic = require('./license');
-//var emikro = require('./emikro');
+var emikro = require('./emikro');
 
 var msql;
 var tsql;
@@ -124,7 +124,7 @@ io.on('connection', function(socket)
                 else
                     TmpDb = pQuery.db;            
             }
-            
+
             msql = new _sql(config.server,TmpDb,config.uid,config.pwd,config.trustedConnection);
             msql.QueryPromise(pQuery,function(data)
             {
@@ -299,9 +299,15 @@ io.on('connection', function(socket)
     });
     socket.on('EIrsGonder',function(pParam,fn)
     {
-        console.log(pParam)
-        emikro.eIrsGonder();
-        fn("reco")
+        emikro.eIrsGonder(pParam,(pData)=>
+        {
+            fn(pData);
+        });
+    });
+    socket.on('EIrsGoster',async (pDocumentId,fn) =>
+    {
+        let TmpData = await emikro.eIrsGoster(pDocumentId);
+        fn(TmpData);
     });
 });
 

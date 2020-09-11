@@ -68,7 +68,7 @@ var QuerySql =
     }, 
     CmbBankaGetir : 
     {
-        query : "SELECT ban_kod AS KODU,ban_ismi AS ADI, ban_doviz_cinsi AS DOVIZCINSI,(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(ban_doviz_cinsi,0),2)) AS DOVIZKUR FROM BANKALAR " ,
+        query : "SELECT ban_kod AS KODU,ban_ismi AS ADI FROM BANKALAR " ,
     },
     CmbAdresNo : 
     {
@@ -2026,7 +2026,6 @@ var QuerySql =
         query:  "SELECT *, " +
                 "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod=cha_kod) AS CARIADI, " +
                 "ROUND(cha_meblag,2) AS TUTAR, " +
-                "CASE cha_evrak_tip WHEN 34 THEN ISNULL((SELECT ban_ismi FROM BANKALAR WHERE ban_kod = cha_kasa_hizkod),'') END AS BANKAADI, " +
                 "CASE cha_cinsi WHEN 19 THEN ISNULL((SELECT ban_ismi FROM BANKALAR WHERE ban_kod = cha_kasa_hizkod),'') " +
                 "ELSE ISNULL((SELECT kas_isim FROM KASALAR WHERE kas_kod = cha_kasa_hizkod),'') END AS KASAADI, " +
                 "CONVERT(VARCHAR(10),GETDATE(),112) AS cha_d_kurtar " +
@@ -2323,7 +2322,7 @@ var QuerySql =
                 ",@cha_e_islem_turu								--<cha_e_islem_turu, tinyint,> \n" + 
                 ",0												--<cha_fatura_belge_turu, tinyint,> \n" + 
                 ",''											--<cha_diger_belge_adi, nvarchar(50),> \n" + 
-                ",NEWID() 									    --<cha_uuid, nvarchar(40),> \n" + 
+                ",NEWID()									    --<cha_uuid, nvarchar(40),> \n" + 
                 ",1												--<cha_adres_no, int,> \n" + 
                 ",0												--<cha_vergifon_toplam, float,> \n" + 
                 ",'18991230'									--<cha_ilk_belge_tarihi> \n" + 
@@ -3289,7 +3288,181 @@ var QuerySql =
         param : ['KODU','ADI'],
         type : ['string|25','string|127']
     }, 
-
+    //E-Süreçler
+    EIrsGetir : 
+    {
+        query : "SELECT sth_evrakno_seri AS SERI, " +
+                "sth_evraktip AS EVRAKTIP, " +
+                "sth_evrakno_sira AS SIRA, " +
+                "CONVERT(VARCHAR,sth_tarih, 23) AS TARIH, " +
+                "CONVERT(VARCHAR,sth_belge_tarih, 23) AS BELGETARIH, " +
+                "CONVERT(VARCHAR, sth_lastup_date, 8) AS BELGEZAMAN, " +
+                "'1111111111' AS VKNNO, " +
+                //"'ISNULL((SELECT TOP 1 fir_FVergiNo FROM FIRMALAR WHERE fir_sirano = 0),'')' AS VKNNO, " +
+                "ISNULL((SELECT  TOP 1  fir_unvan FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN, " +
+                "ISNULL((SELECT TOP 1  fir_unvan2 FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN2, " +
+                "ISNULL((SELECT TOP 1  sube_Cadde FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBECADDE, " +
+                "ISNULL((SELECT TOP 1  sube_Mahalle FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEMAHALLE, " +
+                "ISNULL((SELECT TOP 1  sube_Sokak FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBESOKAK, " +
+                "ISNULL((SELECT TOP 1  sube_Semt FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBESEMT, " +
+                "ISNULL((SELECT TOP 1  sube_Apt_No FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEAPTNO, " +
+                "ISNULL((SELECT TOP 1  sube_Daire_No FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEDAIRENO, " +
+                "ISNULL((SELECT TOP 1  sube_Ilce FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEILCE, " +
+                "ISNULL((SELECT TOP 1  sube_Il FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEIL, " +
+                "ISNULL((SELECT TOP 1  sube_Ulke FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEULKE, " +
+                "ISNULL((SELECT TOP 1 Vgd_adi FROM MikroDB_V16..VERGI_DAIRELERI WHERE Vgd_orj_kod = (SELECT TOP 1 fir_FVergiDaire FROM FIRMALAR WHERE fir_sirano = 0)),'') AS VDADI, " +
+                "ISNULL((SELECT TOP 1 cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN1, " +
+                "ISNULL((SELECT TOP 1 cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN2, " +
+                "ISNULL((SELECT TOP 1 cari_vdaire_adi FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVDADI, " +
+                "ISNULL((SELECT TOP 1 cari_vdaire_no FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVKNO, " +
+                "ISNULL((SELECT TOP 1 adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARICADDE, " +
+                "ISNULL((SELECT TOP 1 adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARISOKAK, " +
+                "ISNULL((SELECT TOP 1 adr_mahalle FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIMAH, " +
+                "ISNULL((SELECT TOP 1 adr_Semt FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARISEMT, " +
+                "ISNULL((SELECT TOP 1 adr_Apt_No FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIAPTNO, " +
+                "ISNULL((SELECT TOP 1 adr_Daire_No FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIDAIRENO, " +
+                "ISNULL((SELECT TOP 1 adr_ilce FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIILCE, " +
+                "ISNULL((SELECT TOP 1 adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIIL, " +
+                "ISNULL((SELECT TOP 1 adr_ulke FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIULKE, " +
+                "ISNULL((SELECT TOP 1 eir_sofor_adi FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS SOFORADI, " +
+                "ISNULL((SELECT TOP 1 eir_sofor_soyadi FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS SOFORSOYADI, " +
+                "ISNULL((SELECT TOP 1 eir_tasiyici_arac_plaka FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS ARACPLAKA, " +
+                "ISNULL((SELECT TOP 1 eir_sofor2_adi FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS SOFORADI2, " +
+                "ISNULL((SELECT TOP 1 eir_sofor2_soyadi FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS SOFORSOYADI2, " +
+                "ISNULL((SELECT TOP 1 eir_sofor_tckn FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS SOFORTC, " +
+                "sth_tutar AS TUTAR, " +
+                "sth_miktar AS MIKTAR, " +
+                "sth_tutar / sth_miktar AS BFIYAT, " +
+                "ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = sth_stok_kod),'') AS STOKADI ," +
+                "sth_stok_kod AS STOKKODU ," +
+                "sth_satirno AS SATIR," +
+                "CASE sth_har_doviz_cinsi WHEN 0 THEN 'TRY' WHEN 1 THEN 'USD' WHEN 2 THEN 'EUR' END AS DOVIZ " +
+                "FROM STOK_HAREKETLERI " +
+                "WHERE sth_evrakno_seri = @sth_evrakno_seri AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = 1",
+        param : ['sth_evrakno_seri','sth_evrakno_sira'],
+        type : ['string|20','int']
+    }, 
+    EIrsDetayInsert : 
+    {
+        query : "INSERT INTO [dbo].[E_IRSALIYE_DETAYLARI] " +
+                    "([eir_Guid] " +
+                    ",[eir_DBCno] " +
+                    ",[eir_SpecRECno] " +
+                    ",[eir_iptal] " +
+                    ",[eir_fileid] " +
+                    ",[eir_hidden] " +
+                    ",[eir_kilitli] " +
+                    ",[eir_degisti] " +
+                    ",[eir_checksum] " +
+                    ",[eir_create_user] " +
+                    ",[eir_create_date] " +
+                    ",[eir_lastup_user] " +
+                    ",[eir_lastup_date] " +
+                    ",[eir_special1] " +
+                    ",[eir_special2] " +
+                    ",[eir_special3] " +
+                    ",[eir_firma_no] " +
+                    ",[eir_evrak_tip] " +
+                    ",[eir_tipi] " +
+                    ",[eir_evrakno_seri] " +
+                    ",[eir_evrakno_sira] " +
+                    ",[eir_gib_seri] " +
+                    ",[eir_gib_sira] " +
+                    ",[eir_pozisyon] " +
+                    ",[eir_uuid] " +
+                    ",[eir_mVkn] " +
+                    ",[eir_tasiyici_firma_kodu] " +
+                    ",[eir_sofor_uid] " +
+                    ",[eir_sofor2_uid] " +
+                    ",[eir_tasiyici_arac_plaka] " +
+                    ",[eir_tasiyici_dorse_plaka1] " +
+                    ",[eir_tasiyici_dorse_plaka2] " +
+                    ",[eir_stok_konsinye] " +
+                    ",[eir_toptanci_firma_kodu] " +
+                    ",[eir_bayi_firma_kodu] " +
+                    ",[eir_sofor_adi] " +
+                    ",[eir_sofor_soyadi] " +
+                    ",[eir_sofor2_adi] " +
+                    ",[eir_sofor2_soyadi] " +
+                    ",[eir_matbu_belgeno] " +
+                    ",[eir_matbu_tarih] " +
+                    ",[eir_sofor_tckn] " +
+                    ",[eir_sofor2_tckn] " +
+                    ",[eir_kargo_no] " +
+                    ",[eir_asama_no] " +
+                    ",[eir_tasima_yontemi] " +
+                    ",[eir_arac_tipi] " +
+                    ",[eir_guzergah_kodu] " +
+                    ",[eir_detay_bilgi] " +
+                    ",[eir_baslama_zamani] " +
+                    ",[eir_bitis_zamani] " +
+                    ",[eir_normal_iade] " +
+                    ",[eir_tip]) " +
+            "VALUES  " +
+                    "(newid()             --<eir_Guid, uniqueidentifier,>  \n" +
+                    ",0              --<eir_DBCno, smallint,>  \n" +
+                    ",0              --<eir_SpecRECno, int,>  \n" +
+                    ",0              --<eir_iptal, bit,>  \n" +
+                    ",614              --<eir_fileid, smallint,>  \n" +
+                    ",0              --<eir_hidden, bit,>  \n" +
+                    ",0              --<eir_kilitli, bit,>  \n" +
+                    ",0              --<eir_degisti, bit,>  \n" +
+                    ",0              --<eir_checksum, int,>  \n" +
+                    ",1              --<eir_create_user, smallint,>  \n" +
+                    ",GETDATE()              --<eir_create_date, datetime,>  \n" +
+                    ",1              --<eir_lastup_user, smallint,>  \n" +
+                    ",GETDATE()              --<eir_lastup_date, datetime,>  \n" +
+                    ",''              --<eir_special1, nvarchar(4),>  \n" +
+                    ",''              --<eir_special2, nvarchar(4),>  \n" +
+                    ",''              --<eir_special3, nvarchar(4),>  \n" +
+                    ",0              --<eir_firma_no, int,>  \n" +
+                    ",@eir_evrak_tip              --<eir_evrak_tip, tinyint,>  \n" +
+                    ",@eir_tipi              --<eir_tipi, tinyint,>  \n" +
+                    ",@eir_evrakno_seri              --<eir_evrakno_seri, [dbo].[evrakseri_str],>  \n" +
+                    ",@eir_evrakno_sira              --<eir_evrakno_sira, int,>  \n" +
+                    ",''              --<eir_gib_seri, nvarchar(10),>  \n" +
+                    ",0              --<eir_gib_sira, int,>  \n" +
+                    ",0              --<eir_pozisyon, tinyint,>  \n" +
+                    ",'00000000-0000-0000-0000-000000000000'              --<eir_uuid, nvarchar(40),>  \n" +
+                    ",''              --<eir_mVkn, nvarchar(15),>  \n" +
+                    ",@eir_tasiyici_firma_kodu              --<eir_tasiyici_firma_kodu, nvarchar(25),>  \n" +
+                    ",'00000000-0000-0000-0000-000000000000'              --<eir_sofor_uid, uniqueidentifier,>  \n" +
+                    ",'00000000-0000-0000-0000-000000000000'               --<eir_sofor2_uid, uniqueidentifier,>  \n" +
+                    ",@eir_tasiyici_arac_plaka              --<eir_tasiyici_arac_plaka, nvarchar(15),>  \n" +
+                    ",@eir_tasiyici_dorse_plaka1              --<eir_tasiyici_dorse_plaka1, nvarchar(15),>  \n" +
+                    ",@eir_tasiyici_dorse_plaka2              --<eir_tasiyici_dorse_plaka2, nvarchar(15),>  \n" +
+                    ",0              --<eir_stok_konsinye, tinyint,>  \n" +
+                    ",''              --<eir_toptanci_firma_kodu, nvarchar(25),>  \n" +
+                    ",''              --<eir_bayi_firma_kodu, nvarchar(25),>  \n" +
+                    ",@eir_sofor_adi              --<eir_sofor_adi, nvarchar(50),>  \n" +
+                    ",@eir_sofor_soyadi              --<eir_sofor_soyadi, nvarchar(50),>  \n" +
+                    ",@eir_sofor2_adi              --<eir_sofor2_adi, nvarchar(50),>  \n" +
+                    ",@eir_sofor2_soyadi             --<eir_sofor2_soyadi, nvarchar(50),>  \n" +
+                    ",''              --<eir_matbu_belgeno, [dbo].[belgeno_str],>  \n" +
+                    ",'1900-01-01 00:00:00.000'              --<eir_matbu_tarih, datetime,>  \n" +
+                    ",@eir_sofor_tckn              --<eir_sofor_tckn, nvarchar(11),>  \n" +
+                    ",@eir_sofor2_tckn              --<eir_sofor2_tckn, nvarchar(11),>  \n" +
+                    ",''              --<eir_kargo_no, nvarchar(50),>  \n" +
+                    ",''              --<eir_asama_no, nvarchar(50),>  \n" +
+                    ",''              --<eir_tasima_yontemi, nvarchar(50),>  \n" +
+                    ",''             --<eir_arac_tipi, nvarchar(50),>  \n" +
+                    ",''              --<eir_guzergah_kodu, nvarchar(50),>  \n" +
+                    ",''              --<eir_detay_bilgi, nvarchar(127),>  \n" +
+                    ",'1900-01-01 00:00:00.000'              --<eir_baslama_zamani, datetime,>  \n" +
+                    ",'1900-01-01 00:00:00.000'              --<eir_bitis_zamani, datetime,>  \n" +
+                    ",0              --<eir_normal_iade, tinyint,>  \n" +
+                    ",0              --<eir_tip, tinyint,>  \n" +
+                    ")" ,
+            param : ['eir_evrak_tip:int','eir_tipi:int','eir_evrakno_seri:string|10','eir_evrakno_sira:int','eir_tasiyici_firma_kodu:string|25',
+                      'eir_tasiyici_arac_plaka:string|15','eir_tasiyici_dorse_plaka1:string|15','eir_tasiyici_dorse_plaka2:string|15','eir_sofor_adi:string|50',
+                     'eir_sofor_soyadi:string|50','eir_sofor2_adi:string|50','eir_sofor2_soyadi:string|50','eir_sofor_tckn:string|11','eir_sofor2_tckn:string|11']
+    },
+    EIrsUpdate : 
+    {
+        query : "UPDATE E_IRSALIYE_DETAYLARI SET eir_uuid = @eir_uuid WHERE eir_evrak_tip = 1 AND eir_tipi = 3 AND eir_evrakno_seri = @eir_evrakno_seri AND eir_evrakno_sira = @eir_evrakno_sira", 
+        param: ['eir_uuid','eir_evrakno_seri','eir_evrakno_sira'],
+        type:  ['string|50','string|25','int']
+    }, 
     //#region "AKTARIM"
     AdresTbl : 
     {
@@ -4263,6 +4436,6 @@ var QuerySql =
             ",0         --<bar_asortitanimkodu, nvarchar(25),> \n" +
            ") ",
            param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int']
-    },
+    }    
     //#endregion "AKTARIM"
 };

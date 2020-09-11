@@ -150,6 +150,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         //DIZAYN
         $scope.DGenelToplam = 0;
         $scope.DizaynListe = [];
+
+        //E İRSALİYE MODAL
+        $scope.TxtSfrAd = ''
+        $scope.TxtSrfSoyAd = ''
+        $scope.TxtSfrTckn = ''
+        $scope.TxtPlaka = ''
     }
     function InitCariGrid()
     {   
@@ -526,7 +532,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             0,  // REZERVASYON MİKTAR
             0  // REZERVASYON TESLİM MİKTAR
         ];
-        console.log(Data)
         db.ExecuteTag($scope.Firma,'BedenHarInsert',Data,function(data)
         {   
             if(typeof(data.result.err) == 'undefined')
@@ -1134,7 +1139,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(data)
         {
             $scope.DepoListe = data; 
-            console.log($scope.DepoListe)
             $scope.DepoNo = UserParam[ParamName].DepoNo;
             $scope.DepoListe.forEach(function(item) 
             {
@@ -2057,7 +2061,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 Init();
                 InitCariGrid();
                 InitIslemGrid(); 
-                console.log(data)
+                
                 $scope.CariFiyatListe = data[0].sth_fiyat_liste_no;
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
@@ -2623,5 +2627,99 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             alertify.alert("Reis parametreni kontrol et ya yazamıyorum bir şey")
         }
+    }
+    $scope.BtnEIrsModalAc = function()
+    {
+        let TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query : "SELECT * FROM E_IRSALIYE_DETAYLARI WHERE eir_evrak_tip = 1 AND eir_tipi = 3 AND eir_evrakno_seri = @eir_evrakno_seri AND eir_evrakno_sira = @eir_evrakno_sira", 
+            param: ['eir_evrakno_seri','eir_evrakno_sira'],
+            type:  ['string|25','int'],
+            value: [$scope.Seri,$scope.Sira]
+        }
+        db.GetDataQuery(TmpQuery,function(pData)
+        {                         
+            if(pData.length == 0)
+            {
+                $('#MdlEIrsGonder').modal("show");
+            }
+            else
+            {
+                alertify.alert("Bu evrak zaten gönderilmiş !")
+            }
+        });
+        
+    }
+    $scope.BtnEIrsKaydet = async function()
+    {
+        if($scope.TxtSrfSoyAd != '' && $scope.TxtSfrAd != '' && $scope.TxtSfrTckn != '' && $scope.TxtPlaka != '')
+        {
+            let InsertData = 
+            [
+                $scope.EvrakTip,
+                3,
+                $scope.Seri,
+                $scope.Sira,
+                '',
+                $scope.TxtPlaka,
+                '',
+                '',
+                $scope.TxtSfrAd,
+                $scope.TxtSrfSoyAd,
+                '',
+                '',
+                $scope.TxtSfrTckn,
+                ''
+            ];
+
+            await db.ExecutePromiseTag($scope.Firma,'EIrsDetayInsert',InsertData);
+            let TmpData = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
+
+            if(TmpData.length > 0)
+            {
+                db.EIrsGonder(TmpData,(pData) =>
+                {
+                    $('#MdlEIrsGonder').modal("hide");
+
+                    if(typeof pData.id != 'undefined')
+                    {
+                        db.ExecuteTag($scope.Firma,'EIrsUpdate',[pData.id,$scope.Seri,$scope.Sira],function(pResult)
+                        {                         
+                        });
+                    }
+                    else
+                    {
+                        alertify.alert("E-Irsaliye gönderilemedi !")
+                    }
+                });
+            }
+        }
+        else
+        {
+            alert("Lütfen Tüm Alanları Doldurun")           
+        }
+    }
+    $scope.BtnEIrsGoster = function()
+    {
+        let TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query : "SELECT * FROM E_IRSALIYE_DETAYLARI WHERE eir_evrak_tip = 1 AND eir_tipi = 3 AND eir_evrakno_seri = @eir_evrakno_seri AND eir_evrakno_sira = @eir_evrakno_sira", 
+            param: ['eir_evrakno_seri','eir_evrakno_sira'],
+            type:  ['string|25','int'],
+            value: [$scope.Seri,$scope.Sira]
+        }
+        db.GetDataQuery(TmpQuery,function(pIrsDetay)
+        {                 
+            if(pIrsDetay.length > 0)
+            {
+                db.EIrsGoster(pIrsDetay[0].eir_uuid,(pData) =>
+                {
+                    let win = window.open("","E-Irsaliye");
+                    win.document.write(pData);
+                })
+            }        
+        });        
     }
 }

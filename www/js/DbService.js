@@ -317,9 +317,9 @@ angular.module('app.db', []).service('db',function($rootScope)
             {
                 if(pCallback)
                 {
-                    pCallback(data.result.recordset);
-                    resolve();
+                    pCallback(data.result.recordset);                    
                 }
+                resolve(data.result.recordset);
             });            
         });
     }    
@@ -331,9 +331,9 @@ angular.module('app.db', []).service('db',function($rootScope)
             {
                 if(pCallback)
                 {
-                    pCallback(data.result.recordset);
-                    resolve();
+                    pCallback(data.result.recordset);                    
                 }
+                resolve(data.result.recordset);
             });            
         });
     } 
@@ -351,9 +351,9 @@ angular.module('app.db', []).service('db',function($rootScope)
             {
                 if(pCallback)
                 {
-                    pCallback(data);
-                    resolve();
+                    pCallback(data);                    
                 }
+                resolve(data);
             });            
         });
     }
@@ -365,9 +365,9 @@ angular.module('app.db', []).service('db',function($rootScope)
             {
                 if(pCallback)
                 {
-                    pCallback(data);
-                    resolve();
+                    pCallback(data);                    
                 }
+                resolve(data);
             });            
         });
     }   
@@ -848,11 +848,24 @@ angular.module('app.db', []).service('db',function($rootScope)
             pCallback(true);
         }
     }
-    this.EIrsGonder = function()
+    this.EIrsGonder = function(pParam,pCallback)
     {
-        _Socket.emit('EIrsGonder', {t:"mahir"}, function (data) 
+        _Socket.emit('EIrsGonder', pParam,(Data) =>
         {
-            console.log(data);
+            if(typeof pCallback != 'undefined')
+            {
+                pCallback(Data)
+            }
+        });
+    }
+    this.EIrsGoster = function(pDocumentId,pCallback)
+    {
+        _Socket.emit('EIrsGoster', pDocumentId,(Data) =>
+        {
+            if(typeof pCallback != 'undefined')
+            {
+                pCallback(Data)
+            }
         });
     }
      //#endregion "PUBLIC"

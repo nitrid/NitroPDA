@@ -26,6 +26,8 @@
                                 <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Evrak Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(1)">Evrak Sil</button>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRaporClick()">Gün Sonu Raporu</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnEIrsModalAc()">E-Irsaliye Gönder</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnEIrsGoster()">E-Irsaliye Göster</button>
                                 <!-- <button class="dropdown-item" data-target="#RenkBeden" data-toggle="modal" role="menu-item">Renk Beden</a>
                                 <button class="dropdown-item" data-target="#PartiLot" data-toggle="modal" role="menu-item">PartiLot</a> -->
                             </div>
@@ -462,6 +464,42 @@
         </div>
     </div>
     <!-- MODALLAR -->
+      <!-- E-İRSALİYE Modal -->
+      <div class="modal fade" id="MdlEIrsGonder" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">X</span>
+                </button>
+                <h4 class="modal-title">e-İrsaliye Detayları</h4>
+            </div>
+                <div class="panel-body">
+                    <div class="form-group row my--5">
+                        <label class="form-control-label col-lg-4 col-md-4 col-sm-6 pr-6"><div class="float-left"><b><span style="color:dodgerblue;">Soför Adı :</span></b></div></label>
+                        <input type="text" class="form-control col-lg-8 col-md-8 col-sm-6 form-control-sm" ng-model="TxtSfrAd" ng-blur="MaxLot()">
+                    </div>
+                    <div class="form-group row my--5">
+                        <label class="form-control-label col-lg-4 col-md-4 col-sm-6 pr-6"><div class="float-left"><b><span style="color:dodgerblue;">Soför Soyadı :</span></b></div></label>
+                        <input type="text" class="form-control col-lg-8 col-md-8 col-sm-6 form-control-sm" ng-model="TxtSrfSoyAd">
+                    </div>
+                    <div class="form-group row my-5">
+                        <label class="form-control-label col-lg-4 col-md-4 col-sm-6 pr-6"><div class="float-left"><b><span style="color:dodgerblue;">Soför TCKN :</span></b></div></label>
+                        <input type="text" class="form-control col-lg-8 col-md-8 col-sm-6 form-control-sm" ng-model="TxtSfrTckn">
+                    </div>
+                    <div class="form-group row my-5">
+                        <label class="form-control-label col-lg-4 col-md-4 col-sm-6 pr-6"><div class="float-left"><b><span style="color:dodgerblue;">Araç Plaka :</span></b></div></label>
+                        <input type="text" class="form-control col-lg-8 col-md-8 col-sm-6 form-control-sm" ng-model="TxtPlaka">
+                    </div>
+                    <div class="form-group row my--5">
+                        <div class="form-group col-md-6 col-sm-6 col-lg-6">
+                            <button type="submit" class="btn btn-primary btn-block form-control-sm"  ng-click="BtnEIrsKaydet()">Kaydet ve Gönder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
     <!-- PartiLot Modal -->
     <div class="modal fade" id="MdlPartiLot" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-simple modal-primary modal-center px-10">
