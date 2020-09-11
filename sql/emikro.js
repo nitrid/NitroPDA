@@ -304,91 +304,106 @@ let FatTemplate =
                 },
                 PaymentMeans:
                 {
-
+                    PaymentMeansCode : "ZZZ",
+                    PaymentDueDate : "2020-06-19"
                 },
-                Shipment : 
+                TaxTotal : 
                 {
-                    ID : "",
-                    GoodsItem : 
-                    {
-                        ValueAmount : {"#text" : "900.00","@_currencyID":"TRY"}
-                    },
-                    ShipmentStage:
-                    {
-                       
-                        Person :
+                    TaxAmount : {"#text":"76.50","@_currencyID": "TRY"},
+                    TaxSubtotal :
+                    [
                         {
-                        FirstName:"ABDULLAH" ,
-
-                        FamilyName:"ATALAR",
-
-                        Title:"Şoför",
-
-                        NationalityID:"50614141501"
-                        }
-                       
-                    },
-                    Delivery : 
-                    {
-                        DeliveryAddress : 
-                        {
-                            StreetName : "Adres1 / Adres2",
-                            CitySubdivisionName : "SARIYER",
-                            CityName : "İSTANBUL",
-                            Country :
+                            TaxableAmount : {"#text":"300.00","@_currencyID": "TRY"},
+                            TaxAmount : {"#text":"22.50","@_currencyID": "TRY"},
+                            CalculationSequenceNumeric : 1,
+                            Percent : 7.5,
+                            TaxCategory : 
                             {
-                                IdentificationCode : "TR",
-                                Name : "TÜRKİYE",
+                                TaxScheme : 
+                                {
+                                    Name : "Ö.İLETİŞİM V",
+                                    TaxTypeCode : "4080"
+                                }
                             }
                         },
-                        Despatch : 
                         {
-                            ActualDespatchDate : "2020-08-31",
-                            ActualDespatchTime : "00:00:00"
+                            TaxableAmount : {"#text":"300.00","@_currencyID": "TRY"},
+                            TaxAmount : {"#text":"54.00","@_currencyID": "TRY"},
+                            CalculationSequenceNumeric : 2,
+                            Percent : 18,
+                            TaxCategory : 
+                            {
+                                TaxScheme : 
+                                {
+                                    Name : "KDV",
+                                    TaxTypeCode : "0015"
+                                }
+                            }
                         }
-                    }
+                    ]
                 },
-                DespatchLine :
+                LegalMonetaryTotal : 
+                {
+                    LineExtensionAmount : {"#text":"300.00","@_currencyID": "TRY"}, 
+                    TaxExclusiveAmount : {"#text":"300.00","@_currencyID": "TRY"}, 
+                    TaxInclusiveAmount : {"#text":"376.50","@_currencyID": "TRY"},
+                    AllowanceTotalAmount : {"#text":"0.00","@_currencyID": "TRY"}, 
+                    ChargeTotalAmount : {"#text":"0.00","@_currencyID": "TRY"}, 
+                    PayableRoundingAmount : {"#text":"0.00","@_currencyID": "TRY"}, 
+                    PayableAmount : {"#text":"376.50","@_currencyID": "TRY"}, 
+                },
+                InvoiceLine :
                 [
                     {
                         ID : "1",
-                        DeliveredQuantity : {"#text" : "2", "@_unitCode" : "C62"},
-                        OrderLineReference : 
+                        Note : "1",
+                        InvoicedQuantity : {"#text" : "3", "@_unitCode" : "C62"},
+                        LineExtensionAmount : {"#text":"300.00","@_currencyID": "TRY"},
+                        TaxTotal : 
                         {
-                            LineID : "1"
+                            TaxAmount : {"#text":"76.50","@_currencyID": "TRY"},
+                            TaxSubtotal :
+                            [
+                                {
+                                    TaxableAmount : {"#text":"300.00","@_currencyID": "TRY"},
+                                    TaxAmount : {"#text":"22.50","@_currencyID": "TRY"},
+                                    CalculationSequenceNumeric : 1,
+                                    Percent : 7.5,
+                                    TaxCategory : 
+                                    {
+                                        TaxScheme : 
+                                        {
+                                            Name : "Ö.İLETİŞİM V",
+                                            TaxTypeCode : "4080"
+                                        }
+                                    }
+                                },
+                                {
+                                    TaxableAmount : {"#text":"300.00","@_currencyID": "TRY"},
+                                    TaxAmount : {"#text":"54.00","@_currencyID": "TRY"},
+                                    CalculationSequenceNumeric : 2,
+                                    Percent : 18,
+                                    TaxCategory : 
+                                    {
+                                        TaxScheme : 
+                                        {
+                                            Name : "KDV",
+                                            TaxTypeCode : "0015"
+                                        }
+                                    }
+                                }
+                            ]
                         },
                         Item : 
                         {
-                            Description : "",
-                            Name : "Stok 2",
-                            BrandName : "",
-                            ModelName : "",
+                            Name : "Stok 1",
                             SellersItemIdentification : 
                             {
                                 ID : "S2"
-                            }
-                        },
-                        Shipment :
-                        {
-                            ID : "",
-                            GoodsItem :
+                            },
+                            Price : 
                             {
-                                InvoiceLine :
-                                {
-                                    ID : "",
-                                    InvoicedQuantity : {"#text" : "0", "@_unitCode" : "C62"},
-                                    LineExtensionAmount : {"#text" : "900.00", "@_currencyID" : "TRY"},
-                                    Item : 
-                                    {
-                                        Name : "Stok 2",
-                                        BrandName : "",
-                                        ModelName : ""
-                                    },
-                                    Price : 
-                                    {
-                                        PriceAmount : {"#text" : "450.00", "@_currencyID" : "TRY"},
-                                    }
-                                }
+                                PriceAmount : {"#text":"100.00","@_currencyID": "TRY"}
                             }
                         }
                     }
