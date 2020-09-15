@@ -841,7 +841,10 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             0,  //FTISKONTO5
             0,  //FTISKONTO6
             0,  //OTVTUTARI
-            $scope.CariHarListe[0].cha_Guid
+            $scope.Seri,    //SERI
+            $scope.Sira,    //SIRA
+            $scope.ChaEvrakTip, //EVRAKTIP
+            0   //SATIRNO
         ];
         
         db.ExecuteTag($scope.Firma,'CariHarUpdate',CariHarUpdate,function(InsertResult)

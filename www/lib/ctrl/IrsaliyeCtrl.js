@@ -1971,8 +1971,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                     0, //SATIR ISKONTO TİP 4
                                     0, //SATIR ISKONTO TİP 5
                                     0, //SATIR ISKONTO TİP 6
-                                    value.sth_Guid,
-                                    '00000000-0000-0000-0000-000000000000' //Fat Uid
+                                    value.sth_Guid
                                 ],
                                 BedenPntr : $scope.Stok[0].BEDENPNTR,
                                 RenkPntr : $scope.Stok[0].RENKPNTR,
@@ -2020,8 +2019,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                     0, //SATIR ISKONTO TİP 4
                                     0, //SATIR ISKONTO TİP 5
                                     0, //SATIR ISKONTO TİP 6
-                                    value.sth_Guid,
-                                    '00000000-0000-0000-0000-000000000000' //Fat Uid
+                                    value.sth_Guid
                                 ],
                                 BedenPntr : $scope.Stok[0].BEDENPNTR,
                                 RenkPntr : $scope.Stok[0].RENKPNTR,
@@ -2318,8 +2316,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.IrsaliyeListe[pIndex].sth_sat_iskmas4, //SATIR ISKONTO 4
                 $scope.IrsaliyeListe[pIndex].sth_sat_iskmas5, //SATIR ISKONTO 5
                 0, // SATIR ISKONTO 6
-                $scope.IrsaliyeListe[pIndex].sth_Guid,
-                '00000000-0000-0000-0000-000000000000' //Fat Uid
+                $scope.IrsaliyeListe[pIndex].sth_Guid
             ],
             BedenPntr : $scope.IrsaliyeListe[pIndex].BEDENPNTR,
             RenkPntr : $scope.IrsaliyeListe[pIndex].RENKPNTR,
