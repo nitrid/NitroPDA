@@ -156,7 +156,7 @@ function StokRaporCtrl($scope,$window,db)
             "sto_standartmaliyet * ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS TOPLAMMALIYET, " +
             "sto_standartmaliyet AS MALIYET, " +
             "ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR " +
-            "FROM STOKLAR",
+            "FROM STOKLAR WHERE (SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))) > 0",
             param:  ['STOKKODU','STOKADI','DEPONO'],
             type:   ['string','string','int'],
             value:  [$scope.StokKod,$scope.StokAdi,$scope.DepoNo]
