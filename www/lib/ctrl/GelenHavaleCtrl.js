@@ -415,6 +415,7 @@ function GelenHavaleCtrl($scope,$window,$timeout,db)
         await db.FillCmbDocInfo($scope.Firma,'CmbBankaGetir',function(data)
         {
             $scope.BankaListe = data;
+            console.log($scope.BankaListe)
             $scope.BankaKodu = UserParam[ParamName].BankaKodu;
             $scope.BankaListe.forEach(function(item)
             {
@@ -603,7 +604,6 @@ function GelenHavaleCtrl($scope,$window,$timeout,db)
                 }
                 else
                 {
-                    alertify.alert()
                     $('#MdlDoviz').modal('show');
                 }
             }

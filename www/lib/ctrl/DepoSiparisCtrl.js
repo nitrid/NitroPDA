@@ -528,7 +528,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
             Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
         }
             
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.CDepo,''],function(StokData)
         {
              $scope.StokListe = StokData;
             if ($scope.StokListe.length > 0)

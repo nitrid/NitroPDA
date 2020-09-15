@@ -832,7 +832,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
         }
             
-        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.CDepo],function(StokData)
         {
             $scope.StokListe = StokData;
             if ($scope.StokListe.length > 0)
@@ -1222,7 +1222,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     }
     $scope.MaxSira = async function()
     {
-        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.CDepo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     }
     $scope.YeniEvrak =  async function ()
     {
