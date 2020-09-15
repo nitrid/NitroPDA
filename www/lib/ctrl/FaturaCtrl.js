@@ -92,7 +92,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.ChaTip = 1;
         $scope.ChaCins = 6;
         $scope.ChaNormalIade = 0;
-        $scope.ChaGuid = "";
 
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -621,7 +620,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {   
             if(typeof InsertResult.result.err == 'undefined')
             {
-                $scope.ChaGuid = InsertResult.result.recordset[0].cha_Guid;
                 $scope.InsertLock = false;
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
                 {
@@ -671,7 +669,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             0,  //FTISKONTO5
             0,  //FTISKONTO6
             0,  //OTVTUTARI
-            $scope.StokHarListe[0].sth_fat_uid
+            $scope.Seri,    //SERI
+            $scope.Sira,    //SIRA
+            $scope.ChaEvrakTip, //EVRAKTIP
+            0   //SATIRNO
         ];
         
         db.ExecuteTag($scope.Firma,'CariHarUpdate',CariHarUpdate,function(InsertResult)
@@ -904,7 +905,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.OdemeNo,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
             '',//AÇIKLAMA
             '00000000-0000-0000-0000-000000000000', //sth_sip_uid
-            ($scope.ChaGuid != "") ? $scope.ChaGuid : '00000000-0000-0000-0000-000000000000' , //sth_fat_uid,
+            '00000000-0000-0000-0000-000000000000' , //sth_fat_uid,
             $scope.DepoNo, //GİRİSDEPONO
             $scope.DepoNo, //CİKİSDEPONO
             $scope.Tarih, //MALKABULSEVKTARİHİ
@@ -1560,7 +1561,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.CariAdi = data[0].CARIADI;
                 $scope.BelgeNo = data[0].sth_belge_no;
                 $scope.Tarih = new Date(data[0].sth_tarih).toLocaleDateString();
-                $scope.ChaGuid = data[0].sth_fat_uid;
                 
                 $scope.Barkod = "";
                 $scope.Stok = 
@@ -1990,7 +1990,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             {   
                 CariHarInsert(function(pResult)
                 {   
-                    if(pResult == true && $scope.ChaGuid != null)
+                    if(pResult == true)
                     {
                         StokHarInsert();     
                     }
@@ -2001,10 +2001,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             {   
                 if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                 {
-                    console.log(2)
                     StokHarInsert(function(pResult)
                     {
-                        console.log(3)
                         if(pResult)
                         {
                             CariHarUpdate(); 
@@ -2382,8 +2380,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.StokHarListe[pIndex].sth_sat_iskmas4, //SATIR ISKONTO 4
                 $scope.StokHarListe[pIndex].sth_sat_iskmas5, //SATIR ISKONTO 5
                 0, // SATIR ISKONTO 6
-                $scope.StokHarListe[pIndex].sth_Guid,
-                ($scope.ChaGuid != "") ? $scope.ChaGuid : '00000000-0000-0000-0000-000000000000' , //sth_fat_uid,
+                $scope.StokHarListe[pIndex].sth_Guid
             ],
             BedenPntr : $scope.StokHarListe[pIndex].BEDENPNTR,
             RenkPntr : $scope.StokHarListe[pIndex].RENKPNTR,

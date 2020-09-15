@@ -1535,6 +1535,17 @@ var QuerySql =
     StokHarInsert : 
     {
         query : "DECLARE @UIDTABLE table([sth_Guid] [uniqueidentifier]) " +
+                "SET @sth_fat_uid = '00000000-0000-0000-0000-000000000000' " +
+                "IF (@sth_evraktip=4) " +
+                "BEGIN " + 
+                "SELECT @sth_fat_uid = cha_Guid FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = @sth_evrakno_seri " + 
+                "AND cha_evrakno_sira = @sth_evrakno_sira AND cha_evrak_tip = 63 " +
+                "END " + 
+                "IF (@sth_evraktip=3) " + 
+                "BEGIN " +
+                "SELECT @sth_fat_uid = cha_Guid FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = @sth_evrakno_seri " +
+                "AND cha_evrakno_sira = @sth_evrakno_sira AND cha_evrak_tip = 0 " +                
+                "END " +
                 "INSERT INTO [STOK_HAREKETLERI] " +
                 "([sth_DBCno] " +
                 ",[sth_SpecRECno] " +
@@ -1984,11 +1995,10 @@ var QuerySql =
                 ",sth_sat_iskmas4=@sth_sat_iskmas4 " +
                 ",sth_sat_iskmas5=@sth_sat_iskmas5 " +
                 ",sth_sat_iskmas6=@sth_sat_iskmas6 " +
-                ",sth_fat_uid=@sth_fat_uid" +
                 " WHERE  sth_Guid = @sth_Guid",
         param : ['sth_miktar:float','sth_miktar2:float','sth_tutar:float','sth_vergi_pntr:int','sth_iskonto1:float','sth_iskonto2:float','sth_iskonto3:float',
         'sth_iskonto4:float','sth_iskonto5:float','sth_iskonto6:float','sth_sat_iskmas1:bit','sth_sat_iskmas2:bit','sth_sat_iskmas3:bit','sth_sat_iskmas4:bit',
-        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:string|50','sth_fat_uid:string|50']
+        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:string|50']
     },
     MaxStokHarSira :
     {
@@ -2356,7 +2366,10 @@ var QuerySql =
     },
     CariHarUpdate:
     {
-        query:  "UPDATE CARI_HESAP_HAREKETLERI " +
+        query:  "DECLARE @cha_Guid AS NVARCHAR(50) " +
+                "SET @cha_Guid = (SELECT TOP 1 cha_Guid FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = @cha_evrakno_seri " +
+                "AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip AND cha_satir_no = @cha_satir_no) " +
+                "UPDATE CARI_HESAP_HAREKETLERI " +
                 "SET cha_meblag=@cha_meblag " +
                 ",cha_aratoplam=@cha_aratoplam " +
                 ",cha_vergi1=@cha_vergi1 " +
@@ -2379,7 +2392,8 @@ var QuerySql =
                 "WHERE  cha_Guid = @cha_Guid ",
         param : ['cha_meblag:float','cha_aratoplam:float','cha_vergi1:float','cha_vergi2:float','cha_vergi3:float','cha_vergi4:float','cha_vergi5:float','cha_vergi6:float',
                  'cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float',
-                 'cha_ft_iskonto4:float','cha_ft_iskonto5:float','cha_ft_iskonto6:float','cha_otvtutari:float','cha_Guid:string|50']
+                 'cha_ft_iskonto4:float','cha_ft_iskonto5:float','cha_ft_iskonto6:float','cha_otvtutari:float','cha_evrakno_seri:string|25','cha_evrakno_sira:int',
+                 'cha_evrak_tip:int','cha_satir_no:int']
     },
     MaxCariHarSira : 
     {

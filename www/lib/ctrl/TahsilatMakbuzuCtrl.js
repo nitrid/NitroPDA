@@ -1000,7 +1000,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             0,
             0,
             0,
-            $scope.IslemListeSelectedItem.cha_Guid
+            $scope.Seri,
+            $scope.Sira,
+            $scope.ChaEvrakTip,
+            0
         ]
         db.ExecuteTag($scope.Firma,'CariHarUpdate',Param,function(InsertResult)
         {   
