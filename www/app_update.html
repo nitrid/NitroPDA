@@ -262,6 +262,12 @@
                     window.resolveLocalFileSystemURL("file:///data/user/0/com.tone.nitro/files/nitro/www/lib",
                     function(targetEntry)
                     {
+                        var setProgress = this.setProgress; 
+                        update.on('progress', function(progress) 
+                        {
+                            console.log("Progress event", progress.status);
+                            app.setProgress(progress);
+                        });
                         fileEntry.moveTo(targetEntry, "Param.js", 
                         function() 
                         {

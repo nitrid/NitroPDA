@@ -2528,6 +2528,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbStok").removeClass('active');
+                BarkodFocus();
             }              
             else
             {

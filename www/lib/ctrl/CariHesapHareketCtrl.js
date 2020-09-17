@@ -179,14 +179,14 @@ function CariHesapHareketCtrl($scope,$window,db)
             {
                 db : '{M}.' + $scope.Firma,
                 query:  "SELECT  " +
-                        "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +       
+                        "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +
                         "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA, " +
                         "msg_S_0094 AS EVRAKTIP, " +
                         "msg_S_0003 AS CINSI, " +
                         "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
                         "msg_S_0099 AS VADEGUN, " +
                         "msg_S_0100 AS BA, " +
-                        "msg_s_0112 AS DOVIZCINS, " +
+                        "msg_S_0112 AS DOVIZCINS, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
                         "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE, " +
