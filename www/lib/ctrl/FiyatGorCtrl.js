@@ -492,6 +492,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         });
                     }
                     BarkodFocus()
+                    $scope.Barkod = "";
                 }
             });
         }
@@ -711,6 +712,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     $scope.BtnBarkodGetirClick = function()
     {
         StokBarkodGetir($scope.Barkod);
+        
     }
     $scope.BtnManuelArama = function(keyEvent)
     {
@@ -983,6 +985,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         BarkodSelectedRow = $row;
         
         $scope.Barkod = $scope.Barkodliste[pIndex].BARKOD;
+        $scope.BtnBarkodGetirClick();
         $("#MdlBarkodlar").modal('hide');
 
     }

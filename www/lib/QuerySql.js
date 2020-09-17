@@ -68,7 +68,7 @@ var QuerySql =
     }, 
     CmbBankaGetir : 
     {
-        query : "SELECT ban_kod AS KODU,ban_ismi AS ADI FROM BANKALAR " ,
+        query : "SELECT ban_kod AS KODU,ban_ismi AS ADI,ban_doviz_cinsi AS DOVIZCINSI,(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(ban_doviz_cinsi,0),2)) AS DOVIZKUR, CASE ban_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZSEMBOL FROM BANKALAR " ,
     },
     CmbAdresNo : 
     {
