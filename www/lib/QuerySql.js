@@ -1675,6 +1675,10 @@ var QuerySql =
                 ",[sth_Olcu5]   " +
                 ",[sth_FormulMiktarNo]   " +
                 ",[sth_FormulMiktar]   " +
+                ",[sth_eirs_senaryo]   " +
+                ",[sth_eirs_tipi]   " +
+                ",[sth_teslim_tarihi]   " +
+                ",[sth_matbu_fl]   " +
                 ") " +
                 "OUTPUT INSERTED.[sth_Guid] INTO @UIDTABLE " + 
                 "VALUES ( " +
@@ -1806,6 +1810,10 @@ var QuerySql =
                 ",0					--<sth_Olcu5, float,> \n" +
                 ",0					--<sth_FormulMiktarNo, tinyint,> \n" +
                 ",0					--<sth_FormulMiktar, float,> \n" +
+                ",0					--<eir_senaryo, float,> \n" +
+                ",0					--<eir_tip, float,> \n" +
+                ",GETDATE()					--<matbu_tarih, tinyint,> \n" +
+                ",0					--<matbu_fl, float,> \n" +
                 ") " +
                 "SELECT [sth_Guid] FROM @UIDTABLE ",
         param : ['sth_create_user:int','sth_lastup_user:int','sth_firmano:int','sth_subeno:int','sth_tarih:date','sth_tip:int','sth_cins:int',
