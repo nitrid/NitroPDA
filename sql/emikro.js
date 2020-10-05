@@ -691,7 +691,42 @@ async function eIrsGonder(pData,pCallback)
     }
     
 }
+function eIrsQueueState()
+{
+    return new Promise(async resolve => 
+    {
+        let sessionId = await Login();
 
+        args = 
+        {
+            sessionId : sessionId,
+            startDate : "2020-09-15",
+            lastDate : "2020-09-16",
+            // filters : 
+            // {
+            //     QueueId : "2F0812E8-F45A-466A-AFE3-24F774BFF7AE"
+            // }
+        }
+        soap.createClient(url,function(err,client)
+        {            
+            if(err)
+                resolve();
+
+            client.getDocumentQueueState(args,async function(err,result)
+            {
+                console.log(result)
+                if(err)
+                    resolve();
+                else
+                    resolve(result)
+
+                await Logout(sessionId);
+            });
+        });
+    });
+}
+
+//eIrsQueueState();
 //eIrsDurum('36268EFB-D728-472A-986E-A440EA7A92BE')
 //eIrsGonder([{x:1}]);
 // eIrsGoster("");
