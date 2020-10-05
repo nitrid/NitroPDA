@@ -281,20 +281,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 type: "number",
                 align: "center",
                 width: 100
-            },
-            {
-                name: "RENK",
-                title: "RENK",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "BEDEN",
-                title: "BEDEN",
-                type: "number",
-                align: "center",
-                width: 100
             }
             ],
             rowClick: function(args)
@@ -724,37 +710,34 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(IrsaliyeData)
                 {
-                    if(pData.BedenPntr != 0 && pData.RenkPntr != 0)
-                    {
-                        let UpdateStatus = false;
-                        angular.forEach($scope.BedenHarListe,function(value)
-                        {
-                            if(value.BdnHar_Har_uid == pData.Guid && value.BdnHar_BedenNo == Kirilim(pData.BedenPntr,pData.RenkPntr))
-                            {
-                                let Data =
-                                [
-                                    value.BdnHar_Tipi,      // TİPİ
-                                    value.BdnHar_Har_uid,   // GUID
-                                    value.BdnHar_BedenNo,   // BEDEN NO
-                                    pData.Miktar, // MİKTAR
-                                    0, // REZERVASYON MİKTARI
-                                    0, // REZERVASYON TESLİM MİKTARI
-                                    '', // SERİ
-                                    0,  // SIRA
-                                    0,  // TİP
-                                    0   // SATIRNO
-                                ];
+                    // if(pData.BedenPntr != 0 && pData.RenkPntr != 0)
+                    // {
+                    //     let UpdateStatus = false;
+                    //     angular.forEach($scope.BedenHarListe,function(value)
+                    //     {
+                    //         if(value.BdnHar_Har_uid == pData.Guid && value.BdnHar_BedenNo == Kirilim(pData.BedenPntr,pData.RenkPntr))
+                    //         {console.log(Kirilim(pData.BedenPntr,pData.RenkPntr))
+                    //             let Data =
+                    //             [
+                    //                 value.BdnHar_Tipi,      // TİPİ
+                    //                 value.BdnHar_Har_uid,   // GUID
+                    //                 value.BdnHar_BedenNo,   // BEDEN NO
+                    //                 pData.Miktar, // MİKTAR
+                    //                 0, // REZERVASYON MİKTARI
+                    //                 0, // REZERVASYON TESLİM MİKTARI
+                                    
+                    //             ];
 
-                                UpdateStatus = true;
-                                BedenHarUpdate(Data);
-                            }                            
-                        });
+                    //             UpdateStatus = true;
+                    //             BedenHarUpdate(Data);
+                    //         }                            
+                    //     });
 
-                        if(!UpdateStatus)
-                        {
-                            BedenHarInsert(pData.Guid);
-                        }
-                    }                        
+                    //     if(!UpdateStatus)
+                    //     {
+                    //         BedenHarInsert(pData.Guid);
+                    //     }
+                    // }                        
                     InsertAfterRefresh(IrsaliyeData);
                     FisData(IrsaliyeData);
                     $scope.InsertLock = false;
@@ -919,15 +902,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 $scope.Stok[0].BEDENPNTR = "1";
                             });
                         }
-                    }
-                    
-                    if($scope.Stok[0].RENKPNTR != 0) // MAHİR TARAFINDAN GEÇİCİ OLARAK YAPILDI
-                    {
-                        $scope.Stok[0].BEDENPNTR = "1";
-                    }
-                    else if($scope.Stok[0].BEDENPNTR != 0)
-                    {
-                        $scope.Stok[0].RENKPNTR = "1";
                     }
 
                     if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
@@ -1929,7 +1903,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 return;
             } 
             $scope.InsertLock = true
-            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2 )
+            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2  )
             {          
                 InsertData();
             }
@@ -1941,13 +1915,32 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
                     angular.forEach($scope.IrsaliyeListe,function(value)
                     {
-                        if(value.sth_stok_kod == $scope.Stok[0].KODU && value.BEDENPNTR == $scope.Stok[0].BEDENPNTR && value.RENKPNTR == $scope.Stok[0].RENKPNTR)
+                        if(value.sth_stok_kod == $scope.Stok[0].KODU)
                         {   
-
-                            db.ExecuteTag($scope.Firma,'BedenHarGorUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,value.BEDENGUID],function(data)
+                            
+                            let TmpQuery = 
                             {
-                                console.log(data)
+                                db :'{M}.' + $scope.Firma,
+                                query:  "SELECT BdnHar_Guid from BEDEN_HAREKETLERI WHERE BdnHar_Har_uid=@BdnHar_Har_uid AND BdnHar_BedenNo = @BdnHar_BedenHarNo",
+                                param : ['BdnHar_Har_uid','BdnHar_BedenHarNo'],
+                                type : ['string|50','int'],
+                                value : [value.sth_Guid,Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR)]
+                            }
+                            db.GetDataQuery(TmpQuery,function(Data)
+                            {
+                                if(Data.length > 0)
+                                {
+                                    db.ExecuteTag($scope.Firma,'BedenHarGorUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,Data[0].BdnHar_Guid],function(data)
+                                    {
+                                        console.log(data)
+                                    });
+                                }
+                                else
+                                {
+                                    BedenHarInsert(value.sth_Guid)
+                                }
                             });
+                           
 
                             let TmpFiyat  = value.sth_tutar / value.sth_miktar
                             let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);

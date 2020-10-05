@@ -530,8 +530,8 @@ var QuerySql =
                 "sas_doviz_cinsi AS DOVIZ, " + 
                 "sas_depo_no AS DEPO, " +
                 "1 AS LISTENO, " +
-                "(SELECT     dbo.fn_DovizSembolu(ISNULL(sas_doviz_cinsi, 0))) AS DOVIZSEMBOL, " +
-                "(SELECT     dbo.fn_KurBul(CONVERT(VARCHAR(10), GETDATE(), 112), ISNULL(sas_doviz_cinsi, 0), 2)) AS DOVIZKUR " +
+                "(SELECT dbo.fn_DovizSembolu(ISNULL(sas_doviz_cinsi, 0))) AS DOVIZSEMBOL, " +
+                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10), GETDATE(), 112), ISNULL(sas_doviz_cinsi, 0), 2)) AS DOVIZKUR " +
                 "FROM SATINALMA_SARTLARI " +
                 "WHERE sas_basla_tarih <= GETDATE() AND (sas_bitis_tarih >= GETDATE() OR sas_bitis_tarih = '18991230') " +
                 "AND sas_cari_kod = @sas_cari_kod AND sas_stok_kod = @sas_stok_kod AND (sas_depo_no = @sas_depo_no OR sas_depo_no = 0) " +
@@ -1286,7 +1286,7 @@ var QuerySql =
                 "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
                 "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN " +
                 "FROM SIPARISLER LEFT OUTER JOIN BEDEN_HAREKETLERI ON sip_Guid = BdnHar_Har_uid " +
-                "WHERE sip_depono =@sip_depono AND sip_musteri_kod =@sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
+                "WHERE sip_depono = @sip_depono AND sip_musteri_kod =@sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
         param : ['sip_depono','sip_musteri_kod','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
         type : ['string|15','string|25','string|10','int','int']       
     },

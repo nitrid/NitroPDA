@@ -42,6 +42,11 @@
                         <div class="col-5 px-0 text-info"><label class="form-control-label float-right">Toplam Satır :</label></div>
                         <div class="col-7 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
+                    <div class="row py-10">
+                        <div class="col-6 ">
+                            <button class="btn btn-block btn-primary h-50" ng-click="BtnSiparisYazdir()">Sipariş Yazdır</button>
+                        </div>
+                    </div>
                     <div class="row py-10 ">
                         <div class="col-6">
                             <button class="btn btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
@@ -552,6 +557,44 @@
                         <button type="submit" class="btn btn-primary btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnDuzenleKaydet(this.IslemListeSelectedIndex)">Kaydet</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sipariş yazdır  -->
+     <div class="modal fade" id="MdlSipYazdir" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">X</span>
+                </button>
+                <h4 class="modal-title">Sipariş Yazdır</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel">
+                    <br>
+                    <div class="row ">
+                        <div class="col-3 px-1">
+                            <h5 class="text-right my-1"><span style="color:dodgerblue;">Barkod :</span></h5>
+                        </div>
+                        <div class="col-8 px-1">
+                            <input type="text" class="form-control " ng-model="SipSeriSira" ng-keypress = "BtnBarkodSiparisAra($event)">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row ">
+                        <div class="col-4 px-1 modal-center">
+                            <button type="submit" class="btn btn-primary btn-block h-40" ng-click="ScanSipBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row my--5 p5">
+                        <div class="form-group col-md-12 col-sm-12 col-lg-12">
+                            <button type="submit" class="btn btn-primary btn-block form-control-sm"  ng-click="SiparisYazdir()">YAZDIR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
     </div>

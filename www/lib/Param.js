@@ -64,7 +64,7 @@ var Param = [
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
-			"SatisSarti": "0",
+			"SatisSarti": "1",
 			"AlisSarti": "0",
 			"FiyatListe": "1",
 			"EvrakSil": "0",
@@ -184,7 +184,7 @@ var Param = [
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
-			"IsEmriGiderKodu": "",
+			"IsEmriGiderKodu": "EKR01",
 			"EvrakSil": "0"
 		},
 		"FiyatGor": {
@@ -234,6 +234,7 @@ var Param = [
 			"Stok Detay": "1",
 			"Sayım Fişi": "1",
 			"Cari Listesi": "1",
+			"Fire": "1",
 			"Cari Ekle": "1",
 			"Deposevk": "1",
 			"Depo Sipariş": "1",

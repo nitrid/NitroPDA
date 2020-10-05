@@ -108,9 +108,17 @@
                         </div>
                     </div>
                     <div class="row my-0 py-0">
+                        <div class="col-5 text-info px-1 py-0 my-0"><div class="col-form-label float-right py-2">Gider Kodu:</div></div>
+                        <div class="col-7 px-1">
+                            <select class="form-control" ng-model="GiderKodu" ng-change="GiderKoduChange()">
+                                <option ng-repeat="option in GiderKoduListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
                         <div class="col-5 text-info px-1 py-0 my-0"><div class="col-form-label float-right py-2">İstek Merkezi:</div></div>
                         <div class="col-7 px-1">
-                            <select class="form-control" ng-model="Sorumluluk" disabled="">
+                            <select class="form-control" ng-model="Sorumluluk" >
                                 <option ng-repeat="option in SorumlulukListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
@@ -174,7 +182,7 @@
                             <div class="col-form-label float-right py-1">Gider Kodu:</div>
                         </div>
                         <div class="col-4 px-1">
-                            <input disabled type="text" class="form-control form-control-sm" ng-model="IsEmriGiderKodu">
+                            <input disabled type="text" class="form-control form-control-sm" ng-model="GiderKodu">
                         </div>
                     </div>
                     <div class="row my-0 pt-80">
