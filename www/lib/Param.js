@@ -72,7 +72,8 @@ var Param = [
 			"FiyatLock": "0",
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
-			"EksiyeDusme": "0"
+			"EksiyeDusme": "0",
+			"ProjeGetir": "1"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",

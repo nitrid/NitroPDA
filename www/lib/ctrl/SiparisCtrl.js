@@ -4,6 +4,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     let IslemSelectedRow = null;
     let StokSelectedRow = null;
     let PartiLotSelectedRow = null;
+    let ProjeEvrakSelectedRow = null;
     let ParamName = "";
     
     $('#MdlPartiLot').on('hide.bs.modal', function () 
@@ -38,6 +39,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.Seri = "";
         $scope.Sira;
+        $scope.ProjeKod = "";
         $scope.EvrakTip = 0;
         $scope.CariKodu = "";  
         $scope.CariAdi = "";
@@ -74,12 +76,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.AciklamaEvrTip = 0;
         $scope.AciklamaHarTip = 0;
         $scope.EvrakDovizTip = "";
-        $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.Risk = 0;
         $scope.RiskLimit = 0; 
-        $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
-        $scope.FiyatListe = [];
 
+        $scope.RiskParam = UserParam.Sistem.RiskParam;
+        $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
+        $scope.ProjeGetirParam = UserParam[ParamName].ProjeGetir;
+
+        $scope.FiyatListe = [];
         $scope.DepoListe = [];
         $scope.CariListe = [];
         $scope.SorumlulukListe = [];
@@ -118,9 +122,11 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BarkodLock = false;
         $scope.FiyatLock = false;
         $scope.DepoMiktar = false;
+        $scope.ProjeShow = false;
 
         $scope.IslemListeSelectedIndex = -1;  
         $scope.PartiLotListeSelectedIndex = 0;
+        $scope.ProjeEvrakSelectedIndex  = 0;
 
         $scope.TxtParti = "";
         $scope.TxtLot = 0;
@@ -494,6 +500,61 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             rowClick: function(args)
             {
                 $scope.StokListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitProjeEvrakGetirGrid()
+    {
+        $("#TblProjeEvrakGetirListe").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            editing: true,
+            data : $scope.ProjeEvrakGetirListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: [
+                // { 
+                //       itemTemplate: function(_, item) 
+                //       {
+                //           return $("<button type='submit' class='btn btn-primary btn-block btn-sm'></button>").text("D")
+                //               .on("click", function() 
+                //               {
+                //                   $scope.ManuelGiris(item);
+                //               });
+                //       },
+                //       width: 45
+                // },
+                {
+                    name: "SERI",
+                    title: "SERI",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                },
+                {
+                    name: "SIRA",
+                    title: "SIRA",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "PROJEKOD",
+                    title: "PROJEKOD",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+            ],
+            rowClick: function(args)
+            {
+                $scope.ProjeEvrakListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -1019,32 +1080,32 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
         }
     }
-     function SpaceLength(pData,pLength)
-     {
-         try 
-         {
-             let x = pLength - pData.toString().length;
+    function SpaceLength(pData,pLength)
+    {
+        try 
+        {
+            let x = pLength - pData.toString().length;
 
-             if(pData.toString().length > pLength)
-             {
-                 pData = pData.substring(0,pLength);
-             }
+            if(pData.toString().length > pLength)
+            {
+                pData = pData.substring(0,pLength);
+            }
 
-             Space = "";
+            Space = "";
 
-             for(let i=0; i < x; i++)
-             {
-                 Space = Space + " ";
-             }
+            for(let i=0; i < x; i++)
+            {
+                Space = Space + " ";
+            }
 
-             return pData + Space
-            
-         } 
-         catch (error) 
-         {
-             console.log(error)
-         }
-     }
+            return pData + Space
+        
+        } 
+        catch (error) 
+        {
+            console.log(error)
+        }
+    }
     $scope.BtnCariListele = function()
     {   
         $scope.Loading = true;
@@ -1347,18 +1408,19 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.YeniEvrak = async function (pAlinanVerilen)
     {
+        //ALINAN = 0 VERİLEN = 1
+        if(pAlinanVerilen == 0)
+            ParamName = "AlinanSiparis";
+        else
+            ParamName = "VerilenSiparis";
+
         Init();
         InitCariGrid();
         InitIslemGrid();
         InitStokGrid();
         InitPartiLotGrid();
         InitDepoMiktarGrid();
-
-        //ALINAN = 0 VERİLEN = 1
-        if(pAlinanVerilen == 0)
-            ParamName = "AlinanSiparis";
-        else
-            ParamName = "VerilenSiparis";
+        InitProjeEvrakGetirGrid();
 
         
         $scope.EvrakLock = false;
@@ -1366,6 +1428,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.EvrakTip = pAlinanVerilen;
         $scope.CariKodu = UserParam[ParamName].Cari;
+
         if(pAlinanVerilen == 0)
         $scope.PersonelTip = "0";
         else
@@ -1457,8 +1520,20 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
            $scope.SipOnayKulNo = UserParam.MikroId
         }
-
         BarkodFocus();
+        $scope.ParamKontrol();
+    }
+    $scope.ParamKontrol = function()
+    {
+        //Proje Kodundan Getir Butonu Başlangıç
+        if($scope.ProjeGetirParam == "0")
+        {
+            $scope.ProjeShow= false;
+        }
+        else if($scope.ProjeGetirParam == "1")
+        {
+            $scope.ProjeShow = true;
+        }
     }
     $scope.DepoChange = function()
     {
@@ -1548,6 +1623,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.DovizChangeKodu = "0"
         $scope.DovizChange()
         $scope.MainClick();
+        console.log($scope.CariListe[pIndex])
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -1576,6 +1652,19 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         PartiLotSelectedRow = $row;
 
         $scope.PartiLotListeSelectedIndex = pIndex;
+    }
+    $scope.ProjeEvrakListeRowClick = function(pIndex,pItem,pObj)
+    {
+        if ( ProjeEvrakSelectedRow ) { ProjeEvrakSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        var $row = pObj.rowByItem(pItem);
+        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+        ProjeEvrakSelectedRow = $row;
+        console.log($scope.ProjeEvrakGetirListe)
+        console.log(pItem)
+        $scope.ProjeEvrakSelectedIndex = pItem;
+
+        $scope.Seri = $scope.ProjeEvrakSelectedIndex.SERI;
+        $scope.Sira = $scope.ProjeEvrakSelectedIndex.SIRA;
     }
     $scope.MiktarPress = function(keyEvent)
     {
@@ -1745,7 +1834,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
             else if($scope.DovizChangeKodu == 1)
             {
-                console.log(1)
                 $scope.CariDovizCinsi = $scope.CariDovizCinsi1;
                 $scope.CariDovizKuru = $scope.CariDovizKuru1;
                 $scope.EvrakDovizTip = $scope.DovizSembol1
@@ -1756,6 +1844,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $scope.CariDovizKuru =  $scope.CariDovizKuru2
                 $scope.EvrakDovizTip = $scope.DovizSembol2
             }
+            console.log($scope.EvrakDovizTip)
     }
     $scope.Insert = function()
     {
@@ -1844,6 +1933,40 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         }     
         
         BarkodFocus();
+    }
+    //ŞU ANDA BUNUN ÜZERİNDE " $scope.ProjeEvrakGetir " ÇALIŞIYOSUN!
+    $scope.ProjeEvrakGetir = function()
+    {
+        db.GetData($scope.Firma,'SiparisProjeGetir',[$scope.EvrakTip,0,$scope.ProjeKod],function(data)
+        {
+            $scope.ProjeEvrakGetirListe = data;
+            if($scope.ProjeEvrakGetirListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblProjeEvrakGetirListe").jsGrid({data : $scope.ProjeEvrakGetirListe});  
+                $("#TblProjeEvrakGetirListe").jsGrid({pageIndex: true})
+            }
+            else
+            {
+                angular.element('#MdlProjeEvrakGetir').modal('hide');
+                alertify.alert("Evrak Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblProjeEvrakGetirListe").jsGrid({data : $scope.ProjeEvrakGetirListe});
+                $("#TblProjeEvrakGetirListe").jsGrid({pageIndex: true})
+            }
+        });
+    }
+    $scope.ProjeEvrakSec = function()
+    {
+       angular.element('#MdlProjeEvrakGetir').modal('hide');
+       $scope.EvrakGetir()
+    }
+    $scope.ProjeEvrakGetirModal = async function()
+    {
+        $("#MdlEvrakGetir").modal('hide');
+        $("#MdlProjeEvrakGetir").modal('show');
     }
     $scope.EvrakGetir = function()
     {
@@ -1935,7 +2058,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
 
                 ToplamMiktarHesapla();
                 DipToplamHesapla();
-
+                console.log($scope.EvrakTip)
                 $scope.EvrakLock = true;
                 $scope.BarkodLock = false;
 

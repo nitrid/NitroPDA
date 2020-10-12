@@ -135,9 +135,9 @@ var QuerySql =
                 "cari_grup_kodu AS GRUP, " +
                 "cari_temsilci_kodu AS TEMSILCI, " +
                 "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI, " +
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))) AS DOVIZSEMBOL, " +
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))) AS DOVIZSEMBOL1, " +
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi2,0))) AS DOVIZSEMBOL2, " +
+                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))),'') AS DOVIZSEMBOL," +
+                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))),'') AS DOVIZSEMBOL1, " +
+                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi2,0))),'') AS DOVIZSEMBOL2, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi,0),2)) AS DOVIZKUR, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2, " +
@@ -1195,6 +1195,29 @@ var QuerySql =
                  'sip_adresno:int','sip_iskonto1:int','sip_iskonto2:int','sip_iskonto3:int','sip_iskonto4:int','sip_iskonto5:int','sip_iskonto6:int',
                  'sip_isk1:bit','sip_isk2:bit','sip_isk3:bit','sip_isk4:bit','sip_isk5:bit','sip_isk6:bit','sip_parti_kodu:string|25','sip_lot_no:int',
                  'sip_projekodu:string|25','sip_fiyat_liste_no:int','sip_rezervasyon_miktari:float','sip_rezerveden_teslim_edilen:float']
+    },
+    SiparisProjeGetir:
+    {
+       query: "SELECT " +
+       "sip_evrakno_seri AS SERI, " +
+       "sip_evrakno_sira AS SIRA, " +
+       "sip_projekodu AS PROJEKOD, " +
+       "ISNULL((SELECT som_isim FROM SORUMLULUK_MERKEZLERI WHERE som_kod = sip_stok_sormerk),'') AS SORUMLUMERADI , " +
+       "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = sip_satici_kod),'') AS PERSONELADI, " +
+       "sip_tip , " +
+       "sip_musteri_kod , " +
+       "sip_belgeno , " +
+       "sip_tarih, " +
+       "sip_teslim_tarih, " +
+       "sip_stok_sormerk, " +
+       "sip_satici_kod, " +
+       "sip_opno, " +
+       "sip_depono " +
+        "FROM SIPARISLER WHERE sip_tip = @sip_tip and sip_cins = @sip_cins AND sip_projekodu != '' AND ((sip_projekodu = @sip_projekodu ) OR (@sip_projekodu = '')) " +
+        "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_projekodu,sip_stok_sormerk,sip_satici_kod, " +
+        "sip_miktar,sip_tip,sip_belgeno,sip_musteri_kod,sip_tarih,sip_teslim_tarih,sip_opno,sip_depono ",
+        param:  ['sip_tip','sip_cins','sip_projekodu'],
+        type:   ['int','int','string|20']
     },
     SiparisGetir:
     {

@@ -848,7 +848,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         if(isNaN($scope.TxtLot))
         $scope.TxtLot = 0;
 
-        db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.TxtParti,$scope.TxtLot],function(data)
+        db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.Depo,$scope.TxtParti,$scope.TxtLot],function(data)
         {   
             $scope.PartiLotListe = data;
             $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
@@ -877,7 +877,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             if(isNaN($scope.TxtLot))
             $scope.TxtLot = 0;
           
-            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.TxtParti,$scope.TxtLot],function(data)
+            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.Depo,$scope.TxtParti,$scope.TxtLot],function(data)
             {   
                 if(data.length > 0)
                 {
@@ -1233,6 +1233,35 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     {
         StokBarkodGetir($scope.Barkod);
     }
+    $scope.BtnRenkBedenSec = function()
+    {
+        if($scope.RenkListe != "")
+        {
+            $scope.Stok[0].RENK = $.grep($scope.RenkListe, function (Item) 
+            {   
+                return Item.PNTR == $scope.Stok[0].RENKPNTR;
+            })[0].KIRILIM;
+        }
+        else
+        {
+            $scope.Stok[0].RENKPNTR = "1";
+        }
+        if($scope.BedenListe != "")
+        {   
+            $scope.Stok[0].BEDEN = $.grep($scope.BedenListe, function (Item) 
+            {
+                return Item.PNTR == $scope.Stok[0].BEDENPNTR;
+            })[0].KIRILIM;
+        }
+        else
+        {
+            $scope.Stok[0].BEDENPNTR = "1";
+        }
+
+        $('#MdlRenkBeden').modal('hide');
+
+        PartiLotEkran();
+    }
     $scope.BtnStokGridGetir = function()
     {
         $scope.Loading = true;
@@ -1247,9 +1276,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         else
         {
             Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
-        }
-            
-        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        }  
+        db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.Depo],function(StokData)
         {
             $scope.StokListe = StokData;
             if ($scope.StokListe.length > 0)
