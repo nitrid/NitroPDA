@@ -6,3 +6,4 @@ www/theme/base/html/
 daemon/
 *.zip
 package-lock
+package-lock.json

@@ -45,7 +45,7 @@ var QuerySql =
     CmbOdemePlanGetir : 
     {
         query : "SELECT '0' AS KODU, 'PEŞİN' AS ADI UNION ALL SELECT odp_no AS KODU, " +
-                "odp_adi  AS ADI FROM ODEME_PLANLARI"
+                "odp_adi  AS ADI FROM ODEME_PLANLARI  "
     },
     CmbBirimGetir : 
     {
