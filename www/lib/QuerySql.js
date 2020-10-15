@@ -160,6 +160,10 @@ var QuerySql =
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
     },
+    KrediSozlemesiGetir : 
+    {
+        query : "SELECT * FROM KREDI_SOZLESMESI_TANIMLARI"
+    },
     CariGetir : 
     {
         query : "SELECT cari_kod AS KODU, " +

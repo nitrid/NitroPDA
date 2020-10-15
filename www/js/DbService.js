@@ -711,11 +711,14 @@ angular.module('app.db', []).service('db',function($rootScope)
             }            
         });        
 
+        console.log(1)
         // İSKONTO MATRİS
         if(pEvrParam.IskontoMatris == "1" && pEvrParam.AlisSarti == "0" && pEvrParam.SatisSarti == "0")
         {
+            console.log('girdi')
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
-            {
+            { 
+                
                 if(Data.length > 0)
                 {
                     BarkodData[0].ISK.ORAN1 =  Data[0].ORAN1;

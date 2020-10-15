@@ -1530,6 +1530,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
         $scope.CariDovizCinsi1 = $scope.CariListe[pIndex].DOVIZCINSI1;
         $scope.CariDovizCinsi2 = $scope.CariListe[pIndex].DOVIZCINSI2;
+        $scope.CariIskontoKodu = $scope.CariListe[pIndex].ISKONTOKOD;
         $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
         $scope.CariDovizKuru1 = $scope.CariListe[pIndex].DOVIZKUR1;
         $scope.CariDovizKuru2 = $scope.CariListe[pIndex].DOVIZKUR2;
