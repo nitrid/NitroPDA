@@ -17,6 +17,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         });
 
         UserParam = Param[$window.sessionStorage.getItem('User')];
+        $scope.Kullanici = UserParam.Kullanici.split("o",2).pop(1);
         $scope.Firma = $window.sessionStorage.getItem('Firma');
         
         $scope.CDepo;
@@ -50,6 +51,9 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.Personel = ''
         $scope.NDepo = UserParam.DepoMalKabul.NDepo
         $scope.NakliyeDurum = 0
+        $scope.YazdirSeri = "";
+        $scope.YazdirSira = "";
+        $scope.SipSeriSira = "";
         
         $scope.SipIlkTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SipSonTarih = moment(new Date()).format("DD.MM.YYYY");
@@ -428,7 +432,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     {
         $timeout( function(){$window.document.getElementById("Barkod").focus();},100);
     }
-    function  StokBarkodGetir(pBarkod)
+    function StokBarkodGetir(pBarkod)
     {
         if(pBarkod != '')
         {
@@ -668,8 +672,10 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                     $scope.NDepoAdi = item.ADI;
             });     
         });
+        console.log($scope.Seri)
         await db.MaxSiraPromiseTag($scope.Firma,'DepoSiparisMaxSira',[$scope.Seri],function(data)
         {
+            console.log(data)
             $scope.Sira = data
         });
         
@@ -766,8 +772,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             $scope.Tip = 2;
             $scope.NakliyeDurum = 1
         }
-        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
-      
     }
     $scope.GDepoChange = function()
     {
@@ -1141,9 +1145,88 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     $scope.ManuelGiris = function(pItem)
      {
-         $scope.Barkod = pItem.BARKOD
+        $scope.Barkod = pItem.BARKOD
         StokBarkodGetir(pItem.BARKOD)
         $scope.Miktar = pItem.MIKTAR
         $scope.Insert()
-     }
+    }
+    $scope.SiparisYazdir = function ()
+    {
+        console.log($scope.SipSeriSira)
+        $scope.YazdirSeri = $scope.SipSeriSira.split("-",1).pop(1);
+        $scope.YazdirSira = $scope.SipSeriSira.split("-",2).pop(1);
+
+        let TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+                query:  "SELECT * FROM DEPOLAR_ARASI_SIPARISLER WHERE ssip_evrakno_seri = @ssip_evrakno_seri AND ssip_evrakno_sira = @ssip_evrakno_sira ",
+                param:  ['ssip_evrakno_seri','ssip_evrakno_sira'],
+                type:   ['string|25','int'],
+                value:  [$scope.YazdirSeri,$scope.YazdirSira]
+        }
+        console.log(TmpQuery)
+        db.GetDataQuery(TmpQuery,function(data)
+        {   
+            if(data.length > 0)
+            {
+                if($scope.YazdirSeri != '')
+                {
+                    let TmpQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                            query:  "UPDATE DEPOLAR_ARASI_SIPARISLER SET ssip_special1 = 1 " +
+                                    "WHERE ssip_evrakno_seri = @ssip_evrakno_seri AND ssip_evrakno_sira = @ssip_evrakno_sira ",
+                            param:  ['ssip_evrakno_seri','ssip_evrakno_sira'],
+                            type:   ['string|25','int'],
+                            value:  [$scope.YazdirSeri,$scope.YazdirSira]
+                    }
+                    db.ExecuteQuery(TmpQuery,function(data)
+                    {   
+                        if(typeof(data.result.err) == 'undefined')
+                        {
+                            alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Başarıyla Gerçekleşti !" + "</a>" ); 
+                        }
+                        else
+                        {
+                            alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşleminde Hata !" + "</a>" ); 
+                        }
+                        $('#MdlSipYazdir').modal('hide');
+                    });
+                }
+                else
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Sipariş Barkodunu Okutunuz !" + "</a>" ); 
+                    $('#MdlSipYazdir').modal('hide');
+                }
+            }
+            else
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Sipariş Bulunamadı !" + "</a>" ); 
+                $('#MdlSipYazdir').modal('hide');
+            }
+        });    
+    }
+    $scope.BtnSiparisYazdir = function()
+    {
+        $('#MdlSipYazdir').modal("show");
+    }
+    $scope.ScanSipBarkod = function()
+    {
+        
+        cordova.plugins.barcodeScanner.scan(
+            function (result) 
+            {
+                $scope.SipSeriSira = result.text;
+                BarkodSiparisAra(13)
+            },
+            function (error) 
+            {
+                //alert("Scanning failed: " + error);
+            },
+            {
+                prompt : "Barkod Okutunuz",
+                orientation : "portrait"
+            }
+        );
+    }
 }

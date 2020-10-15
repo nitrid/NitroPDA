@@ -262,6 +262,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 width: 100
             },
             {
+                name: "sth_miktar2",
+                title: "MİKTAR2",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
                 name: "FIYAT",
                 title: "FIYAT",
                 type: "number",
@@ -278,20 +285,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {
                 name: "sth_iskonto1",
                 title: "IND1",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "RENK",
-                title: "RENK",
-                type: "number",
-                align: "center",
-                width: 100
-            },
-            {
-                name: "BEDEN",
-                title: "BEDEN",
                 type: "number",
                 align: "center",
                 width: 100
@@ -937,6 +930,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         else
                         {
                             PartiLotEkran();
+                            $timeout( function(){
+                            $window.document.getElementById("Parti").focus();
+                            $window.document.getElementById("Parti").select();
+                            },250)
                         }
                     }
                     if($scope.OtoEkle == true)
@@ -1058,7 +1055,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         db.GetData($scope.Firma,'CmbAdresNo',[$scope.CariKodu],function(data)
         {
             $scope.AdresNoListe = data;
-            console.log($scope.AdresNoListe)
         });
     }
     // $scope.MaxSira = async function()
@@ -1207,8 +1203,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         if(isNaN($scope.TxtLot))
         $scope.TxtLot = 0;
 
-        db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.TxtParti,$scope.TxtLot],function(data)
-        {   
+        db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
+        { 
             $scope.PartiLotListe = data;
             $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
         });
@@ -1236,7 +1232,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             if(isNaN($scope.TxtLot))
             $scope.TxtLot = 0;
           
-            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.TxtParti,$scope.TxtLot],function(data)
+            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
             {   
                 if(data.length > 0)
                 {
@@ -1268,6 +1264,47 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 }
             });
             
+        }
+    }
+    $scope.BtnPartiEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnPartiLotGetir();
+            $timeout(function() 
+            {
+                if($scope.PartiLotListe != '')
+                {
+                    $scope.BtnPartiLotSec();
+                    $timeout(function(){$scope.Insert();},150)
+                }
+                else
+                {
+                    $('#MdlPartiLot').modal('hide');
+                    alertify.okBtn("Tamam");
+                    alertify.alert("Parti Bulunamadı");
+                    $('#MdlPartiLot').modal('hide');
+                    $scope.TxtParti = "";
+                    $scope.Barkod = "";
+                    $scope.Stok = null;
+                    $scope.Stok = 
+                    [
+                        {
+                            BIRIM : '',
+                            BIRIMPNTR : 0, 
+                            FIYAT : 0,
+                            TUTAR : 0,
+                            INDIRIM : 0,
+                            KDV : 0,
+                            TOPTUTAR :0
+                        }
+                    ];
+                    $scope.Miktar = 1;
+                    $scope.BarkodLock = false;
+            
+                    $scope.BirimListe = [];
+                }
+            },250)         
         }
     }
     $scope.BtnRenkBedenSec = function()
@@ -2046,7 +2083,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     } 
                   
                 }
-               
             }
         }
         else

@@ -117,7 +117,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                 
                 TmpQuery.value = pParam.param;
                 TmpQuery.db = pParam.db;
-
+                
                 //PARAMETRE UNDEFINED KONTROLÜ (17.07.2020 - ALI KEMAL KARACA)
                 if(typeof(TmpQuery.value) != 'undefined')
                 {

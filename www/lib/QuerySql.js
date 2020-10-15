@@ -45,7 +45,7 @@ var QuerySql =
     CmbOdemePlanGetir : 
     {
         query : "SELECT '0' AS KODU, 'PEŞİN' AS ADI UNION ALL SELECT odp_no AS KODU, " +
-                "odp_adi  AS ADI FROM ODEME_PLANLARI"
+                "odp_adi  AS ADI FROM ODEME_PLANLARI  "
     },
     CmbBirimGetir : 
     {
@@ -135,9 +135,9 @@ var QuerySql =
                 "cari_grup_kodu AS GRUP, " +
                 "cari_temsilci_kodu AS TEMSILCI, " +
                 "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI, " +
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))) AS DOVIZSEMBOL, " +
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))) AS DOVIZSEMBOL1, " +
-                "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi2,0))) AS DOVIZSEMBOL2, " +
+                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))),'') AS DOVIZSEMBOL," +
+                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))),'') AS DOVIZSEMBOL1, " +
+                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi2,0))),'') AS DOVIZSEMBOL2, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi,0),2)) AS DOVIZKUR, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2, " +
@@ -534,8 +534,8 @@ var QuerySql =
                 "sas_doviz_cinsi AS DOVIZ, " + 
                 "sas_depo_no AS DEPO, " +
                 "1 AS LISTENO, " +
-                "(SELECT     dbo.fn_DovizSembolu(ISNULL(sas_doviz_cinsi, 0))) AS DOVIZSEMBOL, " +
-                "(SELECT     dbo.fn_KurBul(CONVERT(VARCHAR(10), GETDATE(), 112), ISNULL(sas_doviz_cinsi, 0), 2)) AS DOVIZKUR " +
+                "(SELECT dbo.fn_DovizSembolu(ISNULL(sas_doviz_cinsi, 0))) AS DOVIZSEMBOL, " +
+                "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10), GETDATE(), 112), ISNULL(sas_doviz_cinsi, 0), 2)) AS DOVIZKUR " +
                 "FROM SATINALMA_SARTLARI " +
                 "WHERE sas_basla_tarih <= GETDATE() AND (sas_bitis_tarih >= GETDATE() OR sas_bitis_tarih = '18991230') " +
                 "AND sas_cari_kod = @sas_cari_kod AND sas_stok_kod = @sas_stok_kod AND (sas_depo_no = @sas_depo_no OR sas_depo_no = 0) " +
@@ -1200,6 +1200,29 @@ var QuerySql =
                  'sip_isk1:bit','sip_isk2:bit','sip_isk3:bit','sip_isk4:bit','sip_isk5:bit','sip_isk6:bit','sip_parti_kodu:string|25','sip_lot_no:int',
                  'sip_projekodu:string|25','sip_fiyat_liste_no:int','sip_rezervasyon_miktari:float','sip_rezerveden_teslim_edilen:float']
     },
+    SiparisProjeGetir:
+    {
+       query: "SELECT " +
+       "sip_evrakno_seri AS SERI, " +
+       "sip_evrakno_sira AS SIRA, " +
+       "sip_projekodu AS PROJEKOD, " +
+       "ISNULL((SELECT som_isim FROM SORUMLULUK_MERKEZLERI WHERE som_kod = sip_stok_sormerk),'') AS SORUMLUMERADI , " +
+       "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = sip_satici_kod),'') AS PERSONELADI, " +
+       "sip_tip , " +
+       "sip_musteri_kod , " +
+       "sip_belgeno , " +
+       "sip_tarih, " +
+       "sip_teslim_tarih, " +
+       "sip_stok_sormerk, " +
+       "sip_satici_kod, " +
+       "sip_opno, " +
+       "sip_depono " +
+        "FROM SIPARISLER WHERE sip_tip = @sip_tip and sip_cins = @sip_cins AND sip_projekodu != '' AND ((sip_projekodu = @sip_projekodu ) OR (@sip_projekodu = '')) " +
+        "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_projekodu,sip_stok_sormerk,sip_satici_kod, " +
+        "sip_miktar,sip_tip,sip_belgeno,sip_musteri_kod,sip_tarih,sip_teslim_tarih,sip_opno,sip_depono ",
+        param:  ['sip_tip','sip_cins','sip_projekodu'],
+        type:   ['int','int','string|20']
+    },
     SiparisGetir:
     {
         query:  "SELECT ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod),'') AS ADI, " +
@@ -1290,7 +1313,7 @@ var QuerySql =
                 "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
                 "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN " +
                 "FROM SIPARISLER LEFT OUTER JOIN BEDEN_HAREKETLERI ON sip_Guid = BdnHar_Har_uid " +
-                "WHERE sip_depono =@sip_depono AND sip_musteri_kod =@sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
+                "WHERE sip_depono = @sip_depono AND sip_musteri_kod =@sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
         param : ['sip_depono','sip_musteri_kod','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
         type : ['string|15','string|25','string|10','int','int']       
     },
