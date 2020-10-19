@@ -2271,7 +2271,13 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.OdemePlanListe = data; 
             $scope.OdemeNo = '0'
         });
+        db.GetPromiseTag($scope.Firma,'FiyatListeGetir',[$scope.PersonelTip],function(data)
+        {
+            $scope.FiyatListe = data;
+            $scope.FiyatListeNo = UserParam[ParamName].FiyatListe;
 
+            
+        });  
         if(typeof (localStorage.FaturaParam) != 'undefined') // Fatura Tahsilat Geçişi İçin Yapıldı.
         {
             $scope.Seri = JSON.parse(localStorage.FaturaParam).Seri;

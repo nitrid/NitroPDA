@@ -64,14 +64,14 @@ var Param = [
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
-			"SatisSarti": "1",
+			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "1",
 			"EvrakSil": "0",
-			"PartiSec": "0",
+			"PartiSec": "1",
 			"FiyatLock": "0",
 			"SiparisOnay": "",
-			"IskontoMatris": "0",
+			"IskontoMatris": "1",
 			"EksiyeDusme": "0"
 		},
 		"VerilenSiparis": {
@@ -92,7 +92,8 @@ var Param = [
 			"PartiSec": "0",
 			"SiparisOnay": "",
 			"FiyatLock": "0",
-			"IskontoMatris": "0"
+			"IskontoMatris": "0",
+			"TedarikcidenSiparis": "0"
 		},
 		"DepoSevk": {
 			"EvrakTip": "0",
@@ -392,6 +393,26 @@ var Param = [
 		},
 		"DepoDurumRaporu": {
 			"Depo": "4"
+		},
+		"StokVirman": {
+			"EvrakTip": "0",
+			"Seri": "STV",
+			"BelgeNo": "",
+			"Cari": "",
+			"DepoNo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "01",
+			"Proje": "",
+			"SonSatisFiyati": "0",
+			"SonAlisFiyati": "0",
+			"SatisSarti": "0",
+			"AlisSarti": "0",
+			"FiyatListe": "1",
+			"EvrakSil": "0",
+			"FiyatLock": "0",
+			"EksiyeDusme": "0",
+			"IskontoMatris": "0"
 		}
 	},
 	{
@@ -735,6 +756,26 @@ var Param = [
 			"Durağan Cariler Raporu": "1",
 			"Kasa Rapor": "1",
 			"Stok Hareket Rapor": "1"
+		},
+		"StokVirman": {
+			"EvrakTip": "0",
+			"Seri": "STV",
+			"BelgeNo": "",
+			"Cari": "",
+			"DepoNo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "01",
+			"Proje": "",
+			"SonSatisFiyati": "0",
+			"SonAlisFiyati": "0",
+			"SatisSarti": "0",
+			"AlisSarti": "0",
+			"FiyatListe": "1",
+			"EvrakSil": "0",
+			"FiyatLock": "0",
+			"EksiyeDusme": "0",
+			"IskontoMatris": "0"
 		}
 	}
 ]

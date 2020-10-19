@@ -687,6 +687,42 @@ angular.module('app.db', []).service('db',function($rootScope)
             }
         });
     }
+    this.TedarikciStokBarkodGetir = function(pFirma,pBarkod,pDepoNo,pTedarikci,pCallback)
+    {
+        let m = 
+        {
+            db : '{M}.' + pFirma,
+            tag : 'TedarikciBarkodGetir',
+            param : [pBarkod,pDepoNo,pTedarikci]
+        }
+        _SqlExecute(m,function(data)
+        {
+            if(pCallback)
+            {
+                
+                if(data.result.recordset.length > 0)
+                {
+                    pCallback(data.result.recordset);
+                }
+                else
+                {
+                    let m = 
+                    {
+                        db : '{M}.' + pFirma,
+                        tag : 'StokAnaSaglayiciGetir',
+                        param : [pBarkod,'',pDepoNo,'',pTedarikci]
+                    }
+                    _SqlExecute(m,function(data)
+                    {
+                        if(pCallback)
+                        {
+                            pCallback(data.result.recordset);
+                        }
+                    });
+                }
+            }
+        });
+    }
     this.FiyatGetir = async function (pFirma,BarkodData,pFiyatParam,pEvrParam,pCallback)
     {
         let FiyatParam = [BarkodData[0].KODU,1,pFiyatParam.DepoNo,pFiyatParam.OdemeNo];

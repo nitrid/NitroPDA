@@ -669,8 +669,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             0,  // DİSTİCARETTURU
             0,  // OTVVERGİSİZFL
             0,  // OİVVERGİSİZ
-           $scope.CariFiyatListe,
-           0   //NAKLİYEDEPO
+            $scope.CariFiyatListe,
+            0,  //NAKLİYEDEPO
+            0   // NAKLİYEDURUMU
         ];
         
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
@@ -1142,7 +1143,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         });    
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
+        db.GetPromiseTag($scope.Firma,'FiyatListeGetir',[$scope.PersonelTip],function(data)
+        {
+            $scope.FiyatListe = data;
+            $scope.FiyatListeNo = UserParam[ParamName].FiyatListe;
 
+            
+        }); 
         //db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});       
         
         $scope.EvrakTipChange();
@@ -1193,7 +1200,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         if(isNaN($scope.TxtLot))
         $scope.TxtLot = 0;
 
-        db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.TxtParti,$scope.TxtLot],function(data)
+        db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
         {   
             $scope.PartiLotListe = data;
             $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
@@ -1222,7 +1229,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             if(isNaN($scope.TxtLot))
             $scope.TxtLot = 0;
           
-            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.TxtParti,$scope.TxtLot],function(data)
+            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
             {   
                 if(data.length > 0)
                 {
