@@ -78,6 +78,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = false;
         $scope.Barkod = "";
         $scope.IslemListeSelectedIndex = -1;
+        $scope.PartiLotListeSelectedIndex = 0;
 
         $scope.TxtParti = "";
         $scope.TxtLot = 0;
@@ -592,6 +593,10 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                         else
                         {
                             PartiLotEkran();
+                            $timeout( function(){
+                                $window.document.getElementById("Parti").focus();
+                                $window.document.getElementById("Parti").select();
+                                },250)
                         }
                     }
 
@@ -767,6 +772,47 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             
         }
     }
+    $scope.BtnPartiEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnPartiLotGetir();
+            $timeout(function() 
+            {
+                if($scope.PartiLotListe != '')
+                {
+                    $scope.BtnPartiLotSec();
+                    $timeout(function(){$scope.Insert();},150)
+                }
+                else
+                {
+                    $('#MdlPartiLot').modal('hide');
+                    alertify.okBtn("Tamam");
+                    alertify.alert("Parti Bulunamadı");
+                    $('#MdlPartiLot').modal('hide');
+                    $scope.TxtParti = "";
+                    $scope.Barkod = "";
+                    $scope.Stok = null;
+                    $scope.Stok = 
+                    [
+                        {
+                            BIRIM : '',
+                            BIRIMPNTR : 0, 
+                            FIYAT : 0,
+                            TUTAR : 0,
+                            INDIRIM : 0,
+                            KDV : 0,
+                            TOPTUTAR :0
+                        }
+                    ];
+                    $scope.Miktar = 1;
+                    $scope.BarkodLock = false;
+            
+                    $scope.BirimListe = [];
+                }
+            },250)         
+        }
+    }
     $scope.BtnRenkBedenSec = function()
     {
         if($scope.RenkListe != "")
@@ -932,7 +978,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             return 'Depolar Arası Satış';
         } 
     }
- /*   $scope.EvrakTipChange = function()
+ /* $scope.EvrakTipChange = function()
     {
         if($scope.CmbEvrakTip == 0)
         {   

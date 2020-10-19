@@ -156,7 +156,7 @@
                     <div class="form-group row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Proje:</div></div>
                         <div class="col-8 px-1">
-                            <select class="form-control" ng-model="Proje" ng-disabled="EvrakLock">
+                            <select class="form-control js-example-basic-single" data-plugin="select2" ng-model="Proje" ng-disabled="EvrakLock">
                                 <option ng-repeat="option in ProjeListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
@@ -625,7 +625,7 @@
                     <div class="row my-0 py-0">
                         <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Parti :</div></div>
                         <div class="col-4 px-1">
-                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtParti" ng-blur="MaxLot()">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtParti" ng-blur="MaxLot()" id="Parti" ng-keypress = "BtnPartiEnter($event)">
                         </div>
                         <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Lot :</div></div>
                         <div class="col-4 px-1">
@@ -765,5 +765,10 @@
     });
     $("#PTarih").datepicker({
     language: "tr"
+    });
+</script>
+<script>
+    $(document).ready(function() {
+    $(".js-example-basic-single").select2();
     });
 </script>

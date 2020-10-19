@@ -71,8 +71,9 @@ var Param = [
 			"PartiSec": "1",
 			"FiyatLock": "0",
 			"SiparisOnay": "",
-			"IskontoMatris": "1",
-			"EksiyeDusme": "0"
+			"IskontoMatris": "0",
+			"EksiyeDusme": "0",
+			"ProjeGetir": "1"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -253,6 +254,7 @@ var Param = [
 			"Alış İrsaliyesi": "1",
 			"Tediye Makbuzu": "1",
 			"Mal Kabul Eşleştirme": "1",
+			"Kredi Sözlesme Izleme": "1",
 			"Cari Hesap Hareket": "1",
 			"Yapilacak Tahsilatlar/Ödemeler": "1",
 			"Stok Rapor": "1",

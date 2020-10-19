@@ -1145,7 +1145,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     $scope.ManuelGiris = function(pItem)
      {
-         $scope.Barkod = pItem.BARKOD
+        $scope.Barkod = pItem.BARKOD
         StokBarkodGetir(pItem.BARKOD)
         $scope.Miktar = pItem.MIKTAR
         $scope.Insert()

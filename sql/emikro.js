@@ -4,6 +4,7 @@ const md5 = require('md5');
 const fastparser = require("fast-xml-parser").j2xParser;
 const soap = require('soap');
 const sql = require('./sqllib');
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 let IrsTemplate =
 {
@@ -304,106 +305,91 @@ let FatTemplate =
                 },
                 PaymentMeans:
                 {
-                    PaymentMeansCode : "ZZZ",
-                    PaymentDueDate : "2020-06-19"
+
                 },
-                TaxTotal : 
+                Shipment : 
                 {
-                    TaxAmount : {"#text":"76.50","@_currencyID": "TRY"},
-                    TaxSubtotal :
-                    [
+                    ID : "",
+                    GoodsItem : 
+                    {
+                        ValueAmount : {"#text" : "900.00","@_currencyID":"TRY"}
+                    },
+                    ShipmentStage:
+                    {
+                       
+                        Person :
                         {
-                            TaxableAmount : {"#text":"300.00","@_currencyID": "TRY"},
-                            TaxAmount : {"#text":"22.50","@_currencyID": "TRY"},
-                            CalculationSequenceNumeric : 1,
-                            Percent : 7.5,
-                            TaxCategory : 
+                        FirstName:"ABDULLAH" ,
+
+                        FamilyName:"ATALAR",
+
+                        Title:"Şoför",
+
+                        NationalityID:"50614141501"
+                        }
+                       
+                    },
+                    Delivery : 
+                    {
+                        DeliveryAddress : 
+                        {
+                            StreetName : "Adres1 / Adres2",
+                            CitySubdivisionName : "SARIYER",
+                            CityName : "İSTANBUL",
+                            Country :
                             {
-                                TaxScheme : 
-                                {
-                                    Name : "Ö.İLETİŞİM V",
-                                    TaxTypeCode : "4080"
-                                }
+                                IdentificationCode : "TR",
+                                Name : "TÜRKİYE",
                             }
                         },
+                        Despatch : 
                         {
-                            TaxableAmount : {"#text":"300.00","@_currencyID": "TRY"},
-                            TaxAmount : {"#text":"54.00","@_currencyID": "TRY"},
-                            CalculationSequenceNumeric : 2,
-                            Percent : 18,
-                            TaxCategory : 
-                            {
-                                TaxScheme : 
-                                {
-                                    Name : "KDV",
-                                    TaxTypeCode : "0015"
-                                }
-                            }
+                            ActualDespatchDate : "2020-08-31",
+                            ActualDespatchTime : "00:00:00"
                         }
-                    ]
+                    }
                 },
-                LegalMonetaryTotal : 
-                {
-                    LineExtensionAmount : {"#text":"300.00","@_currencyID": "TRY"}, 
-                    TaxExclusiveAmount : {"#text":"300.00","@_currencyID": "TRY"}, 
-                    TaxInclusiveAmount : {"#text":"376.50","@_currencyID": "TRY"},
-                    AllowanceTotalAmount : {"#text":"0.00","@_currencyID": "TRY"}, 
-                    ChargeTotalAmount : {"#text":"0.00","@_currencyID": "TRY"}, 
-                    PayableRoundingAmount : {"#text":"0.00","@_currencyID": "TRY"}, 
-                    PayableAmount : {"#text":"376.50","@_currencyID": "TRY"}, 
-                },
-                InvoiceLine :
+                DespatchLine :
                 [
                     {
                         ID : "1",
-                        Note : "1",
-                        InvoicedQuantity : {"#text" : "3", "@_unitCode" : "C62"},
-                        LineExtensionAmount : {"#text":"300.00","@_currencyID": "TRY"},
-                        TaxTotal : 
+                        DeliveredQuantity : {"#text" : "2", "@_unitCode" : "C62"},
+                        OrderLineReference : 
                         {
-                            TaxAmount : {"#text":"76.50","@_currencyID": "TRY"},
-                            TaxSubtotal :
-                            [
-                                {
-                                    TaxableAmount : {"#text":"300.00","@_currencyID": "TRY"},
-                                    TaxAmount : {"#text":"22.50","@_currencyID": "TRY"},
-                                    CalculationSequenceNumeric : 1,
-                                    Percent : 7.5,
-                                    TaxCategory : 
-                                    {
-                                        TaxScheme : 
-                                        {
-                                            Name : "Ö.İLETİŞİM V",
-                                            TaxTypeCode : "4080"
-                                        }
-                                    }
-                                },
-                                {
-                                    TaxableAmount : {"#text":"300.00","@_currencyID": "TRY"},
-                                    TaxAmount : {"#text":"54.00","@_currencyID": "TRY"},
-                                    CalculationSequenceNumeric : 2,
-                                    Percent : 18,
-                                    TaxCategory : 
-                                    {
-                                        TaxScheme : 
-                                        {
-                                            Name : "KDV",
-                                            TaxTypeCode : "0015"
-                                        }
-                                    }
-                                }
-                            ]
+                            LineID : "1"
                         },
                         Item : 
                         {
-                            Name : "Stok 1",
+                            Description : "",
+                            Name : "Stok 2",
+                            BrandName : "",
+                            ModelName : "",
                             SellersItemIdentification : 
                             {
                                 ID : "S2"
-                            },
-                            Price : 
+                            }
+                        },
+                        Shipment :
+                        {
+                            ID : "",
+                            GoodsItem :
                             {
-                                PriceAmount : {"#text":"100.00","@_currencyID": "TRY"}
+                                InvoiceLine :
+                                {
+                                    ID : "",
+                                    InvoicedQuantity : {"#text" : "0", "@_unitCode" : "C62"},
+                                    LineExtensionAmount : {"#text" : "900.00", "@_currencyID" : "TRY"},
+                                    Item : 
+                                    {
+                                        Name : "Stok 2",
+                                        BrandName : "",
+                                        ModelName : ""
+                                    },
+                                    Price : 
+                                    {
+                                        PriceAmount : {"#text" : "450.00", "@_currencyID" : "TRY"},
+                                    }
+                                }
                             }
                         }
                     }
@@ -413,14 +399,25 @@ let FatTemplate =
     }
 }
 
-let url = 'http://efaturademo.mikro.com.tr/firmbox.asmx?wsdl';
+// DEMO LOGİN BİLGİLERİ 
+//let url = 'http://efaturademo.mikro.com.tr/firmbox.asmx?wsdl';
+// let login_args = 
+// {
+//     userName : "tx:1111111111:br:default",
+//     password : "Mikro",
+//     version : "TeknoERP.01",
+//     isOnlySelf : false
+// }
+
+let url = 'https://firma.myefatura.com.tr/EFatura/Firmbox/Firmbox.asmx?wsdl';
 let login_args = 
 {
-    userName : "tx:1111111111:br:default",
-    password : "Mikro",
+    userName : "tx:8360445507:br:default:ap:FC01FA99B6814D98AEF2124E10DD0066",
+    password : "Tekno050574",
     version : "TeknoERP.01",
     isOnlySelf : false
 }
+
 function Login()
 {
     return new Promise(resolve => 
@@ -534,7 +531,6 @@ function eIrsSend(pXml,pSessionId,pUid)
     {
         let zip = new admzip();
         zip.addFile(pUid + ".xml",Buffer.from(pXml),"")
-        
         let SendBuffer = zip.toBuffer();
         //zip.writeZip(pUid + ".zip");
         args = 
@@ -547,7 +543,6 @@ function eIrsSend(pXml,pSessionId,pUid)
                 hash : md5(SendBuffer)
             }
         }
-        
         let TmpValid = await eIrsValid(args);
 
         if(TmpValid != null)
@@ -556,12 +551,12 @@ function eIrsSend(pXml,pSessionId,pUid)
             resolve();
             return;
         }
-        
         soap.createClient(url,function(err,client)
         {
             if(err)
+            {
                 resolve();
-
+            }
             client.sendDocument(args,function(err,result)
             {
                 if (err) 
@@ -621,7 +616,7 @@ function eIrsDurum(pUid)
     return new Promise(async resolve => 
     {
         let sessionId = await Login();
-
+        
         args = 
         {
             sessionId : sessionId,
@@ -633,13 +628,12 @@ function eIrsDurum(pUid)
             }
         }
         soap.createClient(url,function(err,client)
-        {            
+        {         
             if(err)
                 resolve();
 
             client.getDocumentCurrentStatus(args,async function(err,result)
             {
-                console.log(result)
                 if(err)
                     resolve();
                 else
@@ -659,7 +653,7 @@ function eIrsValid(pArgs)
             if(err)
                 resolve();
 
-            client.getDocumentValidation(args,function(err,result)
+            client.getDocumentValidation(pArgs,function(err,result)
             {
                 if (err) 
                     resolve();
@@ -674,11 +668,11 @@ async function eIrsGonder(pData,pCallback)
     if(pData.length > 0)
     {        
         let TmpUid = uuidv4().toString().toUpperCase();
-
         let sessionId = await Login();
         let TmpXml = await eIrsXml(TmpUid,pData);
+
         let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
-    
+
         if(typeof TmpSend != 'undefined')
         {
             if(typeof pCallback != 'undefined')
@@ -689,44 +683,8 @@ async function eIrsGonder(pData,pCallback)
        
         await Logout(sessionId);
     }
-    
-}
-function eIrsQueueState()
-{
-    return new Promise(async resolve => 
-    {
-        let sessionId = await Login();
-
-        args = 
-        {
-            sessionId : sessionId,
-            startDate : "2020-09-15",
-            lastDate : "2020-09-16",
-            // filters : 
-            // {
-            //     QueueId : "2F0812E8-F45A-466A-AFE3-24F774BFF7AE"
-            // }
-        }
-        soap.createClient(url,function(err,client)
-        {            
-            if(err)
-                resolve();
-
-            client.getDocumentQueueState(args,async function(err,result)
-            {
-                console.log(result)
-                if(err)
-                    resolve();
-                else
-                    resolve(result)
-
-                await Logout(sessionId);
-            });
-        });
-    });
 }
 
-//eIrsQueueState();
 //eIrsDurum('36268EFB-D728-472A-986E-A440EA7A92BE')
 //eIrsGonder([{x:1}]);
 // eIrsGoster("");

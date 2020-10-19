@@ -119,6 +119,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.StokDetay = [];
 
         $scope.IslemListeSelectedIndex = -1;
+        $scope.PartiLotListeSelectedIndex = 0;
 
         // DÜZENLE MODAL
         $scope.MiktarEdit = 0;
@@ -816,6 +817,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         else
                         {
                             PartiLotEkran();
+                            $timeout( function(){
+                                $window.document.getElementById("Parti").focus();
+                                $window.document.getElementById("Parti").select();
+                                },250)
                         }
                     }
                     if($scope.OtoEkle == true)
@@ -929,13 +934,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
             {
-                console.log(1)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(Data)
                 {   
-                    console.log(2)
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
-                        console.log(3)
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     }
                     InsertAfterRefresh(Data);
@@ -1057,10 +1059,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 $scope.TxtLot = 0;
                 $scope.SktTarih = new Date().toLocaleDateString();
                 $scope.PartiLotListe = [];
-                $scope.$apply();
 
                 $("#LblPartiLotAlert").hide();
-                $("TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+                $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+
                 $('#MdlPartiLot').modal('show');
             }
         }
@@ -1203,6 +1205,47 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 }
             });
             
+        }
+    }
+    $scope.BtnPartiEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnPartiLotGetir();
+            $timeout(function() 
+            {
+                if($scope.PartiLotListe != '')
+                {
+                    $scope.BtnPartiLotSec();
+                    $timeout(function(){$scope.Insert();},150)
+                }
+                else
+                {
+                    $('#MdlPartiLot').modal('hide');
+                    alertify.okBtn("Tamam");
+                    alertify.alert("Parti Bulunamadı");
+                    $('#MdlPartiLot').modal('hide');
+                    $scope.TxtParti = "";
+                    $scope.Barkod = "";
+                    $scope.Stok = null;
+                    $scope.Stok = 
+                    [
+                        {
+                            BIRIM : '',
+                            BIRIMPNTR : 0, 
+                            FIYAT : 0,
+                            TUTAR : 0,
+                            INDIRIM : 0,
+                            KDV : 0,
+                            TOPTUTAR :0
+                        }
+                    ];
+                    $scope.Miktar = 1;
+                    $scope.BarkodLock = false;
+            
+                    $scope.BirimListe = [];
+                }
+            },250)         
         }
     }
     $scope.BtnRenkBedenSec = function()
