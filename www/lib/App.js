@@ -163,6 +163,10 @@ angular.module("app",
     {
         templateUrl : "html/rapor/DepoDurumRaporu.html"
     })
+    .when("/KrediSozlesmeIzleme",
+    {
+        templateUrl : "html/rapor/KrediSozlesmeIzleme.html"
+    })
     .when("/GelenHavale",
     {
         templateUrl : "html/evraklar/GelenHavale.html"
@@ -170,6 +174,10 @@ angular.module("app",
     .when("/KonsinyeIrsaliye",
     {
         templateUrl : "html/evraklar/KonsinyeIrsaliye.html"
+    })
+    .when("/StokVirman",
+    {
+        templateUrl : "html/evraklar/StokVirman.html"
     })
 });
 

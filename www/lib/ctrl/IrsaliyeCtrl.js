@@ -735,8 +735,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             0,  // DİSTİCARETTURU
             0,  // OTVVERGİSİZFL
             0,  // OİVVERGİSİZ
-           $scope.CariFiyatListe,
-           0   //NAKLİYEDEPO
+            $scope.CariFiyatListe,
+            0,  //NAKLİYEDEPO
+            0   // NAKLİYEDURUMU
         ];
         
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
@@ -1115,10 +1116,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.AdresNoListe = data;
         });
     }
-    $scope.MaxSira = async function()
-    {   
-        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
-    }
+    // $scope.MaxSira = async function()
+    // {   
+    //     await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+    // }
     $scope.YeniEvrak = function (pAlisSatis)
     {
         //ALIŞ = 0 SATIŞ = 1
@@ -1212,7 +1213,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         });    
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
+        db.GetPromiseTag($scope.Firma,'FiyatListeGetir',[$scope.PersonelTip],function(data)
+        {
+            $scope.FiyatListe = data;
+            $scope.FiyatListeNo = UserParam[ParamName].FiyatListe;
 
+            
+        }); 
         //db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});       
         
         $scope.EvrakTipChange();
@@ -2027,7 +2034,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 return;
             } 
             $scope.InsertLock = true
-            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 2  )
+            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2  )
             {          
                 InsertData();
             }
@@ -2052,6 +2059,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             }
                             db.GetDataQuery(TmpQuery,function(Data)
                             {
+                                console.log(Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR))
                                 if(Data.length > 0)
                                 {
                                     db.ExecuteTag($scope.Firma,'BedenHarGorUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,Data[0].BdnHar_Guid],function(data)
