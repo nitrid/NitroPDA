@@ -767,7 +767,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function StokBarkodGetir(pBarkod)
     {
-        // KİLO BARKODU KONTROLÜ - RECEP KARACA 10.09.2019
         let Kilo = pBarkod;
         let KiloFlag = UserParam.Sistem.KiloFlag;
         let FlagDizi = KiloFlag.split(',')
@@ -778,7 +777,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             if(Flag == FlagDizi[i])
             {
                 var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
-                var Uzunluk = Kilo.slice(UserParam.Sistem.KiloBaslangic,((UserParam.Sistem.KiloBaslangic)+(UserParam.Sistem.KiloUzunluk)));
+                var Uzunluk = Kilo.slice(parseInt(UserParam.Sistem.KiloBaslangic),parseInt(UserParam.Sistem.KiloBaslangic)+parseInt(UserParam.Sistem.KiloUzunluk));
                 pBarkod = kBarkod
                 $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
             }

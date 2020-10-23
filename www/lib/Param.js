@@ -75,7 +75,8 @@ var Param = [
 			"FiyatLock": "0",
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
-			"EksiyeDusme": "0"
+			"EksiyeDusme": "0",
+			"ProjeGetir": "1"
 		},
 		"VerilenSiparis": {
 			"Seri": "SP",
@@ -95,7 +96,8 @@ var Param = [
 			"PartiSec": "0",
 			"SiparisOnay": "",
 			"FiyatLock": "0",
-			"IskontoMatris": "0"
+			"IskontoMatris": "0",
+			"ProjeGetir": "1"
 		},
 		"DepoSevk": {
 			"EvrakTip": "0",
@@ -159,7 +161,8 @@ var Param = [
 			"FiyatListe": "1",
 			"FiyatLock": "0",
 			"EvrakSil": "0",
-			"IskontoMatris": "0"
+			"IskontoMatris": "0",
+			"ProjeGetir": "1"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -173,6 +176,25 @@ var Param = [
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
+			"SatisSarti": "0",
+			"AlisSarti": "0",
+			"FiyatListe": "1",
+			"EvrakSil": "0",
+			"FiyatLock": "0",
+			"EksiyeDusme": "0",
+			"IskontoMatris": "0",
+			"ProjeGetir": "1"
+		},
+		"KonsinyeIrsaliye": {
+			"EvrakTip": "0",
+			"Seri": "KNS",
+			"BelgeNo": "",
+			"Cari": "",
+			"DepoNo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "01",
+			"Proje": "",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "1",
@@ -272,7 +294,8 @@ var Param = [
 			"Planlı Üretim": "0",
 			"Aktarim": "0",
 			"EvrakGonder": "0",
-			"Gelen Havale": "1"
+			"Gelen Havale": "1",
+			"Konsinye İrsaliye": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "1",
