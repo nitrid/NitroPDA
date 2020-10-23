@@ -5,7 +5,6 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     let EklenecekStokSelectedRow= null;
     let BarkodSelectedRow = null;
     
-   
     function Init()
     {
         gtag('config', 'UA-12198315-14', 
@@ -52,7 +51,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.FiyatSiraListe = [];
         $scope.BarkodListe = [];
 
-        $scope.Special = "1";
+        $scope.Special = UserParam.FiyatGor.Special;
         $scope.SpecialListe = [];
 
         $scope.FiyatListeSelectedIndex = -1;
@@ -63,7 +62,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.Combo = true;
         $scope.FiyatGizle = true;
         $scope.StokResim = false;
-
+        
         $scope.Loading = false;
         $scope.TblLoading = true
 
@@ -336,8 +335,23 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     }
     function StokBarkodGetir(pBarkod)
     {
+        let Kilo = pBarkod;
+        let KiloFlag = UserParam.Sistem.KiloFlag;
+        let FlagDizi = KiloFlag.split(',')
+        let Flag = Kilo.slice(0,2);
+ 
+        for (i = 0; i < FlagDizi.length; i++ )
+        {
+            if(Flag == FlagDizi[i])
+            {
+                var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
+                var Uzunluk = Kilo.slice(parseInt(UserParam.Sistem.KiloBaslangic),parseInt(UserParam.Sistem.KiloBaslangic)+parseInt(UserParam.Sistem.KiloUzunluk));
+                pBarkod = kBarkod
+                $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
+            }
+        }
         if(pBarkod != '')
-        {   
+        {
             db.StokBarkodGetir($scope.Firma,pBarkod,$scope.DepoNo,function(BarkodData) 
             { 
                 if(BarkodData.length <= 0)
@@ -357,8 +371,10 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                 {          
                            
                     $scope.Stok = BarkodData;
+                    console.log(BarkodData)
                     
                     $scope.Barkod = $scope.Stok[0].BARKOD;
+                    console.log($scope.Barkod)
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.BarkodLock = true;
                     $scope.ReyonStok = $scope.Stok[0].BARKOD;
@@ -492,7 +508,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         });
                     }
                     BarkodFocus()
-                    $scope.Barkod = "";
+                    
                 }
             });
         }
@@ -505,6 +521,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     }
     function InsertData()
     {   
+        console.log(InsertData)
         if($scope.Barkod > 0)
         {   
             var InsertData = 
@@ -528,6 +545,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             ];
             db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
             {   
+                console.log(InsertData)
                 db.GetData($scope.Firma,'EtiketGetir',[$scope.Seri,$scope.Sira],function(EtiketData)
                 { 
                     if(typeof(InsertResult.result.err) == 'undefined')

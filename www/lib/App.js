@@ -167,6 +167,10 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/GelenHavale.html"
     })
+    .when("/KonsinyeIrsaliye",
+    {
+        templateUrl : "html/evraklar/KonsinyeIrsaliye.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {
