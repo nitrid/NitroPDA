@@ -4,7 +4,11 @@ const md5 = require('md5');
 const fastparser = require("fast-xml-parser").j2xParser;
 const soap = require('soap');
 const sql = require('./sqllib');
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+const request = require('request')
+
+let req = request.defaults({strictSSL: false});
+
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 let IrsTemplate =
 {
@@ -422,7 +426,7 @@ function Login()
 {
     return new Promise(resolve => 
     {
-        soap.createClient(url,function(err,client)
+        soap.createClient(url,{request : req,wsdl_options: {timeout: 5000}},function(err,client)
         {
             if(err)
                 resolve();
@@ -441,7 +445,7 @@ function Logout(pSessionId)
 {
     return new Promise(resolve => 
     {
-        soap.createClient(url,function(err,client)
+        soap.createClient(url,{request : req},function(err,client)
         {
             if(err)
                 resolve(false);
@@ -551,14 +555,15 @@ function eIrsSend(pXml,pSessionId,pUid)
             resolve();
             return;
         }
-        soap.createClient(url,function(err,client)
-        {
+        soap.createClient(url,{request : req,wsdl_options: {timeout: 5000}},function(err,client)
+        {            
             if(err)
             {
                 resolve();
             }
             client.sendDocument(args,function(err,result)
             {
+                console.log(err)
                 if (err) 
                     resolve();
                 else
@@ -581,7 +586,7 @@ function eIrsGoster(pDocumentId)
             documentContent : "DCEDespatch"
         }
 
-        soap.createClient(url,function(err,client)
+        soap.createClient(url,{request : req},function(err,client)
         {
             if(err)
                 resolve();
@@ -627,7 +632,8 @@ function eIrsDurum(pUid)
                 TransactionUUID : pUid
             }
         }
-        soap.createClient(url,function(err,client)
+        
+        soap.createClient(url,{request : req},function(err,client)
         {         
             if(err)
                 resolve();
@@ -648,7 +654,7 @@ function eIrsValid(pArgs)
 {
     return new Promise(resolve => 
     {
-        soap.createClient(url,function(err,client)
+        soap.createClient(url,{request : req},function(err,client)
         {
             if(err)
                 resolve();
@@ -665,14 +671,16 @@ function eIrsValid(pArgs)
 }
 async function eIrsGonder(pData,pCallback)
 {    
+    console.log(pData)
     if(pData.length > 0)
     {        
+        console.log(1);
         let TmpUid = uuidv4().toString().toUpperCase();
         let sessionId = await Login();
         let TmpXml = await eIrsXml(TmpUid,pData);
-
+        console.log(2);
         let TmpSend = await eIrsSend(TmpXml,sessionId,TmpUid);
-
+        console.log(TmpSend);
         if(typeof TmpSend != 'undefined')
         {
             if(typeof pCallback != 'undefined')
