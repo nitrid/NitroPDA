@@ -160,6 +160,10 @@ var QuerySql =
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
     },
+    KrediSozlemesiGetir : 
+    {
+        query : "SELECT * FROM KREDI_SOZLESMESI_TANIMLARI"
+    },
     CariGetir : 
     {
         query : "SELECT cari_kod AS KODU, " +
@@ -261,6 +265,61 @@ var QuerySql =
                 "WHERE BARKOD.bar_kodu = @BARKOD" ,
         param : ['BARKOD','DEPONO'],
         type : ['string|50','int']
+    },
+    TedarikciBarkodGetir:
+    {
+        query : "SELECT sto_kod AS KODU, " +
+                "sto_isim AS ADI, " +
+                "ISNULL((SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = STOK.sto_sat_cari_kod),'') AS UNVAN1, " +
+                "ISNULL((SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = STOK.sto_sat_cari_kod),'') AS UNVAN2, " +
+                "sto_sat_cari_kod AS CARIKODU, " +
+                "ISNULL(sto_birim2_katsayi * -1,0) AS MIKTAR, " +
+                "sto_kisa_ismi AS KISAAD, " +
+                "sto_yabanci_isim AS YABANCIAD, " +
+                "sto_doviz_cinsi AS DOVIZCINSI, " +
+                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sto_doviz_cinsi,0),2)),1) AS DOVIZCINSKURU, " +
+                "sto_perakende_vergi AS PERAKENDEVERGIPNTR, " +
+                "sto_toptan_vergi AS TOPTANVERGIPNTR, " +
+                "sto_altgrup_kod AS ALTGRUP, " +
+                "ISNULL((SELECT TOP 1 sta_isim FROM STOK_ALT_GRUPLARI WHERE sta_kod = sto_altgrup_kod),'') AS ALTGRUPADI, " +
+                "sto_anagrup_kod AS ANAGRUP, " +
+                "ISNULL((SELECT TOP 1 san_isim FROM STOK_ANA_GRUPLARI WHERE san_kod = sto_anagrup_kod),'') AS ANAGRUPADI, " +
+                "sto_uretici_kodu AS URETICI, " +
+                "sto_sektor_kodu AS SEKTOR, " +
+                "sto_reyon_kodu AS REYON, " +
+                "ISNULL((SELECT TOP 1 ryn_ismi FROM STOK_REYONLARI WHERE STOK_REYONLARI.ryn_kod = sto_reyon_kodu),'') AS REYONADI, " +
+                "sto_marka_kodu AS MARKA, " +
+                "sto_beden_kodu AS BEDENKODU, " +
+                "sto_renk_kodu AS RENKKODU, " +
+                "sto_pasif_fl AS AKTIFPASIF, " +
+                "bar_kodu AS BARKOD, " +
+                "bar_birimpntr AS BIRIMPNTR, " +
+                "bar_bedenpntr AS BEDENPNTR, " +
+                "bar_renkpntr AS RENKPNTR, " +
+                "bar_partikodu AS PARTI, " +
+                "bar_lotno AS LOT, " +
+                "bar_barkodtipi AS BARKODTIP, " +
+                "ISNULL((SELECT dbo.fn_beden_kirilimi (bar_bedenpntr,sto_beden_kodu)),0) AS BEDEN, " +
+                "ISNULL((SELECT dbo.fn_renk_kirilimi (bar_renkpntr,sto_renk_kodu)),0) AS RENK, " +
+                "(SELECT dbo.fn_VergiYuzde (sto_perakende_vergi)) AS PERAKENDEVERGI, " +
+                "(SELECT dbo.fn_VergiYuzde (sto_toptan_vergi)) AS TOPTANVERGI, " +
+                "ISNULL((SELECT dbo.fn_StokBirimHesapla (sto_kod,bar_birimpntr,1,1)),1) AS KATSAYI, " +
+                "(SELECT dbo.fn_StokBirimi (sto_kod,bar_birimpntr)) AS BIRIM, " +
+                "sto_detay_takip AS DETAYTAKIP, " +
+                "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
+                "ISNULL(( SELECT  msg_S_0165  FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] ( sto_kod ,@DEPONO,GETDATE()) WHERE msg_S_0062=CASE WHEN bar_renkpntr=0 THEN bar_bedenpntr ELSE CASE WHEN bar_bedenpntr=0 THEN (bar_renkpntr-1)*40+1 ELSE (bar_renkpntr-1)*40+bar_bedenpntr END  END),0) AS KIRILIMMIKTAR, " +
+                "sto_siparis_dursun AS SIPARISDURSUN, " +
+                "sto_malkabul_dursun as MALKABULDURSUN, " +
+                "sto_otvtutar AS OTVTUTAR, " +
+                "0 AS DOVIZ, " + 
+                "'' AS DOVIZSEMBOL, " + 
+                "1 AS DOVIZKUR " + 
+                "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
+                "LEFT JOIN BARKOD_TANIMLARI AS BARKOD WITH (NOLOCK,INDEX=NDX_BARKOD_TANIMLARI_02) ON " +
+                "STOK.sto_kod = BARKOD.bar_stokkodu " +
+                "WHERE BARKOD.bar_kodu = @BARKOD AND STOK.sto_sat_cari_kod = @sto_sat_cari_kod" ,
+        param : ['BARKOD','DEPONO','sto_sat_cari_kod'],
+        type : ['string|50','int','string|50']
     },
     StokGetir:
     {
@@ -369,6 +428,113 @@ var QuerySql =
         param : ['KODU',"ADI",'DEPONO','MKODU'],
         type : ['string|25','string|50','int','string|25']
     },    
+    StokAnaSaglayiciGetir:
+    {
+        query : "SELECT " +
+                "KODU AS KODU, " +
+                "ADI AS ADI, " +
+                "UNVAN1 AS UNVAN1, " +
+                "UNVAN2 AS UNVAN2, " + 
+                "CARIKODU AS CARIKODU," + 
+                "MAX(MIKTAR) AS MIKTAR," +
+                "KISAAD AS KISAAD," +
+                "YABANCIAD AS YABANCIAD," +
+                "MAX(DOVIZCINSI) AS DOVIZCINSI," +
+                "MAX(DOVIZCINSKURU) AS DOVIZCINSKURU," +
+                "MAX(PERAKENDEVERGIPNTR) AS PERAKENDEVERGIPNTR," +
+                "MAX(TOPTANVERGIPNTR) AS TOPTANVERGIPNTR," +
+                "ALTGRUP AS ALTGRUP," +
+                "ALTGRUPADI AS ALTGRUPADI," +
+                "ANAGRUP AS ANAGRUP," +
+                "ANAGRUPADI AS ANAGRUPADI," +
+                "MAX(URETICI) AS URETICI," +
+                "MAX(SEKTOR) AS SEKTOR," +
+                "MAX(REYON) AS REYON," +
+                "MAX(REYONADI) AS REYONADI," +
+                "MAX(MARKA) AS MARKA," +
+                "MAX(BEDENKODU) AS BEDENKODU," +
+                "MAX(RENKKODU) AS RENKKODU," +
+                "MAX(BARKOD) AS BARKOD," +
+                "MAX(BIRIMPNTR) AS BIRIMPNTR," +
+                "MAX(BEDENPNTR) AS BEDENPNTR," +
+                "MAX(RENKPNTR) AS RENKPNTR," +
+                "MAX(PARTI) AS PARTI," +
+                "MAX(LOT) AS LOT," +
+                "MAX(BARKODTIP) AS BARKODTIP," +
+                "MAX(BEDEN) AS BEDEN," +
+                "MAX(RENK) AS RENK," +
+                "MAX(PERAKENDEVERGI) AS PERAKENDEVERGI," +
+                "MAX(TOPTANVERGI) AS TOPTANVERGI," +
+                "MAX(KATSAYI) AS KATSAYI," +
+                "MAX(BIRIM) AS BIRIM," +
+                "MAX(DETAYTAKIP) AS DETAYTAKIP," +
+                "MAX(DEPOMIKTAR) AS DEPOMIKTAR," +
+                "BEDENMIKTAR AS BEDENMIKTAR," +
+                "RENKMIKTAR AS RENKMIKTAR," +
+                "MAX(KIRILIMMIKTAR) AS KIRILIMMIKTAR, " +
+                "MAX(SIPARISDURSUN) AS SIPARISDURSUN, " +
+                "MAX(MALKABULDURSUN) AS MALKABULDURSUN, " +
+                "MAX(OTVTUTAR) AS OTVTUTAR," +
+                "MAX(DOVIZ) AS DOVIZ," +
+                "MAX(DOVIZSEMBOL) AS DOVIZSEMBOL, " +
+                "MAX(DOVIZKUR) AS DOVIZKUR " +
+                "FROM (SELECT " +
+                "sto_kod AS KODU, " +
+                "sto_isim AS ADI, " +
+                "ISNULL((SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = STOK.sto_sat_cari_kod),'') AS UNVAN1, " +
+                "ISNULL((SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = STOK.sto_sat_cari_kod),'') AS UNVAN2, " +
+                "sto_sat_cari_kod AS CARIKODU, " +
+                "ISNULL(sto_birim2_katsayi * -1,0) AS MIKTAR, " +
+                "sto_kisa_ismi AS KISAAD, " +
+                "sto_yabanci_isim AS YABANCIAD, " +
+                "sto_doviz_cinsi AS DOVIZCINSI, " +
+                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sto_doviz_cinsi,0),2)),1) AS DOVIZCINSKURU, " +
+                "sto_perakende_vergi AS PERAKENDEVERGIPNTR, " +
+                "sto_toptan_vergi AS TOPTANVERGIPNTR, " +
+                "sto_altgrup_kod AS ALTGRUP, " +
+                "ISNULL((SELECT TOP 1 sta_isim FROM STOK_ALT_GRUPLARI WHERE sta_kod = sto_altgrup_kod),'') AS ALTGRUPADI, " +
+                "sto_anagrup_kod AS ANAGRUP, " +
+                "ISNULL((SELECT TOP 1 san_isim FROM STOK_ANA_GRUPLARI WHERE san_kod = sto_anagrup_kod),'') AS ANAGRUPADI, " +
+                "sto_uretici_kodu AS URETICI, " +
+                "sto_sektor_kodu AS SEKTOR, " +
+                "sto_reyon_kodu AS REYON, " +
+                "ISNULL((SELECT TOP 1 ryn_ismi FROM STOK_REYONLARI WHERE STOK_REYONLARI.ryn_kod = sto_reyon_kodu),'') AS REYONADI, " +
+                "sto_marka_kodu AS MARKA, " +
+                "sto_beden_kodu AS BEDENKODU, " +
+                "sto_renk_kodu AS RENKKODU, " +
+                "sto_pasif_fl AS AKTIFPASIF, " +
+                "'' AS BARKOD, " +
+                "1 AS BIRIMPNTR, " +
+                "0 AS BEDENPNTR, " +
+                "0 AS RENKPNTR, " +
+                "'' AS PARTI, " +
+                "0 AS LOT, " +
+                "0 AS BARKODTIP, " +
+                "'' AS BEDEN, " +
+                "'' AS RENK, " +
+                "(SELECT dbo.fn_VergiYuzde (sto_perakende_vergi)) AS PERAKENDEVERGI, " +
+                "(SELECT dbo.fn_VergiYuzde (sto_toptan_vergi)) AS TOPTANVERGI, " +
+                "1 AS KATSAYI, " +
+                "'' AS BIRIM, " +
+                "sto_detay_takip AS DETAYTAKIP, " +
+                "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
+                "0 AS RENKMIKTAR," +
+                "0 AS BEDENMIKTAR," +
+                "0 AS KIRILIMMIKTAR, " +
+                "sto_siparis_dursun AS SIPARISDURSUN, " +
+                "sto_malkabul_dursun AS MALKABULDURSUN, " +
+                "sto_otvtutar AS OTVTUTAR, " +
+                "0 AS DOVIZ,  " +
+                " '' AS DOVIZSEMBOL,  " +
+                "1 AS DOVIZKUR  " +
+                "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
+                "WHERE ((sto_kod LIKE  @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE @ADI + '%' ) OR (@ADI = '')) " +
+                "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = '')) AND sto_sat_cari_kod = @sto_sat_cari_kod " +
+                ") AS TMP " +
+                "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI,BEDENMIKTAR,RENKMIKTAR ORDER BY KODU" ,
+        param : ['KODU',"ADI",'DEPONO','MKODU','sto_sat_cari_kod'],
+        type : ['string|25','string|50','int','string|25','string|50']
+    },   
     StokAdiGetir : 
     {
         query : "SELECT " +
@@ -633,7 +799,7 @@ var QuerySql =
             ",@pl_partikodu						--<pl_partikodu, nvarchar(25),> \n" +
             ",@pl_lotno							--<pl_lotno, int,> \n" +
             ",@pl_stokkodu						--<pl_stokkodu, nvarchar(25),> \n" +
-            ",''									--<pl_aciklama, nvarchar(50),> \n" +
+            ",''								--<pl_aciklama, nvarchar(50),> \n" +
             ",0									--<pl_olckalkdeg_deg1, float,> \n" +
             ",0									--<pl_olckalkdeg_deg2, float,> \n" +
             ",0									--<pl_olckalkdeg_deg3, float,> \n" +
@@ -671,7 +837,7 @@ var QuerySql =
             ",''									--<pl_kod8, nvarchar(25),> \n" +
             ",''									--<pl_kod9, nvarchar(25),> \n" +
             ",''									--<pl_kod10, nvarchar(25),> \n" +
-            ",CONVERT(VARCHAR(10),GETDATE(),112)									--<pl_uretim_tar, datetime,> \n" +
+            ",CONVERT(VARCHAR(10),GETDATE(),112)	--<pl_uretim_tar, datetime,> \n" +
             ")",
         param : ['pl_create_user:int','pl_lastup_user:int','pl_partikodu:string|25','pl_lotno:int','pl_stokkodu:string|25','pl_son_kullanim_tar:date']
     },
@@ -946,7 +1112,7 @@ var QuerySql =
     },
     EslestirmeOtukmaSayı :
     {
-        query: "SELECT COUNT(sth_stok_kod) AS OKUTULAN FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = @SERI AND sth_evrakno_sira = @SIRA  AND sth_stok_kod = @sth_stok_kod AND sth_evraktip = 1 ",
+        query : "SELECT COUNT(sth_stok_kod) AS OKUTULAN FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = @SERI AND sth_evrakno_sira = @SIRA  AND sth_stok_kod = @sth_stok_kod AND sth_evraktip = 1 ",
         param : ['SERI','SIRA','sth_stok_kod'],
         type : ['string|20','int','string|20']
     },
@@ -1213,7 +1379,7 @@ var QuerySql =
        "sip_satici_kod, " +
        "sip_opno, " +
        "sip_depono " +
-        "FROM SIPARISLER WHERE sip_tip = @sip_tip and sip_cins = @sip_cins AND sip_projekodu != '' AND ((sip_projekodu = @sip_projekodu ) OR (@sip_projekodu = '')) " +
+        "FROM SIPARISLER WHERE sip_tip = @sip_tip and sip_cins = @sip_cins AND sip_projekodu != '' AND ((sip_projekodu = @sip_projekodu ) OR (@sip_projekodu = '')) AND sip_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
         "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_projekodu,sip_stok_sormerk,sip_satici_kod, " +
         "sip_miktar,sip_tip,sip_belgeno,sip_musteri_kod,sip_tarih,sip_teslim_tarih,sip_opno,sip_depono ",
         param:  ['sip_tip','sip_cins','sip_projekodu'],
@@ -1550,10 +1716,34 @@ var QuerySql =
                 "(SELECT dbo.fn_beden_kirilimi(ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0),(SELECT TOP 1 sto_beden_kodu FROM STOKLAR WHERE sto_kod = sth_stok_kod))) AS BEDEN ," +
                 "ISNULL((SELECT sip_evrakno_seri from SIPARISLER WHERE sip_Guid = sth_sip_uid),'') AS SIPSERI ," +
                 "ISNULL((SELECT sip_evrakno_sira from SIPARISLER WHERE sip_Guid = sth_sip_uid),0) AS SIPSIRA ," +
+                "CASE sth_tip WHEN 0 THEN 'GIREN' WHEN 1 THEN 'CIKAN' END AS VIRMANTIP, " +
                 "* FROM STOK_HAREKETLERI " +
                 "WHERE sth_evrakno_seri=@sth_evrakno_seri AND sth_evrakno_sira=@sth_evrakno_sira AND sth_evraktip=@sth_evraktip ORDER BY sth_satirno " ,
         param:   ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
         type:    ['string|20','int','int']
+    },
+    StokProjeGetir :
+    {
+        query:  "SELECT " +
+                "sth_evrakno_seri AS SERI,  " +
+                "sth_evrakno_sira AS SIRA,  " +
+                "sth_proje_kodu AS PROJEKOD,  " +
+                "ISNULL((SELECT som_isim FROM SORUMLULUK_MERKEZLERI WHERE som_kod = sth_stok_srm_merkezi),'') AS SORUMLUMERADI ,  " +
+                "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = sth_plasiyer_kodu),'') AS PERSONELADI,  " +
+                "sth_tip ,  " +
+                "sth_cari_kodu ,  " +
+                "sth_belge_no ,  " +
+                "sth_tarih,  " +
+                "sth_teslim_tarihi,  " +
+                "sth_stok_srm_merkezi,  " +
+                "sth_plasiyer_kodu,  " +
+                "sth_odeme_op,  " +
+                "sth_cikis_depo_no  " +
+                "FROM STOK_HAREKETLERI WHERE sth_evraktip = @sth_evraktip and sth_cins = @sth_cins AND sth_proje_kodu != '' AND ((sth_proje_kodu = @sth_proje_kodu ) OR (@sth_proje_kodu = '')) --AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
+                "GROUP BY sth_evrakno_seri,sth_evrakno_sira,sth_proje_kodu,sth_stok_srm_merkezi,sth_plasiyer_kodu, " +
+                "sth_tip,sth_belge_no,sth_cari_kodu,sth_tarih,sth_teslim_tarihi,sth_odeme_op,sth_cikis_depo_no ",
+                param:  ['sth_evraktip','sth_cins','sth_proje_kodu'],
+                type:   ['int','int','string|20']
     },
     StokHarInsert : 
     {
@@ -1708,7 +1898,7 @@ var QuerySql =
                 "0					--<sth_DBCno, smallint,> \n" +
                 ",0					--<sth_SpecRECno, int,> \n" +
                 ",0	 				--<sth_iptal, bit,> \n" +
-                ",16					 --<sth_fileid, smallint,> \n" +
+                ",16			    --<sth_fileid, smallint,> \n" +
                 ",0		 			--<sth_hidden, bit,> \n" +
                 ",0		 			--<sth_kilitli, bit,> \n" +
                 ",0		 			--<sth_degisti, bit,> \n" +
@@ -1716,14 +1906,14 @@ var QuerySql =
                 ",@sth_create_user 			--<sth_create_user, smallint,> \n" +
                 ",GETDATE() 			--<sth_create_date, datetime,> \n" +
                 ",@sth_lastup_user 			--<sth_lastup_user, smallint,> \n" +
-                ",GETDATE() 			--<sth_lastup_date, datetime,> \n" +
-                ",''		 			--<sth_special1, varchar(4),> \n" +
-                ",''		 			--<sth_special2, varchar(4),> \n" +
-                ",''		 			--<sth_special3, varchar(4),> \n" +
-                ",@sth_firmano 			--<sth_firmano, int,> \n" +
-                ",@sth_subeno 			--<sth_subeno, int,> \n" +
+                ",GETDATE() 			    --<sth_lastup_date, datetime,> \n" +
+                ",''		 			    --<sth_special1, varchar(4),> \n" +
+                ",''		 			    --<sth_special2, varchar(4),> \n" +
+                ",''		 			    --<sth_special3, varchar(4),> \n" +
+                ",@sth_firmano 			    --<sth_firmano, int,> \n" +
+                ",@sth_subeno 			    --<sth_subeno, int,> \n" +
                 ",@sth_tarih 				--<sth_tarih, datetime,> \n" +
-                ",@sth_tip 				--<sth_tip, tinyint,> \n" +
+                ",@sth_tip 				    --<sth_tip, tinyint,> \n" +
                 ",@sth_cins 				--<sth_cins, tinyint,> \n" +
                 ",@sth_normal_iade 			--<sth_normal_iade, tinyint,> \n" +
                 ",@sth_evraktip 			--<sth_evraktip, tinyint,> \n" +
@@ -3333,6 +3523,329 @@ var QuerySql =
         param : ['KODU','ADI'],
         type : ['string|25','string|127']
     }, 
+    // Konsinye Hareket
+    KonsinyeHarInsert :
+    {
+       query : "INSERT INTO [dbo].[KONSINYE_HAREKETLERI] " +
+       "([kon_Guid]" + 
+       ",[kon_DBCno] " +                                                                       
+       ",[kon_SpecRecno] " +                                                                       
+       ",[kon_iptal] " +                                                                       
+       ",[kon_fileid] " +                                                                       
+       ",[kon_hidden] " +                                                                       
+       ",[kon_kilitli] " +                                                                       
+       ",[kon_degisti] " +                                                                       
+       ",[kon_checksum] " +                                                                       
+       ",[kon_create_user] " +                                                                       
+       ",[kon_create_date] " +                                                                       
+       ",[kon_lastup_user] " +                                                                       
+       ",[kon_lastup_date] " +                                                                       
+       ",[kon_special1] " +                                                                       
+       ",[kon_special2] " +                                                                       
+       ",[kon_special3] " +                                                                       
+       ",[kon_firmano] " +                                                                       
+       ",[kon_subeno] " +                                                                       
+       ",[kon_tarih] " +                                                                       
+       ",[kon_tip] " +                                                                       
+       ",[kon_normal_iade] " +                                                                                            
+       ",[kon_evrakno_seri] " +                                                                                            
+       ",[kon_evrakno_sira] " +                                                 
+       ",[kon_satirno] " +                                                 
+       ",[kon_belge_no] " +                                                 
+       ",[kon_belge_tarih] " +                                                 
+       ",[kon_stok_kod] " +                                                 
+       ",[kon_cari_kod] " +                                                 
+       ",[kon_satici_kod] " +                                                 
+       ",[kon_miktar] " +                                                 
+       ",[kon_faturalanan] " +                                                 
+       ",[kon_aciklama] " +                                                 
+       ",[kon_giris_depo_no] " +                                                 
+       ",[kon_cikis_depo_no] " +                                                 
+       ",[kon_malkabul_tarih] " +                                                 
+       ",[kon_sip_uid] " +                                                 
+       ",[kon_islemgoren] " +                                                 
+       ",[kon_karkon_uid] " +                                                 
+       ",[kon_netagirlik] " +                                                 
+       ",[kon_brutagirlik] " +                                                 
+       ",[kon_rehinmiktari] " +                                                 
+       ",[kon_rehinfiyati] " +                                                 
+       ",[kon_miktar2] " +                                                 
+       ",[kon_islemgoren2] " +                                                 
+       ",[kon_sandikmiktari] " +                                                 
+       ",[kon_sandikfiyati] " +                                                 
+       ",[kon_sevk_adresno] " +                                                 
+       ",[kon_cari_srm_merkez] " +                                                 
+       ",[kon_stok_srm_merkez] " +                                                 
+       ",[kons_parti_kodu] " +                                                 
+       ",[kons_lot_no] " +                                                 
+       ",[kons_projekodu] " +                                                 
+       ",[kons_har_doviz_cinsi] " +                                                 
+       ",[kons_har_doviz_kuru] " +                                                 
+       ",[kons_alt_doviz_kuru] " +                                                 
+       ",[kons_stok_doviz_cinsi] " +                                                 
+       ",[kons_stok_doviz_kuru] " +                                                 
+       ",[kons_odeme_op] " +                                                 
+       ",[kons_birim_pntr] " +                                                 
+       ",[kons_tutar] " +                                                 
+       ",[kons_isk_mas1] " +                                                 
+       ",[kons_isk_mas2] " +                                                 
+       ",[kons_isk_mas3] " +                                                 
+       ",[kons_isk_mas4] " +                                                 
+       ",[kons_isk_mas5] " +                                                 
+       ",[kons_isk_mas6] " +                                                 
+       ",[kons_isk_mas7] " +                                                 
+       ",[kons_isk_mas8] " +                                                 
+       ",[kons_isk_mas9] " +                                                 
+       ",[kons_isk_mas10] " +                                                 
+       ",[kons_sat_iskmas1] " +                                                 
+       ",[kons_sat_iskmas2] " +                                                 
+       ",[kons_sat_iskmas3] " +                                                 
+       ",[kons_sat_iskmas4] " +                                                 
+       ",[kons_sat_iskmas5] " +                                                 
+       ",[kons_sat_iskmas6] " +                                                 
+       ",[kons_sat_iskmas7] " +                                                 
+       ",[kons_sat_iskmas8] " +                                                 
+       ",[kons_sat_iskmas9] " +                                                 
+       ",[kons_sat_iskmas10] " +                                                 
+       ",[kons_iskonto1] " +                                                 
+       ",[kons_iskonto2] " +                                                 
+       ",[kons_iskonto3] " +                                                 
+       ",[kons_iskonto4] " +                                                 
+       ",[kons_iskonto5] " +                                                 
+       ",[kons_iskonto6] " +                                                 
+       ",[kons_masraf1] " +                                                 
+       ",[kons_masraf2] " +                                                 
+       ",[kons_masraf3] " +                                                 
+       ",[kons_masraf4] " +                                                 
+       ",[kons_vergi_pntr] " +                                                 
+       ",[kons_vergi] " +                                                 
+       ",[kons_masraf_vergi_pntr] " +                                                 
+       ",[kons_masraf_vergi] " +                                                 
+       ",[kons_vergisiz_fl] " +                                                 
+       ",[kons_otv_pntr] " +                                                 
+       ",[kons_otv_vergi] " +                                                 
+       ",[kons_otvtutari] " +                                                 
+       ",[kons_otvvergisiz_fl] " +                                                 
+       ",[kons_oiv_pntr] " +                                                 
+       ",[kons_oiv_vergi] " +                                                 
+       ",[kons_oivvergisiz_fl] " +                                                 
+       ",[kons_fiyat_liste_no] " +                                                 
+       ",[kon_cins] " +                                                 
+       ",[kon_evraktip] " +                                                 
+       ",[kon_gider_kodu] " +                                                 
+       ",[kons_oivtutari] " +                                                 
+       ",[kon_irs_uid] " +                                                 
+       ",[kon_yetkili_uid] " +                                                 
+       ",[kon_nakliyedeposu] " +                                                 
+       ",[kon_nakliyedurumu] " +     
+       ",[kon_kunye_no] " +
+       ",[kon_eirs_senaryo] " +
+       ",[kon_eirs_tipi] " +
+       ",[kon_teslim_tarihi] " +
+       ",[kon_matbu_fl]) " +                                           
+       "VALUES " +
+       "(newid()                    --<kon_Guid, uniqueidentifier,>  \n " +
+       ",0                          --<kon_DBCno, smallint,> \n" +
+       ",0	                        --<kon_SpecRecno, int,> \n" +
+       ",0	                        --<kon_iptal, bit,> \n" +
+       ",46                         --<kon_fileid, smallint,> \n" +
+       ",0	                        --<kon_hidden, bit,> \n" +
+       ",0	                        --<kon_kilitli, bit,> \n" +
+       ",0	                        --<kon_degisti, bit,> \n" +
+       ",0	                        --<kon_checksum, int,> \n" +
+       ",@kon_create_user	        --<kon_create_user, smallint,> \n" +
+       ",GETDATE()	                --<kon_create_date, datetime,> \n" +
+       ",@kon_lastup_user	        --<kon_lastup_user, smallint,> \n" +
+       ",GETDATE()              	--<kon_lastup_date, datetime,> \n" +
+       ",''	                        --<kon_special1, nvarchar(4),> \n" +
+       ",''	                        --<kon_special2, nvarchar(4),> \n" +
+       ",''	                        --<kon_special3, nvarchar(4),> \n" +
+       ",@kon_firmano	            --<kon_firmano, int,> \n" +
+       ",@kon_subeno		        --<kon_subeno, int,> \n" +
+       ",@kon_tarih	                --<kon_tarih, datetime,> \n" +
+       ",@kon_tip	                --<kon_tip, tinyint,> \n" +
+       ",@kon_normal_iade	        --<kon_normal_iade, tinyint,> \n" +
+       ",@kon_evrakno_seri	        --<kon_evrakno_seri, [dbo].[evrakseri_str],> \n" +
+       ",@kon_evrakno_sira	        --<kon_evrakno_sira, int,> \n" +
+       ",(SELECT ISNULL(MAX(kon_satirno),-1) + 1 AS SATIRNO FROM KONSINYE_HAREKETLERI WHERE kon_evrakno_seri = @kon_evrakno_seri AND kon_evrakno_sira = @kon_evrakno_sira and kon_evraktip = @kon_evraktip)  --<kon_satirno, int,> \n" +
+       ",@kon_belge_no	            --<kon_belge_no, [dbo].[belgeno_str],> \n" +
+       ",@kon_belge_tarih	        --<kon_belge_tarih, datetime,> \n" +
+       ",@kon_stok_kod	            --<kon_stok_kod, nvarchar(25),> \n" +
+       ",@kon_cari_kod	            --<kon_cari_kod, nvarchar(25),> \n" +
+       ",@kon_satici_kod	        --<kon_satici_kod, nvarchar(25),> \n" +
+       ",@kon_miktar		        --<kon_miktar, float,> \n" +
+       ",0	                        --<kon_faturalanan, float,> \n" +
+       ",@kon_aciklama	            --<kon_aciklama, nvarchar(50),> \n" +
+       ",@kon_giris_depo_no 		--<kon_giris_depo_no, int,> \n" +
+       ",@kon_cikis_depo_no		    --<kon_cikis_depo_no, int,> \n" +
+       ",GETDATE()              	--<kon_malkabul_tarih, datetime,> \n" +
+       ",'00000000-0000-0000-0000-000000000000'                          --<kon_sip_uid, uniqueidentifier,> \n" +
+       ",0	                        --<kon_islemgoren, float,> \n" +
+       ",'00000000-0000-0000-0000-000000000000'	                        --<kon_karkon_uid, uniqueidentifier,> \n" +
+       ",0	                        --<kon_netagirlik, float,> \n" +
+       ",0	                        --<kon_brutagirlik, float,> \n" +
+       ",0	                        --<kon_rehinmiktari, float,> \n" +
+       ",0	                        --<kon_rehinfiyati, float,> \n" +
+       ",@kon_miktar2	            --<kon_miktar2, float,> \n" +
+       ",0	                        --<kon_islemgoren2, float,> \n" +
+       ",0	                        --<kon_sandikmiktari, float,> \n" +
+       ",0	                        --<kon_sandikfiyati, float,> \n" +
+       ",@kon_sevk_adresno	        --<kon_sevk_adresno, smallint,> \n" +
+       ",@kon_cari_srm_merkez	    --<kon_cari_srm_merkez, nvarchar(25),> \n" +
+       ",@kon_stok_srm_merkez	    --<kon_stok_srm_merkez, nvarchar(25),> \n" +
+       ",''	                        --<kons_parti_kodu, nvarchar(25),> \n" +
+       ",0	                        --<kons_lot_no, int,> \n" +
+       ",@kons_projekodu 	        --<kons_projekodu, nvarchar(25),> \n" +
+       ",@kons_har_doviz_cinsi	    --<kons_har_doviz_cinsi, tinyint,> \n" +
+       ",@kons_har_doviz_kuru       --<kons_har_doviz_kuru, float,> \n" +
+       ",@kons_alt_doviz_kuru       --<kons_alt_doviz_kuru, float,> \n" +
+       ",@kons_stok_doviz_cinsi     --<kons_stok_doviz_cinsi, tinyint,> \n" +
+       ",@kons_stok_doviz_kuru      --<kons_stok_doviz_kuru, float,> \n" +
+       ",0	                        --<kons_odeme_op, int,> \n" +
+       ",@kons_birim_pntr           --<kons_birim_pntr, tinyint,> \n" +
+       ",@kons_tutar	            --<kons_tutar, float,> \n" +
+       ",0	                        --<kons_isk_mas1, tinyint,> \n" +
+       ",0	                        --<kons_isk_mas2, tinyint,> \n" +
+       ",0	                        --<kons_isk_mas3, tinyint,> \n" +
+       ",0	                        --<kons_isk_mas4, tinyint,> \n" +
+       ",0	                        --<kons_isk_mas5, tinyint,> \n" +
+       ",0	                        --<kons_isk_mas6, tinyint,> \n" +
+       ",0	                        --<kons_isk_mas7, tinyint,> \n" +
+       ",0	                        --<kons_isk_mas8, tinyint,> \n" +
+       ",0	                        --<kons_isk_mas9, tinyint,> \n" +
+       ",0	                        --<kons_isk_mas10, tinyint,> \n" +
+       ",0	                        --<kons_sat_iskmas1, bit,> \n" +
+       ",0	                        --<kons_sat_iskmas2, bit,> \n" +
+       ",0	                        --<kons_sat_iskmas3, bit,> \n" +
+       ",0	                        --<kons_sat_iskmas4, bit,> \n" +
+       ",0	                        --<kons_sat_iskmas5, bit,> \n" +
+       ",0	                        --<kons_sat_iskmas6, bit,> \n" +
+       ",0	                        --<kons_sat_iskmas7, bit,> \n" +
+       ",0	                        --<kons_sat_iskmas8, bit,> \n" +
+       ",0	                        --<kons_sat_iskmas9, bit,> \n" +
+       ",0	                        --<kons_sat_iskmas10, bit,> \n" +
+       ",@kons_iskonto1	            --<kons_iskonto1, float,> \n" +
+       ",@kons_iskonto2	            --<kons_iskonto2, float,> \n" +
+       ",@kons_iskonto3	            --<kons_iskonto3, float,> \n" +
+       ",@kons_iskonto4	            --<kons_iskonto4, float,> \n" +
+       ",@kons_iskonto5	            --<kons_iskonto5, float,> \n" +
+       ",@kons_iskonto6		        --<kons_iskonto6, float,> \n" +
+       ",0	                        --<kons_masraf1, float,> \n" +
+       ",0	                        --<kons_masraf2, float,> \n" +
+       ",0	                        --<kons_masraf3, float,> \n" +
+       ",0	                        --<kons_masraf4, float,> \n" +
+       ",@kons_vergi_pntr	        --<kons_vergi_pntr, tinyint,> \n" +
+       ",@kons_vergi	            --<kons_vergi, float,> \n" +
+       ",0	                        --<kons_masraf_vergi_pntr, tinyint,> \n" +
+       ",0	                        --<kons_masraf_vergi, float,> \n" +
+       ",0	                        --<kons_vergisiz_fl, bit,> \n" +
+       ",0	                        --<kons_otv_pntr, tinyint,> \n" +
+       ",0	                        --<kons_otv_vergi, float,> \n" +
+       ",0	                        --<kons_otvtutari, float,> \n" +
+       ",0	                        --<kons_otvvergisiz_fl, bit,> \n" +
+       ",0	                        --<kons_oiv_pntr, tinyint,> \n" +
+       ",0	                        --<kons_oiv_vergi, float,> \n" +
+       ",0	                        --<kons_oivvergisiz_fl, bit,> \n" +
+       ",1	                        --<kons_fiyat_liste_no, int,> \n" +
+       ",@kon_cins                  --<kon_cins, tinyint,> \n" +
+       ",@kon_evraktip	            --<kon_evraktip, tinyint,> \n" +
+       ",''	                        --<kon_gider_kodu, nvarchar(25),> \n" +
+       ",0	                        --<kons_oivtutari, float,> \n" +
+       ",'00000000-0000-0000-0000-000000000000'	                        --<kon_irs_uid, uniqueidentifier,> \n" +
+       ",'00000000-0000-0000-0000-000000000000'	                        --<kon_yetkili_uid, uniqueidentifier,> \n" +
+       ",0	                        --<kon_nakliyedeposu, int,> \n" +
+       ",0	                        --<kon_nakliyedurumu, tinyint,> \n" +
+       ",0                          --<kon_kunye_no, nvarchar(50),>  \n" +
+       ",0                          --<kon_eirs_senaryo, tinyint,> \n" +
+       ",0                          --<kon_eirs_tipi, tinyint,> \n" +
+       ",GETDATE()                  --<kon_teslim_tarihi, datetime,> \n" +
+       ",0                          --<kon_matbu_fl, bit,> \n" +
+       ") ",
+       param : ['kon_create_user:int','kon_lastup_user:int','kon_firmano:int','kon_subeno:int','kon_tarih:date','kon_tip:int','kon_normal_iade:int',
+        'kon_evrakno_seri:string|25','kon_evrakno_sira:int','kon_belge_no:string|25','kon_belge_tarih:date','kon_stok_kod:string|25',
+        'kon_cari_kod:string|25','kon_satici_kod:string|25','kon_miktar:float','kon_aciklama:string|25','kon_giris_depo_no:int','kon_cikis_depo_no:int',
+        'kon_miktar2:float','kon_sevk_adresno:int','kon_cari_srm_merkez:string|25','kon_stok_srm_merkez:string|25','kons_projekodu:string|25','kons_har_doviz_cinsi:int','kons_har_doviz_kuru:float',
+        'kons_alt_doviz_kuru:float','kons_stok_doviz_cinsi:int','kons_stok_doviz_kuru:float','kons_birim_pntr:int','kons_tutar:float','kons_iskonto1:float','kons_iskonto2:float','kons_iskonto3:float','kons_iskonto4:float','kons_iskonto5:float','kons_iskonto6:float','kons_vergi_pntr:int','kons_vergi:float','kon_cins:int','kon_evraktip:int']
+    },
+    KonsinyeHarGetir : 
+    {
+        query:  "SELECT CONVERT(VARCHAR(10),GETDATE(),112) AS kon_kur_tarihi ,  " +
+                "ISNULL((SELECT sto_isim from STOKLAR WHERE sto_kod=kon_stok_kod),'') AS ADI ,  " +
+                "CASE WHEN kons_tutar <> 0 AND kon_miktar <> 0 THEN ROUND((kons_tutar / kon_miktar),2) ELSE 0 END AS FIYAT,  " +
+                "(select cari_unvan1 from CARI_HESAPLAR WHERE cari_kod=kon_cari_kod) AS CARIADI,  " +
+                "(select som_isim from SORUMLULUK_MERKEZLERI where som_kod=kon_stok_srm_merkez) AS SORUMLUMERADI,  " +
+                "(select cari_per_adi from CARI_PERSONEL_TANIMLARI where cari_per_kod=kon_satici_kod) AS PERSONELADI, " +
+                "kon_miktar AS MIKTAR ,  " +
+                "kon_miktar2 AS MIKTAR2 ,  " +
+                "ROUND(kons_tutar,2) AS TUTAR,   " +
+                "CASE WHEN kons_iskonto1 <> 0 AND kons_tutar <> 0 THEN (100 * kons_iskonto1) / kons_tutar ELSE 0 END AS ISKYUZDE ,  " +
+                "(SELECT dbo.fn_StokBirimi(kon_stok_kod,kons_birim_pntr)) AS BIRIMADI,  " +
+                "(SELECT dbo.fn_StokBirimHesapla(kon_stok_kod,1,kon_miktar,kons_birim_pntr)) AS BIRIM, " +
+                "ISNULL((SELECT sto_birim1_ad as ADET FROM STOKLAR WHERE sto_kod = kon_stok_kod),'') AS BIRIM1,  " +
+                "ROW_NUMBER() OVER(ORDER BY kon_Guid) AS NO,  " +
+                "(SELECT dbo.fn_VergiYuzde (kons_vergi_pntr)) AS TOPTANVERGI,  " +
+                "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = kon_Guid AND BdnHar_Tipi = 11),0) AS RENKPNTR ,  " +
+                "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = kon_Guid AND BdnHar_Tipi = 11),0) AS BEDENPNTR ,  " +
+                "ISNULL((SELECT TOP 1 BdnHar_Guid FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = kon_Guid AND BdnHar_Tipi = 11),'00000000-0000-0000-0000-000000000000') AS BEDENGUID ,  " +
+                "(SELECT dbo.fn_renk_kirilimi(ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = kon_Guid AND BdnHar_Tipi = 11),0),(SELECT TOP 1 sto_renk_kodu FROM STOKLAR WHERE sto_kod = kon_stok_kod))) AS RENK , " +
+                "(SELECT dbo.fn_beden_kirilimi(ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = kon_Guid AND BdnHar_Tipi = 11),0),(SELECT TOP 1 sto_beden_kodu FROM STOKLAR WHERE sto_kod = kon_stok_kod))) AS BEDEN , " +
+                "ISNULL((SELECT sip_evrakno_seri from SIPARISLER WHERE sip_Guid = kon_sip_uid),'') AS SIPSERI , " +
+                "ISNULL((SELECT sip_evrakno_sira from SIPARISLER WHERE sip_Guid = kon_sip_uid),0) AS SIPSIRA , " +
+                "* FROM KONSINYE_HAREKETLERI " +
+                "WHERE kon_evrakno_seri=@kon_evrakno_seri AND kon_evrakno_sira=@kon_evrakno_sira AND kon_evraktip=@kon_evraktip ORDER BY kon_satirno " ,
+        param:   ['kon_evrakno_seri','kon_evrakno_sira','kon_evraktip'],
+        type:    ['string|20','int','int']
+    },
+    KonsinyeHarUpdate:
+    {
+        query:  "UPDATE KONSINYE_HAREKETLERI " +
+        "SET kon_miktar= @kon_miktar " +
+        ",kon_miktar2= @kon_miktar2   " +
+        ",kons_tutar= @kons_tutar " +
+        ",kons_vergi= (@kons_tutar - (@kons_iskonto1 + @kons_iskonto2 + @kons_iskonto3 + @kons_iskonto4 + @kons_iskonto5)) *  (SELECT [dbo].[fn_VergiYuzde] (@kons_vergi_pntr) / 100) " +
+        ",kons_iskonto1= @kons_iskonto1 " +
+        ",kons_iskonto2= @kons_iskonto2 " +
+        ",kons_iskonto3= @kons_iskonto3 " +
+        ",kons_iskonto4= @kons_iskonto4 " +
+        ",kons_iskonto5= @kons_iskonto5 " +
+        ",kons_iskonto6= @kons_iskonto6 " +
+        ",kons_sat_iskmas1= @kons_sat_iskmas1 " +
+        ",kons_sat_iskmas2= @kons_sat_iskmas2 " +
+        ",kons_sat_iskmas3= @kons_sat_iskmas3 " +
+        ",kons_sat_iskmas4= @kons_sat_iskmas4 " +
+        ",kons_sat_iskmas5= @kons_sat_iskmas5 " +
+        ",kons_sat_iskmas6= @kons_sat_iskmas6 " +
+        "WHERE  kon_Guid = @kon_Guid",
+        param : ['kon_miktar:float','kon_miktar2:float','kons_tutar:float','kons_vergi_pntr:int','kons_iskonto1:float','kons_iskonto2:float','kons_iskonto3:float',
+        'kons_iskonto4:float','kons_iskonto5:float','kons_iskonto6:float','kons_sat_iskmas1:bit','kons_sat_iskmas2:bit','kons_sat_iskmas3:bit','kons_sat_iskmas4:bit',
+        'kons_sat_iskmas5:bit','kons_sat_iskmas6:bit','kon_Guid:string|50']
+    },
+    KonsHarEvrDelete : 
+    {
+        query : "DELETE FROM KONSINYE_HAREKETLERI WHERE kon_evrakno_seri = @kon_evrakno_seri AND " +
+                "kon_evrakno_sira = @kon_evrakno_sira AND kon_evraktip = @kon_evraktip" ,
+        param : ['kon_evrakno_seri','kon_evrakno_sira','kon_evraktip'],
+        type : ['string|20','int','int']
+    },
+    MaxKonsinyeHarSira :
+    {
+        query: "SELECT ISNULL(MAX(kon_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM KONSINYE_HAREKETLERI " +
+                "WHERE kon_evrakno_seri = @kon_evrakno_seri AND kon_evraktip = @kon_evraktip " ,
+        param : ['kon_evrakno_seri','kon_evraktip'],
+        type : ['string|25','int']
+    },
+    KonsHarSatirDelete : 
+    {
+        query : "DELETE FROM KONSINYE_HAREKETLERI WHERE kon_Guid = @kon_Guid ",
+        param : ['kon_Guid'],
+        type : ['string|50']
+    },
+    KonsBedenHarGetir:
+    {
+        query:  "SELECT * FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid IN ((SELECT kon_Guid FROM KONSINYE_HAREKETLERI WHERE kon_evrakno_seri = @kon_evrakno_seri AND kon_evrakno_sira = @kon_evrakno_sira AND kon_evraktip = @kon_evraktip)) AND BdnHar_Tipi = @BdnHar_Tipi",
+        param:  ['kon_evrakno_seri','kon_evrakno_sira','kon_evraktip','BdnHar_Tipi'],
+        type:   ['string|20','int','int','int']
+    },
     //E-Süreçler
     EIrsGetir : 
     {
@@ -4360,7 +4873,7 @@ var QuerySql =
         ",[egk_prevwiewsayisi] " +
         ",[egk_emailsayisi] " +
         ",[egk_Evrakopno_verildi_fl]) " +
-  "VALUES " +
+        "VALUES " +
         "(NEWID()		--<egk_Guid, uniqueidentifier,> \n" +
         ",0			--<egk_DBCno, smallint,> \n" +
         ",0			--<egk_SpecRECno, int,> \n" +

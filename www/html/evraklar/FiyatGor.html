@@ -71,6 +71,22 @@
                     <div class="row" ng-show = "FiyatGizle">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Birim Fiyatı:</label></div>
                         <div class="col-2 px-0"><label class="form-control-label pl-10">{{Fiyat}}  {{Stok[0].DOVIZSEMBOL}}</label></div>
+                        <div class="col-3 text-info px-1">
+                            <div class="col-form-label px-1 float-right py-1">Dizayn Seç:</div>
+                        </div>
+                        <div class="col-4 px-1">
+                            <select class="form-control" ng-model="Special" ng-change="SpecialChange()">
+                                <option value="1">Dizayn 1</option>
+                                <option value="2">Dizayn 2</option>
+                                <option value="3">Dizayn 3</option>
+                                <option value="4">Dizayn 4</option>
+                                <option value="5">Dizayn 5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right">SKT: </label></div>
+                        <div class="col-7 px-0"><label class="form-control-label pl-10">{{MaxSkt}}</label></div>
                     </div>
                     <div class="row" ng-show = "FiyatGizle">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Diğer Fiyatlar:</label></div>

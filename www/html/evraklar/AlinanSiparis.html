@@ -20,7 +20,7 @@
                             <button type="button" class="btn btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak(0)">Yeni Evrak</button>
-                                <button class="dropdown-item"  data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Evrak Getir</a>
+                                <button class="dropdown-item"  ng-click="ProjeEvrakGetirModal()" data-toggle="modal" role="menu-item">Evrak Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(0)">Evrak Sil</button>
                             </div>
                         </div>
@@ -151,7 +151,7 @@
                     <div class="form-group row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Proje:</div></div>
                         <div class="col-8 px-1 pb-2">
-                            <select class="form-control js-example-basic-single" data-plugin="select2" ng-model="Proje" ng-disabled="EvrakLock">
+                            <select class="form-control js-example-basic-single" type="text" data-plugin="select2" ng-model="Proje" ng-disabled="EvrakLock">
                                 <option ng-repeat="option in ProjeListe" value="{{option.KODU}}">{{option.KODU}}</option>
                             </select>
                         </div>
@@ -522,50 +522,47 @@ Tel:0252 214 78 58 muglasutas@hotmail.com<br>
                         <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="Sira">
                     </div>
                     <div class="row my-5">
-                        <button type="submit" class="btn btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="ProjeEvrakGetirModal()" ng-show="ProjeShow" >Proje Kodundan Getir</button>
-                    </div>
-                    <div class="row my-5">
                         <button type="submit" class="btn btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="EvrakGetir()">Getir</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-        <!-- Proje Kodundan Evrak Getir Modal Başlangıç -->
-        <div class="modal fade" id="MdlProjeEvrakGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-simple modal-center modal-primary">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">X</span>
-                        </button>
-                        <h4 class="modal-title">Proje Kodu Evrak Getir</h4>
-                    </div>
-                    <div class="modal-body px-1 py-1">
-                        <div class="panel">
-                            <div class="form-group row my-10">
-                                <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Proje Kodu :</b></span></div></label>
-                                <input type="text" class="form-control col-lg-8 col-md-8 col-sm-7 offset-0" id="ProjeTxt" ng-model="ProjeKod">
-                            </div>
-                            <div class="row">
-                                <div class="form-group row col-lg-12 my-0 ml-5">
-                                    <div class="col-lg-6 col-sm-6 col-lg-6">
-                                    <button class="btn btn-block btn-primary" ng-click="ProjeEvrakSec()">Seç</button>
-                                    </div> 
-                                    <div class="col-lg-6 col-sm-6 col-lg-6">
-                                        <button class="btn btn-block btn-primary" ng-click="ProjeEvrakGetir()">Liste Getir</button>
-                                    </div>
+    <!-- Proje Kodundan Evrak Getir Modal Başlangıç -->
+    <div class="modal fade" id="MdlProjeEvrakGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Proje Kodu Evrak Getir</h4>
+                </div>
+                <div class="modal-body px-1 py-1">
+                    <div class="panel">
+                        <div class="form-group row my-10">
+                            <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Proje Kodu :</b></span></div></label>
+                            <input type="text" class="form-control col-lg-8 col-md-8 col-sm-7 offset-0" ng-keypress = "BtnProjeListeleEnter($event)" id="ProjeLabel" ng-model="ProjeKod">
+                        </div>
+                        <div class="row">
+                            <div class="form-group row col-lg-12 my-0 ml-5">
+                                <div class="col-lg-6 col-sm-6 col-lg-6">
+                                <button class="btn btn-block btn-primary" ng-click="ProjeEvrakSec()">Seç</button>
+                                </div> 
+                                <div class="col-lg-6 col-sm-6 col-lg-6">
+                                    <button class="btn btn-block btn-primary" ng-click="ProjeEvrakGetir()">Liste Getir</button>
                                 </div>
                             </div>
-                            <div class="col-1 offset-5" ng-show="Loading">
-                                <div class="loader vertical-align-middle loader-circle"></div>
-                            </div>
-                            <div id="TblProjeEvrakGetirListe" class="pt-5" ng-show="TblLoading"></div>
                         </div>
+                        <div class="col-1 offset-5" ng-show="Loading">
+                            <div class="loader vertical-align-middle loader-circle"></div>
+                        </div>
+                        <div id="TblProjeEvrakGetirListe" class="pt-5" ng-show="TblLoading"></div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     <!-- İskonto Modal  -->
     <div class="modal fade" id="MdlIskontoEkran" aria-labelledby="IskontoEkran" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-simple px-10 modal-center modal-primary">
