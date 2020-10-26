@@ -1032,6 +1032,13 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             $scope.BtnStokGridGetir();
         }
     }
+    $scope.StokVirmanEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnReceteStokGridGetir();
+        }  
+    }
     $scope.BtnBarkodGetirClick = function()
     {
         StokBarkodGetir($scope.Barkod);
@@ -1876,8 +1883,8 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         cordova.plugins.barcodeScanner.scan(
         function (result) 
         {
-            $scope.Barkod = result.text;
-            StokBarkodGetir($scope.Barkod);
+            $scope.TxtReceteStokGrid = result.text;
+            $scope.StokVirmanEnter(13);
         },
         function (error) 
         {
