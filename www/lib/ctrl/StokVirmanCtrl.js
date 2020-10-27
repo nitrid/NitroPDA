@@ -430,6 +430,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         $scope.BtnTemizle();
         DipToplamHesapla();
         ToplamMiktarHesapla();
+        $scope.BtnReceteStokGridGetir();
         
         $window.document.getElementById("Barkod").focus();
     }
@@ -880,6 +881,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             $scope.Stok[0].TOPTANVERGIPNTR = 0;
             $scope.Miktar = $scope.TxtReceteMiktar;
             $scope.Stok[0].CARPAN = 1;
+            $scope.Tip = 0;
             InsertData();
     
             let TmpKodu = AnaKodu;
@@ -890,7 +892,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                 query: 
                 "SELECT rec_tuketim_kod AS TUKETIMKODU," +
                 "rec_tuketim_miktar AS TUKETIMMIKTAR, " +
-                "rec_uretim_tuketim AS HAREKET " +
+                "rec_uretim_tuketim AS HAREKET " + 
                 "FROM URUN_RECETELERI " +
                 "WHERE rec_anakod = @TmpKodu ",
                 param : ['TmpKodu'],
@@ -901,6 +903,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             db.GetDataQuery(TmpQuery,function(TuketimData)
             {
                 $scope.StokReceteListe = TuketimData;
+                console.log($scope.StokReceteListe)    
                 if($scope.StokReceteListe.length > 0)
                 {
                     for(var i=0; i<$scope.StokReceteListe.length; i++)
@@ -919,7 +922,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                         }
                         $scope.Stok[0].KODU = $scope.StokReceteListe[i].TUKETIMKODU;
                         $scope.Miktar = $scope.StokReceteListe[i].TUKETIMMIKTAR * $scope.TxtReceteMiktar;                
-                        InsertData();                    
+                        InsertData();             
                     }
                     alertify.alert("Stoklar başarıyla eklendi.") 
                 }
@@ -1136,6 +1139,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
         $scope.BarkodGirisClick();
         StokBarkodGetir($scope.Barkod);
+        console.log($scope.Barkod)
     }
     $scope.StokReceteListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -1884,7 +1888,8 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         function (result) 
         {
             $scope.TxtReceteStokGrid = result.text;
-            $scope.StokVirmanEnter(13);
+            //$scope.StokVirmanEnter(13);
+            $scope.BtnReceteStokGridGetir();
         },
         function (error) 
         {
