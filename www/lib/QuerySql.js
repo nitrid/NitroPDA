@@ -73,11 +73,14 @@ var QuerySql =
     CmbAdresNo : 
     {
         query : "SELECT " +
-                "adr_adres_no AS KODU, " +
-                "adr_cadde AS ADI  " +
+                "adr_cadde AS ADRES,  " +
+                "adr_sokak AS ADRES2," +
+                "adr_il AS IL," +
+                "adr_ilce AS ILCE," +
+                "adr_tel_no1 AS TELEFON" +
                 "FROM CARI_HESAP_ADRESLERI " +
-                "WHERE adr_cari_kod = @adr_cari_kod" ,
-        param : ['adr_cari_kod'],
+                "WHERE adr_cari_kod = @CARIKOD" ,
+        param : ['CARIKOD'],
         type : ['string|25']
     },
     CariListeGetir : 
@@ -98,6 +101,8 @@ var QuerySql =
                 "BOLGE, " +
                 "GRUP, " +
                 "TEMSILCI, " +
+                "EMAIL," +
+                "CARITIP," +
                 "TEMSILCIADI, " +
                 "DOVIZSEMBOL, " +
                 "DOVIZSEMBOL1, " +
@@ -112,6 +117,8 @@ var QuerySql =
                 "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE, " +
                 "BELGETARIH, " +
                 "ADRES, " +
+                "IL, " +
+                "ILCE, " +
                 "ADRES1, " +
                 "ADRES2, " +
                 "TELNOLGE, " +
@@ -134,6 +141,8 @@ var QuerySql =
                 "cari_bolge_kodu AS BOLGE, " +
                 "cari_grup_kodu AS GRUP, " +
                 "cari_temsilci_kodu AS TEMSILCI, " +
+                "cari_EMail AS EMAIL, " +
+                "cari_baglanti_tipi AS CARITIP, " +
                 "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI, " +
                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))),'') AS DOVIZSEMBOL," +
                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))),'') AS DOVIZSEMBOL1, " +
@@ -148,6 +157,8 @@ var QuerySql =
                 "(SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)) AS BAKIYE, " +
                 "ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo,'') as BELGENO, ISNULL(CARI_MUSTAHSIL_TANIMLARI.Cm_GecerlilikTarihi,GETDATE()) as BELGETARIH, " +
                 "ISNULL((SELECT adr_ilce + '-' + adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES, " +
+                "ISNULL((SELECT adr_ilce FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS IL, " +
+                "ISNULL((SELECT adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ILCE, " +
                 "ISNULL((SELECT adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES1, " +
                 "ISNULL((SELECT adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS ADRES2, " +
                 "ISNULL((SELECT adr_tel_bolge_kodu FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS TELNOLGE, " +

@@ -246,6 +246,177 @@
                     </div>
                 </div>
             </div>
+            <div id="TbCariDuzenle" class="tab-pane">
+                <div class="panel">
+                    <div class="row pt-5">
+                        <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">  
+                            <label class="mb-0 h4 text-primary">Cari Düzenle</label> 
+                        </div>
+                    </div>
+                    <div class="form-group row ">
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block" ng-disabled="InsertLock" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-4 px-1">
+                        <div class="checkbox-custom checkbox-info my-0">
+                        <input type="checkbox" name="inputCheckboxes" ng-model="ChkDuzenleKontrol" ng-change="DuzenleChange()" checked="">
+                        <label for="inputUnchecked"><div class="text-info"><div class="col-form-label py-0"><b>Düzenle</b></div></div></label>
+                        </div>
+                    </div> 
+                    <div class="form-group row my-1 pb-10" >
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Cari Kodu :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input disabled type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="CariKodu" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Unvan 1 :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="CariAdi" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Unvan 2 :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="CariUnvan2" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Vergi Daire Adı :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="CariVDADI" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Vergi Daire No :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="CariVDNO" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Mail Adresi :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Email" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Cep Telefonu :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="TelNo1" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Adres-1 :</label> 
+                        </div>
+                        <div class="col-lg-5 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Adres1" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Adres-2 :</label> 
+                        </div>
+                        <div class="col-lg-5 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Adres2" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">İl :</label> 
+                        </div>
+                        <div class="col-lg-5 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Il" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">İlçe :</label> 
+                        </div>
+                        <div class="col-lg-5 col-sm-6 px-1">
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"  ng-model="Ilce" ng-disabled="DuzenleLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Cari Tipi :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <select id="CariTip" class="form-control" ng-model="CariTip" ng-disabled="DuzenleLock">
+                                <option value="0">Müşteri</option>
+                                <option value="1">Satıcı</option>
+                                <option value="2">Diğer Cari</option>
+                                <option value="3">Dağıtıcı</option>
+                                <option value="4">Bayi</option>
+                                <option value="5">Hedef Müşteri</option>
+                                <option value="6">Hedef Bayi</option>
+                                <option value="7">Alt Bayi</option>
+                                <option value="8">Bağlı ortaklık</option>  
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Döviz Tipi :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <select id="DovizCinsi" class="form-control" ng-model="DovizTip" ng-disabled="DuzenleLock">
+                                <option value="0">Türk Lirası</option>
+                                <option value="1">Dolar</option>
+                                <option value="2">Euro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row my-1 pb-10">
+                        <div class="col-lg-1 col-sm-5 pt-3">
+                            <label class="mb-0 h5 text-primary">Temsilci Kodu :</label> 
+                        </div>
+                        <div class="col-lg-10 col-sm-6 px-1">
+                            <select class="form-control" id="Temsilci" ng-model="Temsilci" ng-disabled="DuzenleLock" ng-change="TemsilciChange()">
+                                <option ng-repeat="option in TemsilciListe" value="{{option.TEMSILCI}}">{{option.TEMSILCIADI}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block" ng-disabled="InsertLock" ng-click="CariUpdate()">Cari Güncelle</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>  
