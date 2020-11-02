@@ -1,7 +1,7 @@
 {
-	"server": "192.168.100.12",
+	"server": "192.168.100.250",
 	"database": "MikroDB_V16",
-	"uid": "nitrogen",
-	"pwd": "lp8462+",
+	"uid": "beka",
+	"pwd": "12345",
 	"trustedConnection": false
 }
