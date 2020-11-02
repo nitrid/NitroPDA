@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "DEMO",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "0",
 			"MalKabulEvrakTip": "0",
