@@ -360,6 +360,23 @@ var ParamTemp =
 			"KrediKasa" : {"Title" : "Kredi Kasa Kodu","DefaultValue" : ""},
 			"HavaleKasa" : {"Title" : "Havale Kasa Kodu","DefaultValue" : ""},
 		},
+		"StokVirman" :
+		{
+			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"Seri" : {"Title" : "Seri","DefaultValue" : "IRS"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"DepoNo" : {"Title" : "Depo No","DefaultValue" : "1"},
+			"DepoListe" : {"Title" : "Depo Liste","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
+			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
+			"SonSatisFiyati" : {"Title" : "Son Satış Fiyatı","DefaultValue" : "0"},
+			"SonAlisFiyati" : {"Title" : "Son Alış Fiyatı","DefaultValue" : "0"},
+			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
+		},
 		"Menu" :
 		{
 			"Stok Detay" : {"Title" : "Stok Detay","DefaultValue" : "1"},

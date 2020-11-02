@@ -171,6 +171,10 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/GelenHavale.html"
     })
+    .when("/StokVirman",
+    {
+        templateUrl : "html/evraklar/StokVirman.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

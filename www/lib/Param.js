@@ -286,7 +286,7 @@ var Param = [
 			"Stok Hareket Rapor": "0",
 			"GelenHavale": "1",
 			"Ambar Fişi": "0",
-			"Stok Virman Fişi": "0",
+			"Stok Virman Fişi": "1",
 			"Stok Listesi": "0",
 			"Stok Ekle": "0",
 			"Ürün Giriş Çıkış": "0",
@@ -433,6 +433,26 @@ var Param = [
 			"OdemeKasa": "",
 			"EvrakSil": "0",
 			"ChaTip": "0"
+		},
+		"StokVirman": {
+			"EvrakTip": "0",
+			"Seri": "STV",
+			"BelgeNo": "",
+			"Cari": "",
+			"DepoNo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "01",
+			"Proje": "",
+			"SonSatisFiyati": "0",
+			"SonAlisFiyati": "0",
+			"SatisSarti": "0",
+			"AlisSarti": "0",
+			"FiyatListe": "1",
+			"EvrakSil": "0",
+			"FiyatLock": "0",
+			"EksiyeDusme": "0",
+			"IskontoMatris": "0"
 		}
 	},
 	{
