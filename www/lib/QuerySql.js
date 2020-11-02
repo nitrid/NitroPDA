@@ -1527,6 +1527,7 @@ var QuerySql =
                 "(SELECT dbo.fn_beden_kirilimi(ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0),(SELECT TOP 1 sto_beden_kodu FROM STOKLAR WHERE sto_kod = sth_stok_kod))) AS BEDEN ," +
                 "ISNULL((SELECT sip_evrakno_seri from SIPARISLER WHERE sip_Guid = sth_sip_uid),'') AS SIPSERI ," +
                 "ISNULL((SELECT sip_evrakno_sira from SIPARISLER WHERE sip_Guid = sth_sip_uid),0) AS SIPSIRA ," +
+                "CASE sth_tip WHEN 0 THEN 'GIREN' WHEN 1 THEN 'CIKAN' END AS VIRMANTIP, " +
                 "* FROM STOK_HAREKETLERI " +
                 "WHERE sth_evrakno_seri=@sth_evrakno_seri AND sth_evrakno_sira=@sth_evrakno_sira AND sth_evraktip=@sth_evraktip ORDER BY sth_satirno " ,
         param:   ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
