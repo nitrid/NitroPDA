@@ -85,6 +85,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.Risk = 0;
         $scope.RiskLimit = 0; 
         $scope.FisDizaynTip = "0";
+        $scope.SonSatisMiktar = "0";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -102,6 +103,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.DepoMiktarListe = [];
         $scope.AdresNoListe = [];
         $scope.ProjeEvrakGetirListe = [];
+        $scope.SonSatisListe = [];
 
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -556,6 +558,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function BedenHarInsert(pGuid)
     {
+        console.log(Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR))
         let Data =
         [
             UserParam.MikroId, // KULLANICI
@@ -620,7 +623,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.IrsaliyeListe = pData;
         $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});    
-        $scope.BtnTemizle();
+        
         DipToplamHesapla();
         ToplamMiktarHesapla();
         
@@ -846,6 +849,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 if(BarkodData.length > 0)
                 { 
                     $scope.Stok = BarkodData;
+                    console.log($scope.Stok)
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
@@ -1004,6 +1008,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         $window.document.getElementById("Miktar").focus();
                         $window.document.getElementById("Miktar").select();
                     }
+                    $scope.SonSatisGetir();
                 }
                 else
                 {   
@@ -1375,16 +1380,22 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnRenkBedenSec = function()
     {
+        console.log($scope.Stok[0].BEDEN)
+        console.log($scope.Stok[0].RENK)
+        console.log($scope.Stok[0].RENKPNTR)
+        console.log($scope.Stok[0].BEDENPNTR)
         $scope.Stok[0].RENK = $.grep($scope.RenkListe, function (Item) 
         {
             return Item.PNTR == $scope.Stok[0].RENKPNTR;
         })[0].KIRILIM;
-
+        
         $scope.Stok[0].BEDEN = $.grep($scope.BedenListe, function (Item) 
         {
+            console.log($scope.BedenListe)
             return Item.PNTR == $scope.Stok[0].BEDENPNTR;
         })[0].KIRILIM;
-        
+        console.log($scope.Stok[0].BEDEN)
+        console.log($scope.Stok[0].RENK)
         $('#MdlRenkBeden').modal('hide');
 
         PartiLotEkran();
@@ -1623,6 +1634,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         ];
         $scope.Miktar = 1;
         $scope.BarkodLock = false;
+        $scope.SonSatisMiktar = "0";
 
         $scope.BirimListe = [];
         BarkodFocus();      
@@ -2170,7 +2182,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             console.log("Barkod Okutunuz!");
             $scope.InsertLock = false
         }     
-
         BarkodFocus();
     }
     $scope.EvrakGetir = function ()
@@ -2892,5 +2903,23 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 })
             }        
         });        
+    }
+    $scope.SonSatisGetir = function()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query: "SELECT TOP 1 sth_miktar AS MIKTAR " +
+                    "FROM STOK_HAREKETLERI WHERE sth_cari_kodu = @CARIKOD and sth_stok_kod = @STOKKOD AND sth_evraktip = @EVRAKTIP ORDER BY sth_create_date DESC ",
+            param:  ['CARIKOD','STOKKOD','EVRAKTIP'],
+            type:   ['string|25','string|25','int',],
+            value:  [$scope.CariKodu,$scope.StokKodu,$scope.EvrakTip]
+        }
+        db.ExecuteQuery(TmpQuery,function(data)
+        {  
+            $scope.SonSatisListe = data.result.recordset[0];
+            $scope.SonSatisMiktar = $scope.SonSatisListe.MIKTAR
+            console.log($scope.SonSatisListe.MIKTAR)
+        });
     }
 }

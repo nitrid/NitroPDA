@@ -77,7 +77,7 @@ var QuerySql =
                 "adr_sokak AS ADRES2," +
                 "adr_il AS IL," +
                 "adr_ilce AS ILCE," +
-                "adr_tel_no1 AS TELEFON" +
+                "adr_tel_no1 AS TELEFON " +
                 "FROM CARI_HESAP_ADRESLERI " +
                 "WHERE adr_cari_kod = @CARIKOD" ,
         param : ['CARIKOD'],

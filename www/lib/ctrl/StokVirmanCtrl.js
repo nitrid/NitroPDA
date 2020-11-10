@@ -426,7 +426,11 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         $scope.BarkodLock = false;
 
         $scope.IrsaliyeListe = pData;
-        $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});    
+        $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe}); 
+        if($scope.CmbEvrakTip == 0)
+        {
+            $scope.BtnEtiketBas();
+        }
         $scope.BtnTemizle();
         DipToplamHesapla();
         ToplamMiktarHesapla();
@@ -595,9 +599,9 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             if(Flag == FlagDizi[i])
             {
                 var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
-                var Uzunluk = Kilo.slice(UserParam.Sistem.KiloBaslangic,((UserParam.Sistem.KiloBaslangic)+(UserParam.Sistem.KiloUzunluk)));
+                var Uzunluk = Kilo.slice(parseInt(UserParam.Sistem.KiloBaslangic),parseInt(UserParam.Sistem.KiloBaslangic)+parseInt(UserParam.Sistem.KiloUzunluk));
                 pBarkod = kBarkod
-                $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
+                $scope.Miktar = (Uzunluk * UserParam.Sistem.KiloCarpan)
             }
         }
         // ----------------------------------------------------
@@ -688,27 +692,27 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                         }
                     }
 
-                    if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
-                    {
-                        if($scope.Stok[0].PARTI !='')
-                        {
-                            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.Stok[0].PARTI,$scope.Stok[0].LOT],function(data)
-                            {  
-                                $scope.PartiLotListe = data;
+                    // if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+                    // {
+                    //     if($scope.Stok[0].PARTI !='')
+                    //     {
+                    //         db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.Stok[0].PARTI,$scope.Stok[0].LOT],function(data)
+                    //         {  
+                    //             $scope.PartiLotListe = data;
 
-                                if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
-                                {   
-                                    $scope.Miktar = $scope.PartiLotListe[0].MIKTAR;
-                                    $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
-                                }
-                                $scope.MiktarFiyatValid();
-                            });
-                        }
-                        else
-                        {
-                            PartiLotEkran();
-                        }
-                    }
+                    //             if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
+                    //             {   
+                    //                 $scope.Miktar = $scope.PartiLotListe[0].MIKTAR;
+                    //                 $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
+                    //             }
+                    //             $scope.MiktarFiyatValid();
+                    //         });
+                    //     }
+                    //     else
+                    //     {
+                    //         PartiLotEkran();
+                    //     }
+                    // }
                     if($scope.OtoEkle == true)
                     {
                         $scope.Insert()
@@ -718,6 +722,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                         $window.document.getElementById("Miktar").focus();
                         $window.document.getElementById("Miktar").select();
                     }
+                    console.log($scope.Barkod)
                 }
                 else
                 {   
@@ -1069,40 +1074,74 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnEtiketBas = function()
     {
-        for(i = 0; i < $scope.IrsaliyeListe.length; i++)
+        if($scope.StokKodu = $scope.IrsaliyeListe[0].sth_stok_kod)
         {
-            $scope.StokKodu = $scope.IrsaliyeListe[i].sth_stok_kod;
             var InsertData = 
             [
                 UserParam.MikroId,
                 UserParam.MikroId,
-                1,
+                2,
                 $scope.Seri,
                 $scope.Sira,
                 "",
                 $scope.BelgeNo,
                 0,
                 0,
-                $scope.IrsaliyeListe[i].sth_miktar,
+                $scope.IrsaliyeListe[0].sth_miktar,
                 $scope.DepoNo,
                 $scope.StokKodu,
                 1,
                 1,
                 $scope.Barkod,
-                $scope.IrsaliyeListe[i].sth_miktar
+                1
             ]
+            console.log($scope.Barkod)
             db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
             {
-
+                if(InsertResult != 'undefined')
+                {
+                    alertify.alert("Etiket Yazdırıldı.");
+                }
             });
-        }
-        if(i == $scope.IrsaliyeListe.length)
-        {
-            alertify.alert("Etiket Yazdırıldı.");
         }
         else
         {
-            alertify.alert("Etiket Yazdıralamadı.");
+            for(i = 0; i < $scope.IrsaliyeListe.length; i++)
+            {
+                $scope.StokKodu = $scope.IrsaliyeListe[i].sth_stok_kod;
+                var InsertData = 
+                [
+                    UserParam.MikroId,
+                    UserParam.MikroId,
+                    1,
+                    $scope.Seri,
+                    $scope.Sira,
+                    "",
+                    $scope.BelgeNo,
+                    0,
+                    0,
+                    $scope.IrsaliyeListe[i].sth_miktar,
+                    $scope.DepoNo,
+                    $scope.StokKodu,
+                    1,
+                    1,
+                    $scope.Barkod,
+                    $scope.IrsaliyeListe[i].sth_miktar
+                ]
+                console.log($scope.Barkod)
+                db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
+                {
+    
+                });
+            }
+            if(i == $scope.IrsaliyeListe.length)
+            {
+                alertify.alert("Etiket Yazdırıldı.");
+            }
+            else
+            {
+                alertify.alert("Etiket Yazdıralamadı.");
+            }
         }
     }
     $scope.MiktarFiyatValid = function()
@@ -1125,8 +1164,9 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
-        
+        console.log($scope.Barkod)
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
+        console.log($scope.Barkod)
         $scope.BarkodGirisClick();
         StokBarkodGetir($scope.Barkod);
     }
@@ -1420,7 +1460,15 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             $scope.InsertLock = true
             if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2  )
             {          
-                InsertData();
+                console.log($scope.CmbEvrakTip)
+                if($scope.CmbEvrakTip == "0")
+                {
+                    InsertData();
+                }
+                else
+                {
+                    InsertData();
+                }
             }
             else
             {
@@ -1494,6 +1542,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
     
                     if(!UpdateStatus)
                     {
+
                         InsertData();
                     } 
                 }
@@ -1546,9 +1595,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                     {
                         InsertData();
                     } 
-                  
                 }
-               
             }
         }
         else

@@ -7,7 +7,7 @@ var Param = [
 			"FirmaNo": "0",
 			"Firma": "",
 			"SubeNo": "0",
-			"SatirBirlestir": "0",
+			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
@@ -17,7 +17,7 @@ var Param = [
 			"KiloFlag": "26,27,28",
 			"KiloBaslangic": "7",
 			"KiloUzunluk": "5",
-			"KiloCarpan": "1000",
+			"KiloCarpan": "1",
 			"Titresim": "1",
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
@@ -73,7 +73,7 @@ var Param = [
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
 			"EksiyeDusme": "0",
-			"ProjeGetir": "1"
+			"ProjeGetir": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
