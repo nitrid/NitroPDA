@@ -663,7 +663,6 @@ angular.module('app.db', []).service('db',function($rootScope)
         {
             if(pCallback)
             {
-                
                 if(data.result.recordset.length > 0)
                 {
                     pCallback(data.result.recordset);
@@ -830,7 +829,7 @@ angular.module('app.db', []).service('db',function($rootScope)
             if(Flag == FlagDizi[i])
             {
                 var kBarkod = Kilo.slice(0,pParam.Sistem.KiloBaslangic);
-                var Uzunluk = Kilo.slice(pParam.Sistem.KiloBaslangic,((pParam.Sistem.KiloBaslangic)+(pParam.Sistem.KiloUzunluk)));
+                var Uzunluk = Kilo.slice(parseInt(pParam.Sistem.KiloBaslangic),parseInt(((pParam.Sistem.KiloBaslangic))+parseInt((pParam.Sistem.KiloUzunluk))));
                 pBarkod = kBarkod
                 Miktar = (Uzunluk / pParam.Sistem.KiloCarpan)
             }

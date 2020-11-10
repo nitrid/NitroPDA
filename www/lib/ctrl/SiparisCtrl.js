@@ -122,7 +122,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BarkodLock = false;
         $scope.FiyatLock = false;
         $scope.DepoMiktar = false;
-        $scope.ProjeShow = false;
 
         $scope.IslemListeSelectedIndex = -1;  
         $scope.PartiLotListeSelectedIndex = 0;
@@ -1744,19 +1743,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
            $scope.SipOnayKulNo = UserParam.MikroId
         }
         BarkodFocus();
-        $scope.ParamKontrol();
-    }
-    $scope.ParamKontrol = function()
-    {
-        //Proje Kodundan Getir Butonu Başlangıç
-        if($scope.ProjeGetirParam == "0")
-        {
-            $scope.ProjeShow= false;
-        }
-        else if($scope.ProjeGetirParam == "1")
-        {
-            $scope.ProjeShow = true;
-        }
     }
     $scope.DepoChange = function()
     {
@@ -2158,12 +2144,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         
         BarkodFocus();
     }
-    //ŞU ANDA BUNUN ÜZERİNDE " $scope.ProjeEvrakGetir " ÇALIŞIYOSUN!
     $scope.ProjeEvrakGetir = function()
     {
         db.GetData($scope.Firma,'SiparisProjeGetir',[$scope.EvrakTip,0,$scope.ProjeKod],function(data)
         {
             $scope.ProjeEvrakGetirListe = data;
+            console.log($scope.ProjeEvrakGetirListe)
             if($scope.ProjeEvrakGetirListe.length > 0)
             {
                 $scope.Loading = false;
@@ -2182,6 +2168,13 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
         });
     }
+    $scope.BtnProjeListeleEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.ProjeEvrakGetir();
+        }
+    }
     $scope.ProjeEvrakSec = function()
     {
        angular.element('#MdlProjeEvrakGetir').modal('hide');
@@ -2189,8 +2182,18 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.ProjeEvrakGetirModal = async function()
     {
-        $("#MdlEvrakGetir").modal('hide');
-        $("#MdlProjeEvrakGetir").modal('show');
+        if($scope.ProjeGetirParam == "0")
+        {
+            $("#MdlEvrakGetir").modal('show');
+        }
+        else if($scope.ProjeGetirParam == "1")
+        {
+            $("#MdlProjeEvrakGetir").modal('show');
+            $timeout( function(){
+                $window.document.getElementById("ProjeLabel").focus();
+                $window.document.getElementById("ProjeLabel").select();
+            },100);  
+        }
     }
     $scope.EvrakGetir = function()
     {

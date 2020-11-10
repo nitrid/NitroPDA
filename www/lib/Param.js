@@ -17,7 +17,7 @@ var Param = [
 			"KiloFlag": "26,27,28",
 			"KiloBaslangic": "7",
 			"KiloUzunluk": "5",
-			"KiloCarpan": "1000",
+			"KiloCarpan": "1",
 			"Titresim": "1",
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
@@ -56,7 +56,7 @@ var Param = [
 		"AlinanSiparis": {
 			"Seri": "SPR",
 			"BelgeNo": "",
-			"Cari": "",
+			"Cari": "0101",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
@@ -73,7 +73,7 @@ var Param = [
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
 			"EksiyeDusme": "0",
-			"ProjeGetir": "1"
+			"ProjeGetir": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -94,6 +94,7 @@ var Param = [
 			"SiparisOnay": "",
 			"FiyatLock": "0",
 			"IskontoMatris": "0",
+			"ProjeGetir": "1",
 			"TedarikcidenSiparis": "0"
 		},
 		"DepoSevk": {
@@ -158,7 +159,8 @@ var Param = [
 			"FiyatListe": "1",
 			"FiyatLock": "0",
 			"EvrakSil": "0",
-			"IskontoMatris": "0"
+			"IskontoMatris": "0",
+			"ProjeGetir": "1"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -172,6 +174,25 @@ var Param = [
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
+			"SatisSarti": "0",
+			"AlisSarti": "0",
+			"FiyatListe": "1",
+			"EvrakSil": "0",
+			"FiyatLock": "0",
+			"EksiyeDusme": "0",
+			"IskontoMatris": "0",
+			"ProjeGetir": "1"
+		},
+		"KonsinyeIrsaliye": {
+			"EvrakTip": "0",
+			"Seri": "KNS",
+			"BelgeNo": "",
+			"Cari": "",
+			"DepoNo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "01",
+			"Proje": "",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "1",
@@ -204,7 +225,7 @@ var Param = [
 			"DepoMiktarEtiketBas": "0",
 			"SecimliFiyatListe": "0",
 			"DovizTipi": "-1",
-			"Special": "1",
+			"Special": "4",
 			"FiyatGizle": "0",
 			"StokResmi": "1"
 		},
@@ -274,7 +295,8 @@ var Param = [
 			"Aktarim": "1",
 			"EvrakGonder": "1",
 			"Gelen Havale": "1",
-			"Vade Aralıklı Fatura Raporu": "1"
+			"Vade Aralıklı Fatura Raporu": "1",
+			"Konsinye İrsaliye": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -463,7 +485,7 @@ var Param = [
 		"AlinanSiparis": {
 			"Seri": "SPR",
 			"BelgeNo": "",
-			"Cari": "",
+			"Cari": "0101",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
@@ -476,10 +498,11 @@ var Param = [
 			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"PartiSec": "0",
-			"FiyatLock": "0",
+			"FiyatLock": "1",
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
-			"EksiyeDusme": "0"
+			"EksiyeDusme": "0",
+			"ProjeGetir": "1"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -662,7 +685,7 @@ var Param = [
 			"DepoMiktarEtiketBas": "0",
 			"SecimliFiyatListe": "0",
 			"DovizTipi": "-1",
-			"Special": "1",
+			"Special": "3",
 			"FiyatGizle": "0",
 			"StokResmi": "0"
 		},

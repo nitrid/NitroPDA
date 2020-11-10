@@ -29,7 +29,11 @@ function CariListeCtrl($scope,$window,db)
         $scope.DovizTip = '0';
         $scope.Temsilci = "";
         $scope.TemsilciAdi;
+        $scope.DuzenleLock = true;
+        $scope.ChkDuzenleKontrol = false;
+
         $scope.CariListe = [];
+        $scope.CariAdresListe = [];
 
         InitCariGrid();
         $scope.MainClick();
@@ -156,8 +160,7 @@ function CariListeCtrl($scope,$window,db)
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
                 $("#TblCari").jsGrid({pageIndex: true})
-            }     
-            
+            }         
         });
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
@@ -168,12 +171,20 @@ function CariListeCtrl($scope,$window,db)
             var $row = pObj.rowByItem(pItem);
             $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
             CariSelectedRow = $row;
-            
+            var Temsilci =
+            {
+                db : '{M}.' + $scope.Firma,
+                query : "SELECT cari_per_kod AS TEMSILCI, cari_per_adi AS TEMSILCIADI FROM CARI_PERSONEL_TANIMLARI ",
+            }
+            db.GetDataQuery(Temsilci,function(Data)
+            {   
+                $scope.TemsilciListe = Data
+            });
             $scope.CariKodu = $scope.CariListe[pIndex].KODU;
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
             $scope.CariUnvan2 = $scope.CariListe[pIndex].UNVAN2;
             $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
-            $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
+            // $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
             $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
             $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
             $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
@@ -185,25 +196,35 @@ function CariListeCtrl($scope,$window,db)
             $scope.Adres = $scope.CariListe[pIndex].ADRES;
             $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
             $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+            $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
+            $scope.Adres2 = $scope.CariListe[pIndex].ADRES2; 
+            $scope.Il = $scope.CariListe[pIndex].IL; 
+            $scope.Ilce = $scope.CariListe[pIndex].ILCE; 
             $scope.TelBolge =  $scope.CariListe[pIndex].TELBOLGE
             $scope.TelNo1 =  $scope.CariListe[pIndex].TELNO1
             $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
             $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
+            $scope.Email =  $scope.CariListe[pIndex].EMAIL
+            $scope.Temsilci = $scope.CariListe[pIndex].TEMSILCI.toString()
+            console.log($scope.CariListe[pIndex])
 
-
+            document.getElementById( "CariTip").selectedIndex = $scope.CariListe[pIndex].CARITIP.toString(); 
+            document.getElementById( "Temsilci").selectedIndex = $scope.Temsilci; 
+            document.getElementById( "DovizCinsi").selectedIndex = $scope.CariListe[pIndex].DOVIZCINSI.toString(); 
             $scope.CariClick();
         }
     }
     $scope.CariClick = function() 
     {
-        $("#TbDetay").addClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbCariEkle").removeClass('active');
+       $("#TbCariDuzenle").addClass('active');
+       $("#TbMain").removeClass('active');
+       $("#TbCariEkle").removeClass('active');
+        
     }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
-        $("#TbDetay").removeClass('active');
+        $("#TbCariDuzenle").removeClass('active');
         $("#TbCariEkle").removeClass('active');
     }
     $scope.CariEkleClick = function()
@@ -219,7 +240,7 @@ function CariListeCtrl($scope,$window,db)
             $scope.Temsilci = $scope.TemsilciListe[0].TEMSILCI
             $("#TbCariEkle").addClass('active');
             $("#TbMain").removeClass('active');
-            $("#TbDetay").removeClass('active');
+            $("#TbCariDuzenle").removeClass('active');
         });  
     }
     $scope.CariEkleInsert = function()
@@ -267,7 +288,7 @@ function CariListeCtrl($scope,$window,db)
                         $scope.YeniEvrak()
                     }
                 });
-                
+                 
             }
             else
             {
@@ -284,5 +305,47 @@ function CariListeCtrl($scope,$window,db)
         });
         console.log( $scope.TemsilciListe)
         console.log($scope.Temsilci)
+    }
+    $scope.CariUpdate = function()
+    {
+        console.log($scope.CariTip)
+        let TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+                query:  "UPDATE CARI_HESAPLAR SET cari_unvan1 = @cari_unvan1, " +
+                        "cari_unvan2 = @cari_unvan2, " +
+                        "cari_baglanti_tipi = @cari_baglanti_tipi, " +
+                        "cari_doviz_cinsi = @cari_doviz_cinsi, " +
+                        "cari_vdaire_adi = @cari_vdaire_adi, " +
+                        "cari_vdaire_no = @cari_vdaire_no, " +
+                        "cari_temsilci_kodu = @cari_temsilci_kodu, " +
+                        "cari_EMail = @cari_EMail " +
+                        "WHERE cari_kod = @cari_kod " +
+                        "UPDATE CARI_HESAP_ADRESLERI SET adr_cadde = @Adres1," +
+                        "adr_sokak = @Adres2, " +
+                        "adr_il = @adr_il, " +
+                        "adr_ilce = @adr_ilce, " +
+                        "adr_tel_no1 = @adr_tel_no1 " +
+                        "WHERE adr_cari_kod = @adr_cari_kod ",
+                param:  ['cari_unvan1','cari_unvan2','cari_baglanti_tipi','cari_doviz_cinsi','cari_vdaire_adi','cari_vdaire_no','cari_temsilci_kodu','cari_EMail','cari_kod',
+                        'Adres1','Adres2','adr_il','adr_ilce','adr_tel_no1','adr_cari_kod'   ],
+                type:   ['string|25','string|25','int','int','string|25','string|25','string|25','string|25','string|25','string|25','string|25','string|25','string|25','string|25','string|25'],
+                value:  [$scope.CariAdi,$scope.CariUnvan2,$scope.CariTip,$scope.DovizTip,$scope.CariVDADI,$scope.CariVDNO,$scope.Temsilci,$scope.Email,$scope.CariKodu,$scope.Adres1,$scope.Adres2,$scope.Ilce,$scope.Il,$scope.TelNo1,$scope.CariKodu]
+        }
+        db.ExecuteQuery(TmpQuery,function(data)
+        {   
+            alertify.alert("Cari Güncelle İşlemi Başarılı!")
+        });
+    }
+    $scope.DuzenleChange = function()
+    {
+        if($scope.ChkDuzenleKontrol != true)
+        {
+            $scope.DuzenleLock = true;
+        }
+        else
+        {
+            $scope.DuzenleLock = false;
+        }
     }
 }

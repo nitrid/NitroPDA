@@ -678,6 +678,21 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             // KILO BARKOD KONTROL EDİLİYOR. DÖNEN DEĞERLER ATANIYOR. ALI KEMAL KARACA 18.09.2019
             //pBarkod = db.KiloBarkod(pBarkod,UserParam).Barkod;
             $scope.Miktar = db.KiloBarkod(pBarkod,UserParam).Miktar;
+            let Kilo = pBarkod;
+            let KiloFlag = UserParam.Sistem.KiloFlag;
+            let FlagDizi = KiloFlag.split(',')
+            let Flag = Kilo.slice(0,2);
+     
+            for (i = 0; i < FlagDizi.length; i++ )
+            {
+                if(Flag == FlagDizi[i])
+                {
+                    var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
+                    var Uzunluk = Kilo.slice(parseInt(UserParam.Sistem.KiloBaslangic),parseInt(UserParam.Sistem.KiloBaslangic)+parseInt(UserParam.Sistem.KiloUzunluk));
+                    pBarkod = kBarkod
+                    $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
+                }
+            }
             //SİPARİŞE BAĞLI VEYA NORMAL STOK OLARAK GETİRME FONKSİYONU
             EslestirmeStokGetir(pBarkod,async function(pData,pTip)
             {
