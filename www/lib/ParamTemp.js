@@ -382,6 +382,7 @@ var ParamTemp =
 			"Stok Hareket Rapor" : {"Title" : "Stok Hareket Rapor","DefaultValue" : "1"},
 			"Depo Durum Raporu" : {"Title" : "Depo Durum Raporu","DefaultValue" : "1"},
 			"Gelen Havale" : {"Title" : "Gelen Havale","DefaultValue" : "1"},
+			"Vade Aralıklı Fatura Raporu" : {"Title" : "Vade Aralıklı Fatura Raporu","DefaultValue" : "1"},
 		},
 		"StokVirman" :
 		{
@@ -399,5 +400,8 @@ var ParamTemp =
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
+		},
+		"VadeAralikliFaturalar":{
+			
 		}
 	}

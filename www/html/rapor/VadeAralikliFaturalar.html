@@ -1,0 +1,63 @@
+<div class="col-12" ng-controller="VadeAralikliFaturalarCtrl" ng-init="Init()">
+    <div class="page-content container-fluid">
+       <div class="tab-content">
+           <div id="TbMain" class="tab-pane active">
+               <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+                   <div class="panel-heading">
+                       <h3 style="font-weight:bold" class="panel-title">Vade Aralıklı Faturalar Raporu</h3>
+                   </div>
+                   
+                   <div style="margin-left: 15px; margin-right: -15px; margin-top: -5px;" class="panel-body">
+                       <div class="row">
+                           <div class="col-sm-4 col-md-2 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
+                           <div class="col-sm-7 col-md-3 px-1 m-5">
+                               <div class="input-group input-group-icon">
+                                   <div class="input-group-prepend">
+                                       <div class="input-group-text">
+                                           <span class="icon wb-calendar" aria-hidden="true"></span>
+                                       </div>
+                                   </div>
+                                   <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                               </div>
+                           </div>
+                       </div>
+                       <div class="row">
+                           <div class="col-sm-4 col-md-2 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Son Tarih:</div></div>
+                           <div class="col-sm-7 col-md-3 px-1  m-5">
+                               <div class="input-group input-group-icon">
+                                   <div class="input-group-prepend">
+                                       <div class="input-group-text">
+                                           <span class="icon wb-calendar" aria-hidden="true"></span>
+                                       </div>
+                                   </div>
+                                   <input type="text" class="form-control" id="SonTarih" type="text" ng-model="SonTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                               </div>
+                           </div>
+                       </div>
+                       <div class="row py-5">
+                           <div class="col-12 col-sm-11 p-5 m-5" >
+                               <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnVadeAralikliFaturaGetir()">Getir</button>
+                           </div>
+                       </div>
+                       <div class="row ">
+                           <div class="col-12 col-sm-11 p-5 m-5" >
+                               <div id="TblVadeAralikliFatura"></div>
+                           </div>
+                       </div>
+                       <div class="p-5" style="text-align: right;"><br><b>Bakiye</b> : {{Bakiye | number:2}}</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
+
+<script>
+       $("#IlkTarih").datepicker({
+       language: "tr"
+       });
+       $("#SonTarih").datepicker({
+       language: "tr"
+       });
+</script>
+       
