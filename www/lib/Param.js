@@ -296,7 +296,8 @@ var Param = [
 			"EvrakGonder": "1",
 			"Gelen Havale": "1",
 			"Vade Aralıklı Fatura Raporu": "1",
-			"Konsinye İrsaliye": "1"
+			"Konsinye İrsaliye": "1",
+			"Cari Analiz" : "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",

@@ -183,6 +183,10 @@ angular.module("app",
     {
         templateUrl : "html/rapor/VadeAralikliFaturalar.html"
     })
+    .when("/CariAnaliz",
+    {
+        templateUrl : "html/rapor/CariAnaliz.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {
