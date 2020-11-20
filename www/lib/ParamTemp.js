@@ -420,7 +420,7 @@ var ParamTemp =
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
 		},
-		"VadeAralikliFaturalar":{
-			
+		"RaporParams":{
+			"Depo" :  {"Title" : "Depo","DefaultValue" : ""},
 		}
 	}

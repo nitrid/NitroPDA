@@ -440,9 +440,10 @@ var Param = [
 			"EksiyeDusme": "0",
 			"IskontoMatris": "0"
 		},
-		"VadeAralikliFaturalar":{
-			
-		}
+		"RaporParams":
+		{
+			"Depo" : ""
+		},
 	},
 	{
 		"Kullanici": "test",
