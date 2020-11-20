@@ -2953,13 +2953,14 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     "ISNULL((SELECT cari_per_adi  FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = MAX(sth_plasiyer_kodu)),'') AS PERSONEL, " +
                     "ROUND(SUM(sth_tutar),2) TUTAR " +
                     "FROM STOK_HAREKETLERI  " +
-                    "WHERE sth_evraktip = 4 AND sth_cins = 0 AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
-                    "AND sth_plasiyer_kodu = '" + $scope.Personel + "'" + 
+                    "WHERE sth_evraktip = 4 AND sth_cins = 1 AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
+                    "AND sth_evrakno_seri = '" + $scope.Seri + "'" + 
                     "GROUP BY sth_evrakno_seri,sth_evrakno_sira " 
         }
 
         await db.GetPromiseQuery(TmpQuery,async function(Data)
         {
+            console.log(Data)
             $scope.DGenelToplam = db.SumColumn(Data,"TUTAR");
             $scope.DizaynListe = Data;
             $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
