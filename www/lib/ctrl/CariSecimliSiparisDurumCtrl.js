@@ -252,7 +252,21 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $scope.SipTip = "2";
         $scope.Carikodu = "";
         $scope.CariAdi = "";
-        $scope.SubeKodu = '';
+        $scope.SubeKodu = UserParam.RaporParams.Depo
+        {
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT dep_adi FROM DEPOLAR WHERE dep_no = @dep_no" ,
+                param:  ['dep_no'], 
+                type:   ['int'], 
+                value:  [$scope.SubeKodu]
+            }
+            db.GetDataQuery(TmpQuery,function(Data)
+            {
+                $scope.SubeAdi = Data[0].dep_adi
+            });
+        }
         $scope.SubeAdi = "";
         $scope.ToplamSatir = "";
         $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");

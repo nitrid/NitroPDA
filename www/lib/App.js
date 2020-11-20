@@ -179,6 +179,14 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/StokVirman.html"
     })
+    .when("/VadeAralikliFaturalar",
+    {
+        templateUrl : "html/rapor/VadeAralikliFaturalar.html"
+    })
+    .when("/CariAnaliz",
+    {
+        templateUrl : "html/rapor/CariAnaliz.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

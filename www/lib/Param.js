@@ -295,7 +295,9 @@ var Param = [
 			"Aktarim": "1",
 			"EvrakGonder": "1",
 			"Gelen Havale": "1",
-			"Konsinye İrsaliye": "1"
+			"Vade Aralıklı Fatura Raporu": "1",
+			"Konsinye İrsaliye": "1",
+			"Cari Analiz" : "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -437,7 +439,11 @@ var Param = [
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
 			"IskontoMatris": "0"
-		}
+		},
+		"RaporParams":
+		{
+			"Depo" : ""
+		},
 	},
 	{
 		"Kullanici": "test",
@@ -780,7 +786,8 @@ var Param = [
 			"Cari Secimli Siparis Durum Raporu": "1",
 			"Durağan Cariler Raporu": "1",
 			"Kasa Rapor": "1",
-			"Stok Hareket Rapor": "1"
+			"Stok Hareket Rapor": "1",
+			"Vade Aralıklı Fatura Raporu": "1"
 		},
 		"StokVirman": {
 			"EvrakTip": "0",
