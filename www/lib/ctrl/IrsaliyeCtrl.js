@@ -22,6 +22,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.BtnTemizle();
         }
     });
+
     function Init()
     {
         gtag('config', 'UA-12198315-14', 
@@ -104,6 +105,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.AdresNoListe = [];
         $scope.ProjeEvrakGetirListe = [];
         $scope.SonSatisListe = [];
+        $scope.KirilimListe = [];
 
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -558,7 +560,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function BedenHarInsert(pGuid)
     {
-        console.log(Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR))
         let Data =
         [
             UserParam.MikroId, // KULLANICI
@@ -626,6 +627,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         
         DipToplamHesapla();
         ToplamMiktarHesapla();
+        $scope.BtnTemizle();
         
         $window.document.getElementById("Barkod").focus();
     }
@@ -755,21 +757,18 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
                     InsertAfterRefresh(IrsaliyeData);  
-
                     $scope.InsertLock = false
                     if(UserParam.Sistem.Titresim == 1)
                     {
                         Confirmation();
                     }
                     FisData(IrsaliyeData);
-                    
                 });
             }
             else
             {
                 console.log(InsertResult.result.err);
             }
-            
         });
     }
     function UpdateData(pData) 
@@ -849,7 +848,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 if(BarkodData.length > 0)
                 { 
                     $scope.Stok = BarkodData;
-                    console.log($scope.Stok)
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
@@ -973,7 +971,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             });
                         }
                     }
-
                     if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     {
                         if($scope.Stok[0].PARTI !='')
@@ -1056,6 +1053,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function FisData(pData)
     { 
+        $scope.KirilimGetir()
         $scope.FisLength = pData;
         if($scope.FisDizaynTip == "0")
         {
@@ -1084,10 +1082,27 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
            {
                 $scope.FisDeger = "";
                 $scope.FisDeger = "                                    "+ $scope.Tarih + "\n" + "                                    " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,25) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
-    
                 for(let i=0; i < pData.length; i++)
                 {
                    $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI.substring(0,28),30) + SpaceLength(pData[i].RENK + " " + pData[i].BEDEN,20) + SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),6) +  SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),7) + " " +SpaceLength(parseFloat(pData[i].sth_tutar.toFixed(2)),7) + "\n";       
+                } 
+           } 
+           catch (error) 
+           {
+               console.log(error)
+           }
+        }
+        else if($scope.FisDizaynTip == "2")
+        {
+            $scope.FisDeger = "";
+            $scope.FisData = "";
+           try 
+           {
+                $scope.FisDeger = "";
+                $scope.FisDeger = "                                    "+ $scope.Tarih + "\n" + "                                    " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,25) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
+                for(let i=0; i < $scope.KirilimListe.length; i++)
+                {
+                   $scope.FisData = $scope.FisData + SpaceLength($scope.KirilimListe[i].STOKKOD,20) +  SpaceLength($scope.KirilimListe[i].RENK,10) + SpaceLength($scope.KirilimListe[i].S36,5) + " " + SpaceLength($scope.KirilimListe[i].S37,5) + " " + SpaceLength($scope.KirilimListe[i].S38,5) + SpaceLength(($scope.KirilimListe[i].S36 + $scope.KirilimListe[i].S37 + $scope.KirilimListe[i].S38),5)  + "\n";       
                 } 
            } 
            catch (error) 
@@ -1119,6 +1134,42 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         db.GetData($scope.Firma,'CmbAdresNo',[$scope.CariKodu],function(data)
         {
             $scope.AdresNoListe = data;
+        });
+    }
+    $scope.KirilimGetir = function ()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT STOKKOD,RENK,ISNULL(PVT.[36],0) AS S36,ISNULL(PVT.[37],0) S37,ISNULL(PVT.[38],0) AS S38 " +
+            "FROM " +
+            "( " +
+            "SELECT  " +
+            "(SELECT dbo.fn_renk_kirilimi((SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)),(SELECT sto_renk_kodu FROM STOKLAR WHERE sto_kod = @STOKKOD))) AS RENK,  " +
+            "(select sth_stok_kod FROM STOK_HAREKETLERI WHERE sth_Guid = BdnHar_Har_uid ) AS STOKKOD , " +
+            "ISNULL((SELECT dbo.fn_beden_kirilimi((SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)),(SELECT  sto_renk_kodu FROM STOKLAR WHERE sto_kod = @STOKKOD))),0) AS BEDEN , " +
+            "(SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) AS RENKPNTR,  " +
+            "ISNULL(BdnHar_HarGor,0) AS MIKTAR " +
+            "FROM BEDEN_HAREKETLERI AS BDN INNER JOIN STOK_HAREKETLERI AS STH ON BDN.BdnHar_Har_uid = STH.sth_Guid " +
+            "WHERE STH.sth_evrakno_seri = @SERI AND STH.sth_evrakno_sira = @SIRA " +
+            ")AS VERI " +
+            "PIVOT " +
+            "( SUM(MIKTAR) " +
+            "FOR BEDEN IN ([36],[37],[38])) " +
+            "AS PVT GROUP BY RENKPNTR,PVT.[36],PVT.[37],PVT.[38],PVT.STOKKOD,PVT.RENK",
+            param:  ['STOKKOD','SERI','SIRA'],
+            type:   ['string|25','string|50','int'],
+            value:  [$scope.IrsaliyeListe[0].sth_stok_kod,$scope.Seri,$scope.Sira]
+        }
+        db.GetPromiseQuery(TmpQuery,function(data)
+        {   
+            console.log(data)
+            console.log($scope.IrsaliyeListe[0].sth_Guid)
+            $scope.KirilimListe = data
+            for(let i = 0; i < $scope.KirilimListe.length; i++)
+            {
+                $scope.DizTopMik = $scope.KirilimListe[i].S36 + $scope.KirilimListe[i].S37 + $scope.KirilimListe[i].S38;   
+            }
         });
     }
     // $scope.MaxSira = async function()
@@ -1380,10 +1431,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnRenkBedenSec = function()
     {
-        console.log($scope.Stok[0].BEDEN)
-        console.log($scope.Stok[0].RENK)
-        console.log($scope.Stok[0].RENKPNTR)
-        console.log($scope.Stok[0].BEDENPNTR)
         $scope.Stok[0].RENK = $.grep($scope.RenkListe, function (Item) 
         {
             return Item.PNTR == $scope.Stok[0].RENKPNTR;
@@ -1391,11 +1438,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         
         $scope.Stok[0].BEDEN = $.grep($scope.BedenListe, function (Item) 
         {
-            console.log($scope.BedenListe)
             return Item.PNTR == $scope.Stok[0].BEDENPNTR;
         })[0].KIRILIM;
-        console.log($scope.Stok[0].BEDEN)
-        console.log($scope.Stok[0].RENK)
         $('#MdlRenkBeden').modal('hide');
 
         PartiLotEkran();
@@ -1462,13 +1506,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnBarkodGetirClick = function()
     {
-        StokBarkodGetir($scope.Barkod);
+        StokBarkodGetir($scope.Barkod); 
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {
         if(keyEvent.which === 13)
         {
-            StokBarkodGetir($scope.Barkod);    
+            StokBarkodGetir($scope.Barkod); 
         }
     }
     $scope.BtnOnlineYazdir = function()
@@ -1609,8 +1653,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         ProjeEvrakSelectedRow = $row;
-        console.log($scope.ProjeEvrakGetirListe)
-        console.log(pItem)
         $scope.ProjeEvrakSelectedIndex = pItem;
 
         $scope.Seri = $scope.ProjeEvrakSelectedIndex.SERI;
@@ -1739,7 +1781,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             });
             angular.element('#MdlVergiDuzenle').modal('hide');
         }
-      
     }
     $scope.MiktarPress = function(keyEvent)
     {
@@ -2071,12 +2112,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             }
                             db.GetDataQuery(TmpQuery,function(Data)
                             {
-                                console.log(Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR))
                                 if(Data.length > 0)
                                 {
                                     db.ExecuteTag($scope.Firma,'BedenHarGorUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,Data[0].BdnHar_Guid],function(data)
                                     {
-                                        console.log(data)
                                     });
                                 }
                                 else
@@ -2268,11 +2307,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 });
                 
                 db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sth_stok_srm_merkezi; $scope.SorumlulukAdi = data[0].SORUMLUMERADI});
-                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = [0].sth_plasiyer_kodu; $scope.PersonelAdi = data[0].PERSONELADI});
+                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e;$scope.PersonelAdi = data[0].PERSONELADI});
                 db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sth_proje_kodu});
                 db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(e){$scope.OdemePlanListe = e; $scope.OdemeNo = data[0].sth_odeme_op.toString()});
                 
                 $scope.IrsaliyeListe = data;
+                console.log($scope.IrsaliyeListe)
                 $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});  
                 DipToplamHesapla();
                 ToplamMiktarHesapla()
@@ -2284,7 +2324,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 angular.element('#MdlEvrakGetir').modal('hide');
 
                 BarkodFocus();
+                $scope.KirilimGetir();
                 FisData(data)
+                
 
                 alertify.alert("Evrak Başarıyla Getirildi.");
             }
@@ -2581,7 +2623,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         db.GetData($scope.Firma,'StokProjeGetir',[$scope.EvrakTip,0,$scope.ProjeKod],function(data)
         {
             $scope.ProjeEvrakGetirListe = data;
-            console.log($scope.ProjeEvrakGetirListe)
             if($scope.ProjeEvrakGetirListe.length > 0)
             {
                 $scope.Loading = false;
@@ -2805,6 +2846,35 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 }
             });
         }
+        else if($scope.FisDizaynTip == "2")
+        {
+            let FisDizayn = "";
+            let FisDeger = "";
+            let i = 51 - $scope.FisLength.length;
+            let Satır = "";
+            for(let x = 0; x <= i; x++)
+            {    
+                Satır += "                                                                   -" + "\n"; 
+            }
+            FisDeger = FisDeger + "                                " + "\n" 
+            FisDeger = FisDeger + SpaceLength($scope.CariAdi.substring(0,61),63) + $scope.Seri + "-" +  $scope.Sira + "\n" + SpaceLength($scope.CariSoyAdi.substring(0,43),45) + SpaceLength($scope.Il.substring(0,16),18) +  $scope.Tarih + "\n" + "                                                               " + $scope.Saat + "\n";
+            FisDizayn = "                                             " + "\n" + 
+            FisDeger +                                       
+            "        " + "\n" + 
+            "STOKKOD              RENK     36    37    38                " + "\n" +
+            $scope.FisData + "\n"  
+            FisDizayn = FisDizayn + "MIKTAR TOPLAM : " + db.SumColumn($scope.FisLength,"MIKTAR") + "\n" + "                                               ARA TOPLAM     : " +$scope.AraToplam + "\n" +"                                               TOPLAM KDV     : " + parseFloat($scope.ToplamKdv.toFixed(2),7) + "\n" +"                                               TOPLAM INDIRIM : " + $scope.ToplamIndirim + "\n" + "                                               GENEL TOPLAM   : "+ parseFloat($scope.GenelToplam.toFixed(2),7)+"\n" + Satır
+            FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u").split("ı").join("i");
+            
+            console.log(FisDizayn)
+            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+            {
+                if(pStatus)
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                }
+            });
+        }
         else
         {
             alertify.alert("Reis parametreni kontrol et ya yazamıyorum bir şey")
@@ -2919,7 +2989,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {  
             $scope.SonSatisListe = data.result.recordset[0];
             $scope.SonSatisMiktar = $scope.SonSatisListe.MIKTAR
-            console.log($scope.SonSatisListe.MIKTAR)
         });
     }
 }

@@ -268,9 +268,9 @@
                             <button type="submit" class="btn btn-primary btn-block h-40" ng-click="BtnBarkodGetirClick()">Getir</button>        
                         </div>
                     </div>
-                    <div class="row pt-5">
+                    <div class="row">
                         <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">  
-                            <label class="mb-0 h4 text-primary">{{Stok[0].KODU}} - {{Stok[0].ADI}} - {{Stok[0].BEDEN}} - {{Stok[0].RENK}}</label> 
+                            <label class="mb-0 h5 text-black">{{Stok[0].KODU}} - {{Stok[0].ADI}} - {{Stok[0].BEDEN}} - {{Stok[0].RENK}}</label> 
                         </div>                        
                     </div>
                     <div class="row pt-5">
@@ -278,13 +278,11 @@
                             <label class="mb-0 h6 text-danger">D.MIKTAR : {{Stok[0].DEPOMIKTAR}} - {{Stok[0].KIRILIMMIKTAR}}</label> 
                         </div>                        
                     </div>
-                    <div class="row pt-5">
-                        <div class="col-lg-12" style="display: inline; text-align: left; overflow: hidden;">  
-                            <label class="mb-0 h6 text-danger">DOVIZ : {{Stok[0].DOVIZSEMBOL}}</label> 
-                        </div>                        
-                    </div>
                     <div class="row my-0 ">
-                        <div class="col-4 offset-4 text-info px-1">
+                        <div class="col-4" style="display: inline; text-align: left; overflow: hidden;">  
+                            <label class="mb-0 h6 text-danger">DOVIZ : {{Stok[0].DOVIZSEMBOL}}</label> 
+                        </div> 
+                        <div class="col-4  text-info px-1">
                             <div class="col-form-label px-1 float-right py-1">Birim:</div>
                         </div>
                         <div class="col-4 px-1">

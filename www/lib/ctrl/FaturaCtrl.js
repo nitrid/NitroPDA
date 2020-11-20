@@ -731,6 +731,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     $scope.Stok[0].INDIRIM = 0;
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
+        
                     if(UserParam.Sistem.PartiLotKontrol == 1)//PARTI-LOT KONTROL
                     {
                         for(i = 0;i < $scope.StokHarListe.length;i++)
@@ -771,6 +772,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             $scope.MiktarFiyatValid();
                         }
                     });
+        
                     let FiyatParam = 
                     { 
                         CariKodu : $scope.CariKodu,
@@ -781,6 +783,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         AlisSatis : ($scope.EvrakTip === 3 ? 0 : 1),
                         OdemeNo : $scope.OdemeNo
                     };
+        
                     await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()//FİYAT GETİR
                     {   
                         $scope.MiktarFiyatValid();
@@ -814,6 +817,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             }
                         })
                     }
+        
                     if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     {
                         if($scope.Stok[0].PARTI != '')
@@ -838,6 +842,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                                 },250)
                         }
                     }
+        
                     if($scope.OtoEkle == true)
                     {
                         $scope.Insert()
@@ -2076,7 +2081,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     {   
                         let TmpFiyat  = value.sth_tutar / value.sth_miktar
                         let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-                        let Data = 
+                        let Data =
                         {
                             Param :
                             [
