@@ -7,7 +7,7 @@ var Param = [
 			"FirmaNo": "0",
 			"Firma": "",
 			"SubeNo": "0",
-			"SatirBirlestir": "1",
+			"SatirBirlestir": "0",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
@@ -297,7 +297,8 @@ var Param = [
 			"Gelen Havale": "1",
 			"Vade Aralıklı Fatura Raporu": "1",
 			"Konsinye İrsaliye": "1",
-			"Cari Analiz" : "1"
+			"Cari Analiz": "1",
+			"Is Emri Depo Sevk": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -440,10 +441,9 @@ var Param = [
 			"EksiyeDusme": "0",
 			"IskontoMatris": "0"
 		},
-		"RaporParams":
-		{
-			"Depo" : ""
-		},
+		"RaporParams": {
+			"Depo": ""
+		}
 	},
 	{
 		"Kullanici": "test",
