@@ -94,7 +94,7 @@ var Param = [
 			"SiparisOnay": "",
 			"FiyatLock": "0",
 			"IskontoMatris": "0",
-			"ProjeGetir": "1",
+			"ProjeGetir": "0",
 			"TedarikcidenSiparis": "0"
 		},
 		"DepoSevk": {
@@ -181,7 +181,7 @@ var Param = [
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
 			"IskontoMatris": "0",
-			"ProjeGetir": "1"
+			"ProjeGetir": "0"
 		},
 		"KonsinyeIrsaliye": {
 			"EvrakTip": "0",
@@ -298,7 +298,8 @@ var Param = [
 			"Vade Aralıklı Fatura Raporu": "1",
 			"Konsinye İrsaliye": "1",
 			"Cari Analiz": "1",
-			"Is Emri Depo Sevk": "1"
+			"Is Emri Depo Sevk": "1",
+			"Cari Analiz": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
