@@ -1417,6 +1417,19 @@ var QuerySql =
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
         type:   ['string|20','int','int','int']
     },
+    SiparisGetirExcel:
+    {
+        query:  "SELECT ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod),'') AS ADI, " +
+                "sip_miktar  AS MIKTAR , (SELECT dbo.fn_StokBirimi(sip_stok_kod,sip_birim_pntr)) AS BIRIMADI,  " +
+                "ROUND((sip_tutar / sip_miktar),2) AS FIYAT, " +
+                "ROUND(sip_tutar,2) AS TUTAR, " +
+                "(SELECT TOP 1 bar_kodu  FROM  BARKOD_TANIMLARI WHERE bar_Stokkodu = sip_stok_kod) AS BARKOD " +
+                " FROM SIPARISLER WHERE sip_evrakno_seri = @sip_evrakno_seri AND " +
+                "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins " +
+                "ORDER BY sip_satirno ASC",
+        param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
+        type:   ['string|20','int','int','int']
+    },
     SiparisEvrDelete:
     {
         query:  "DELETE FROM SIPARISLER WHERE sip_evrakno_seri = @sip_evrakno_seri AND " + 
@@ -3538,6 +3551,28 @@ var QuerySql =
         param : ['KODU','ADI'],
         type : ['string|25','string|127']
     }, 
+    IsEmriPlanListeGetir : 
+    {
+        query : "SELECT upl_kodu AS KODU ,upl_Guid AS GUID ," +
+        " (SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu) AS ADI," +
+        " upl_miktar  AS MIKTAR," +
+        "upl_parti_kod AS PARTI," +
+        "upl_lotno AS LOT," +
+        "upl_miktar - upl_special3 AS KALAN, " +
+        "upl_isemri  AS ISEMRI, " +
+        " CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
+        "FROM URETIM_MALZEME_PLANLAMA WHERE upl_depno = 14 and upl_uretim_tuket = 0 and    upl_isemri LIKE @upl_isemri + '%' AND (upl_miktar - upl_special3) > 0" ,
+        param : ['upl_isemri'],
+        type : ['string|50']
+
+
+    },
+    PlanListeUpdate : 
+    {
+        query : "UPDATE URETIM_MALZEME_PLANLAMA  set upl_special3 = @upl_special3 where upl_Guid = @upl_Guid ",
+        param : ['upl_special3','upl_Guid'],
+        type : ['string|4','string|50']
+    },
     // Konsinye Hareket
     KonsinyeHarInsert :
     {

@@ -19,6 +19,10 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/Deposevk.html"
     })
+    .when("/IsEmriDepoSevkEslestirme",
+    {
+        templateUrl : "html/evraklar/IsEmriDepoSevkEslestirme.html"
+    })
     .when("/DepoSiparis",
     {
         templateUrl : "html/evraklar/DepoSiparis.html"

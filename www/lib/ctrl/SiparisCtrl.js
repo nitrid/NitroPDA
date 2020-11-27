@@ -2768,4 +2768,72 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             alertify.alert("Etiket Yazdıralamadı.");
         }
     }
+    $scope.ExcelExport = function()
+    {
+        db.GetData($scope.Firma,'SiparisGetirExcel',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(ExcelData)
+        {   
+            $scope.ExcelDataListesi = ExcelData
+
+        let ExcelDataListe = [];
+        let ExcelHeaderListe = [];
+
+        for(i = 0; i < Object.keys($scope.ExcelDataListesi[0]).length; i++)
+        {
+            let a = {};
+            
+            a.text = Object.keys($scope.ExcelDataListesi[0])[i];
+            ExcelHeaderListe.push(a)
+        }
+
+        ExcelDataListe.push(ExcelHeaderListe)
+
+        for(i = 0; i < $scope.ExcelDataListesi.length; i++)
+        {
+            let Dizi = [];
+
+            for(m = 0;m < Object.keys($scope.ExcelDataListesi[i]).length;m++)
+            {
+                let b = {};
+                b.text = $scope.ExcelDataListesi[i][Object.keys($scope.ExcelDataListesi[i])[m]]
+                Dizi.push(b);
+                console.log(Dizi)
+            }
+            
+            ExcelDataListe.push(Dizi)
+        }
+        console.log(ExcelDataListe)
+        var RaporListeData = 
+        [
+            {
+                "sheetName":"Sayfa",
+                "data":  ExcelDataListe
+            },
+            
+        ];
+        var options = {
+            fileName:"VerilenSiparisRapor",
+            extension:".xlsx",
+            sheetName:"Sayfa",
+            fileFullName:"report.xlsx",
+            header:true,
+            maxCellWidth: 20
+        };
+
+        Jhxlsx.export(RaporListeData, options);
+
+        var url ='data.json';
+        $.get(url, {},function (data) 
+        {
+            Jhxlsx.export(data.RaporListeData, data.options);
+            db.Connection(function(data)
+            {
+            });
+        })
+
+        });
+
+
+
+        
+    }
 }
