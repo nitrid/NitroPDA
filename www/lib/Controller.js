@@ -39,4 +39,6 @@ angular.module('app.controller', [])
 .controller('KrediSozlesmeIzlemeCtrl',['$scope','$window','db',KrediSozlesmeIzlemeCtrl])
 .controller('VadeAralikliFaturalarCtrl',['$scope','$window','db',VadeAralikliFaturalarCtrl])
 .controller('CariAnalizCtrl',['$scope','$window','db',CariAnalizCtrl])
+.controller('BankaRaporCtrl',['$scope','$window','db',BankaRaporCtrl])
+
 

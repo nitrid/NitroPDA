@@ -398,6 +398,7 @@ var ParamTemp =
 			"Cari Secimli Siparis Durum Raporu" : {"Title" : "Cari Secimli Siparis Durum Raporu","DefaultValue" : "1"},
 			"Durağan Cariler Raporu" : {"Title" : "Durağan Cariler Raporu","DefaultValue" : "1"},
 			"Kasa Rapor" : {"Title" : "Kasa Rapor","DefaultValue" : "1"},
+			"Banka Rapor" : {"Title" : "Banka Rapor","DefaultValue" : "1"},
 			"Stok Hareket Rapor" : {"Title" : "Stok Hareket Rapor","DefaultValue" : "1"},
 			"Depo Durum Raporu" : {"Title" : "Depo Durum Raporu","DefaultValue" : "1"},
 			"Gelen Havale" : {"Title" : "Gelen Havale","DefaultValue" : "1"},

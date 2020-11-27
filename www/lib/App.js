@@ -187,6 +187,10 @@ angular.module("app",
     {
         templateUrl : "html/rapor/CariAnaliz.html"
     })
+    .when("/BankaRapor",
+    {
+        templateUrl : "html/rapor/BankaRapor.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {
