@@ -695,7 +695,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     $scope.BtnBarkodGetirClick = function()
     {
         StokBarkodGetir($scope.Barkod);
-        
+        $scope.Barkod = "";
     }
     $scope.BtnManuelArama = function(keyEvent)
     {
