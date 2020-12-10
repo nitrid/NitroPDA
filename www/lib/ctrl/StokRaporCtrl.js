@@ -153,8 +153,8 @@ function StokRaporCtrl($scope,$window,db)
             "sto_beden_kodu AS BEDEN,"+
             "(SELECT TOP 1 dbo.fn_StokSatisFiyati(sto_kod,1,@DEPONO,1)) AS FIYAT, " +
             "(SELECT TOP 1 dbo.fn_StokSatisFiyati(sto_kod,1,@DEPONO,1)) * ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS TOPLAMFIYAT, " +
-            "sto_standartmaliyet * ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS TOPLAMMALIYET, " +
-            "sto_standartmaliyet AS MALIYET, " +
+            "ROUND((select [#msg_S_1565\\T] / [msg_S_1558\\T] as MALIYET FROM dbo.StokEnvanterYonetimi('20200101',GETDATE(),0,@DEPONO,0,0) where msg_S_0001 = sto_kod ),2) AS MALIYET, " + 
+            "ROUND((select [#msg_S_1565\\T] / [msg_S_1558\\T] as MALIYET FROM dbo.StokEnvanterYonetimi('20200101',GETDATE(),0,@DEPONO,0,0) where msg_S_0001 = sto_kod ) * ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,1,CONVERT(VARCHAR(10),GETDATE(),112))),0),2) as TOPLAMMALIYET, " +
             "ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR " +
             "FROM STOKLAR WHERE (SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))) > 0",
             param:  ['STOKKODU','STOKADI','DEPONO'],
