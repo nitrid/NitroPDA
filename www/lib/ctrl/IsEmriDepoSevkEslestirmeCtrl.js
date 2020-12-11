@@ -523,12 +523,10 @@ function IsEmriDepoSevkEslestirmeCtrl($scope,$window,$timeout,db)
                 });                          
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(DepoSevkData)
                 {  
-                    console.log("2")
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {   
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
-                    console.log("3")
                     InsertAfterRefresh(DepoSevkData);   
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
@@ -692,7 +690,7 @@ function IsEmriDepoSevkEslestirmeCtrl($scope,$window,$timeout,db)
                                 if(($scope.IsEmrıPlanListe.length - 1) == i)
                                 {
                                     $scope.BtnTemizle()
-                                    alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Sevk Listesşnde Bulunan Stok ve Partiyi okutunuz !" + "</a>" );  
+                                    alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Sevk Listesinde Bulunan Stok ve Partiyi okutunuz !" + "</a>" );  
                                 }
                             }
                     }

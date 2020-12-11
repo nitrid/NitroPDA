@@ -97,6 +97,28 @@ var Param = [
 			"ProjeGetir": "0",
 			"TedarikcidenSiparis": "0"
 		},
+		"ProformaAlinanSiparis": {
+			"Seri": "PRSP",
+			"BelgeNo": "",
+			"Cari": "",
+			"DepoNo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "01",
+			"Proje": "",
+			"SonSatisFiyati": "0",
+			"SonAlisFiyati": "0",
+			"SatisSarti": "0",
+			"AlisSarti": "0",
+			"FiyatListe": "1",
+			"EvrakSil": "0",
+			"PartiSec": "1",
+			"FiyatLock": "0",
+			"SiparisOnay": "",
+			"IskontoMatris": "0",
+			"EksiyeDusme": "0",
+			"ProjeGetir": "0"
+		},
 		"DepoSevk": {
 			"EvrakTip": "0",
 			"Seri": "DSV",
@@ -344,6 +366,19 @@ var Param = [
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
+			"BelgeNo": "",
+			"Depo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"Proje": "",
+			"EvrakSil": "0",
+			"IsMerkezi": "01",
+			"IsMerkeziListe": "",
+			"CmbEvrakTip": "0"
+		},
+		"PlanliUretim": {
+			"Seri": "URT",
 			"BelgeNo": "",
 			"Depo": "1",
 			"DepoListe": "",
@@ -703,6 +738,19 @@ var Param = [
 			"Personel": "",
 			"Proje": "",
 			"EvrakSil": "0"
+		},
+		"PlanliUretim": {
+			"Seri": "URT",
+			"BelgeNo": "",
+			"Depo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"Proje": "",
+			"EvrakSil": "0",
+			"IsMerkezi": "01",
+			"IsMerkeziListe": "",
+			"CmbEvrakTip": "0"
 		},
 		"FasonGirisCikis": {
 			"CmbEvrakTip": "0",

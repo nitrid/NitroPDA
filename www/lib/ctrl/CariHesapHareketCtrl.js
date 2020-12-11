@@ -118,6 +118,98 @@ function CariHesapHareketCtrl($scope,$window,db)
                 },
              
             ],
+            rowClick: function(args)
+            {
+                $scope.CariFoyRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitCariFoyDetayGrid()
+    {   
+        $("#TblCariFoyDetay").jsGrid
+        ({
+            width: "100%",
+            height: "auto",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            pageSize: 15,
+            pageButtonCount: 3,
+            data : $scope.CariFoyListeDetay,
+            fields: 
+            [ 
+            {
+                name: "sth_stok_kod",
+                title: "KODU",
+                type: "text",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "ADI",
+                title: "ADI",
+                type: "text",
+                align: "center",
+                width: 200
+            }, 
+            {
+                name: "sth_miktar",
+                title: "MİKTAR",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "FIYAT",
+                title: "FIYAT",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "TUTAR",
+                title: "TUTAR",
+                type: "number",
+                align: "center",
+                width: 200
+            },
+            {
+                name: "sth_iskonto1",
+                title: "IND1",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "sth_iskonto2",
+                title: "IND2",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "sth_iskonto3",
+                title: "IND3",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "sth_iskonto4",
+                title: "IND4",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "sth_iskonto5",
+                title: "IND5",
+                type: "number",
+                align: "center",
+                width: 100
+            }
+            ],
         });
     }
     $scope.Init = function()
@@ -138,6 +230,7 @@ function CariHesapHareketCtrl($scope,$window,db)
 
         InitCariGrid();
         InitCariFoyGrid();
+        InitCariFoyDetayGrid();
     }
     $scope.BtnCariListele = function()
     {   
@@ -181,7 +274,10 @@ function CariHesapHareketCtrl($scope,$window,db)
                 query:  "SELECT  " +
                         "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +       
                         "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA, " +
+                        "msg_S_0090 AS SERI, " +
+                        "msg_S_0091 AS SIRA, " +
                         "msg_S_0094 AS EVRAKTIP, " +
+                        "CASE msg_S_0094 WHEN 'Satış faturası' THEN 4 WHEN  'Alış faturası' THEN 3 ELSE 0 END AS EVRAKTIPNO , " +
                         "msg_S_0003 AS CINSI, " +
                         "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
                         "msg_S_0099 AS VADEGUN, " +
@@ -212,6 +308,7 @@ function CariHesapHareketCtrl($scope,$window,db)
                 $scope.OrjDovizBakiye = $scope.CariFoyListe[0].ORJINALDOVIZBAKIYE
                 $scope.OrjDoviz = $scope.CariFoyListe[0].ORJINALDOVIZ
                 $scope.AltDovizBakiye = $scope.CariFoyListe[0].ALTERNATIFDOVIZBAKIYE
+                console.log($scope.CariFoyListe[0].EVRAKTIPNO)
 
                 let TmpBakiye = 0;
                 for (let i = 0; i < $scope.CariFoyListe.length; i++) 
@@ -225,6 +322,26 @@ function CariHesapHareketCtrl($scope,$window,db)
             });
 
         }
+    }
+    $scope.BtnCariFoyDetayGetir = function()
+    {
+      if($scope.EvrakTipNo == 3 || $scope.EvrakTipNo == 4)
+      {
+        db.GetData($scope.Firma,'StokHarGetir',[$scope.EvrakNoSeri,$scope.EvrakNoSira,$scope.EvrakTipNo],function(Data)
+        {   
+            $scope.CariFoyDetayListe = Data
+            console.log(Data)
+
+            $("#TblCariFoyDetay").jsGrid({data : $scope.CariFoyDetayListe});
+            $scope.DetayClick();
+
+        });
+      }
+      else
+      {
+          alertify.alert('Sadece Fatura Evraklarının Detayı Görülebilir...')
+      }
+        
     }
     $scope.BtnCariListeleEnter = function(keyEvent)
     {
@@ -247,19 +364,45 @@ function CariHesapHareketCtrl($scope,$window,db)
             $scope.MainClick();
         }
     }
+    $scope.CariFoyRowClick = function(pIndex,pItem,pObj)
+    {
+        if(!$scope.EvrakLock)
+        {
+            if ( CariSelectedRow ) { CariSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+            var $row = pObj.rowByItem(pItem);
+            $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+            CariSelectedRow = $row;
+            
+            $scope.EvrakTipNo = $scope.CariFoyListe[pIndex].EVRAKTIPNO;
+            $scope.EvrakNoSeri = $scope.CariFoyListe[pIndex].SERI;
+            $scope.EvrakNoSira =  $scope.CariFoyListe[pIndex].SIRA;
+            $scope.BtnCariFoyDetayGetir();
+        }
+    }
     $scope.CariSecClick = function() 
     {
         $("#TbCari").addClass('active');
         $("#TbMain").removeClass('active');
+        $("#TbDetay").removeClass('active');
     }
     $scope.MainClick = function() 
     {
         $("#TbMain").addClass('active');
         $("#TbCari").removeClass('active');
+        $("#TbDetay").removeClass('active');
+        $scope.CariFoyDetayListe = []
+        $("#TblCariFoyDetay").jsGrid({data : $scope.CariFoyDetayListe});
+
     }
     $scope.BtnTemizle = function()
     {
         $scope.CariAdi = "";
         $scope.Carikodu = "";
+    }
+    $scope.DetayClick = function()
+    {
+        $("#TbDetay").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbCari").removeClass('active');
     }
 }

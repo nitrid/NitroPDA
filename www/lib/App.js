@@ -191,6 +191,10 @@ angular.module("app",
     {
         templateUrl : "html/rapor/CariAnaliz.html"
     })
+    .when("/ProformaAlinanSiparis",
+    {
+        templateUrl : "html/evraklar/ProformaAlinanSiparis.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

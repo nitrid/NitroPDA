@@ -85,6 +85,29 @@ var ParamTemp =
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
 			"TedarikcidenSiparis" : {"Title" : "Tedarikçiden Sipariş","DefaultValue" : "0"}
 		},
+		"ProformaAlinanSiparis" :
+		{
+			"Seri" : {"Title" : "Seri","DefaultValue" : "PRSP"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"Cari" : {"Title" : "Cari Kodu","DefaultValue" : ""},
+			"DepoNo" : {"Title" : "Depo No","DefaultValue" : "1"},
+			"DepoListe" : {"Title" : "Depo Liste","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
+			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
+			"SonSatisFiyati" : {"Title" : "Son Satış Fiyatı","DefaultValue" : "0"},
+			"SonAlisFiyati" : {"Title" : "Son Alış Fiyatı","DefaultValue" : "0"},
+			"SatisSarti" : {"Title" : "Satış Şartı","DefaultValue" : "0"},
+			"AlisSarti" : {"Title" : "Alış Şartı","DefaultValue" : "0"},
+			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"PartiSec" : {"Title" : "Parti Seç","DefaultValue" : "0"},
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
+			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},			
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
+			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}		
+		},
 		"DepoSevk" :
 		{
 			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
@@ -293,6 +316,19 @@ var ParamTemp =
 			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
 		},
+		"PlanliUretim" :
+		{
+			"CmbEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"Seri" : {"Title" : "Seri","DefaultValue" : "URT"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"IsMerkezi" : {"Title" : "İş Merkezi","DefaultValue" : ""},
+			"Depo" : {"Title" : "Depo No","DefaultValue" : "1"},
+			"DepoListe" : {"Title" : "Depo Liste","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
+			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+		},
 		"FasonGirisCikis" :
 		{
 			"CmbEvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
@@ -402,6 +438,7 @@ var ParamTemp =
 			"Depo Durum Raporu" : {"Title" : "Depo Durum Raporu","DefaultValue" : "1"},
 			"Gelen Havale" : {"Title" : "Gelen Havale","DefaultValue" : "1"},
 			"Vade Aralıklı Fatura Raporu" : {"Title" : "Vade Aralıklı Fatura Raporu","DefaultValue" : "1"},
+			"Proforma Alınan Siparis" : {"Title" : "Proforma Alınan Siparis","DefaultValue" : "1"},
 		},
 		"StokVirman" :
 		{
