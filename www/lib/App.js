@@ -194,6 +194,9 @@ angular.module("app",
     .when("/ProformaAlinanSiparis",
     {
         templateUrl : "html/evraklar/ProformaAlinanSiparis.html"
+    .when("/BankaRapor",
+    {
+        templateUrl : "html/rapor/BankaRapor.html"
     })
 });
 

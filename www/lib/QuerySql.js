@@ -381,7 +381,8 @@ var QuerySql =
                 "MAX(OTVTUTAR) AS OTVTUTAR," +
                 "MAX(DOVIZ) AS DOVIZ," +
                 "MAX(DOVIZSEMBOL) AS DOVIZSEMBOL, " +
-                "MAX(DOVIZKUR) AS DOVIZKUR " +
+                "MAX(DOVIZKUR) AS DOVIZKUR, " +
+                "MAX(PRIMORANI) AS PRIMORANI " +
                 "FROM (SELECT " +
                 "sto_kod AS KODU, " +
                 "sto_isim AS ADI, " +
@@ -430,7 +431,8 @@ var QuerySql =
                 "sto_otvtutar AS OTVTUTAR, " +
                 "0 AS DOVIZ,  " +
                 " '' AS DOVIZSEMBOL,  " +
-                "1 AS DOVIZKUR  " +
+                "1 AS DOVIZKUR,  " +
+                "sto_prim_orani AS PRIMORANI " +
                 "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
                 "WHERE ((sto_kod LIKE  @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE @ADI + '%' ) OR (@ADI = '')) " +
                 "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
@@ -2023,6 +2025,8 @@ var QuerySql =
                 "(SELECT dbo.fn_StokBirimi(sth_stok_kod,sth_birim_pntr)) AS BIRIMADI, " +
                 "(SELECT dbo.fn_StokBirimHesapla(sth_stok_kod,1,sth_miktar,sth_birim_pntr)) AS BIRIM," +
                 "ISNULL((SELECT sto_birim1_ad as ADET FROM STOKLAR WHERE sto_kod = sth_stok_kod),'') AS BIRIM1, " +
+                "sth_miktar * (SELECT sto_prim_orani FROM STOKLAR WHERE sto_kod = sth_stok_kod) AS PRIMTOPLAM,  " + 
+                "(SELECT sto_prim_orani FROM STOKLAR WHERE sto_kod = sth_stok_kod ) AS PRIMORANI, " + 
                 "ROW_NUMBER() OVER(ORDER BY sth_Guid) AS NO, " +
                 "(SELECT dbo.fn_VergiYuzde (sth_vergi_pntr)) AS TOPTANVERGI, " +
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sth_Guid AND BdnHar_Tipi = 11),0) AS RENKPNTR , " +
@@ -2535,7 +2539,7 @@ var QuerySql =
                 " WHERE  sth_Guid = @sth_Guid",
         param : ['sth_miktar:float','sth_miktar2:float','sth_tutar:float','sth_vergi_pntr:int','sth_iskonto1:float','sth_iskonto2:float','sth_iskonto3:float',
         'sth_iskonto4:float','sth_iskonto5:float','sth_iskonto6:float','sth_sat_iskmas1:bit','sth_sat_iskmas2:bit','sth_sat_iskmas3:bit','sth_sat_iskmas4:bit',
-        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:string|50']
+        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_fat_uid:string|50','sth_Guid:string|50']
     },
     MaxStokHarSira :
     {
