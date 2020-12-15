@@ -1542,10 +1542,48 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
             {
                 if($scope.IsEmriPlanı[i].TIP == 1)
                 {
-                    $scope.Stok[0].PARTI = $scope.IsEmriPlanı[i].PARTI
-                    $scope.Stok[0].LOT =  $scope.IsEmriPlanı[i].LOT
+                    $scope.Stok[0].LOT =  0
                     $scope.Stok[0].TOPTANVERGIPNTR = 0;
                     $scope.Stok[0].CARPAN = 1;
+                    $scope.Stok[0].PARTI = $scope.IsEmriPlanı[i].KODU + $scope.Tarih
+
+                    var TmpQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query:  "SELECT pl_partikodu FROM PARTILOT WHERE pl_partikodu = @partikodu" ,
+                        param:  ['partikodu'], 
+                        type:   ['string|25'], 
+                        value:  [$scope.Stok[0].PARTI]    
+                    }
+                
+                    db.GetPromiseQuery(TmpQuery,function(Data)
+                    {
+                        if(Data.length > 0)
+                        {
+
+                        }
+                        else
+                        {
+                            let Data = 
+                            [
+                                UserParam.MikroId,
+                                UserParam.MikroId,
+                                $scope.Stok[0].PARTI,
+                                0,
+                                $scope.IsEmriPlanı[i].KODU,
+                                $scope.SktTarih
+                            ]   
+                            db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
+                            {
+                                if(typeof(InsertResult.result.err) == 'undefined')
+                                {
+                                   
+                                }
+                            });
+                        }
+
+                    });
+            
                     
                     $scope.Stok[0].KODU = $scope.IsEmriPlanı[i].KODU;
                     $scope.Miktar = $scope.IsEmriPlanı[i].MIKTAR;                
@@ -1581,10 +1619,47 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
                 $scope.Stok[0].CARPAN = 1;
                 if($scope.IsEmriPlanı[i].TIP == 1)
                 {   
+                    $scope.Stok[0].LOT =  0
+                    $scope.Stok[0].PARTI = $scope.IsEmriPlanı[i].KODU + $scope.Tarih
                     $scope.Tip = 0;
                     $scope.Cins = 7;
                     $scope.NormalIade = 0;
                     $scope.EvrakTip = 12;
+                    var TmpQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query:  "SELECT pl_partikodu FROM PARTILOT WHERE pl_partikodu = @partikodu" ,
+                        param:  ['partikodu'], 
+                        type:   ['string|25'], 
+                        value:  [$scope.Stok[0].PARTI]    
+                    }
+                
+                    db.GetPromiseQuery(TmpQuery,function(Data)
+                    {
+                        if(Data.length > 0)
+                        {
+    
+                        }
+                        else
+                        {
+                            let Data = 
+                            [
+                                UserParam.MikroId,
+                                UserParam.MikroId,
+                                $scope.Stok[0].PARTI,
+                                0,
+                                $scope.IsEmriPlanı[i].KODU,
+                                $scope.SktTarih
+                            ]   
+                            db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
+                            {
+                                if(typeof(InsertResult.result.err) == 'undefined')
+                                {
+                                   
+                                }
+                            });
+                        }
+                    });
                 }
                 else if($scope.IsEmriPlanı[i].TIP == 0)
                 {
@@ -1593,6 +1668,11 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
                     $scope.NormalIade = 0;
                     $scope.EvrakTip = 0;
                 }
+                $scope.Stok[0].PARTI = $scope.IsEmriPlanı[i].KODU + $scope.Tarih
+
+               
+                
+                $scope.Stok[0].KODU = $scope.IsEmriPlanı[i].KODU;
                 $scope.Stok[0].KODU = $scope.IsEmriPlanı[i].KODU;
                 $scope.Miktar = $scope.IsEmriPlanı[i].MIKTAR;                
                 InsertData();             

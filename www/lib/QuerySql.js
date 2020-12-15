@@ -1471,7 +1471,7 @@ var QuerySql =
     {
         query : "UPDATE SIPARISLER SET sip_teslim_miktar = sip_teslim_miktar + @sip_teslim_miktar WHERE sip_Guid = @sip_Guid " +  
                 "UPDATE BEDEN_HAREKETLERI SET BdnHar_TesMik = BdnHar_TesMik + @sip_teslim_miktar WHERE BdnHar_Har_uid = @sip_Guid AND BdnHar_BedenNo = @BdnHar_BedenNo",
-        param : ['sip_teslim_miktar:int','sip_Guid:string|50','BdnHar_BedenNo:int']
+        param : ['sip_teslim_miktar:float','sip_Guid:string|50','BdnHar_BedenNo:int']
     },
     StokHarDepoSiparisUpdate :
     {
@@ -3848,8 +3848,8 @@ var QuerySql =
         query : "SELECT upl_kodu AS KODU ,upl_Guid AS GUID ," +
         " (SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu) AS ADI," +
         " upl_miktar  AS MIKTAR," +
-        "upl_parti_kod AS PARTI," +
-        "upl_lotno AS LOT," +
+        "ISNULL((Select  top 1 pl_partikodu from PARTILOT WHERE pl_stokkodu = upl_kodu  and ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,14,GETDATE(),pl_partikodu,pl_lotno)),0) > 0 order by pl_son_kullanim_tar asc),'')  AS PARTI," +
+        "0 AS LOT," +
         "upl_miktar - upl_special3 AS KALAN, " +
         "upl_isemri  AS ISEMRI, " +
         "upl_uretim_tuket AS TIP, " +

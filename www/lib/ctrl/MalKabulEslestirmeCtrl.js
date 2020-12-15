@@ -1126,7 +1126,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                 if(typeof($scope.Stok[0].RECNO) != 'undefined')
                 {
                     
-                    db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].RECNO,Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR)],function(InsertResult)
+                    db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[$scope.Miktar ,$scope.Stok[0].RECNO,Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR)],function(InsertResult)
                     {
                         console.log(InsertResult)
                     });
