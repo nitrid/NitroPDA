@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row my-0 py-0 pb-50">
+                    <div class="row my-0 py-0">
                         <div class="col-md-1 col-lg-1 col-sm-3 text-info px-2"><div class="col-form-label float-right py-2">Barkod :</div></div>
                         <div class="col-md-11 col-lg-11 col-sm-9 px-1">
                             <div class="input-group">
@@ -37,7 +37,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row pt-5">
+                    <div class="row ">
                         <div class="col-5 px-1">
                             <button type="submit" ng-click="ManuelAramaClick()" class="btn btn-primary btn-block h-40">Manuel Arama</button>        
                         </div>
@@ -48,12 +48,12 @@
                             <button type="submit" class="btn btn-primary btn-block h-40" ng-click="BtnBarkodGetirClick()">Getir</button>        
                         </div>
                     </div>
-                    <div class="row pt-5 pb-20">
+                    <div class="row pb-20">
                         <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">  
-                            <label class="mb-0 h5 text-primary ng-binding">{{Stok[0].KODU}}</label>
-                            <label class="mb-0 h5 text-primary ng-binding">{{Stok[0].ADI}}</label>
-                            <label class="mb-0 h5 text-primary ng-binding">{{Stok[0].BEDEN}}</label>
-                            <label class="mb-0 h5 text-primary ng-binding">{{Stok[0].RENK}}</label>
+                            <label class="mb-0 h5 text-black ng-binding">{{Stok[0].KODU}}</label>
+                            <label class="mb-0 h5 text-black ng-binding">{{Stok[0].ADI}}</label>
+                            <label class="mb-0 h5 text-black ng-binding">{{Stok[0].BEDEN}}</label>
+                            <label class="mb-0 h5 text-black ng-binding">{{Stok[0].RENK}}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -89,7 +89,7 @@
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{MaxSkt}}</label></div>
                     </div>
                     <div class="row" ng-show = "FiyatGizle">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Diğer Fiyatlar:</label></div>
+                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Diğer Fiyat:</label></div>
                         <div class="col-2 px-0"><label class="form-control-label pl-10">{{DigerFiyat}}  {{Stok[0].DOVIZSEMBOL}}</label></div>
                         <div class="col-3 text-info px-1">
                             <div class="col-form-label px-1 float-right py-1">Fiyat Seç:</div>
@@ -114,7 +114,7 @@
                     <div class="row pt-50">
                         <div class="col-3 px-1">
                             <div class="input-group">
-                                <input type="text" class="form-control" ng-model="BasilacakMiktar">
+                                <input type="number" class="form-control" ng-model="BasilacakMiktar">
                             </div>
                         </div>
                         <div class="col-4 px-1">
@@ -455,4 +455,3 @@
     language: "tr"
     });
 </script>
-    

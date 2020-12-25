@@ -95,8 +95,6 @@ function CariListeCtrl($scope,$window,db)
     $scope.YeniEvrak = async function ()
     {
         Init();
-        console.log(1)       
-
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
@@ -112,7 +110,6 @@ function CariListeCtrl($scope,$window,db)
             console.log($scope.CariHarfEkle)
             $scope.CariEkleKodu = $scope.CariHarfEkle + Data[0].MAXCARIKOD;
         });
-        console.log(1)  
     }
     $scope.EvrakGetir = function ()
     {
@@ -219,7 +216,6 @@ function CariListeCtrl($scope,$window,db)
        $("#TbCariDuzenle").addClass('active');
        $("#TbMain").removeClass('active');
        $("#TbCariEkle").removeClass('active');
-        
     }
     $scope.MainClick = function() 
     {

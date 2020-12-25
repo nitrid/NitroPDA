@@ -1682,7 +1682,6 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                 DipToplamHesapla();
                 ToplamMiktarHesapla()
                 
-
                 $scope.EvrakLock = true;
                 $scope.BarkodLock = false;
 

@@ -2022,7 +2022,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Tip = 1;
                 $scope.Cins = 0;
             }
-           
+            else if($scope.CmbEvrakTip == 4) // İhraç Kayıtlı İrsaliye
+            {
+                $scope.EvrakTip = 1;
+                $scope.NormalIade = 0;
+                $scope.Tip = 1;
+                $scope.Cins = 2;
+            }
         }
         await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }

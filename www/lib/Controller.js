@@ -41,5 +41,7 @@ angular.module('app.controller', [])
 .controller('CariAnalizCtrl',['$scope','$window','db',CariAnalizCtrl])
 .controller('BankaRaporCtrl',['$scope','$window','db',BankaRaporCtrl])
 .controller('IsEmriDepoSevkEslestirmeCtrl',['$scope','$window','$timeout','db',IsEmriDepoSevkEslestirmeCtrl])
+.controller('RotaCtrl',['$scope','$window','$timeout','db',RotaCtrl])
+
 
 

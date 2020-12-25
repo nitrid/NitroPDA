@@ -7,7 +7,7 @@ var Param = [
 			"FirmaNo": "0",
 			"Firma": "",
 			"SubeNo": "0",
-			"SatirBirlestir": "0",
+			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
@@ -19,16 +19,17 @@ var Param = [
 			"KiloUzunluk": "5",
 			"KiloCarpan": "1",
 			"Titresim": "1",
-			"PlasiyerKodu": "",
+			"PlasiyerKodu": "01",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "DP321-BT",
+			"BTYaziciAdi": "SW_FFAC",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "70",
-			"FisDizayn": "1"
+			"FisDizayn": "0",
+			"undefined": "0"
 		},
 		"StokRaporu": {
 			"DepoNo": "4"
@@ -46,7 +47,7 @@ var Param = [
 			"EvrakTip": "0"
 		},
 		"Sayim": {
-			"EvrakNo": "1",
+			"EvrakNo": "10",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"BelgeBilgisi": "",
@@ -299,8 +300,7 @@ var Param = [
 			"Vade Aralıklı Fatura Raporu": "1",
 			"Konsinye İrsaliye": "1",
 			"Cari Analiz": "1",
-			"Is Emri Depo Sevk": "1",
-			"Cari Analiz": "1"
+			"Is Emri Depo Sevk": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",

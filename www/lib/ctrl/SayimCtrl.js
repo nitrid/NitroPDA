@@ -2,7 +2,16 @@ function SayimCtrl($scope,$window,$timeout,db)
 {
     let IslemSelectedRow = null;
     let StokSelectedRow = null;
+    let PartiLotSelectedRow = null;
     $scope.CmbEvrakTip = '0';
+
+    $('#MdlPartiLot').on('hide.bs.modal', function () 
+    {
+        if($scope.TxtParti == "" && $scope.TxtLot == 0)
+        {
+            $scope.BtnTemizle();
+        }
+    });
 
     function Init()
     {
@@ -15,7 +24,8 @@ function SayimCtrl($scope,$window,$timeout,db)
         UserParam = Param[$window.sessionStorage.getItem('User')];
         $scope.Firma = $window.sessionStorage.getItem('Firma');
         
-        $scope.EvrakNo;
+        $scope.EvrakNo = UserParam.Sayim.EvrakNo;
+        console.log($scope.EvrakNo)
         $scope.Barkod = "";
         $scope.Tarih = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.DepoNo;
@@ -24,11 +34,15 @@ function SayimCtrl($scope,$window,$timeout,db)
         $scope.Birim = 0;
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
+        $scope.TxtParti = "";
+        $scope.LblPartiLotAlert = "";
+
 
         $scope.DepoListe = [];
         $scope.SayimListe = [];
         $scope.BirimListe = [];
         $scope.StokListe = [];
+        $scope.PartiLotListe = [];
         $scope.Stok = [];
 
         $scope.ToplamMiktar1 = 0;
@@ -50,12 +64,11 @@ function SayimCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = false;
         $scope.BarkodLock = false; 
         $scope.IslemListeSelectedIndex = -1; 
+        $scope.PartiLotListeSelectedIndex = 0;
         $scope.CmbEvrakTip = "0";
 
         $scope.Loading = false;
         $scope.TblLoading = true;
-
-        
     }
     function InitIslemGrid()
     {
@@ -179,6 +192,85 @@ function SayimCtrl($scope,$window,$timeout,db)
             }
         });
     }
+    function InitPartiLotGrid()
+    {
+        let CustomDate = function (config) 
+        {
+            jsGrid.Field.call(this, config);
+        };
+
+        CustomDate.prototype = new jsGrid.Field(
+        {
+            itemTemplate: function (value) 
+            {
+                return new Date(value).toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
+            }
+        });
+
+        jsGrid.fields.CustomDate = CustomDate;
+
+        $("#TblPartiLot").jsGrid
+        ({
+            width: "100%",         
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.PartiLotListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: [
+                {
+                    name: "PARTI",
+                    title: "PARTI",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+                {
+                    name: "LOT",
+                    title: "LOT",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }, 
+                {
+                    name: "STOK",
+                    title: "STOK",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+                {
+                    name: "MIKTAR",
+                    title: "MIKTAR",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }, 
+                {
+                    name: "KALAN",
+                    title: "KALAN",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                }, 
+                {
+                    name: "SKTTARIH",
+                    title: "SKT TARİHİ",
+                    type: "CustomDate",
+                    align: "center",
+                    width: 100
+                }  
+            ],
+            rowClick: function(args)
+            {
+                $scope.PartiLotListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
     function ToplamMiktarHesapla()
     {
        $scope.ToplamMiktar1 = 0;
@@ -227,11 +319,11 @@ function SayimCtrl($scope,$window,$timeout,db)
             $scope.Stok[0].BARKOD,
             $scope.Stok[0].RENKPNTR,
             $scope.Stok[0].BEDENPNTR,
-            '',
-            0,
+            $scope.Stok[0].PARTI,
+            $scope.Stok[0].LOT,
             ''
         ];
-        
+        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'SayimInsert',InsertData,function(InsertResult)
         {    
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -325,6 +417,22 @@ function SayimCtrl($scope,$window,$timeout,db)
 
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.Stok[0].TOPMIKTAR = 1;
+                    if(UserParam.Sistem.PartiLotKontrol == 1)
+                    {
+                        for(i = 0;i < $scope.IrsaliyeListe.length;i++)
+                        {   
+                            if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
+                            {
+                                if($scope.Stok[0].PARTI == $scope.IrsaliyeListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IrsaliyeListe[i].sth_lot_no)
+                                {
+                                    alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
+                                    $scope.InsertLock = false;
+                                    $scope.BtnTemizle();
+                                    return;
+                                }
+                            }
+                        }
+                    }
 
                     db.GetData($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {
@@ -355,7 +463,32 @@ function SayimCtrl($scope,$window,$timeout,db)
                             $window.document.getElementById("Miktar").focus();
                             $window.document.getElementById("Miktar").select();
                         }
-                    });                   
+                    });    
+                    if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+                    {
+                        if($scope.Stok[0].PARTI !='')
+                        {
+                            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.Stok[0].PARTI,$scope.Stok[0].LOT],function(data)
+                            {  
+                                $scope.PartiLotListe = data;
+
+                                if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
+                                {   
+                                    $scope.Miktar = $scope.PartiLotListe[0].MIKTAR;
+                                    $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
+                                }
+                                $scope.MiktarFiyatValid();
+                            });
+                        }
+                        else
+                        {
+                            PartiLotEkran();
+                            $timeout( function(){
+                            $window.document.getElementById("Parti").focus();
+                            $window.document.getElementById("Parti").select();
+                            },250)
+                        }
+                    }               
                 }
                 else
                 {                        
@@ -363,6 +496,26 @@ function SayimCtrl($scope,$window,$timeout,db)
                     console.log("Stok Bulunamamıştır.");
                 }
             });
+        }
+    }
+    function PartiLotEkran()
+    {
+        if($scope.Stok[0].PARTI == '')
+        {   
+            if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+            {   
+                $scope.LblPartiLotAlert = "";
+                $scope.TxtParti = "";
+                $scope.TxtLot = 0;
+                $scope.SktTarih = new Date().toLocaleDateString();
+                $scope.PartiLotListe = [];
+
+                $("#LblPartiLotAlert").hide();
+                
+                $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+
+                $('#MdlPartiLot').modal('show');
+            }
         }
     }
     function Beep()
@@ -403,7 +556,8 @@ function SayimCtrl($scope,$window,$timeout,db)
         Init();
         InitIslemGrid();
         InitStokGrid();
-     
+        InitPartiLotGrid();
+
         $scope.EvrakLock = false;
         $scope.DepoNo = UserParam.Sayim.DepoNo;
         $scope.CmbEvrakTip = "0";
@@ -430,9 +584,8 @@ function SayimCtrl($scope,$window,$timeout,db)
         
        await db.MaxSiraPromiseTag($scope.Firma,'MaxSayimSira',[$scope.DepoNo,$scope.Tarih],function(data)
         {  
-            $scope.EvrakNo = data
+            
         });
-        
         BarkodFocus();
     }
     $scope.BtnStokGridGetir = function()
@@ -494,6 +647,114 @@ function SayimCtrl($scope,$window,$timeout,db)
             $scope.BtnCariListele();
         }
     }
+    $scope.BtnPartiLotGetir = function()
+    {   
+        if(isNaN($scope.TxtLot))
+        $scope.TxtLot = 0;
+
+        db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
+        { 
+            $scope.PartiLotListe = data;
+            $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+        });
+    }
+    $scope.BtnPartiLotSec = function()
+    {   
+        $scope.Stok[0].PARTI = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].PARTI;
+        $scope.Stok[0].LOT = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].LOT;
+
+        $scope.TxtParti = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].PARTI;
+        $scope.TxtLot = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].LOT;
+        $scope.PartiLotListe = [];
+        
+        $('#MdlPartiLot').modal('hide');
+    }
+    $scope.BtnPartiLotOlustur = function()
+    {   
+        if($scope.TxtParti == '')
+        {
+            $("#LblPartiLotAlert").show();
+            $scope.LblPartiLotAlert = "Parti Alanı Boş Geçilemez !"
+        }
+        else
+        {   
+            if(isNaN($scope.TxtLot))
+            $scope.TxtLot = 0;
+          
+            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
+            {   
+                if(data.length > 0)
+                {
+                    $scope.PartiLotListe = data;
+                    $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+                    $("#LblPartiLotAlert").show();
+                    $scope.LblPartiLotAlert = "Bu PartiLot Daha Önceden Oluşturulmuş !"
+                }
+                else
+                {
+                    let Data = 
+                    [
+                        UserParam.MikroId,
+                        UserParam.MikroId,
+                        $scope.TxtParti,
+                        $scope.TxtLot,
+                        $scope.Stok[0].KODU,
+                        $scope.SktTarih
+                    ]   
+                    db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
+                    {
+                        if(typeof(InsertResult.result.err) == 'undefined')
+                        {
+                            $scope.Stok[0].PARTI = $scope.TxtParti;
+                            $scope.Stok[0].LOT = $scope.TxtLot;
+                            $('#MdlPartiLot').modal('hide');
+                        }
+                    });
+                }
+            });
+        }
+    }
+    $scope.BtnPartiEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnPartiLotGetir();
+            $timeout(function() 
+            {
+                if($scope.PartiLotListe != '')
+                {
+                    $scope.BtnPartiLotSec();
+                    $timeout(function(){$scope.Insert();},150)
+                }
+                else
+                {
+                    $('#MdlPartiLot').modal('hide');
+                    alertify.okBtn("Tamam");
+                    alertify.alert("Parti Bulunamadı");
+                    $('#MdlPartiLot').modal('hide');
+                    $scope.TxtParti = "";
+                    $scope.Barkod = "";
+                    $scope.Stok = null;
+                    $scope.Stok = 
+                    [
+                        {
+                            BIRIM : '',
+                            BIRIMPNTR : 0, 
+                            FIYAT : 0,
+                            TUTAR : 0,
+                            INDIRIM : 0,
+                            KDV : 0,
+                            TOPTUTAR :0
+                        }
+                    ];
+                    $scope.Miktar = 1;
+                    $scope.BarkodLock = false;
+            
+                    $scope.BirimListe = [];
+                }
+            },250)         
+        }
+    }
     $scope.BtnStokBarkodGetir = function(keyEvent)
     {
         if(keyEvent.which === 13)
@@ -524,6 +785,28 @@ function SayimCtrl($scope,$window,$timeout,db)
         StokBarkodGetir($scope.Barkod);
         $scope.BarkodGirisClick();
     }
+    $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
+    {   
+        if ( PartiLotSelectedRow ) { PartiLotSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        var $row = pObj.rowByItem(pItem);
+        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+        PartiLotSelectedRow = $row;
+        $scope.PartiLotListeSelectedIndex = pIndex;
+    }
+    $scope.MaxLot = function()
+    {   
+        if($scope.Stok[0].DETAYTAKIP == 2)
+        {
+            db.GetData($scope.Firma,'MaxPartiLot',[$scope.TxtParti],function(pData)
+            {
+                $scope.TxtLot = pData[0].LOT;
+            });
+        }
+        else
+        {
+            $scope.TxtLot = 1;
+        }
+    }
     $scope.BtnTemizle = function()
     {   
         $scope.DepoMiktar = 0;
@@ -542,7 +825,7 @@ function SayimCtrl($scope,$window,$timeout,db)
         //ENKAY İÇİ YAPILDI
         
         $scope.BarkodLock = false;
-        
+        $scope.Barkod = "";
         $scope.BirimListe = [];
         BarkodFocus();      
     }
@@ -587,6 +870,10 @@ function SayimCtrl($scope,$window,$timeout,db)
         {   
             if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
             {
+                InsertData();
+            }
+            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2  )
+            {          
                 InsertData();
             }
             else

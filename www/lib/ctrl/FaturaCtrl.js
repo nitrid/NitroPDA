@@ -33,6 +33,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 
         UserParam = Param[$window.sessionStorage.getItem('User')];
         $scope.Firma = $window.sessionStorage.getItem('Firma');
+        $scope.KullaniciIndex = $window.sessionStorage.getItem('User');
 
         $scope.Seri = "";
         $scope.Sira = 0;
@@ -78,6 +79,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.BirimAdi = "";
         $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
+        $scope.RotaKontrol = false;
+        $scope.RotaAciklama = "";
 
         //CARİHAREKET
         if(ParamName == "AlisFatura")
@@ -146,7 +149,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
         $scope.FiyatLock = false;
-        $scope.TblLoading = true; 
+        $scope.TblLoading = true;
+        $scope.Aciklama = "";
     }
     function InitCariGrid()
     {   
@@ -731,6 +735,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     $scope.Stok[0].INDIRIM = 0;
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
+                    console.log($scope.Stok[0].DOVIZSEMBOL)
         
                     if(UserParam.Sistem.PartiLotKontrol == 1)//PARTI-LOT KONTROL
                     {
@@ -772,7 +777,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             $scope.MiktarFiyatValid();
                         }
                     });
-        
                     let FiyatParam = 
                     { 
                         CariKodu : $scope.CariKodu,
@@ -783,7 +787,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                         AlisSatis : ($scope.EvrakTip === 3 ? 0 : 1),
                         OdemeNo : $scope.OdemeNo
                     };
-        
                     await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()//FİYAT GETİR
                     {   
                         $scope.MiktarFiyatValid();
@@ -817,7 +820,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                             }
                         })
                     }
-        
                     if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     {
                         if($scope.Stok[0].PARTI != '')
@@ -842,7 +844,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                                 },250)
                         }
                     }
-        
                     if($scope.OtoEkle == true)
                     {
                         $scope.Insert()
@@ -1613,6 +1614,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                 InitIslemGrid();
                 InitPartiLotGrid();
                 
+                if(typeof db.Rota.Kodu != 'undefined')
+                {
+                    //YAPILACAK
+                    $scope.RotaKontrol = true;
+                }
+                
                 $scope.Seri = data[0].sth_evrakno_seri;
                 $scope.Sira = data[0].sth_evrakno_sira;
                 $scope.EvrakTip = data[0].sth_evraktip;
@@ -2276,6 +2283,13 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.CmbEvrakTip = UserParam[ParamName].EvrakTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
+        if(typeof db.Rota.Kodu != 'undefined')
+        {
+            //YAPILACAK
+            $scope.RotaKontrol = true;
+            $scope.CariKodu = db.Rota.Kodu;
+            $scope.CariAdi = db.Rota.Adi;
+        }
         if(UserParam[ParamName].FiyatLock == 1)
         {
             $scope.FiyatLock = true;
@@ -2289,11 +2303,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
 
                 let Obj = $("#TblCari").data("JSGrid");
                 let Item = Obj.rowByItem(data[0]);
-                
+             
                 $scope.CariListeRowClick(0,Item,Obj);
             });
         }
-
         db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(data)
         {
             $scope.DepoListe = data; 
@@ -2350,8 +2363,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.FatSeri = JSON.parse(localStorage.FaturaParam).TahSeri;
             $scope.FatSira = JSON.parse(localStorage.FaturaParam).TahSira;
             $scope.EvrakGetir();
-        }
-        
+        }        
         $scope.EvrakTipChange(true);//EVRAK GETİR İÇİN TRUE FALSE DEĞERİ GÖNDERİLİYOR.
         BarkodFocus();
     }
@@ -2600,9 +2612,21 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         {
             alertify.alert("<a style='color:#3e8ef7''>" + "Gösterilecek Evrak Bulunamadı !" + "</a>" );
             $("#TbMain").addClass('active');
+            $("#TbIslemSatirlari").removeClass('active');
+            $("#TbBelgeBilgisi").removeClass('active');
+            $("#TbBarkodGiris").removeClass('active');
+            $("#TbStok").removeClass('active');
         }
         else
         {
+            if(typeof db.Rota.Kodu != "undefined")
+            {
+                $scope.RotaKontrol = false;
+            }
+            else
+            {
+                $scope.RotaKontrol = true;
+            }
             $("#TbIslemSatirlari").addClass('active');
             $("#TbMain").removeClass('active');
             $("#TbBelgeBilgisi").removeClass('active');
@@ -2641,6 +2665,14 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     $scope.MainClick = function() 
     {
+        if(typeof db.Rota.Kodu != "undefined")
+        {
+            $scope.RotaKontrol = true;
+        }
+        else
+        {
+            $scope.RotaKontrol = false;
+        }
         $("#TbMain").addClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
@@ -2725,12 +2757,20 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
             console.log(FisDizayn)
-            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+            console.log(1)
+            var doc = new jsPDF()
+
+            doc.text(FisDizayn, 10, 10)
+            doc.save('deneme.pdf')
+            console.log(1)
+            db.BTYazdir(FisDizayn,UserParam.Sistem.FisDizayn,function(pStatus)
             {
+                console.log(1)
+
                 if(pStatus)
                 {
                     alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
-                   
+                    
                 }
             });
         }
@@ -2788,15 +2828,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             "                                             -" + "\n"
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
     
-            console.log(FisDizayn)
-            
-           
+            console.log(FisDizayn)            
             db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
             {
                 if(pStatus)
                 {
                     alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
-                   
                 }
             });
         }
@@ -2971,5 +3008,34 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
             $("#TbDizayn").addClass('active');
         });
+    }
+    $scope.BtnRota = function()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "UPDATE ZIYARET_HAREKETLERI SET zyrt_Aciklama = @ACIKLAMA, zyrt_tamamlandi_fl = 1 WHERE zyrt_kodu = @ZIYARET ",
+            param:  ['ACIKLAMA','ZIYARET'],
+            type:   ['string|25','string|25'],
+            value:  [$scope.RotaAciklama,db.Rota.Ziyaret]
+        }
+        db.ExecuteQuery(TmpQuery,function(data)
+        {
+            console.log("Gönderdi")
+        });
+        db.Rota = {};
+        var url = "main.html#!/Rota";
+        $window.location.href = url;
+    }
+    $scope.HazirAciklama = function(pParam)
+    {
+        if(pParam == 0)
+        {
+            $scope.RotaAciklama = $("#RotaSelect option:selected").text()
+        }
+        else if(pParam = 1)
+        {
+            $scope.CmbAciklamaTip = "";
+        }
     }
 }

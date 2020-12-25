@@ -23,7 +23,7 @@
                         <div class="col-4 px-1">
                             <button type="button" class="btn btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
-                                <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak(1)">Yeni Evrak</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-hide="RotaKontrol" ng-click="YeniEvrak(1)">Yeni Evrak</button>
                                 <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Evrak Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(1)">Evrak Sil</button>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRaporClick()">Gün Sonu Raporu</button>
@@ -63,7 +63,7 @@
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-4 offset-1">
+                        <div class="col-4 offset-2">
                             <button class="btn btn-block btn-primary h-60">
                                 <span class="glyphicon glyphicon-print"  aria-hidden="true" ng-click="BtnFisYazdir()"></span>
                             </button>
@@ -74,7 +74,7 @@
                             <button class="btn btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="CariSecClick()">Cari Seç</button>
+                            <button class="btn btn-block btn-primary h-50" ng-hide="RotaKontrol" ng-click="CariSecClick()">Cari Seç</button>
                         </div>
                     </div>
                     <div class="row py-10">
@@ -85,7 +85,6 @@
                             <button class="btn btn-block btn-primary h-50" ng-click="IslemSatirlariClick()">İşlem Satırları</button>
                         </div>
                     </div>
-                 
                 </div>
                 <div id="TbBelgeBilgisi" class="tab-pane">
                     <div class="row pt-0 pb-1 pb-5">
@@ -114,7 +113,7 @@
                     <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1 py-0 my-0"><div class="col-form-label float-right py-2">Depo:</div></div>
                         <div class="col-8 px-1">
-                            <select class="form-control" ng-model="DepoNo" ng-disabled="EvrakLock" ng-change="DepoChange()">
+                            <select class="form-control" ng-model="DepoNo" ng-change="DepoChange()">
                                 <option ng-repeat="option in DepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>
@@ -270,16 +269,16 @@
                             <label class="mb-0 h5 text-black">{{Stok[0].KODU}} - {{Stok[0].ADI}} - {{Stok[0].BEDEN}} - {{Stok[0].RENK}}</label> 
                         </div>                        
                     </div>
-                    <div class="row mb-20">
-                        <div class="col-4 px-1">
-                            <div class="checkbox-custom checkbox-info my-0">
-                            <input type="checkbox" name="inputCheckboxes" ng-model="OtoEkle" checked="">
-                            <label for="inputUnchecked"><div class="text-info"><div class="col-form-label py-0"><b>Oto. Ekle</b></div></div></label>
-                            </div>
-                        </div> 
+                    <div class="row pt-5">
+                        <div class="col-lg-12" style="display: inline; text-align: left; overflow: hidden;">  
+                            <label class="mb-0 h6 text-danger">D.MIKTAR : {{Stok[0].DEPOMIKTAR}} - R/B :  {{Stok[0].KIRILIMMIKTAR}}</label> 
+                        </div>                        
                     </div>
                     <div class="row my-0">
-                        <div class="offset-6 col-2 text-info px-1">
+                        <div class="col-4" style="display: inline; text-align: left; overflow: hidden;">  
+                            <label class="mb-0 h6 text-danger">DOVIZ : {{Stok[0].DOVIZSEMBOL}}</label> 
+                        </div>
+                        <div class="col-4 text-info px-1">
                             <div class="col-form-label px-1 float-right py-1">Birim:</div>
                         </div>
                         <div class="col-4 px-1">
@@ -303,7 +302,13 @@
                         </div>
                     </div>
                     <div class="row my-0">
-                        <div class="col-4 text-info px-1 offset-4">
+                        <div class="col-4 px-1">
+                            <div class="checkbox-custom checkbox-info my-0">
+                              <input type="checkbox" name="inputCheckboxes" ng-model="OtoEkle" checked="">
+                              <label for="inputUnchecked"><div class="text-info"><div class="col-form-label py-0"><b>Oto. Ekle</b></div></div></label>
+                            </div>
+                        </div> 
+                        <div class="col-4 text-info px-1">
                             <div class="col-form-label float-right py-1">Birim Fiyat:</div>
                         </div>
                         <div class="col-4 px-1">
@@ -385,12 +390,19 @@
                         <div class="col-2 px-1">
                             <div class="row">
                                 <div class="col-12">
+                                <button class="btn btn-block btn-primary h-60" data-target="#MdlRota" data-toggle="modal" ng-hide="RotaKontrol"><b>D</b></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 px-1">
+                            <div class="row">
+                                <div class="col-12">
                                     <a href="#!TahsilatMakbuzu"><button class="btn btn-block btn-primary h-60" ng-click="BtnTahClick()"><b>T</b>
                                     </button></a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-8">
+                        <div class="col-6">
                             <div class="row">
                                 <div class="col-12">
                                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Ara Toplam :</span> {{AraToplam | number:2}}</h5>
@@ -780,6 +792,37 @@
                         <div class="loader vertical-align-middle loader-circle"></div>
                     </div>
                     <div id="TblKasa" class="pt-5" ng-show="TblLoading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Rota Modal-->
+    <div class="modal fade" id="MdlRota" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Rota Açıklama</h4>
+                </div>
+                <div class="modal-body py-10">
+                    <div class="form-group row my-10">
+                        <select id="RotaSelect" class="form-control" ng-model="CmbAciklamaTip" ng-change="HazirAciklama(0)">
+                            <option value="0">Güzel</option>
+                            <option value="1">İyimiş</option>
+                            <option value="2">Memnun</option>
+                            <option value="3">Hoşnut değil</option>
+                            <option value="4">At Çöpe</option>
+                        </select>
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Açıklama :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="RotaAciklama" ng-change="HazirAciklama(1)">
+                    </div>
+                    <div class="row my-5">
+                        <button type="submit" class="btn btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnRota()">Bitir</button>
+                    </div>
                 </div>
             </div>
         </div>

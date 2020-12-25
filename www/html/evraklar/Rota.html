@@ -1,0 +1,48 @@
+<style>
+    .bg-red td {
+background-color: #f08080 !important;
+}
+.bg-green td{
+background-color: #90ee90 !important;
+}
+</style>
+<div class="col-12 px-0" ng-controller="RotaCtrl" ng-init="YeniEvrak()">
+    <div class="panel panel-bordered">
+        <div class="panel-body py-1">
+            <div class="tab-content">
+                <div id="TbMain" class="tab-pane active">
+                    <div class="row pt-5">
+                        <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">
+                            <label class="mb-0 h4 text-primary">Rota</label> 
+                        </div>
+                    </div>
+                    <div class="row px-1">
+                        <div class="col-lg-1 col-sm-3 px-0">
+                            <button type="button" ng-click="EvrakGit(0)" class="btn btn-primary">Fatura</button>
+                        </div>
+                        <div class="col-lg-1 col-sm-3 px-0">
+                            <button type="button" ng-click="EvrakGit(1)" class="btn btn-primary">Tahsilat</button>
+                        </div>
+                        <div class="col-lg-1 col-sm-3 px-2">
+                            <button type="button" ng-click="EvrakGit(2)" class="btn btn-primary">Irsaliye</button>
+                        </div>
+                        <div class="col-lg-1 col-sm-3 px-2">
+                            <button type="button" ng-click="EvrakGit(3)" class="btn btn-primary">Sipariş</button>
+                        </div>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading" >
+                            <div class="loader vertical-align-middle loader-circle"></div>
+                        </div>
+                    <div class="row py-1 px-1 pt-40" ng-show="TblLoading">           
+                        <div id="TblCari"></div>                        
+                    </div>
+                    <div class="row pt-5">
+                        <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">  
+                            <label class="mb-0 h6 text-primary">-Rota-</label> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  

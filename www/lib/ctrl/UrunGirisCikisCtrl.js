@@ -663,9 +663,9 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     $scope.YeniEvrak = async function()
     {
         $scope.EvrakLock = false;
+        Init();
         InitEmirGrid();
         InitIslemGrid();
-        Init();
         InitStokGrid();
         InitPartiLotGrid();
         $scope.MainClick();
@@ -1196,9 +1196,11 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         IsEmriSelectedRow = $row;
-        
+        console.log($scope.IsEmriListe[pIndex])
+
         $scope.IsEmriKodu = $scope.IsEmriListe[pIndex].KODU;
         $scope.IsEmriAdi = $scope.IsEmriListe[pIndex].ADI;
+        console.log($scope.IsEmriListe[pIndex])
         $scope.MainClick();
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
@@ -1366,7 +1368,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
     }
     $scope.MainClick = function() 
     {
-        $scope.IsEmriListe = "";
         $("#TbMain").addClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');

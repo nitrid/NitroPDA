@@ -377,6 +377,118 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.$apply();
             }
         });
+        $("#TblSiparisListe2").jsGrid({
+            responsive : true,
+            width: "100%",          
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.StokListe,
+            paging : true,
+            pageSize: 3,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next}    {pageIndex} of {pageCount}",
+
+            fields: [
+                {
+                    name: "ADI",
+                    title: "ADI",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                },
+                {
+                    name: "BMIKTAR",
+                    title: "BEKLEYEN MIK.",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "RENK",
+                    title: "RENK",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "BEDEN",
+                    title: "BEDEN",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                }
+             
+            ],
+            rowClick: function(args)
+            {
+                $scope.StokListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+        $("#TblStokGrid").jsGrid({
+            responsive : true,
+            width: "100%",          
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.StokListe,
+            paging : true,
+            pageSize: 3,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next}    {pageIndex} of {pageCount}",
+
+            fields: [
+                {
+                    name: "KODU",
+                    title: "KODU",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "ADI",
+                    title: "ADI",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                },
+                {
+                    name: "BMIKTAR",
+                    title: "BEKLEYEN MIK.",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "TUTAR",
+                    title: "TUTAR",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "BIRIM",
+                    title: "BİRİM",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "BIRIMFIYAT",
+                    title: "BİRİM FİYATI",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                }
+             
+            ],
+            rowClick: function(args)
+            {
+                $scope.StokListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
     }
     function InitPartiLotGrid()
     {
@@ -1548,7 +1660,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.DisTicaret = 2;
             
             EvrakParam = UserParam.SatisIrsaliye;         
-        } 
+        }
         if($scope.CmbEvrakTip == 3)
         {
             $scope.CariTip = 0;
@@ -1568,7 +1680,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
 
             alertify.alert("Lütfen Belge Bilgisinden İhracat Kodu Giriniz.");    
         } 
-                       
 
         $scope.Seri = EvrakParam.Seri;
         $scope.Sira = EvrakParam.Sira;
@@ -2067,7 +2178,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbSiparisSecimi").removeClass('active');
-                
+                $scope.BtnStokGridGetir();
                 BarkodFocus();
             }
             else
@@ -2203,6 +2314,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblSiparisListe").jsGrid({data : $scope.StokListe});
+                $("#TblSiparisListe2").jsGrid({data : $scope.StokListe});
             } 
             else
             {                

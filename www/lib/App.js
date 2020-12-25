@@ -195,6 +195,10 @@ angular.module("app",
     {
         templateUrl : "html/rapor/BankaRapor.html"
     })
+    .when("/Rota",
+    {
+        templateUrl : "html/evraklar/Rota.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

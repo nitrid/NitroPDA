@@ -310,6 +310,12 @@
                             <label class="mb-0 h5 text-black">{{Stok[0].KODU}} - {{Stok[0].ADI}} - {{Stok[0].BEDEN}} - {{Stok[0].RENK}} - {{Okutulan[0].OKUTULAN}}</label> 
                         </div>
                     </div>
+                    <div class="row">
+                        <div id="TblStokGrid" class="pt-5" ng-show="TblLoading"></div>
+                    </div>
+                    <div class="row">
+                        <div id="TblSiparisListe2" class="pt-5" ng-show="TblLoading"></div>
+                    </div>
                     <div class="row my-0 ">
                         <div class="col-4 offset-3 text-info px-1">
                             <div class="col-form-label px-1 float-right py-1">Birim:</div>
@@ -320,14 +326,14 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-7 text-info px-1">
                             <div class="col-form-label float-right py-1">Bekleyen Miktar:</div>
                         </div>
                         <div class="col-5 px-1">
                             <input disabled type="text" class="form-control form-control-sm" value="{{Stok[0].SIPMIKTAR - Stok[0].TESLIMMIKTAR}}">
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row my-0">
                         <div class="col-2 text-info px-1">
                             <div class="col-form-label float-right py-1">Miktar:</div>
@@ -358,7 +364,7 @@
                             <input disabled type="number" class="form-control form-control-sm" value="{{Stok[0].TUTAR | number:2}}">
                         </div>
                     </div>
-                    <div class="row my-0">
+                    <!-- <div class="row my-0">
                         <div class="col-7 text-info px-1">
                             <div class="col-form-label float-right py-1">İskonto:</div>
                         </div>
@@ -381,7 +387,7 @@
                         <div class="col-5 px-1">
                             <input disabled type="text" class="form-control form-control-sm" value="{{Stok[0].TOPTUTAR | number:2}}">
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row my-0">
                         <div class="col-12 pt-5 px-1">
                             <button type="submit" class="btn btn-primary btn-block h-40" ng-disabled="InsertLock" ng-click="Insert()">Ekle</button>
@@ -474,31 +480,31 @@
         </div>
     </div>
     </div>
-        <!-- Son Yapılan Satışlar Detay-->
-        <div class="modal fade" id="MdlSiparisDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-lg modal-primary modal-center">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">X</span>
-                        </button>
-                        <h4 class="modal-title">Detay</h4>
-                    </div>
-                    <div class="modal-body py-0 pt-5 px-5">
-                        <div class="row">
-                            <div class="col-12 pb-10">
-                                <div id="TblSiparisDetay"></div>
-                            </div>
+    <!-- Son Yapılan Satışlar Detay-->
+    <div class="modal fade" id="MdlSiparisDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-primary modal-center">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Detay</h4>
+                </div>
+                <div class="modal-body py-0 pt-5 px-5">
+                    <div class="row">
+                        <div class="col-12 pb-10">
+                            <div id="TblSiparisDetay"></div>
                         </div>
-                        <div class="row pb-10">
-                            <div class="col-12">
-                                <button type="button" class="btn btn-primary btn-secondary btn-block" ng-click="BtnGeri()">Çıkış</button>
-                            </div>
+                    </div>
+                    <div class="row pb-10">
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary btn-secondary btn-block" ng-click="BtnGeri()">Çıkış</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     <!-- RenkBeden Modal -->
     <div class="modal fade" id="MdlRenkBeden" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-simple modal-primary modal-center px-10">

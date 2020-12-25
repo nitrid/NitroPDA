@@ -19,6 +19,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.IlkTarih = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.SonTarih = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.Barkod = "";
+        $scope._Barkod = "";
         $scope.Birim = "";
         $scope.Fiyat = "";
         $scope.DepoNo = UserParam.FiyatGor.DepoNo;
@@ -372,9 +373,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                 if(BarkodData.length > 0)
                 {          
                            
-                    $scope.Stok = BarkodData;
-                    console.log(BarkodData)
-                    
+                    $scope.Stok = BarkodData;                    
                     $scope.Barkod = $scope.Stok[0].BARKOD;
                     console.log($scope.Barkod)
                     $scope.StokKodu = $scope.Stok[0].KODU;
@@ -440,8 +439,16 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     }
                     db.GetDataQuery(SktGetir,function(pSktGetir)
                     {                        
-                        $scope.SktGetirListe = pSktGetir
-                        $scope.MaxSkt = $scope.SktGetirListe[0].SKT                  
+                        if(pSktGetir.length > 0)
+                        {
+                            $scope.SktGetirListe = pSktGetir
+                            console.log($scope.SktGetirListe)
+                            $scope.MaxSkt = $scope.SktGetirListe[0].SKT    
+                        }    
+                        else
+                        {
+                            console.log("Veri Yok (SKT)");
+                        }
                     });
                      //Son Alış Getir
                      db.GetData($scope.Firma,'TumSonAlisGetir',[BarkodData[0].KODU],function(data)
@@ -473,7 +480,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         });
                     }
                     BarkodFocus()
-                    
+                    $scope._Barkod = $scope.Barkod
+                    $scope.Barkod = "";
                 }
             });
         }
@@ -487,7 +495,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     function InsertData()
     {   
         console.log(InsertData)
-        if($scope.Barkod > 0)
+        console.log($scope._Barkod)
+        if($scope._Barkod > 0)
         {   
             var InsertData = 
             [
@@ -505,7 +514,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                 $scope.StokKodu,
                 $scope.RenkNo,
                 $scope.BedenNo,
-                $scope.Barkod,
+                $scope._Barkod,
                 $scope.BasilacakMiktar
             ];
             db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
@@ -527,8 +536,10 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         BarkodFocus();
                         
                         InsertAfterRefresh(EtiketData);
-                        alertify.alert("Etiket Yazdırıldı.");
-
+                        alertify.alert("Etiket Yazdırıldı.", function (pUyari) {
+                            BarkodFocus();
+                            pUyari.preventDefault();
+                        });
                     }
                     else
                     {   

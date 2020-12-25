@@ -384,6 +384,7 @@ angular.module('app.db', []).service('db',function($rootScope)
     this.ExecutePromiseTag = _ExecutePromiseTag;
     this.ExecutePromiseQuery = _ExecutePromiseQuery;
     this.SocketConnected = false;
+    this.Rota = {};
     // $APPLY YERİNE YAPILDI.
     this.SafeApply = function(pScope,pFn) 
     {
@@ -842,7 +843,6 @@ angular.module('app.db', []).service('db',function($rootScope)
     {
         if(pParam.BTYaziciTip == "CORDOVABT")
         {
-
             window.BTPrinter.connect(function()
             {                
                 window.BTPrinter.printTextSizeAlign(function(data)
