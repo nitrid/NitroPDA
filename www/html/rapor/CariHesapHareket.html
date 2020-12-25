@@ -98,6 +98,19 @@
                    <div id="TblCari"></div>                        
                </div>
            </div>
+           <div id="TbDetay" class="tab-pane">
+            <div class="row py-1">
+                <div class="col-4 px-1">
+                    <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            <div class="col-1 offset-5" ng-show="Loading" >
+                    <div class="loader vertical-align-middle loader-circle"></div>
+                </div>
+            <div class="row py-1 px-1" ng-show="TblLoading">           
+                <div id="TblCariFoyDetay"></div>                        
+            </div>
+        </div>
        </div>
    </div>
    <!-- Cari Listele Modal -->

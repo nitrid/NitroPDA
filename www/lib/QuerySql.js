@@ -1471,7 +1471,7 @@ var QuerySql =
     {
         query : "UPDATE SIPARISLER SET sip_teslim_miktar = sip_teslim_miktar + @sip_teslim_miktar WHERE sip_Guid = @sip_Guid " +  
                 "UPDATE BEDEN_HAREKETLERI SET BdnHar_TesMik = BdnHar_TesMik + @sip_teslim_miktar WHERE BdnHar_Har_uid = @sip_Guid AND BdnHar_BedenNo = @BdnHar_BedenNo",
-        param : ['sip_teslim_miktar:int','sip_Guid:string|50','BdnHar_BedenNo:int']
+        param : ['sip_teslim_miktar:float','sip_Guid:string|50','BdnHar_BedenNo:int']
     },
     StokHarDepoSiparisUpdate :
     {
@@ -1510,6 +1510,298 @@ var QuerySql =
         query:  "SELECT * FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid IN ((SELECT sip_Guid FROM SIPARISLER WHERE sip_evrakno_seri = @sip_evrakno_seri AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip)) AND BdnHar_Tipi = @BdnHar_Tipi",
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','BdnHar_Tipi'],
         type:   ['string|20','int','int','int']
+    },
+    // PROFORMA SİPARİS
+    ProformaSiparisInsert : 
+    {
+        query : "DECLARE @UIDTABLE table([pro_Guid] [uniqueidentifier]) " +
+                "INSERT INTO [PROFORMA_SIPARISLER] " +
+                "([pro_DBCno]" +
+                ",[pro_SpecRecNo]" +
+                ",[pro_iptal]" +
+                ",[pro_fileid]" +
+                ",[pro_hidden]" +
+                ",[pro_kilitli]" +
+                ",[pro_degisti]" +
+                ",[pro_checksum]" +
+                ",[pro_create_user]" +
+                ",[pro_create_date]" +
+                ",[pro_lastup_user]" +
+                ",[pro_lastup_date]" +
+                ",[pro_special1]" +
+                ",[pro_special2]" +
+                ",[pro_special3]" +
+                ",[pro_firmano]" +
+                ",[pro_subeno]" +
+                ",[pro_tarihi]" +
+                ",[pro_testarihi]" +
+                ",[pro_tipi]" +
+                ",[pro_cinsi]" +
+                ",[pro_evrakno_seri]" +
+                ",[pro_evrakno_sira]" +
+                ",[pro_satirno]" +
+                ",[pro_belge_no]" +
+                ",[pro_belge_tarihi]" +
+                ",[pro_saticikodu]" +
+                ",[pro_mustkodu]" +
+                ",[pro_stokkodu]" +
+                ",[pro_bfiyati]" +
+                ",[pro_miktar]" +
+                ",[pro_birim_pntr]" +
+                ",[pro_tesmiktari]" +
+                ",[pro_tutari]" +
+                ",[pro_iskonto1]" +
+                ",[pro_iskonto2]" +
+                ",[pro_iskonto3]" +
+                ",[pro_iskonto4]" +
+                ",[pro_iskonto5]" +
+                ",[pro_iskonto6]" +
+                ",[pro_masraf1]" +
+                ",[pro_masraf2]" +
+                ",[pro_masraf3]" +
+                ",[pro_masraf4]" +
+                ",[pro_vergipntr]" +
+                ",[pro_vergi]" +
+                ",[pro_masrafvergipntr]" +
+                ",[pro_masrafvergi]" +
+                ",[pro_opno]" +
+                ",[pro_aciklama]" +
+                ",[pro_aciklama2]" +
+                ",[pro_depono]" +
+                ",[pro_onaylayanKul_no]" +
+                ",[pro_vergisiz]" +
+                ",[pro_kapat]" +
+                ",[pro_promosyon_fl]" +
+                ",[pro_cari_sormerk]" +
+                ",[pro_stok_sormerk]" +
+                ",[pro_cari_grupno]" +
+                ",[pro_dovizcinsi]" +
+                ",[pro_dovizkuru]" +
+                ",[pro_altdovizkuru]" +
+                ",[pro_adresno]" +
+                ",[pro_teslimturu]" +
+                ",[pro_cagrilabilir_fl]" +
+                ",[pro_sip_uid]" +
+                ",[pro_isk_mas_1]" +
+                ",[pro_isk_mas_2]" +
+                ",[pro_isk_mas_3]" +
+                ",[pro_isk_mas_4]" +
+                ",[pro_isk_mas_5]" +
+                ",[pro_isk_mas_6]" +
+                ",[pro_isk_mas_7]" +
+                ",[pro_isk_mas_8]" +
+                ",[pro_isk_mas_9]" +
+                ",[pro_isk_mas_10]" +
+                ",[pro_sat_isk_mas1]" +
+                ",[pro_sat_isk_mas2]" +
+                ",[pro_sat_isk_mas3]" +
+                ",[pro_sat_isk_mas4]" +
+                ",[pro_sat_isk_mas5]" +
+                ",[pro_sat_isk_mas6]" +
+                ",[pro_sat_isk_mas7]" +
+                ",[pro_sat_isk_mas8]" +
+                ",[pro_sat_isk_mas9]" +
+                ",[pro_sat_isk_mas10]" +
+                ",[pro_Exp_Imp_Kodu]" +
+                ",[pro_karoani]" +
+                ",[pro_durumu]" +
+                ",[pro_stal_uid]" +
+                ",[pro_planlananmiktar]" +
+                ",[pro_teklif_uid]" +
+                ",[pro_parti_kodu]" +
+                ",[pro_lot_no]" +
+                ",[pro_projekodu]" +
+                ",[pro_fiyat_liste_no]" +
+                ",[pro_Otv_Pntr]" +
+                ",[pro_Otv_Vergi]" +
+                ",[pro_otvtutari]" +
+                ",[pro_OtvVergisiz_Fl]" +
+                ",[pro_paket_kod]" +
+                ",[pro_Rez_uid]" +
+                ",[pro_harekettipi]" +
+                ",[pro_yetkili_uid]" +
+                ",[pro_kapatmanedenkod]" +
+                ",[pro_gecerlilik_tarihi]" +
+                ",[pro_onodeme_evrak_tip]" +
+                ",[pro_onodeme_evrak_seri]" +
+                ",[pro_onodeme_evrak_sira]" +
+                ",[pro_rezervasyon_miktari]" +
+                ",[pro_rezerveden_teslim_edilen]" +
+                ",[pro_HareketGrupKodu1]" +
+                ",[pro_HareketGrupKodu2]" +
+                ",[pro_HareketGrupKodu3]" +
+                ",[pro_Olcu1] " +
+                ",[pro_Olcu2] " +
+                ",[pro_Olcu3] " +
+                ",[pro_Olcu4] " +
+                ",[pro_Olcu5] " +
+                ",[pro_FormulMiktarNo] " +
+                ",[pro_FormulMiktar] " +
+                ") " +
+                "OUTPUT INSERTED.[pro_Guid] INTO @UIDTABLE " +
+                "VALUES ( " +
+                "0							                    --<pro_DBCno, smallint,> \n" +
+                ",0							                    --<pro_SpecRECno, int,> \n" +
+                ",0							                    --<pro_iptal, bit,> \n" +
+                ",22						                    --<pro_fileid, smallint,> \n" +
+                ",0							                    --<pro_hidden, bit,> \n" +
+                ",0							                    --<pro_kilitli, bit,> \n" +
+                ",0							                    --<pro_degisti, bit,> \n" +
+                ",0							                    --<pro_checksum, int,> \n" +
+                ",@pro_create_user			                    --<pro_create_user, smallint,> \n" +
+                ",CONVERT(VARCHAR(10),GETDATE(),112)		    --<pro_create_date, datetime,> \n" +
+                ",@pro_lastup_user			                    --<pro_lastup_user, smallint,> \n" +
+                ",CONVERT(VARCHAR(10),GETDATE(),112)		    --<pro_lastup_date, datetime,> \n" +
+                ",''							                --<pro_special1, varchar(4),> \n" +
+                ",''							                --<pro_special2, varchar(4),> \n" +
+                ",''							                --<pro_special3, varchar(4),> \n" +
+                ",@pro_firmano					                --<pro_firmano, int,> \n" +
+                ",@pro_subeno						            --<pro_subeno, int,> \n" +
+                ",@pro_tarih					                --<pro_tarih, datetime,> \n" +
+                ",@pro_teslim_tarih			                    --<pro_teslim_tarih, datetime,> \n" +
+                ",@pro_tip					                    --<pro_tip, tinyint,> \n" +
+                ",@pro_cins					                    --<pro_cins, tinyint,> \n" +
+                ",@pro_evrakno_seri			                    --<pro_evrakno_seri, varchar(4),> \n" +
+                ",@pro_evrakno_sira			                    --<pro_evrakno_sira, int,> \n" +
+                ",(SELECT ISNULL(MAX(pro_satirno),-1) + 1 AS SATIRNO FROM PROFORMA_SIPARISLER WHERE pro_evrakno_seri = @pro_evrakno_seri AND pro_evrakno_sira = @pro_evrakno_sira AND pro_tipi = @pro_tip AND pro_cinsi = @pro_cins)				                    --<pro_satirno, int,> \n" +
+                ",@pro_belgeno				                    --<pro_belgeno, varchar(15),> \n" +
+                ",@pro_belge_tarih			                    --<pro_belge_tarih, datetime,> \n" +
+                ",@pro_satici_kod				                --<pro_satici_kod, varchar(25),> \n" +
+                ",@pro_musteri_kod			                    --<pro_musteri_kod, varchar(25),> \n" +
+                ",@pro_stok_kod				                    --<pro_stok_kod, varchar(25),> \n" +
+                ",@pro_b_fiyat				                    --<pro_b_fiyat, float,> \n" +
+                ",@pro_miktar					                --<pro_miktar, float,> \n" +
+                ",@pro_birim_pntr				                --<pro_birim_pntr, tinyint,> \n" +
+                ",@pro_teslim_miktar			                --<pro_teslim_miktar, float,> \n" +
+                ",@pro_tutar					                --<pro_tutar, float,> \n" +
+                ",@pro_iskonto_1				                --<pro_iskonto_1, float,> \n" +
+                ",@pro_iskonto_2				                --<pro_iskonto_2, float,> \n" +
+                ",@pro_iskonto_3				                --<pro_iskonto_3, float,> \n" +
+                ",@pro_iskonto_4				                --<pro_iskonto_4, float,> \n" +
+                ",@pro_iskonto_5				                --<pro_iskonto_5, float,> \n" +
+                ",@pro_iskonto_6				                --<pro_iskonto_6, float,> \n" +
+                ",0							                    --<pro_masraf_1, float,> \n" +
+                ",0							                    --<pro_masraf_2, float,> \n" +
+                ",0							                    --<pro_masraf_3, float,> \n" +
+                ",0							                    --<pro_masraf_4, float,> \n" +
+                ",@pro_vergi_pntr				                --<pro_vergi_pntr, tinyint,> \n" +
+                ",@pro_vergi					                --<pro_vergi, float,> \n" +
+                ",0							                    --<pro_masvergi_pntr, tinyint,> \n" +
+                ",0							                    --<pro_masvergi, float,> \n" +
+                ",@pro_opno					                    --<pro_opno, int,> \n" +
+                ",@pro_aciklama				                    --<pro_aciklama, varchar(40),> \n" +
+                ",''							                --<pro_aciklama2, varchar(40),> \n" +
+                ",@pro_depono					                --<pro_depono, int,> \n" +
+                ",@pro_OnaylayanKulNo					        --<pro_OnaylayanKulNo, smallint,> \n" +
+                ",0							                    --<pro_vergisiz_fl, bit,> \n" +
+                ",0							                    --<pro_kapat_fl, bit,> \n" +
+                ",0							                    --<pro_kapat_fl, bit,> \n" +
+                ",@pro_cari_sormerk			                    --<pro_cari_sormerk, varchar(25),> \n" +
+                ",@pro_stok_sormerk			                    --<pro_stok_sormerk, varchar(25),> \n" +
+                ",0							                    --<pro_cari_grupno, tinyint,> \n" +
+                ",@pro_doviz_cinsi			                    --<pro_doviz_cinsi, tinyint,> \n" +
+                ",@pro_doviz_kuru				                --<pro_doviz_kuru, float,> \n" +
+                ",@pro_alt_doviz_kuru			                --<pro_alt_doviz_kuru, float,> \n" +
+                ",@pro_adresno							        --<pro_adresno, int,> \n" +
+                ",''							                --<pro_teslimturu, varchar(4),> \n" +
+                ",1							                    --<pro_cagrilabilir_fl, bit,> \n" +
+                ",cast(cast(0 as binary) as uniqueidentifier)	--<pro_prosip_uid> \n" +
+                ",@pro_iskonto1				                    --<pro_iskonto1, tinyint,> \n" +
+                ",@pro_iskonto2				                    --<pro_iskonto2, tinyint,> \n" +
+                ",@pro_iskonto3				                    --<pro_iskonto3, tinyint,> \n" +
+                ",@pro_iskonto4				                    --<pro_iskonto4, tinyint,> \n" +
+                ",@pro_iskonto5				                    --<pro_iskonto5, tinyint,> \n" +
+                ",@pro_iskonto6				                    --<pro_iskonto6, tinyint,> \n" +
+                ",1							                    --<pro_masraf1, tinyint,> \n" +
+                ",1							                    --<pro_masraf2, tinyint,> \n" +
+                ",1							                    --<pro_masraf3, tinyint,> \n" +
+                ",1							                    --<pro_masraf4, tinyint,> \n" +
+                ",@pro_isk1					                    --<pro_isk1, bit,> \n" +
+                ",@pro_isk2					                    --<pro_isk2, bit,> \n" +
+                ",@pro_isk3					                    --<pro_isk3, bit,> \n" +
+                ",@pro_isk4					                    --<pro_isk4, bit,> \n" +
+                ",@pro_isk5					                    --<pro_isk5, bit,> \n" +
+                ",@pro_isk6					                    --<pro_isk6, bit,> \n" +
+                ",0							                    --<pro_mas1, bit,> \n" +
+                ",0							                    --<pro_mas2, bit,> \n" +
+                ",0							                    --<pro_mas3, bit,> \n" +
+                ",0							                    --<pro_mas4, bit,> \n" +
+                ",''							                --<pro_Exp_Imp_Kodu, varchar(25),> \n" +
+                ",0							                    --<pro_kar_orani, float,> \n" +
+                ",0							                    --<pro_durumu, tinyint,> \n" +
+                ",cast(cast(0 as binary) as uniqueidentifier)	--<pro_stal_uid> \n" +
+                ",0							                    --<pro_planlananmiktar, float,> \n" +
+                ",cast(cast(0 as binary) as uniqueidentifier)	--<pro_teklif_uid> \n" +
+                ",@pro_parti_kodu					            --<pro_parti_kodu, varchar(25),> \n" +
+                ",@pro_lot_no						            --<pro_lot_no, int,> \n" +
+                ",@pro_projekodu					            --<pro_projekodu, varchar(25),> \n" +
+                ",@pro_fiyat_liste_no					        --<pro_fiyat_liste_no, int,> \n" +
+                ",0							                    --<pro_Otv_Pntr, tinyint,> \n" +
+                ",0							                    --<pro_Otv_Vergi, float,> \n" +
+                ",0							                    --<pro_otvtutari, float,> \n" +
+                ",0							                    --<pro_OtvVergisiz_Fl, tinyint,> \n" +
+                ",''							                --<pro_paket_kod, varchar(25),> \n" +
+                ",cast(cast(0 as binary) as uniqueidentifier)	--<pro_Rez_uid> \n" +
+                ",0                                             --<pro_harekettipi, tinyint,> \n" +
+                ",cast(cast(0 as binary) as uniqueidentifier)	--<pro_yetkili_uid> \n" +
+                ",''							                --<pro_kapatmanedenkod> \n" +
+                ",CONVERT(VARCHAR(10),GETDATE(),112)			--<pro_gecerlilik_tarihi> \n" +
+                ",0							                    --<pro_onodeme_evrak_tip> \n" +
+                ",''							                --<pro_onodeme_evrak_seri> \n" +
+                ",0							                    --<pro_onodeme_evrak_sira> \n" +
+                ",@pro_rezervasyon_miktari 				        --<pro_rezervasyon_miktari> \n" +
+                ",@pro_rezerveden_teslim_edilen			        --<pro_rezerveden_teslim_edilen> \n" +
+                ",''							                --<pro_HareketGrupKodu1> \n" +
+                ",''							                --<pro_HareketGrupKodu2> \n" +
+                ",''							                --<pro_HareketGrupKodu3> \n" +
+                ",0							                    --<p> \n" +
+                ",0							                    --<p> \n" +
+                ",0							                    --<p> \n" +
+                ",0							                    --<p> \n" +
+                ",0							                    --<p> \n" +
+                ",0							                    --<p> \n" +
+                ",0							                    --<p> \n" +
+                ") " +
+                "SELECT [pro_Guid] FROM @UIDTABLE ",
+        param : ['pro_create_user:int','pro_lastup_user:int','pro_firmano:int','pro_subeno:int','pro_tarih:date','pro_teslim_tarih:date','pro_tip:int',
+                 'pro_cins:int','pro_evrakno_seri:string|4','pro_evrakno_sira:int','pro_belgeno:string|15','pro_belge_tarih:date','pro_satici_kod:string|25',
+                 'pro_musteri_kod:string|25','pro_stok_kod:string|25','pro_b_fiyat:float','pro_miktar:float','pro_birim_pntr:int','pro_teslim_miktar:float',
+                 'pro_tutar:float','pro_iskonto_1:float','pro_iskonto_2:float','pro_iskonto_3:float','pro_iskonto_4:float','pro_iskonto_5:float',
+                 'pro_iskonto_6:float','pro_vergi_pntr:int','pro_vergi:float','pro_opno:int','pro_aciklama:string|40','pro_depono:int','pro_OnaylayanKulNo:int',
+                 'pro_cari_sormerk:string|25','pro_stok_sormerk:string|25','pro_doviz_cinsi:int','pro_doviz_kuru:float','pro_alt_doviz_kuru:float',
+                 'pro_adresno:int','pro_iskonto1:int','pro_iskonto2:int','pro_iskonto3:int','pro_iskonto4:int','pro_iskonto5:int','pro_iskonto6:int',
+                 'pro_isk1:bit','pro_isk2:bit','pro_isk3:bit','pro_isk4:bit','pro_isk5:bit','pro_isk6:bit','pro_parti_kodu:string|25','pro_lot_no:int',
+                 'pro_projekodu:string|25','pro_fiyat_liste_no:int','pro_rezervasyon_miktari:float','pro_rezerveden_teslim_edilen:float']
+    },
+    MaxProformaSiparisSira : 
+    {
+        query : "SELECT ISNULL(MAX(pro_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM PROFORMA_SIPARISLER " +
+                "WHERE pro_evrakno_seri=@pro_evrakno_seri AND pro_tipi=@pro_tip AND pro_cinsi=@pro_cins " ,
+        param : ['pro_evrakno_seri','pro_tip','pro_cins'],
+        type : ['string|20','int','int']
+    },
+    ProformaSiparisGetir:
+    {
+        query:  "SELECT ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = pro_stokkodu),'') AS ADI, " +
+                "(SELECT dbo.fn_VergiYuzde (pro_vergipntr)) AS VERGIPNTR, " +
+                "* FROM PROFORMA_SIPARISLER WHERE pro_evrakno_seri = @sip_evrakno_seri AND " +
+                "pro_evrakno_sira = @sip_evrakno_sira and pro_tipi = @sip_tip and pro_cinsi = @sip_cins " +
+                "ORDER BY pro_satirno ASC",
+        param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
+        type:   ['string|20','int','int','int']
+    },
+    ProformaSiparisEvrDelete:
+    {
+        query:  "DELETE FROM PROFORMA_SIPARISLER WHERE pro_evrakno_seri = @sip_evrakno_seri AND " + 
+                "pro_evrakno_sira = @sip_evrakno_sira and pro_tipi = @sip_tip and pro_cinsi = @sip_cins",
+        param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
+        type:   ['string|20','int','int','int']
+    },
+    ProformaSiparisSatirDelete:
+    {
+        query:  "DELETE FROM PROFORMA_SIPARISLER WHERE pro_Guid = @sip_Guid",
+        param:  ['sip_Guid'],
+        type:   ['string|50']
     },
     //Beden Hareket
     BedenHarInsert :
@@ -3546,7 +3838,7 @@ var QuerySql =
     //UrunGirisCikis
     IsEmriGetir : 
     {
-        query : "select is_Kod as KODU,is_Ismi AS ADI,CONVERT(NVARCHAR,is_BaslangicTarihi,104) AS TARIH FROM ISEMIRLERI WHERE is_EmriDurumu ='1' AND " +
+        query : "select is_Kod as KODU,is_Ismi AS ADI,CONVERT(NVARCHAR,is_BaslangicTarihi,104) AS TARIH FROM ISEMIRLERI WHERE  " +
         "((ISEMIRLERI.is_Kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((ISEMIRLERI.is_Ismi LIKE  @ADI + '%' ) OR (@ADI = ''))",
         param : ['KODU','ADI'],
         type : ['string|25','string|127']
@@ -3556,10 +3848,11 @@ var QuerySql =
         query : "SELECT upl_kodu AS KODU ,upl_Guid AS GUID ," +
         " (SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu) AS ADI," +
         " upl_miktar  AS MIKTAR," +
-        "upl_parti_kod AS PARTI," +
-        "upl_lotno AS LOT," +
+        "ISNULL((Select  top 1 pl_partikodu from PARTILOT WHERE pl_stokkodu = upl_kodu  and ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,14,GETDATE(),pl_partikodu,pl_lotno)),0) > 0 order by pl_son_kullanim_tar asc),'')  AS PARTI," +
+        "0 AS LOT," +
         "upl_miktar - upl_special3 AS KALAN, " +
         "upl_isemri  AS ISEMRI, " +
+        "upl_uretim_tuket AS TIP, " +
         " CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
         "FROM URETIM_MALZEME_PLANLAMA WHERE upl_depno = 14 and upl_uretim_tuket = 0 and    upl_isemri LIKE @upl_isemri + '%' AND (upl_miktar - upl_special3) > 0" ,
         param : ['upl_isemri'],
@@ -3572,6 +3865,33 @@ var QuerySql =
         query : "UPDATE URETIM_MALZEME_PLANLAMA  set upl_special3 = @upl_special3 where upl_Guid = @upl_Guid ",
         param : ['upl_special3','upl_Guid'],
         type : ['string|4','string|50']
+    },
+    PlanliUretimListesiGetir : 
+    {
+        query : "SELECT upl_kodu AS KODU ,upl_Guid AS GUID ," +
+        " (SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu) AS ADI," +
+        " upl_miktar  AS MIKTAR," +
+        "ISNULL((SELECT  TOP 1 sth_parti_kodu FROM STOK_HAREKETLERI WHERE sth_stok_kod = upl_kodu AND sth_belge_no = upl_isemri AND sth_evraktip = 2),'') AS PARTI," +
+        "ISNULL((SELECT  TOP 1 sth_lot_no FROM STOK_HAREKETLERI WHERE sth_stok_kod = upl_kodu AND sth_belge_no = upl_isemri AND sth_evraktip = 2),0) AS LOT," +
+        "upl_isemri  AS ISEMRI, " +
+        "upl_uretim_tuket AS TIP, " +
+        " CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
+        "FROM URETIM_MALZEME_PLANLAMA WHERE    upl_isemri = @upl_isemri " ,
+        param : ['upl_isemri'],
+        type : ['string|50']
+    },
+    PlanliUretimStokHarGetir : 
+    {
+        query:  "SELECT CONVERT(VARCHAR(10),GETDATE(),112) AS sth_kur_tarihi , " +
+                "ISNULL((SELECT sto_isim from STOKLAR WHERE sto_kod=sth_stok_kod),'') AS ADI , " +
+                "CASE WHEN sth_tutar <> 0 AND sth_miktar <> 0 THEN ROUND((sth_tutar / sth_miktar),2) ELSE 0 END AS FIYAT, " +
+                "sth_miktar AS MIKTAR , " +
+                "sth_miktar2 AS MIKTAR2 , " +
+                "CASE sth_tip WHEN 0 THEN 'GIRIS' WHEN 1 THEN 'CIKIS' END AS HAREKETTIP, " +
+                "* FROM STOK_HAREKETLERI " +
+                "WHERE sth_evrakno_seri=@sth_evrakno_seri AND sth_evrakno_sira=@sth_evrakno_sira AND sth_evraktip IN(0,12) ORDER BY sth_satirno desc" ,
+        param:   ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
+        type:    ['string|20','int','int']
     },
     // Konsinye Hareket
     KonsinyeHarInsert :

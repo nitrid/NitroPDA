@@ -15,3 +15,10 @@ npm install adm-zip
 npm install md5
 npm install fast-xml-parser
 npm install soap
+
+socket.io v3 =>
+{
+    var io = require('socket.io')({cors: {origin: "*"}});
+
+    www/ socket.io.js => v3 
+}
