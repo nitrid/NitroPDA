@@ -1669,7 +1669,7 @@ var QuerySql =
                 ",@pro_satici_kod				                --<pro_satici_kod, varchar(25),> \n" +
                 ",@pro_musteri_kod			                    --<pro_musteri_kod, varchar(25),> \n" +
                 ",@pro_stok_kod				                    --<pro_stok_kod, varchar(25),> \n" +
-                ",@pro_b_fiyat				                    --<pro_b_fiyat, float,> \n" +
+                ",@pro_bfiyati				                    --<pro_bfiyati, float,> \n" +
                 ",@pro_miktar					                --<pro_miktar, float,> \n" +
                 ",@pro_birim_pntr				                --<pro_birim_pntr, tinyint,> \n" +
                 ",@pro_teslim_miktar			                --<pro_teslim_miktar, float,> \n" +
@@ -1765,7 +1765,7 @@ var QuerySql =
                 "SELECT [pro_Guid] FROM @UIDTABLE ",
         param : ['pro_create_user:int','pro_lastup_user:int','pro_firmano:int','pro_subeno:int','pro_tarih:date','pro_teslim_tarih:date','pro_tip:int',
                  'pro_cins:int','pro_evrakno_seri:string|4','pro_evrakno_sira:int','pro_belgeno:string|15','pro_belge_tarih:date','pro_satici_kod:string|25',
-                 'pro_musteri_kod:string|25','pro_stok_kod:string|25','pro_b_fiyat:float','pro_miktar:float','pro_birim_pntr:int','pro_teslim_miktar:float',
+                 'pro_musteri_kod:string|25','pro_stok_kod:string|25','pro_bfiyati:float','pro_miktar:float','pro_birim_pntr:int','pro_teslim_miktar:float',
                  'pro_tutar:float','pro_iskonto_1:float','pro_iskonto_2:float','pro_iskonto_3:float','pro_iskonto_4:float','pro_iskonto_5:float',
                  'pro_iskonto_6:float','pro_vergi_pntr:int','pro_vergi:float','pro_opno:int','pro_aciklama:string|40','pro_depono:int','pro_OnaylayanKulNo:int',
                  'pro_cari_sormerk:string|25','pro_stok_sormerk:string|25','pro_doviz_cinsi:int','pro_doviz_kuru:float','pro_alt_doviz_kuru:float',
@@ -1802,6 +1802,34 @@ var QuerySql =
         query:  "DELETE FROM PROFORMA_SIPARISLER WHERE pro_Guid = @sip_Guid",
         param:  ['sip_Guid'],
         type:   ['string|50']
+    },
+    ProformaSiparisUpdate:
+    {
+        query:  "UPDATE PROFORMA_SIPARISLER " +
+                "SET pro_bfiyati= @pro_bfiyati " + 
+                ",pro_miktar= @pro_miktar " +
+                ",pro_tutari= @pro_tutari " +
+                ",pro_vergi = (@pro_tutari - (@pro_iskonto1 + @pro_iskonto2 + @pro_iskonto3 + @pro_iskonto4 + @pro_iskonto5))  * (SELECT [dbo].[fn_VergiYuzde] (@pro_vergipntr) / 100) " +
+                ",pro_iskonto1=@pro_iskonto1 " +
+                ",pro_iskonto2=@pro_iskonto2 " +
+                ",pro_iskonto3=@pro_iskonto3 " +
+                ",pro_iskonto4=@pro_iskonto4 " +
+                ",pro_iskonto5=@pro_iskonto5 " +
+                ",pro_iskonto6=@pro_iskonto6 " +
+                ",pro_sat_isk_mas1=@pro_sat_isk_mas1 " +
+                ",pro_sat_isk_mas2=@pro_sat_isk_mas2 " +
+                ",pro_sat_isk_mas3=@pro_sat_isk_mas3 " +
+                ",pro_sat_isk_mas4=@pro_sat_isk_mas4 " +
+                ",pro_sat_isk_mas5=@pro_sat_isk_mas5 " +
+                ",pro_sat_isk_mas6=@pro_sat_isk_mas6 " +
+                ",pro_sat_isk_mas7= 0 " +
+                ",pro_sat_isk_mas8= 0 " +
+                ",pro_sat_isk_mas9= 0 " +
+                ",pro_sat_isk_mas10= 0 " +
+                "WHERE pro_Guid = @pro_Guid",
+        param : ['pro_bfiyati:float','pro_miktar:float','pro_tutari:float','pro_vergipntr:int','pro_iskonto1:float','pro_iskonto2:float','pro_iskonto3:float',
+        'pro_iskonto4:float','pro_iskonto5:float','pro_iskonto6:float','pro_sat_isk_mas1:bit','pro_sat_isk_mas2:bit','pro_sat_isk_mas3:bit','pro_sat_isk_mas4:bit',
+        'pro_sat_isk_mas5:bit','pro_sat_isk_mas6:bit','pro_Guid:string|50']
     },
     //Beden Hareket
     BedenHarInsert :

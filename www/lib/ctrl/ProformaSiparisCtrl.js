@@ -590,7 +590,7 @@ function ProformaSiparisCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.SiparisListe = pData;
         console.log($scope.SiparisListe)
-        $("#TblIslem").jsGrid({data : $scope.SiparisListe});    
+        $("#TblIslem").jsGrid({data : $scope.SiparisListe});
         $scope.BtnTemizle();
         DipToplamHesapla();
         ToplamMiktarHesapla();
@@ -696,60 +696,34 @@ function ProformaSiparisCtrl($scope,$window,$timeout,db,$filter)
             return (parseInt(pRenk) - 1) * 40 + 1;
         }
     }
-    // function UpdateData(pData) 
-    // {
-    //     db.ExecuteTag($scope.Firma,'SiparisUpdate',pData.Param,function(InsertResult)
-    //     {
-    //         if(typeof(InsertResult.result.err) == 'undefined')
-    //         {
-    //             db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(SiparisData)
-    //             {
-    //                 if(pData.BedenPntr != 0 && pData.RenkPntr != 0)
-    //                 {
-    //                     let UpdateStatus = false;
-    //                     angular.forEach($scope.BedenHarListe,function(value)
-    //                     {
-    //                         if(value.BdnHar_Har_uid == pData.Guid && value.BdnHar_BedenNo == Kirilim(pData.BedenPntr,pData.RenkPntr))
-    //                         {
-    //                             let Data =
-    //                             [
-    //                                 value.BdnHar_Tipi,      // TİPİ
-    //                                 value.BdnHar_Har_uid,   // Guid
-    //                                 value.BdnHar_BedenNo,   // BEDEN NO
-    //                                 pData.Miktar, // MİKTAR
-    //                                 0, // REZERVASYON MİKTARI
-    //                                 0, // REZERVASYON TESLİM MİKTARI
-    //                                 '', // SERİ
-    //                                 0,  // SIRA
-    //                                 0,  // TİP
-    //                                 0   // SATIRNO
-    //                             ];
-    //                             UpdateStatus = true;
-    //                             BedenHarUpdate(Data);
-    //                         }                            
-    //                     });
-
-    //                     if(!UpdateStatus)
-    //                     {
-    //                         BedenHarInsert(pData.Guid);
-    //                     }
-    //                 }                        
-    //                 InsertAfterRefresh(SiparisData);
-    //                 FisData(SiparisData);
-    //                 $scope.InsertLock = false;
-
-    //                 if(UserParam.Sistem.Titresim == 1)
-    //                 {
-    //                     Confirmation();
-    //                 }                
-    //             });
-    //         }
-    //         else
-    //         {
-    //             console.log(InsertResult.result.err);
-    //         }
-    //     });
-    // }
+     function UpdateData(pData) 
+     {
+        console.log(1)
+        db.ExecuteTag($scope.Firma,'ProformaSiparisUpdate',pData.Param,function(InsertResult)
+        {
+            console.log(pData.Param)
+            console.log(InsertResult)
+            if(typeof(InsertResult.result.err) == 'undefined')
+            {
+                console.log(1)
+                db.GetData($scope.Firma,'ProformaSiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,2],function(SiparisData)
+                {
+                    console.log(SiparisData)           
+                    InsertAfterRefresh(SiparisData);
+                    FisData(SiparisData);
+                    $scope.InsertLock = false
+                    if(UserParam.Sistem.Titresim == 1)
+                    {
+                        Confirmation();
+                    }                
+                });
+            }
+            else
+            {
+                 console.log(InsertResult.result.err);
+            }
+        });
+     }
     function StokBarkodGetir(pBarkod)
     {
         // KİLO BARKODU KONTROLÜ - RECEP KARACA 10.09.2019
@@ -1154,7 +1128,7 @@ function ProformaSiparisCtrl($scope,$window,$timeout,db,$filter)
                 console.log($scope.CariAdi)
                 for(let i=0; i < pData.length; i++)
                 {
-                    $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,17) + "  " + SpaceLength(pData[i].BIRIM + " " + pData[i].BIRIMADI,9) + " " + SpaceLength(parseFloat(pData[i].FIYAT.toFixed(2)),7) + " " + SpaceLength(parseFloat(pData[i].TUTAR.toFixed(2)),9) + "\n";
+                    $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,17) + "  " + SpaceLength(pData[i].BIRIM + " " + pData[i].BIRIMADI,9) + " " + SpaceLength(parseFloat(pData[i].FIYAT,7)) + " " + SpaceLength(parseFloat(pData[i].TUTAR,9)) + "\n";
                 } 
                 console.log(pData)
            } 
@@ -1463,8 +1437,8 @@ function ProformaSiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnDuzenle = function()
     {
-        $scope.MiktarEdit = $scope.SiparisListe[$scope.IslemListeSelectedIndex].sip_miktar;
-        $scope.FiyatEdit = $scope.SiparisListe[$scope.IslemListeSelectedIndex].sip_b_fiyat;
+        $scope.MiktarEdit = $scope.SiparisListe[$scope.IslemListeSelectedIndex].pro_miktar;
+        $scope.FiyatEdit = $scope.SiparisListe[$scope.IslemListeSelectedIndex].pro_bfiyati;
 
         $("#MdlDuzenle").modal('show');
     }
@@ -1492,31 +1466,32 @@ function ProformaSiparisCtrl($scope,$window,$timeout,db,$filter)
         {   
             for(i = 0;i < $scope.SiparisListe.length;i++)
             {
-                $scope.SiparisListe[i].sip_iskonto_1 = $scope.SiparisListe[i].sip_tutar * ($scope.IskYuzde1 / 100);
-                $scope.SiparisListe[i].sip_iskonto_2 = ($scope.SiparisListe[i].sip_tutar - $scope.SiparisListe[i].sip_iskonto_1) * ($scope.IskYuzde2 / 100);
-                $scope.SiparisListe[i].sip_iskonto_3 = ($scope.SiparisListe[i].sip_tutar - ($scope.SiparisListe[i].sip_iskonto_1 + $scope.SiparisListe[i].sip_iskonto_2)) * ($scope.IskYuzde3 / 100);
-                $scope.SiparisListe[i].sip_iskonto_4 = ($scope.SiparisListe[i].sip_tutar - ($scope.SiparisListe[i].sip_iskonto_1 + $scope.SiparisListe[i].sip_iskonto_2 + $scope.SiparisListe[i].sip_iskonto_3)) * ($scope.IskYuzde4 / 100);
-                $scope.SiparisListe[i].sip_iskonto_5 = ($scope.SiparisListe[i].sip_tutar - ($scope.SiparisListe[i].sip_iskonto_1 + $scope.SiparisListe[i].sip_iskonto_2 + $scope.SiparisListe[i].sip_iskonto_3 + $scope.SiparisListe[i].sip_iskonto_4)) * ($scope.IskYuzde5 / 100);
+                $scope.SiparisListe[i].pro_iskonto1 = $scope.SiparisListe[i].pro_tutari * ($scope.IskYuzde1 / 100);
+                $scope.SiparisListe[i].pro_iskonto2 = ($scope.SiparisListe[i].pro_tutari - $scope.SiparisListe[i].pro_iskonto1) * ($scope.IskYuzde2 / 100);
+                $scope.SiparisListe[i].pro_iskonto3 = ($scope.SiparisListe[i].pro_tutari - ($scope.SiparisListe[i].pro_iskonto1 + $scope.SiparisListe[i].pro_iskonto2)) * ($scope.IskYuzde3 / 100);
+                $scope.SiparisListe[i].pro_iskonto4 = ($scope.SiparisListe[i].pro_tutari - ($scope.SiparisListe[i].pro_iskonto1 + $scope.SiparisListe[i].pro_iskonto2 + $scope.SiparisListe[i].pro_iskonto3)) * ($scope.IskYuzde4 / 100);
+                $scope.SiparisListe[i].pro_iskonto5 = ($scope.SiparisListe[i].pro_tutari - ($scope.SiparisListe[i].pro_iskonto1 + $scope.SiparisListe[i].pro_iskonto2 + $scope.SiparisListe[i].pro_iskonto3 + $scope.SiparisListe[i].pro_iskonto4)) * ($scope.IskYuzde5 / 100);
 
-                $scope.FiyatEdit = $scope.SiparisListe[i].sip_b_fiyat;
-                $scope.MiktarEdit = $scope.SiparisListe[i].sip_miktar;
+                $scope.FiyatEdit = $scope.SiparisListe[i].pro_bfiyati;
+                $scope.MiktarEdit = $scope.SiparisListe[i].pro_miktar;
 
                 $scope.Update(i);
             }
-            
         }
         else
         {
             let i = $scope.IslemListeSelectedIndex;
 
-            $scope.SiparisListe[i].sip_iskonto_1 = $scope.SiparisListe[i].sip_tutar * ($scope.IskYuzde1 / 100);
-            $scope.SiparisListe[i].sip_iskonto_2 = ($scope.SiparisListe[i].sip_tutar - $scope.SiparisListe[i].sip_iskonto_1) * ($scope.IskYuzde2 / 100);
-            $scope.SiparisListe[i].sip_iskonto_3 = ($scope.SiparisListe[i].sip_tutar - ($scope.SiparisListe[i].sip_iskonto_1 + $scope.SiparisListe[i].sip_iskonto_2)) * ($scope.IskYuzde3 / 100);
-            $scope.SiparisListe[i].sip_iskonto_4 = ($scope.SiparisListe[i].sip_tutar - ($scope.SiparisListe[i].sip_iskonto_1 + $scope.SiparisListe[i].sip_iskonto_2 + $scope.SiparisListe[i].sip_iskonto_3)) * ($scope.IskYuzde4 / 100);
-            $scope.SiparisListe[i].sip_iskonto_5 = ($scope.SiparisListe[i].sip_tutar - ($scope.SiparisListe[i].sip_iskonto_1 + $scope.SiparisListe[i].sip_iskonto_2 + $scope.SiparisListe[i].sip_iskonto_3 + $scope.SiparisListe[i].sip_iskonto_4)) * ($scope.IskYuzde5 / 100);
-            $scope.FiyatEdit = $scope.SiparisListe[i].sip_b_fiyat;
-            $scope.MiktarEdit = $scope.SiparisListe[i].sip_miktar;
-
+            $scope.SiparisListe[i].pro_iskonto1 = $scope.SiparisListe[i].pro_tutari * ($scope.IskYuzde1 / 100);
+            $scope.SiparisListe[i].pro_iskonto2 = ($scope.SiparisListe[i].pro_tutari - $scope.SiparisListe[i].pro_iskonto1) * ($scope.IskYuzde2 / 100);
+            $scope.SiparisListe[i].pro_iskonto3 = ($scope.SiparisListe[i].pro_tutari - ($scope.SiparisListe[i].pro_iskonto1 + $scope.SiparisListe[i].pro_iskonto2)) * ($scope.IskYuzde3 / 100);
+            $scope.SiparisListe[i].pro_iskonto4 = ($scope.SiparisListe[i].pro_tutari - ($scope.SiparisListe[i].pro_iskonto1 + $scope.SiparisListe[i].pro_iskonto2 + $scope.SiparisListe[i].pro_iskonto3)) * ($scope.IskYuzde4 / 100);
+            $scope.SiparisListe[i].pro_iskonto5 = ($scope.SiparisListe[i].pro_tutari - ($scope.SiparisListe[i].pro_iskonto1 + $scope.SiparisListe[i].pro_iskonto2 + $scope.SiparisListe[i].pro_iskonto3 + $scope.SiparisListe[i].pro_iskonto4)) * ($scope.IskYuzde5 / 100);
+            $scope.FiyatEdit = $scope.SiparisListe[i].pro_bfiyati;
+            $scope.MiktarEdit = $scope.SiparisListe[i].pro_miktar;
+            console.log($scope.SiparisListe[i].pro_iskonto1)
+            console.log($scope.FiyatEdit)
+            console.log($scope.MiktarEdit)
             $scope.Update(i);
         }
 
@@ -1843,31 +1818,31 @@ function ProformaSiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             for(i = 0;i < $scope.SiparisListe.length;i++)
             {
-                $scope.IskTplTutar += $scope.SiparisListe[i].sip_tutar;
-                $scope.IskTutar1 += $scope.SiparisListe[i].sip_iskonto_1;
+                $scope.IskTplTutar += $scope.SiparisListe[i].pro_tutari;
+                $scope.IskTutar1 += $scope.SiparisListe[i].pro_iskonto1;
                 $scope.IskTplTutar1 = $scope.IskTplTutar - $scope.IskTutar1;
-                $scope.IskTutar2 += $scope.SiparisListe[i].sip_iskonto_2;
+                $scope.IskTutar2 += $scope.SiparisListe[i].pro_iskonto2;
                 $scope.IskTplTutar2 = $scope.IskTplTutar1 - $scope.IskTutar2;
-                $scope.IskTutar3 += $scope.SiparisListe[i].sip_iskonto_3;
+                $scope.IskTutar3 += $scope.SiparisListe[i].pro_iskonto3;
                 $scope.IskTplTutar3 = $scope.IskTplTutar2 - $scope.IskTutar3;
-                $scope.IskTutar4 += $scope.SiparisListe[i].sip_iskonto_4;
+                $scope.IskTutar4 += $scope.SiparisListe[i].pro_iskonto4;
                 $scope.IskTplTutar4 = $scope.IskTplTutar3 - $scope.IskTutar4;
-                $scope.IskTutar5 += $scope.SiparisListe[i].sip_iskonto_5;
+                $scope.IskTutar5 += $scope.SiparisListe[i].pro_iskonto5;
                 $scope.IskTplTutar5 = $scope.IskTplTutar4 - $scope.IskTutar5;
             }
         }
         else
         {
-            $scope.IskTplTutar = $scope.SiparisListe[$scope.IslemListeSelectedIndex].sip_tutar;
-            $scope.IskTutar1 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].sip_iskonto_1;
+            $scope.IskTplTutar = $scope.SiparisListe[$scope.IslemListeSelectedIndex].pro_tutari;
+            $scope.IskTutar1 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].pro_iskonto1;
             $scope.IskTplTutar1 = $scope.IskTplTutar - $scope.IskTutar1;
-            $scope.IskTutar2 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].sip_iskonto_2;
+            $scope.IskTutar2 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].pro_iskonto2;
             $scope.IskTplTutar2 = $scope.IskTplTutar1 - $scope.IskTutar2;
-            $scope.IskTutar3 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].sip_iskonto_3;
+            $scope.IskTutar3 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].pro_iskonto3;
             $scope.IskTplTutar3 = $scope.IskTplTutar2 - $scope.IskTutar3;
-            $scope.IskTutar4 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].sip_iskonto_4;
+            $scope.IskTutar4 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].pro_iskonto4;
             $scope.IskTplTutar4 = $scope.IskTplTutar3 - $scope.IskTutar4;
-            $scope.IskTutar5 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].sip_iskonto_5;
+            $scope.IskTutar5 = $scope.SiparisListe[$scope.IslemListeSelectedIndex].pro_iskonto5;
             $scope.IskTplTutar5 = $scope.IskTplTutar4 - $scope.IskTutar5;
         }
 
@@ -2251,27 +2226,26 @@ function ProformaSiparisCtrl($scope,$window,$timeout,db,$filter)
                 $scope.FiyatEdit,
                 $scope.MiktarEdit,
                 $scope.FiyatEdit * $scope.MiktarEdit,
-                $scope.SiparisListe[pIndex].sip_vergi_pntr,
-                $scope.SiparisListe[pIndex].sip_iskonto_1, //ISKONTO TUTAR 1
-                $scope.SiparisListe[pIndex].sip_iskonto_2, //ISKONTO TUTAR 2
-                $scope.SiparisListe[pIndex].sip_iskonto_3, //ISKONTO TUTAR 3
-                $scope.SiparisListe[pIndex].sip_iskonto_4, //ISKONTO TUTAR 4
-                $scope.SiparisListe[pIndex].sip_iskonto_5, //ISKONTO TUTAR 5
+                $scope.SiparisListe[pIndex].pro_vergipntr,
+                $scope.SiparisListe[pIndex].pro_iskonto1, //ISKONTO TUTAR 1
+                $scope.SiparisListe[pIndex].pro_iskonto2, //ISKONTO TUTAR 2
+                $scope.SiparisListe[pIndex].pro_iskonto3, //ISKONTO TUTAR 3
+                $scope.SiparisListe[pIndex].pro_iskonto4, //ISKONTO TUTAR 4
+                $scope.SiparisListe[pIndex].pro_iskonto5, //ISKONTO TUTAR 5
                 0, //ISKONTO TUTAR 6
-                $scope.SiparisListe[pIndex].sip_isk1, //SATIR ISKONTO TİP 1
-                $scope.SiparisListe[pIndex].sip_isk2, //SATIR ISKONTO TİP 2
-                $scope.SiparisListe[pIndex].sip_isk3, //SATIR ISKONTO TİP 3
-                $scope.SiparisListe[pIndex].sip_isk4, //SATIR ISKONTO TİP 4
-                $scope.SiparisListe[pIndex].sip_isk5, //SATIR ISKONTO TİP 5
+                $scope.SiparisListe[pIndex].pro_sat_isk_mas1, //SATIR ISKONTO TİP 1
+                $scope.SiparisListe[pIndex].pro_sat_isk_mas2, //SATIR ISKONTO TİP 2
+                $scope.SiparisListe[pIndex].pro_sat_isk_mas3, //SATIR ISKONTO TİP 3
+                $scope.SiparisListe[pIndex].pro_sat_isk_mas4, //SATIR ISKONTO TİP 4
+                $scope.SiparisListe[pIndex].pro_sat_isk_mas5, //SATIR ISKONTO TİP 5
                 0, //SATIR ISKONTO TİP 6
-                $scope.SiparisListe[pIndex].sip_Guid
+                $scope.SiparisListe[pIndex].pro_Guid
             ],
-            BedenPntr : $scope.SiparisListe[pIndex].BEDENPNTR,
-            RenkPntr : $scope.SiparisListe[pIndex].RENKPNTR,
             Miktar : $scope.MiktarEdit,
-            Guid : $scope.SiparisListe[pIndex].sip_Guid
+            Guid : $scope.SiparisListe[pIndex].pro_Guid
             
         };
+        console.log(Data)
         UpdateData(Data);   
     }
     $scope.MaxLot = function()
