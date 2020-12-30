@@ -76,8 +76,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.Aciklama = "";
         $scope.DetSipSeri = "";
         $scope.DetSipSira = "";
-        $scope.pBarkod = "";
-        $scope.SubeNo = UserParam.Sistem.SubeNo;
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -377,118 +375,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.$apply();
             }
         });
-        $("#TblSiparisListe2").jsGrid({
-            responsive : true,
-            width: "100%",          
-            updateOnResize: true,
-            heading: true,
-            selecting: true,
-            data : $scope.StokListe,
-            paging : true,
-            pageSize: 3,
-            pageButtonCount: 3,
-            pagerFormat: "{pages} {next}    {pageIndex} of {pageCount}",
-
-            fields: [
-                {
-                    name: "ADI",
-                    title: "ADI",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                },
-                {
-                    name: "BMIKTAR",
-                    title: "BEKLEYEN MIK.",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                },
-                {
-                    name: "RENK",
-                    title: "RENK",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                },
-                {
-                    name: "BEDEN",
-                    title: "BEDEN",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                }
-             
-            ],
-            rowClick: function(args)
-            {
-                $scope.StokListeRowClick(args.itemIndex,args.item,this);
-                $scope.$apply();
-            }
-        });
-        $("#TblStokGrid").jsGrid({
-            responsive : true,
-            width: "100%",          
-            updateOnResize: true,
-            heading: true,
-            selecting: true,
-            data : $scope.StokListe,
-            paging : true,
-            pageSize: 3,
-            pageButtonCount: 3,
-            pagerFormat: "{pages} {next}    {pageIndex} of {pageCount}",
-
-            fields: [
-                {
-                    name: "KODU",
-                    title: "KODU",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                },
-                {
-                    name: "ADI",
-                    title: "ADI",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                },
-                {
-                    name: "BMIKTAR",
-                    title: "BEKLEYEN MIK.",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                },
-                {
-                    name: "TUTAR",
-                    title: "TUTAR",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                },
-                {
-                    name: "BIRIM",
-                    title: "BİRİM",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                },
-                {
-                    name: "BIRIMFIYAT",
-                    title: "BİRİM FİYATI",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                }
-             
-            ],
-            rowClick: function(args)
-            {
-                $scope.StokListeRowClick(args.itemIndex,args.item,this);
-                $scope.$apply();
-            }
-        });
     }
     function InitPartiLotGrid()
     {
@@ -594,6 +480,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     },
                     width: 45
                 },
+
                 {
                     name: "SERI",
                     title: "SERI",
@@ -727,6 +614,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 pCallback([],'');
             }
         });
+        
     }
     async function RenkBedenPartiLotKontrol()
     {
@@ -785,7 +673,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     function BarkodGetir(pBarkod)
     {
-        $scope.pBarkod = pBarkod
         if(pBarkod != '')
         {
             // KILO BARKOD KONTROL EDİLİYOR. DÖNEN DEĞERLER ATANIYOR. ALI KEMAL KARACA 18.09.2019
@@ -803,11 +690,11 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
                     var Uzunluk = Kilo.slice(parseInt(UserParam.Sistem.KiloBaslangic),parseInt(UserParam.Sistem.KiloBaslangic)+parseInt(UserParam.Sistem.KiloUzunluk));
                     pBarkod = kBarkod
-                    $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan) / 100
+                    $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
                 }
             }
             //SİPARİŞE BAĞLI VEYA NORMAL STOK OLARAK GETİRME FONKSİYONU
-            EslestirmeStokGetir($scope.pBarkod,async function(pData,pTip)
+            EslestirmeStokGetir(pBarkod,async function(pData,pTip)
             {
                 $scope.Stok = pData
                 //FONKSİYONDA $scope.Stok İÇERİĞİ BOŞ GELİRSE TÜM İŞLEMLER İPTAL EDİLİYOR. ALI KEMAL KARACA 18.09.2019
@@ -945,13 +832,13 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                                 TmpIskontoTip4, //SATIR ISKONTO TİP 4
                                 TmpIskontoTip5, //SATIR ISKONTO TİP 5
                                 TmpIskontoTip6, //SATIR ISKONTO TİP 6
-                                '00000000-0000-0000-0000-000000000000',
                                 value.sth_Guid
                             ],
                             BedenPntr : $scope.Stok[0].BEDENPNTR,
                             RenkPntr : $scope.Stok[0].RENKPNTR,
                             Miktar : $scope.Miktar * $scope.Stok[0].CARPAN
                         };
+                    
                         UpdateStatus = true;
                         UpdateDataIrs(Data);
                     }                        
@@ -1029,7 +916,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             Param[0].MikroId,
             Param[0].MikroId,
             0, //FİRMA NO
-            $scope.SubeNo, //ŞUBE NO
+            0, //ŞUBE NO
             $scope.Tarih,
             $scope.StokTip,
             $scope.StokCins,
@@ -1183,6 +1070,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     }                        
                     InsertAfterRefresh(IrsaliyeData);
                     $scope.InsertLock = false
+
                 });
             }
             else
@@ -1316,7 +1204,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FİRMA NO
-            $scope.SubeNo, //ŞUBE NO
+            0, //ŞUBE NO
             $scope.ChaEvrakTip,
             $scope.Seri,
             $scope.Sira,
@@ -1419,7 +1307,10 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0,  //FTISKONTO5
             0,  //FTISKONTO6
             0,  //OTVTUTARI
-            $scope.CariHarListe[0].cha_Guid
+            $scope.Seri,    //SERI
+            $scope.Sira,    //SIRA
+            $scope.ChaEvrakTip, //EVRAKTIP
+            0   //SATIRNO
         ];
         
         db.ExecuteTag($scope.Firma,'CariHarUpdate',CariHarUpdate,function(InsertResult)
@@ -1434,7 +1325,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FİRMA NO
-            $scope.SubeNo, //ŞUBE NO
+            0, //ŞUBE NO
             $scope.Tarih,
             $scope.StokTip,
             $scope.StokCins,
@@ -1518,6 +1409,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
             {
+                console.log(InsertResult.result)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(FaturaData)
                 {
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
@@ -1660,7 +1552,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.DisTicaret = 2;
             
             EvrakParam = UserParam.SatisIrsaliye;         
-        }
+        } 
         if($scope.CmbEvrakTip == 3)
         {
             $scope.CariTip = 0;
@@ -1680,6 +1572,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
 
             alertify.alert("Lütfen Belge Bilgisinden İhracat Kodu Giriniz.");    
         } 
+                       
 
         $scope.Seri = EvrakParam.Seri;
         $scope.Sira = EvrakParam.Sira;
@@ -2003,6 +1896,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
+        
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
@@ -2178,7 +2072,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbSiparisSecimi").removeClass('active');
-                $scope.BtnStokGridGetir();
+                
                 BarkodFocus();
             }
             else
@@ -2314,7 +2208,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblSiparisListe").jsGrid({data : $scope.StokListe});
-                $("#TblSiparisListe2").jsGrid({data : $scope.StokListe});
             } 
             else
             {                
