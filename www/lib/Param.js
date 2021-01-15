@@ -19,17 +19,16 @@ var Param = [
 			"KiloUzunluk": "5",
 			"KiloCarpan": "1",
 			"Titresim": "1",
-			"PlasiyerKodu": "01",
+			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "SW_FFAC",
+			"BTYaziciAdi": "XP-P323B-8ED0",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "70",
-			"FisDizayn": "0",
-			"undefined": "0"
+			"FisDizayn": "0"
 		},
 		"StokRaporu": {
 			"DepoNo": "4"

@@ -76,6 +76,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.Aciklama = "";
         $scope.DetSipSeri = "";
         $scope.DetSipSira = "";
+        $scope.SubeNo = UserParam.Sistem.SubeNo;
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -480,7 +481,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     },
                     width: 45
                 },
-
                 {
                     name: "SERI",
                     title: "SERI",
@@ -614,7 +614,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 pCallback([],'');
             }
         });
-        
     }
     async function RenkBedenPartiLotKontrol()
     {
@@ -690,7 +689,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
                     var Uzunluk = Kilo.slice(parseInt(UserParam.Sistem.KiloBaslangic),parseInt(UserParam.Sistem.KiloBaslangic)+parseInt(UserParam.Sistem.KiloUzunluk));
                     pBarkod = kBarkod
-                    $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
+                    $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan) / 100
                 }
             }
             //SİPARİŞE BAĞLI VEYA NORMAL STOK OLARAK GETİRME FONKSİYONU
@@ -916,7 +915,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             Param[0].MikroId,
             Param[0].MikroId,
             0, //FİRMA NO
-            0, //ŞUBE NO
+            $scope.SubeNo, //ŞUBE NO
             $scope.Tarih,
             $scope.StokTip,
             $scope.StokCins,
@@ -1070,7 +1069,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                     }                        
                     InsertAfterRefresh(IrsaliyeData);
                     $scope.InsertLock = false
-
                 });
             }
             else
@@ -1204,7 +1202,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FİRMA NO
-            0, //ŞUBE NO
+            $scope.SubeNo, //ŞUBE NO
             $scope.ChaEvrakTip,
             $scope.Seri,
             $scope.Sira,
@@ -1307,10 +1305,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0,  //FTISKONTO5
             0,  //FTISKONTO6
             0,  //OTVTUTARI
-            $scope.Seri,    //SERI
-            $scope.Sira,    //SIRA
-            $scope.ChaEvrakTip, //EVRAKTIP
-            0   //SATIRNO
+            $scope.CariHarListe[0].cha_Guid
         ];
         
         db.ExecuteTag($scope.Firma,'CariHarUpdate',CariHarUpdate,function(InsertResult)
@@ -1325,7 +1320,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FİRMA NO
-            0, //ŞUBE NO
+            $scope.SubeNo, //ŞUBE NO
             $scope.Tarih,
             $scope.StokTip,
             $scope.StokCins,
@@ -1409,7 +1404,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
             {
-                console.log(InsertResult.result)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(FaturaData)
                 {
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
@@ -1552,7 +1546,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.DisTicaret = 2;
             
             EvrakParam = UserParam.SatisIrsaliye;         
-        } 
+        }
         if($scope.CmbEvrakTip == 3)
         {
             $scope.CariTip = 0;
@@ -1572,7 +1566,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
 
             alertify.alert("Lütfen Belge Bilgisinden İhracat Kodu Giriniz.");    
         } 
-                       
 
         $scope.Seri = EvrakParam.Seri;
         $scope.Sira = EvrakParam.Sira;
@@ -1896,7 +1889,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         StokSelectedRow = $row;
-        
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
@@ -2072,7 +2064,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbSiparisSecimi").removeClass('active');
-                
+                $scope.BtnStokGridGetir();
                 BarkodFocus();
             }
             else
@@ -2208,6 +2200,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblSiparisListe").jsGrid({data : $scope.StokListe});
+                $("#TblSiparisListe2").jsGrid({data : $scope.StokListe});
             } 
             else
             {                

@@ -152,7 +152,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.IskTplTutar4 = 0;
         $scope.IskTplTutar5 = 0;
         $scope.IskTplTutar = 0;
-
         $scope.TblLoading = true;
 
         //DIZAYN
@@ -1053,7 +1052,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function FisData(pData)
     { 
-        $scope.KirilimGetir()
+        $scope.KirilimGetir();
         $scope.FisLength = pData;
         if($scope.FisDizaynTip == "0")
         {
@@ -1102,7 +1101,27 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.FisDeger = "                                    "+ $scope.Tarih + "\n" + "                                    " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,25) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
                 for(let i=0; i < $scope.KirilimListe.length; i++)
                 {
-                   $scope.FisData = $scope.FisData + SpaceLength($scope.KirilimListe[i].STOKKOD,20) +  SpaceLength($scope.KirilimListe[i].RENK,10) + SpaceLength($scope.KirilimListe[i].S36,5) + " " + SpaceLength($scope.KirilimListe[i].S37,5) + " " + SpaceLength($scope.KirilimListe[i].S38,5) + SpaceLength(($scope.KirilimListe[i].S36 + $scope.KirilimListe[i].S37 + $scope.KirilimListe[i].S38),5)  + "\n";       
+                   console.log($scope.KirilimListe[i].S38 + $scope.KirilimListe[i].S40 + $scope.KirilimListe[i].S42 * Number($scope.KirilimListe[i].BFIYAT))
+                   $scope.FisData = $scope.FisData + SpaceLength($scope.KirilimListe[i].STOKKOD,20) +  SpaceLength($scope.KirilimListe[i].RENK,10) + SpaceLength($scope.KirilimListe[i].S38,2) + " " + SpaceLength($scope.KirilimListe[i].S40,2) + " " + SpaceLength($scope.KirilimListe[i].S42,2) + " " + SpaceLength($scope.KirilimListe[i].S44,2) + SpaceLength($scope.KirilimListe[i].S46,2) + " " + SpaceLength($scope.KirilimListe[i].S48,2) + " " + SpaceLength($scope.KirilimListe[i].S50,2) + " " + SpaceLength($scope.KirilimListe[i].S52,2) + " " + SpaceLength($scope.KirilimListe[i].S54,2) +   SpaceLength(($scope.KirilimListe[i].TOPMIKTAR),7) + " " + SpaceLength($scope.KirilimListe[i].BFIYAT,7) + " " + SpaceLength($scope.KirilimListe[i].TOPTUTAR,5)  + "\n";       
+                } 
+           } 
+           catch (error) 
+           {
+               console.log(error)
+           }
+        }
+        else if($scope.FisDizaynTip == "3")
+        {
+            $scope.FisDeger = "";
+            $scope.FisData = "";
+           try 
+           {
+                $scope.FisDeger = "";
+                $scope.FisDeger = "                                    "+ $scope.Tarih + "\n" + "                                    " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,25) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
+                for(let i=0; i < $scope.KirilimListe.length; i++)
+                {
+                   console.log($scope.KirilimListe[i].S36 + $scope.KirilimListe[i].S37 + $scope.KirilimListe[i].S38 * Number($scope.KirilimListe[i].BFIYAT))
+                   $scope.FisData = $scope.FisData + SpaceLength($scope.KirilimListe[i].STOKKOD,20) +  SpaceLength($scope.KirilimListe[i].RENK,10) + SpaceLength($scope.KirilimListe[i].S36,5) + " " + SpaceLength($scope.KirilimListe[i].S37,5) + " " + SpaceLength($scope.KirilimListe[i].S38,8) + SpaceLength(($scope.KirilimListe[i].TOPMIKTAR),7) + "\n";       
                 } 
            } 
            catch (error) 
@@ -1141,7 +1160,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "SELECT STOKKOD,RENK,ISNULL(PVT.[36],0) AS S36,ISNULL(PVT.[37],0) S37,ISNULL(PVT.[38],0) AS S38 " +
+            query:  "SELECT BFIYAT,STOKKOD,RENK,ISNULL(PVT.[36],0) AS S36,ISNULL(PVT.[37],0) S37,ISNULL(PVT.[38],0) AS S38, " +
+            "(ISNULL(PVT.[36],0) + ISNULL(PVT.[37],0) + ISNULL(PVT.[38],0)) AS TOPMIKTAR, " +
+            "(ISNULL(PVT.[36],0) + ISNULL(PVT.[37],0) + ISNULL(PVT.[38],0)) * BFIYAT AS TOPTUTAR " +
             "FROM " +
             "( " +
             "SELECT  " +
@@ -1149,27 +1170,22 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             "(select sth_stok_kod FROM STOK_HAREKETLERI WHERE sth_Guid = BdnHar_Har_uid ) AS STOKKOD , " +
             "ISNULL((SELECT dbo.fn_beden_kirilimi((SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)),(SELECT  sto_renk_kodu FROM STOKLAR WHERE sto_kod = @STOKKOD))),0) AS BEDEN , " +
             "(SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) AS RENKPNTR,  " +
-            "ISNULL(BdnHar_HarGor,0) AS MIKTAR " +
+            "ISNULL(BdnHar_HarGor,0) AS MIKTAR, " +
+            "(sth_tutar / sth_miktar) AS BFIYAT " +
             "FROM BEDEN_HAREKETLERI AS BDN INNER JOIN STOK_HAREKETLERI AS STH ON BDN.BdnHar_Har_uid = STH.sth_Guid " +
             "WHERE STH.sth_evrakno_seri = @SERI AND STH.sth_evrakno_sira = @SIRA " +
             ")AS VERI " +
             "PIVOT " +
             "( SUM(MIKTAR) " +
             "FOR BEDEN IN ([36],[37],[38])) " +
-            "AS PVT GROUP BY RENKPNTR,PVT.[36],PVT.[37],PVT.[38],PVT.STOKKOD,PVT.RENK",
+            "AS PVT GROUP BY RENKPNTR,PVT.[36],PVT.[37],PVT.[38],PVT.STOKKOD,PVT.RENK,BFIYAT",
             param:  ['STOKKOD','SERI','SIRA'],
             type:   ['string|25','string|50','int'],
             value:  [$scope.IrsaliyeListe[0].sth_stok_kod,$scope.Seri,$scope.Sira]
         }
         db.GetPromiseQuery(TmpQuery,function(data)
         {   
-            console.log(data)
-            console.log($scope.IrsaliyeListe[0].sth_Guid)
             $scope.KirilimListe = data
-            for(let i = 0; i < $scope.KirilimListe.length; i++)
-            {
-                $scope.DizTopMik = $scope.KirilimListe[i].S36 + $scope.KirilimListe[i].S37 + $scope.KirilimListe[i].S38;   
-            }
         });
     }
     // $scope.MaxSira = async function()
@@ -2331,7 +2347,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
                 BarkodFocus();
                 $scope.KirilimGetir();
-                FisData(data)
+                $timeout(function(){FisData(data);},200);  
                 
 
                 alertify.alert("Evrak Başarıyla Getirildi.");
@@ -2863,13 +2879,46 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 Satır += "                                                                   -" + "\n"; 
             }
             FisDeger = FisDeger + "                                " + "\n" 
+            FisDeger = FisDeger + SpaceLength($scope.CariAdi.substring(0,61),63) + $scope.Seri + "-" +  $scope.Sira + "\n" + SpaceLength($scope.CariSoyAdi.substring(0,43),45) + SpaceLength($scope.Il.substring(0,20),25) +  $scope.Tarih + "\n" + "                                                               " + $scope.Saat + "\n";
+            FisDizayn = "                                             " + "\n" + 
+            FisDeger +                                       
+            "        " + "\n" + 
+            "STOKKOD              RENK   38-40-42-44-46-48-50-52-54    MIKTAR   BFIYAT  TOPTUTAR" + "\n" +
+            "--------------------------------------------------------------------------" + "\n" +
+            $scope.FisData  +
+            "--------------------------------------------------------------------------" + "\n"
+            FisDizayn = FisDizayn + "MIKTAR TOPLAM : " + db.SumColumn($scope.FisLength,"MIKTAR") + "\n" + "                                               ARA TOPLAM     : " +$scope.AraToplam + "\n" +"                                               TOPLAM KDV     : " + parseFloat($scope.ToplamKdv.toFixed(2),7) + "\n" +"                                               TOPLAM INDIRIM : " + $scope.ToplamIndirim + "\n" + "                                               GENEL TOPLAM   : "+ parseFloat($scope.GenelToplam.toFixed(2),7)+"\n" + Satır
+            FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u").split("ı").join("i");
+            
+            console.log(FisDizayn)
+            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+            {
+                if(pStatus)
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                }
+            });
+        }
+        else if($scope.FisDizaynTip == "3")
+        {
+            let FisDizayn = "";
+            let FisDeger = "";
+            let i = 55 - $scope.FisLength.length;
+            let Satır = "";
+            for(let x = 0; x <= i; x++)
+            {    
+                Satır += "                                                                   -" + "\n"; 
+            }
+            FisDeger = FisDeger + "                                " + "\n" 
             FisDeger = FisDeger + SpaceLength($scope.CariAdi.substring(0,61),63) + $scope.Seri + "-" +  $scope.Sira + "\n" + SpaceLength($scope.CariSoyAdi.substring(0,43),45) + SpaceLength($scope.Il.substring(0,16),18) +  $scope.Tarih + "\n" + "                                                               " + $scope.Saat + "\n";
             FisDizayn = "                                             " + "\n" + 
             FisDeger +                                       
             "        " + "\n" + 
-            "STOKKOD              RENK     36    37    38                " + "\n" +
-            $scope.FisData + "\n"  
-            FisDizayn = FisDizayn + "MIKTAR TOPLAM : " + db.SumColumn($scope.FisLength,"MIKTAR") + "\n" + "                                               ARA TOPLAM     : " +$scope.AraToplam + "\n" +"                                               TOPLAM KDV     : " + parseFloat($scope.ToplamKdv.toFixed(2),7) + "\n" +"                                               TOPLAM INDIRIM : " + $scope.ToplamIndirim + "\n" + "                                               GENEL TOPLAM   : "+ parseFloat($scope.GenelToplam.toFixed(2),7)+"\n" + Satır
+            "STOKKOD              RENK     38-40-42-44-46-48-50-52-54    MIKTAR  " + "\n" +
+            "--------------------------------------------------------------------------" + "\n" +
+            $scope.FisData + 
+            "--------------------------------------------------------------------------" + "\n"  
+            FisDizayn = FisDizayn + "MIKTAR TOPLAM : " + db.SumColumn($scope.FisLength,"MIKTAR") + "\n" + Satır
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u").split("ı").join("i");
             
             console.log(FisDizayn)
