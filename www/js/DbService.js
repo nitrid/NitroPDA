@@ -747,7 +747,6 @@ angular.module('app.db', []).service('db',function($rootScope)
             }            
         });        
 
-        console.log(1)
         // İSKONTO MATRİS
         if(pEvrParam.IskontoMatris == "1" && pEvrParam.AlisSarti == "0" && pEvrParam.SatisSarti == "0")
         {
@@ -806,6 +805,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                 {
                     if(SatisSartiData.length > 0)
                     {
+                        console.log(SatisSartiData[0])
                         BarkodData[0].INDIRIM = SatisSartiData[0].INDIRIM
                         BarkodData[0].ISKONTOM1 = SatisSartiData[0].ISKONTOM1
                         BarkodData[0].ISKONTOM2 = SatisSartiData[0].ISKONTOM2
@@ -830,6 +830,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                     }
                     else
                     {
+                        console.log(SatisSartiData[0])
                         BarkodData[0].INDIRIM = 0
                         BarkodData[0].ISKONTOM1 = 0
                         BarkodData[0].ISKONTOM2 = 0
@@ -845,6 +846,22 @@ angular.module('app.db', []).service('db',function($rootScope)
                         BarkodData[0].ISKONTOY6 = 0
                     }
                 });
+            }
+            else
+            {
+                BarkodData[0].INDIRIM = 0
+                BarkodData[0].ISKONTOM1 = 0
+                BarkodData[0].ISKONTOM2 = 0
+                BarkodData[0].ISKONTOM3 = 0
+                BarkodData[0].ISKONTOM4 = 0
+                BarkodData[0].ISKONTOM5 = 0
+                BarkodData[0].ISKONTOM6 = 0
+                BarkodData[0].ISKONTOY1 = 0
+                BarkodData[0].ISKONTOY2 = 0
+                BarkodData[0].ISKONTOY3 = 0
+                BarkodData[0].ISKONTOY4 = 0
+                BarkodData[0].ISKONTOY5 = 0
+                BarkodData[0].ISKONTOY6 = 0
             }
         }
 

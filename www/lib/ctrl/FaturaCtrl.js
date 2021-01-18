@@ -85,6 +85,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
         $scope.RotaKontrol = false;
         $scope.RotaAciklama = "";
+        $scope.Indirim = 0;
 
         //CARİHAREKET
         if(ParamName == "AlisFatura")
@@ -740,7 +741,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     $scope.Stok[0].INDIRIM = 0;
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
-        
+
                     if(UserParam.Sistem.PartiLotKontrol == 1)//PARTI-LOT KONTROL
                     {
                         for(i = 0;i < $scope.StokHarListe.length;i++)
@@ -793,6 +794,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                     };
                     await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()//FİYAT GETİR
                     {   
+                        $scope.Indirim = $scope.Stok[0].INDIRIM;
+                        console.log($scope.Indirim)
                         $scope.MiktarFiyatValid();
                         $scope.BarkodLock = true;
                         $scope.$apply();
@@ -918,12 +921,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.Miktar2,
             $scope.Stok[0].BIRIMPNTR,
             $scope.Stok[0].TUTAR,
-            0, // İSKONTO 1
-            0, // İSKONTO 2
-            0, // İSKONTO 3
-            0, // İSKONTO 4
-            0, // İSKONTO 5
-            0, // İSKONTO 6
+            $scope.Indirim1, // İSKONTO 1
+            $scope.Indirim2, // İSKONTO 2
+            $scope.Indirim3, // İSKONTO 3
+            $scope.Indirim4, // İSKONTO 4
+            $scope.Indirim5, // İSKONTO 5
+            $scope.Indirim6, // İSKONTO 6
             0, // MASRAF 1
             0, // MASRAF 2
             0, // MASRAF 3
@@ -2612,7 +2615,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
             $scope.IndirimHesapla();
             $scope.Stok[0].INDIRIM = $scope.Indirim1 + $scope.Indirim2 + $scope.Indirim3 + $scope.Indirim4 + $scope.Indirim5 + $scope.Indirim6;
-            console.log($scope.Stok[0].INDIRIM)
             $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
             $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
         }
@@ -2626,8 +2628,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
     }
     $scope.IndirimHesapla = function()
     {
-        $scope.Indirim1 = (($scope.Stok[0].TUTAR / 100) * $scope.Stok[0].ISKONTOY1)
-        $scope.IndirimTutar1 = $scope.Stok[0].TUTAR - $scope.Indirim1; 
+        $scope.Indirim1 = (($scope.Stok[0].TUTAR / 100) * $scope.Stok[0].ISKONTOY1);
+        $scope.IndirimTutar1 = $scope.Stok[0].TUTAR - $scope.Indirim1;
+        
         $scope.Indirim2 = (($scope.IndirimTutar1 / 100) * $scope.Stok[0].ISKONTOY2);
         $scope.IndirimTutar2 = $scope.IndirimTutar1 - $scope.Indirim2;
 

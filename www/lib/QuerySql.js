@@ -169,7 +169,9 @@ var QuerySql =
                 "cari_efatura_fl AS EFATURA  " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE ((CARI.cari_kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((CARI.cari_unvan1 LIKE  @ADI + '%' or cari_unvan2 LIKE @ADI + '%' ) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu IN(SELECT value FROM STRING_SPLIT(@PLASIYERKODU,','))) OR (@PLASIYERKODU = ''))) AS TBL ORDER BY KODU " ,
+                "WHERE((UPPER(cari_kod) LIKE  UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(cari_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
+                "AND (((UPPER(cari_unvan1) LIKE UPPER(@ADI) + '%' or UPPER(cari_unvan2) LIKE UPPER(@ADI) + '%') OR (@ADI = '')) OR ((LOWER(cari_unvan1) LIKE LOWER(@ADI) + '%' or LOWER(cari_unvan2) LIKE LOWER(@ADI) + '%') OR (@ADI = ''))) " +
+                "AND ((CARI.cari_temsilci_kodu IN(SELECT value FROM STRING_SPLIT(@PLASIYERKODU,','))) OR (@PLASIYERKODU = ''))) AS TBL ORDER BY KODU " ,
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
     },
@@ -216,7 +218,10 @@ var QuerySql =
                 "cari_efatura_fl AS EFATURA " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE ((CARI.cari_kod = @KODU) OR (@KODU = '')) AND ((CARI.cari_unvan1 = @ADI) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY cari_kod ASC",
+                "WHERE((UPPER(CARI.cari_kod) LIKE  UPPER(@KODU) OR (@KODU = '')) OR (LOWER(CARI.cari_kod) LIKE LOWER(@KODU) OR (@KODU = ''))) " +
+                "AND ((UPPER(CARI.cari_unvan1) LIKE  UPPER(@ADI) OR (@ADI = '')) OR (LOWER(CARI.cari_unvan1) LIKE LOWER(@ADI) OR (@ADI = ''))) " +
+                "AND ((CARI.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY cari_kod ASC",
+
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
     },
@@ -436,7 +441,8 @@ var QuerySql =
                 "1 AS DOVIZKUR,  " +
                 "sto_prim_orani AS PRIMORANI " +
                 "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
-                "WHERE ((sto_kod LIKE  @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE @ADI + '%' ) OR (@ADI = '')) " +
+                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(sto_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
+				"AND ((UPPER(sto_isim) LIKE UPPER(@ADI) + '%' OR (@ADI = '')) OR (LOWER(sto_isim) LIKE LOWER (@ADI) + '%' OR (@ADI = '')))" +
                 "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
                 ") AS TMP " +
                 "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI,BEDENMIKTAR,RENKMIKTAR ORDER BY KODU" ,
@@ -560,10 +566,9 @@ var QuerySql =
                 "CASE sto_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "sto_kod AS BARKOD " +
                 "FROM STOKLAR " +
-                "WHERE ((sto_kod LIKE   @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE '%' + @ADI + '%' ) OR (@ADI = '')) " ,
+                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) OR LOWER(sto_kod) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER(sto_isim) LIKE UPPER(@KODU) OR LOWER(sto_isim) LIKE LOWER(@KODU)) OR (@KODU = '')) " ,
         param : ['KODU',"ADI",'DEPONO'],
         type :  ['string|25','string|50','int']
-
     },
     CariAdiGetir : 
     {

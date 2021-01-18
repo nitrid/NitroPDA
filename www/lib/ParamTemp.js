@@ -61,7 +61,8 @@ var ParamTemp =
 			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},			
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
-			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"}		
+			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
+			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"}			
 		},
 		"VerilenSiparis" :
 		{
@@ -83,7 +84,8 @@ var ParamTemp =
 			"SiparisOnay" : {"Title" : "Sipariş Onay","DefaultValue" : ""},	
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},		
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
-			"TedarikcidenSiparis" : {"Title" : "Tedarikçiden Sipariş","DefaultValue" : "0"}
+			"TedarikcidenSiparis" : {"Title" : "Tedarikçiden Sipariş","DefaultValue" : "0"},
+			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"}	
 		},
 		"ProformaAlinanSiparis" :
 		{
@@ -188,7 +190,8 @@ var ParamTemp =
 			"FiyatListe" : {"Title" : "Fiyat Liste","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
-			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
+			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"}	
 		},
 		"SatisIrsaliye" :
 		{
@@ -209,7 +212,8 @@ var ParamTemp =
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
-			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
+			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"}	
 		},
 		"KonsinyeIrsaliye" :
 		{

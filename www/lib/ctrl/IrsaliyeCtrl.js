@@ -728,7 +728,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.DepoNo, //GİRİSDEPONO
             $scope.DepoNo, //CİKİSDEPONO
             $scope.Tarih, //MALKABULSEVKTARİHİ
-            '', // CARİSORUMLULUKMERKEZİ
+            $scope.Sorumluluk, // CARİSORUMLULUKMERKEZİ
             $scope.Sorumluluk,
             0,  //VERGİSİZFL
             $scope.AdresNo,  // ADRESNO
@@ -743,7 +743,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             0,  //NAKLİYEDEPO
             0   // NAKLİYEDURUMU
         ];
-        
+        console.log($scope.Sorumluluk)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {  
             if(typeof(InsertResult.result.err) == 'undefined')
