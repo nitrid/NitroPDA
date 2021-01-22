@@ -1128,77 +1128,68 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     {
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {
-            console.log($scope.Miktar)
-            console.log($scope.Miktar.length)
-            if($scope.Miktar.length <= 6)
+            if(UserParam.DepoSevk.EksiyeDusme == 1 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
             {
-                if(UserParam.DepoSevk.EksiyeDusme == 1 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
-                {
-                    alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
-                }
-                else
-                {
-                    $scope.InsertLock = true
-                    if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP != 1 || $scope.Stok[0].DETAYTAKIP != 2)
-                    {   
-                        InsertData();
-                    }
-                    else
-                    {
-                        let UpdateStatus = false;
-    
-                        angular.forEach($scope.DepoSevkListe,function(value)
-                        {
-                            if(value.sth_stok_kod == $scope.Stok[0].KODU)
-                            {   
-                                let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-    
-                                let Data = 
-                                {
-                                    Param :
-                                    [
-                                        TmpMiktar,
-                                        TmpMiktar,
-                                        0, //TUTAR
-                                        $scope.Stok[0].TOPTANVERGIPNTR,
-                                        0, //ISKONTO TUTAR 1
-                                        0, //ISKONTO TUTAR 2
-                                        0, //ISKONTO TUTAR 3
-                                        0, //ISKONTO TUTAR 4
-                                        0, //ISKONTO TUTAR 5
-                                        0, //ISKONTO TUTAR 6
-                                        0, //SATIR ISKONTO TİP 1
-                                        0, //SATIR ISKONTO TİP 2
-                                        0, //SATIR ISKONTO TİP 3
-                                        0, //SATIR ISKONTO TİP 4
-                                        0, //SATIR ISKONTO TİP 5
-                                        0, //SATIR ISKONTO TİP 6
-                                        value.sth_Guid
-                                    ],
-                                
-                                    BedenPntr : $scope.Stok[0].BEDENPNTR,
-                                    RenkPntr : $scope.Stok[0].RENKPNTR,
-                                    Miktar : TmpMiktar,
-                                    Guid : value.sth_Guid
-                                };
-    
-                                UpdateStatus = true;
-                                UpdateData(Data);
-                                $scope.InsertLock = false 
-                            }                        
-                        });
-    
-                        if(!UpdateStatus)
-                        {
-                            InsertData();
-                            $scope.InsertLock = false 
-                        }                
-                    } 
-                }
+                alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
             }
             else
             {
-                alertify.alert("Giremezsin aslanım :) :) :)")
+                $scope.InsertLock = true
+                if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP != 1 || $scope.Stok[0].DETAYTAKIP != 2)
+                {   
+                    InsertData();
+                }
+                else
+                {
+                    let UpdateStatus = false;
+
+                    angular.forEach($scope.DepoSevkListe,function(value)
+                    {
+                        if(value.sth_stok_kod == $scope.Stok[0].KODU)
+                        {   
+                            let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+
+                            let Data = 
+                            {
+                                Param :
+                                [
+                                    TmpMiktar,
+                                    TmpMiktar,
+                                    0, //TUTAR
+                                    $scope.Stok[0].TOPTANVERGIPNTR,
+                                    0, //ISKONTO TUTAR 1
+                                    0, //ISKONTO TUTAR 2
+                                    0, //ISKONTO TUTAR 3
+                                    0, //ISKONTO TUTAR 4
+                                    0, //ISKONTO TUTAR 5
+                                    0, //ISKONTO TUTAR 6
+                                    0, //SATIR ISKONTO TİP 1
+                                    0, //SATIR ISKONTO TİP 2
+                                    0, //SATIR ISKONTO TİP 3
+                                    0, //SATIR ISKONTO TİP 4
+                                    0, //SATIR ISKONTO TİP 5
+                                    0, //SATIR ISKONTO TİP 6
+                                    value.sth_Guid
+                                ],
+                            
+                                BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                RenkPntr : $scope.Stok[0].RENKPNTR,
+                                Miktar : TmpMiktar,
+                                Guid : value.sth_Guid
+                            };
+
+                            UpdateStatus = true;
+                            UpdateData(Data);
+                            $scope.InsertLock = false 
+                        }                        
+                    });
+
+                    if(!UpdateStatus)
+                    {
+                        InsertData();
+                        $scope.InsertLock = false 
+                    }                
+                }
             }
         }
         else
@@ -1206,7 +1197,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             alertify.alert("<a style='color:#3e8ef7''>" + "Barkod Okutunuz !" + "</a>" );
             console.log("Barkod Okutunuz!");
             $scope.InsertLock = false;
-        }     
+        }
         
         BarkodFocus();
     }
