@@ -748,9 +748,10 @@ angular.module('app.db', []).service('db',function($rootScope)
         });        
 
         // İSKONTO MATRİS
-        if(pEvrParam.IskontoMatris == "1" && pEvrParam.AlisSarti == "0" && pEvrParam.SatisSarti == "0")
+        if(pEvrParam.IskontoMatris == "1")
         {
             console.log('girdi')
+            console.log([BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo])
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
             { 
                 
@@ -804,21 +805,17 @@ angular.module('app.db', []).service('db',function($rootScope)
                 await _GetPromiseTag(pFirma,'SatisSartiGetir',[pFiyatParam.CariKodu,BarkodData[0].KODU,pFiyatParam.DepoNo],function(SatisSartiData)
                 {
                     if(SatisSartiData.length > 0)
-                    {
-                        console.log(SatisSartiData[0])
+                    {   
+                        console.log(SatisSartiData)
+                        console.log(BarkodData[0])
+                        BarkodData[0].ODEPLAN = SatisSartiData[0].ODEPLAN
                         BarkodData[0].INDIRIM = SatisSartiData[0].INDIRIM
-                        BarkodData[0].ISKONTOM1 = SatisSartiData[0].ISKONTOM1
-                        BarkodData[0].ISKONTOM2 = SatisSartiData[0].ISKONTOM2
-                        BarkodData[0].ISKONTOM3 = SatisSartiData[0].ISKONTOM3
-                        BarkodData[0].ISKONTOM4 = SatisSartiData[0].ISKONTOM4
-                        BarkodData[0].ISKONTOM5 = SatisSartiData[0].ISKONTOM5
-                        BarkodData[0].ISKONTOM6 = SatisSartiData[0].ISKONTOM6
-                        BarkodData[0].ISKONTOY1 = SatisSartiData[0].ISKONTOY1 
-                        BarkodData[0].ISKONTOY2 = SatisSartiData[0].ISKONTOY2 
-                        BarkodData[0].ISKONTOY3 = SatisSartiData[0].ISKONTOY3 
-                        BarkodData[0].ISKONTOY4 = SatisSartiData[0].ISKONTOY4 
-                        BarkodData[0].ISKONTOY5 = SatisSartiData[0].ISKONTOY5 
-                        BarkodData[0].ISKONTOY6 = SatisSartiData[0].ISKONTOY6 
+                        BarkodData[0].ISK.ORAN1 = SatisSartiData[0].ISKONTOY1 
+                        BarkodData[0].ISK.ORAN2 = SatisSartiData[0].ISKONTOY2 
+                        BarkodData[0].ISK.ORAN3 = SatisSartiData[0].ISKONTOY3 
+                        BarkodData[0].ISK.ORAN4 = SatisSartiData[0].ISKONTOY4 
+                        BarkodData[0].ISK.ORAN5 = SatisSartiData[0].ISKONTOY5 
+                        BarkodData[0].ISK.ORAN6 = SatisSartiData[0].ISKONTOY6 
                         if(SatisSartiData[0].FIYAT == SatisSartiData[0].BRUTFIYAT)
                         {
                             BarkodData[0].FIYAT = SatisSartiData[0].FIYAT;
@@ -830,40 +827,16 @@ angular.module('app.db', []).service('db',function($rootScope)
                     }
                     else
                     {
-                        console.log(SatisSartiData[0])
-                        BarkodData[0].INDIRIM = 0
-                        BarkodData[0].ISKONTOM1 = 0
-                        BarkodData[0].ISKONTOM2 = 0
-                        BarkodData[0].ISKONTOM3 = 0
-                        BarkodData[0].ISKONTOM4 = 0
-                        BarkodData[0].ISKONTOM5 = 0
-                        BarkodData[0].ISKONTOM6 = 0
-                        BarkodData[0].ISKONTOY1 = 0
-                        BarkodData[0].ISKONTOY2 = 0
-                        BarkodData[0].ISKONTOY3 = 0
-                        BarkodData[0].ISKONTOY4 = 0
-                        BarkodData[0].ISKONTOY5 = 0
-                        BarkodData[0].ISKONTOY6 = 0
+                        BarkodData[0].ISK.ORAN1 = 0
+                        BarkodData[0].ISK.ORAN2 = 0
+                        BarkodData[0].ISK.ORAN3 = 0
+                        BarkodData[0].ISK.ORAN4 = 0
+                        BarkodData[0].ISK.ORAN5 = 0
+                        BarkodData[0].ISK.ORAN6 = 0
                     }
                 });
             }
-            else
-            {
-                BarkodData[0].INDIRIM = 0
-                BarkodData[0].ISKONTOM1 = 0
-                BarkodData[0].ISKONTOM2 = 0
-                BarkodData[0].ISKONTOM3 = 0
-                BarkodData[0].ISKONTOM4 = 0
-                BarkodData[0].ISKONTOM5 = 0
-                BarkodData[0].ISKONTOM6 = 0
-                BarkodData[0].ISKONTOY1 = 0
-                BarkodData[0].ISKONTOY2 = 0
-                BarkodData[0].ISKONTOY3 = 0
-                BarkodData[0].ISKONTOY4 = 0
-                BarkodData[0].ISKONTOY5 = 0
-                BarkodData[0].ISKONTOY6 = 0
-            }
-        }
+     }
 
         if(pCallback)
         {

@@ -850,16 +850,23 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
+                        console.log(1)
                         for(i = 0;i < $scope.IrsaliyeListe.length;i++)
                         {   
+                            console.log(1.5)
                             if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
                             {
+                                console.log(2)
                                 if($scope.Stok[0].PARTI == $scope.IrsaliyeListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IrsaliyeListe[i].sth_lot_no)
                                 {
                                     alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
                                     $scope.InsertLock = false;
                                     $scope.BtnTemizle();
                                     return;
+                                }
+                                else
+                                {
+                                    alertify.alert("hahah")
                                 }
                             }
                         }
@@ -1355,6 +1362,31 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.TxtParti = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].PARTI;
         $scope.TxtLot = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].LOT;
+        if(UserParam.Sistem.PartiLotKontrol == 1)//PARTI-LOT KONTROL
+        {
+            console.log($scope.IrsaliyeListe)
+            if($scope.IrsaliyeListe != [])
+            {
+                for(i = 0;i < $scope.IrsaliyeListe.length;i++)
+                {   
+                    console.log($scope.IrsaliyeListe)
+                    console.log($scope.IrsaliyeListe[i].sth_parti_kodu,$scope.Stok[0].PARTI,"  LOT   ",$scope.Stok[0].LOT,$scope.IrsaliyeListe[i].sth_lot_no)
+                    if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
+                    {
+                        console.log($scope.IrsaliyeListe[i].sth_parti_kodu,$scope.Stok[0].PARTI,"  LOT   ",$scope.Stok[0].LOT,$scope.IrsaliyeListe[i].sth_lot_no)
+                        if($scope.Stok[0].PARTI == $scope.IrsaliyeListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IrsaliyeListe[i].sth_lot_no)
+                        {
+                            $('#MdlPartiLot').modal('hide');
+                            console.log(1)
+                            alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
+                            $scope.InsertLock = false;
+                            $scope.BtnTemizle();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
         $scope.PartiLotListe = [];
         
         $('#MdlPartiLot').modal('hide');
@@ -2224,7 +2256,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 Miktar : TmpMiktar,
                                 Guid : value.sth_Guid
                             };
-    
                             UpdateStatus = true;
                             UpdateData(Data);
                         }                        

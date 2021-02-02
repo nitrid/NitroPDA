@@ -60,6 +60,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.PersonelAdi;
         $scope.Proje = "";
         $scope.OdemeNo = "0";
+        $scope.OdemePlan = "0";
         $scope.Barkod = "";
         $scope.Birim = "1";
         $scope.StokGridTip = "0";
@@ -708,8 +709,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             0, //REZERVASYON MİKTARI
             0  //REZERVASYON TESLİM MİKTARI
         ];
-        console.log(InsertData)
-
         db.ExecuteTag($scope.Firma,'SiparisInsert',InsertData,function(InsertResult)
         {          
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -1015,6 +1014,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 {   
                     if(BarkodData.length > 0)
                     {
+                        console.log('%c TRABZON!!', 'font-weight: bold; font-size: 50px;color: red; text-shadow: 3px 3px 0 rgb(217,31,38) , 6px 6px 0 rgb(4,77,145) , 9px 9px 0 rgb(217,31,38) , 12px 12px 0 rgb(4,77,145) , 15px 15px 0 rgb(217,31,38) , 18px 18px 0 rgb(4,77,145) , 21px 21px 0 rgb(217,31,38)');          
                         $scope.Stok = BarkodData;
                         $scope.StokKodu = $scope.Stok[0].KODU;
                         for(i = 0;i < $scope.SiparisListe.length;i++)
@@ -1033,6 +1033,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                                 }
                             }
                         }
+                        console.log($scope.Stok)
                         $scope.Stok[0].FIYAT = 0;
                         $scope.Stok[0].TUTAR = 0;
                         $scope.Stok[0].INDIRIM = 0;
@@ -1040,7 +1041,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         $scope.Stok[0].ISK = {ORAN1: 0,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
                         $scope.Stok[0].KDV = 0;
                         $scope.Stok[0].TOPTUTAR = 0;
-    
+                        $scope.OdemeNo = $scope.OdemePlan;
                         // Fiyat Getir (Stok Detay)
                         var Fiyat = 
                         {
@@ -1095,7 +1096,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     
                             if($scope.BirimListe.length > 0)
                             {
-                                
                                 $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
                                 $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
                                 $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
@@ -1113,6 +1113,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         });
     
                         //****** FİYAT GETİR */
+                        console.log($scope.OdemeNo)
                         let FiyatParam = 
                         { 
                             CariKodu : $scope.CariKodu,
@@ -1126,6 +1127,11 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         };
                         await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()
                         {   
+                            if(typeof $scope.Stok[0].ODEPLAN != "undefined")
+                            {
+                                $scope.OdemeNo = $scope.Stok[0].ODEPLAN;
+                            }
+                            console.log($scope.OdemeNo)
                             $scope.MiktarFiyatValid();
                             $scope.BarkodLock = true;
                             $scope.$apply();
@@ -1727,7 +1733,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             });
         });      
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
-        db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
+        db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = $scope.OdemePlan;});
 
         await db.MaxSiraPromiseTag($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
         {
@@ -1771,9 +1777,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     $scope.MiktarFiyatValid = function()
     {
         $scope.Stok[0].INDIRIM = 0;
-        
+    
         $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
-        
+        console.log($scope.Stok[0])
         $scope.Stok[0].ISK.TUTAR1 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100);
         $scope.Stok[0].ISK.TIP1 = $scope.Stok[0].ISK.TUTAR1 === 0 ? 0 : 1; 
         $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100));       
@@ -1830,7 +1836,17 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2        
         $scope.Risk = $scope.CariListe[pIndex].RISK
         $scope.RiskLimit = $scope.CariListe[pIndex].RISKLIMIT;
-        $scope.DovizChangeKodu = "0"
+        console.log($scope.CariListe[pIndex].ODEMEPLANI)
+        if($scope.CariListe[pIndex].ODEMEPLANI == 0)
+        {
+            $scope.OdemePlan = 0;
+        }
+        else
+        {
+            $scope.OdemePlan =  $scope.CariListe[pIndex].ODEMEPLANI;
+        }
+        console.log($scope.OdemePlan)
+        $scope.DovizChangeKodu = "0";
         $scope.DovizChange()
         $scope.MainClick();
         console.log($scope.CariListe[pIndex])
@@ -2035,7 +2051,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.MiktarFiyatValid();
             console.log($scope.Stok[0].BIRIMPNTR)
         }
-    } 
+    }
     $scope.DovizChange = function()
     {
             if($scope.DovizChangeKodu == 0)
@@ -2058,90 +2074,125 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.Insert = function()
     {
-       
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {   
-          if(ParamName == "AlinanSiparis")
-          {
-              if($scope.RiskParam != 0)
-              {
-                  let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
-                 if(TmpRiskOran >= 100)
-                  {
-                      alertify.alert("Risk limitini aştınız");
-                      return;
-                  }
-                  if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
-                  {
-                      alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
-                  }
-              }
-          }
+            if(ParamName == "AlinanSiparis")
+            {
+                if($scope.RiskParam != 0)
+                {
+                    let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
+                    if(TmpRiskOran >= 100)
+                    {
+                        alertify.alert("Risk limitini aştınız");
+                        return;
+                    }
+                    if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
+                    {
+                        alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
+                    }
+                }
+            }
             if(UserParam.AlinanSiparis.EksiyeDusme == 1 &&  $scope.EvrakTip == 0 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
             {
                 alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
                 return;
             }
-                $scope.InsertLock = true
-                if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+            $scope.InsertLock = true
+            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+            {
+                InsertData();
+            }
+            else
+            {
+                let UpdateStatus = false;
+
+                angular.forEach($scope.SiparisListe,function(value)
                 {
-                    InsertData();
-                }
-                else
-                {
-                    let UpdateStatus = false;
-    
-                    angular.forEach($scope.SiparisListe,function(value)
+                    if(value.sip_stok_kod == $scope.Stok[0].KODU)
                     {
-                        if(value.sip_stok_kod == $scope.Stok[0].KODU)
+                        if(value.FIYAT == $scope.Stok[0].FIYAT)
                         {
                             let TmpMiktar = value.sip_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-    
-                            let Data = 
+                            console.log(UserParam[ParamName].SatisSarti)
+                            if(UserParam[ParamName].SatisSarti == 0)
                             {
-                                Param :
-                                [
-                                    $scope.Stok[0].FIYAT,
-                                    TmpMiktar,
-                                    $scope.Stok[0].FIYAT * TmpMiktar,
-                                    $scope.Stok[0].TOPTANVERGIPNTR,
-                                    value.sip_iskonto_1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
-                                    value.sip_iskonto_2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
-                                    value.sip_iskonto_3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
-                                    value.sip_iskonto_4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
-                                    value.sip_iskonto_5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
-                                    value.sip_iskonto_6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
-                                    $scope.Stok[0].ISK.TIP1, //SATIR ISKONTO TİP 1
-                                    $scope.Stok[0].ISK.TIP2, //SATIR ISKONTO TİP 2
-                                    $scope.Stok[0].ISK.TIP3, //SATIR ISKONTO TİP 3
-                                    $scope.Stok[0].ISK.TIP4, //SATIR ISKONTO TİP 4
-                                    $scope.Stok[0].ISK.TIP5, //SATIR ISKONTO TİP 5
-                                    $scope.Stok[0].ISK.TIP6, //SATIR ISKONTO TİP 6
-                                    value.sip_Guid
-                                ],
-                                BedenPntr : $scope.Stok[0].BEDENPNTR,
-                                RenkPntr : $scope.Stok[0].RENKPNTR,
-                                Miktar : TmpMiktar,
-                                Guid : value.sip_Guid
-                            };
-                            
-                            UpdateStatus = true;
-                            UpdateData(Data);
-                        }                        
-                    });
-    
-                    if(!UpdateStatus)
-                    {
-                        InsertData();
-                    }                
-                }
+                                let Data = 
+                                {
+                                    Param :
+                                    [
+                                        $scope.Stok[0].FIYAT,
+                                        TmpMiktar,
+                                        $scope.Stok[0].FIYAT * TmpMiktar,
+                                        $scope.Stok[0].TOPTANVERGIPNTR,
+                                        value.sip_iskonto_1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+                                        value.sip_iskonto_2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+                                        value.sip_iskonto_3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+                                        value.sip_iskonto_4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+                                        value.sip_iskonto_5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+                                        value.sip_iskonto_6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
+                                        $scope.Stok[0].ISK.TIP1, //SATIR ISKONTO TİP 1
+                                        $scope.Stok[0].ISK.TIP2, //SATIR ISKONTO TİP 2
+                                        $scope.Stok[0].ISK.TIP3, //SATIR ISKONTO TİP 3
+                                        $scope.Stok[0].ISK.TIP4, //SATIR ISKONTO TİP 4
+                                        $scope.Stok[0].ISK.TIP5, //SATIR ISKONTO TİP 5
+                                        $scope.Stok[0].ISK.TIP6, //SATIR ISKONTO TİP 6
+                                        value.sip_Guid
+                                    ],
+                                    BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                    RenkPntr : $scope.Stok[0].RENKPNTR,
+                                    Miktar : TmpMiktar,
+                                    Guid : value.sip_Guid
+                                };
+                                UpdateStatus = true;
+                                UpdateData(Data);
+                            }
+                            else
+                            {
+                                let Data = 
+                                {
+                                    Param :
+                                    [
+                                        $scope.Stok[0].FIYAT,
+                                        TmpMiktar,
+                                        $scope.Stok[0].FIYAT * TmpMiktar,
+                                        $scope.Stok[0].TOPTANVERGIPNTR,
+                                        value.sip_iskonto_1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+                                        value.sip_iskonto_2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+                                        value.sip_iskonto_3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+                                        value.sip_iskonto_4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+                                        value.sip_iskonto_5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+                                        value.sip_iskonto_6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
+                                        $scope.Stok[0].ISK.TIP1, //SATIR ISKONTO TİP 1
+                                        $scope.Stok[0].ISK.TIP2, //SATIR ISKONTO TİP 2
+                                        $scope.Stok[0].ISK.TIP3, //SATIR ISKONTO TİP 3
+                                        $scope.Stok[0].ISK.TIP4, //SATIR ISKONTO TİP 4
+                                        $scope.Stok[0].ISK.TIP5, //SATIR ISKONTO TİP 5
+                                        $scope.Stok[0].ISK.TIP6, //SATIR ISKONTO TİP 6
+                                        value.sip_Guid
+                                    ],
+                                    BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                    RenkPntr : $scope.Stok[0].RENKPNTR,
+                                    Miktar : TmpMiktar,
+                                    Guid : value.sip_Guid
+                                };
+                                UpdateStatus = true;
+                                UpdateData(Data);
+                            }
+                        }
+                    }                        
+                });
+
+                if(!UpdateStatus)
+                {
+                    InsertData();
+                }                
+            }
         }
         else
         {
             console.log("Barkod Okutunuz!");
             $scope.InsertLock = false
-        }     
-        
+        }
         BarkodFocus();
     }
     $scope.ProjeEvrakGetir = function()
@@ -2292,8 +2343,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 angular.element('#MdlEvrakGetir').modal('hide');
 
                 BarkodFocus();
-                
-                console.log(data)
 
                 alertify.alert("<a style='color:#3e8ef7''>" + $scope.ToplamSatir + " " + "Satır Kayıt Başarıyla Getirildi.. !" + "</a>" );
             }

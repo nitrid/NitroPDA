@@ -12,7 +12,7 @@ var Param = [
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
 			"SiparisOlmayanBarkodKabul": "1",
-			"PartiLotKontrol": "0",
+			"PartiLotKontrol": "1",
 			"PartiLotMiktarKontrol": "0",
 			"KiloFlag": "26,27,28",
 			"KiloBaslangic": "7",
@@ -56,7 +56,7 @@ var Param = [
 		"AlinanSiparis": {
 			"Seri": "SPR",
 			"BelgeNo": "",
-			"Cari": "0101",
+			"Cari": "E00007",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
@@ -71,7 +71,7 @@ var Param = [
 			"PartiSec": "1",
 			"FiyatLock": "0",
 			"SiparisOnay": "",
-			"IskontoMatris": "0",
+			"IskontoMatris": "1",
 			"EksiyeDusme": "0",
 			"ProjeGetir": "0"
 		},
@@ -362,7 +362,7 @@ var Param = [
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
 			"Kasa": "K01",
-			"IskontoMatris": "0"
+			"IskontoMatris": "1"
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
