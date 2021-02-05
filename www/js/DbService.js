@@ -747,11 +747,11 @@ angular.module('app.db', []).service('db',function($rootScope)
             }            
         });        
 
-        console.log(1)
         // İSKONTO MATRİS
-        if(pEvrParam.IskontoMatris == "1" && pEvrParam.AlisSarti == "0" && pEvrParam.SatisSarti == "0")
+        if(pEvrParam.IskontoMatris == "1")
         {
             console.log('girdi')
+            console.log([BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo])
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
             { 
                 
@@ -805,10 +805,38 @@ angular.module('app.db', []).service('db',function($rootScope)
                 await _GetPromiseTag(pFirma,'SatisSartiGetir',[pFiyatParam.CariKodu,BarkodData[0].KODU,pFiyatParam.DepoNo],function(SatisSartiData)
                 {
                     if(SatisSartiData.length > 0)
-                        BarkodData[0].FIYAT = SatisSartiData[0].FIYAT;
+                    {   
+                        console.log(SatisSartiData)
+                        console.log(BarkodData[0])
+                        BarkodData[0].ODEPLAN = SatisSartiData[0].ODEPLAN
+                        BarkodData[0].INDIRIM = SatisSartiData[0].INDIRIM
+                        BarkodData[0].ISK.ORAN1 = SatisSartiData[0].ISKONTOY1 
+                        BarkodData[0].ISK.ORAN2 = SatisSartiData[0].ISKONTOY2 
+                        BarkodData[0].ISK.ORAN3 = SatisSartiData[0].ISKONTOY3 
+                        BarkodData[0].ISK.ORAN4 = SatisSartiData[0].ISKONTOY4 
+                        BarkodData[0].ISK.ORAN5 = SatisSartiData[0].ISKONTOY5 
+                        BarkodData[0].ISK.ORAN6 = SatisSartiData[0].ISKONTOY6 
+                        if(SatisSartiData[0].FIYAT == SatisSartiData[0].BRUTFIYAT)
+                        {
+                            BarkodData[0].FIYAT = SatisSartiData[0].FIYAT;
+                        }
+                        else
+                        {
+                            BarkodData[0].FIYAT = SatisSartiData[0].BRUTFIYAT;
+                        }
+                    }
+                    else
+                    {
+                        BarkodData[0].ISK.ORAN1 = 0
+                        BarkodData[0].ISK.ORAN2 = 0
+                        BarkodData[0].ISK.ORAN3 = 0
+                        BarkodData[0].ISK.ORAN4 = 0
+                        BarkodData[0].ISK.ORAN5 = 0
+                        BarkodData[0].ISK.ORAN6 = 0
+                    }
                 });
             }
-        }
+     }
 
         if(pCallback)
         {

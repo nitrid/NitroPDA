@@ -1126,11 +1126,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     }
     $scope.Insert = function()
     {
-       
-  
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {
-            console.log($scope.Stok[0].DEPOMIKTAR)
             if(UserParam.DepoSevk.EksiyeDusme == 1 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
             {
                 alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
@@ -1192,16 +1189,15 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                         InsertData();
                         $scope.InsertLock = false 
                     }                
-                } 
+                }
             }
-           
         }
         else
         {   
             alertify.alert("<a style='color:#3e8ef7''>" + "Barkod Okutunuz !" + "</a>" );
             console.log("Barkod Okutunuz!");
             $scope.InsertLock = false;
-        }     
+        }
         
         BarkodFocus();
     }

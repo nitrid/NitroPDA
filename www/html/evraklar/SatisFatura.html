@@ -180,6 +180,14 @@
                         </div>
                     </div>
                     <div class="row my-0 py-0">
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Adres No:</div></div>
+                        <div class="col-8 px-1">
+                            <select class="form-control" ng-model="AdresNo" ng-disabled="EvrakLock">
+                                <option ng-repeat="option in AdresNoListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Belge Tarihi :</div></div>
                         <div class="col-8 px-1">
                             <div class="input-group input-group-icon">

@@ -73,14 +73,16 @@ var QuerySql =
     CmbAdresNo : 
     {
         query : "SELECT " +
-                "adr_cadde AS ADRES,  " +
+                "adr_adres_no AS KODU, " +
+                "adr_cadde AS ADI,  " +
+                "adr_adres_no - 1 AS SIRANO," +
                 "adr_sokak AS ADRES2," +
                 "adr_il AS IL," +
                 "adr_ilce AS ILCE," +
                 "adr_tel_no1 AS TELEFON " +
                 "FROM CARI_HESAP_ADRESLERI " +
-                "WHERE adr_cari_kod = @CARIKOD" ,
-        param : ['CARIKOD'],
+                "WHERE adr_cari_kod = @adr_cari_kod  ORDER BY adr_cadde ASC" ,
+        param : ['adr_cari_kod'],
         type : ['string|25']
     },
     CariListeGetir : 
@@ -167,7 +169,9 @@ var QuerySql =
                 "cari_efatura_fl AS EFATURA  " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE ((CARI.cari_kod LIKE @KODU + '%' ) OR (@KODU = '')) AND ((CARI.cari_unvan1 LIKE  @ADI + '%' or cari_unvan2 LIKE @ADI + '%' ) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu IN(SELECT value FROM STRING_SPLIT(@PLASIYERKODU,','))) OR (@PLASIYERKODU = ''))) AS TBL ORDER BY KODU " ,
+                "WHERE((UPPER(cari_kod) LIKE  UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(cari_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
+                "AND (((UPPER(cari_unvan1) LIKE UPPER(@ADI) + '%' or UPPER(cari_unvan2) LIKE UPPER(@ADI) + '%') OR (@ADI = '')) OR ((LOWER(cari_unvan1) LIKE LOWER(@ADI) + '%' or LOWER(cari_unvan2) LIKE LOWER(@ADI) + '%') OR (@ADI = ''))) " +
+                "AND ((CARI.cari_temsilci_kodu IN(SELECT value FROM STRING_SPLIT(@PLASIYERKODU,','))) OR (@PLASIYERKODU = ''))) AS TBL ORDER BY KODU " ,
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
     },
@@ -214,7 +218,10 @@ var QuerySql =
                 "cari_efatura_fl AS EFATURA " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE ((CARI.cari_kod = @KODU) OR (@KODU = '')) AND ((CARI.cari_unvan1 = @ADI) OR (@ADI = '')) AND ((CARI.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY cari_kod ASC",
+                "WHERE((UPPER(CARI.cari_kod) LIKE  UPPER(@KODU) OR (@KODU = '')) OR (LOWER(CARI.cari_kod) LIKE LOWER(@KODU) OR (@KODU = ''))) " +
+                "AND ((UPPER(CARI.cari_unvan1) LIKE  UPPER(@ADI) OR (@ADI = '')) OR (LOWER(CARI.cari_unvan1) LIKE LOWER(@ADI) OR (@ADI = ''))) " +
+                "AND ((CARI.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY cari_kod ASC",
+
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
     },
@@ -434,7 +441,8 @@ var QuerySql =
                 "1 AS DOVIZKUR,  " +
                 "sto_prim_orani AS PRIMORANI " +
                 "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
-                "WHERE ((sto_kod LIKE  @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE @ADI + '%' ) OR (@ADI = '')) " +
+                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(sto_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
+				"AND ((UPPER(sto_isim) LIKE UPPER(@ADI) + '%' OR (@ADI = '')) OR (LOWER(sto_isim) LIKE LOWER (@ADI) + '%' OR (@ADI = '')))" +
                 "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
                 ") AS TMP " +
                 "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI,BEDENMIKTAR,RENKMIKTAR ORDER BY KODU" ,
@@ -558,10 +566,9 @@ var QuerySql =
                 "CASE sto_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "sto_kod AS BARKOD " +
                 "FROM STOKLAR " +
-                "WHERE ((sto_kod LIKE   @KODU ) OR (@KODU = '')) AND ((sto_isim LIKE '%' + @ADI + '%' ) OR (@ADI = '')) " ,
+                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) OR LOWER(sto_kod) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER(sto_isim) LIKE UPPER(@KODU) OR LOWER(sto_isim) LIKE LOWER(@KODU)) OR (@KODU = '')) " ,
         param : ['KODU',"ADI",'DEPONO'],
         type :  ['string|25','string|50','int']
-
     },
     CariAdiGetir : 
     {
@@ -663,6 +670,8 @@ var QuerySql =
                 ",sat_bitis_tarih AS BITIS " +
                 ",sat_basla_tarih AS BASLANGIC " +
                 ",sat_brut_fiyat -(sat_det_isk_miktar1 + sat_det_isk_miktar2 + sat_det_isk_miktar3 + sat_det_isk_miktar4 + sat_det_isk_miktar5 + sat_det_isk_miktar6) AS FIYAT " +
+                ",sat_det_isk_miktar1 + sat_det_isk_miktar2 + sat_det_isk_miktar3 + sat_det_isk_miktar4 + sat_det_isk_miktar5 + sat_det_isk_miktar6 AS INDIRIM " +
+                ",sat_brut_fiyat AS BRUTFIYAT " +
                 ",sat_det_isk_miktar1 AS ISKONTOM1 " +
                 ",sat_det_isk_miktar2 AS ISKONTOM2 " +
                 ",sat_det_isk_miktar3 AS ISKONTOM3 " +
@@ -976,6 +985,7 @@ var QuerySql =
                 "SIPARIS.sip_teslim_tarih AS TESLIMTARIH, " +
                 "SIPARIS.sip_tip AS TIP, " +
                 "SIPARIS.sip_cins AS CINS, " +
+                "(SELECT dbo.fn_VergiYuzde (sto_perakende_vergi)) AS PERAKENDEVERGI, " +
                 "SIPARIS.sip_evrakno_seri AS SERI, " +
                 "SIPARIS.sip_evrakno_sira AS SIRA, " +
                 "SIPARIS.sip_satirno AS SATIRNO, " +
@@ -987,6 +997,7 @@ var QuerySql =
                 "ISNULL(BEDENHAR.BdnHar_HarGor,SIPARIS.sip_miktar) AS SIPMIKTAR, " +
                 "BARKOD.bar_birimpntr AS BIRIMPNTR, " +
                 "ISNULL(BEDENHAR.BdnHar_TesMik,SIPARIS.sip_teslim_miktar) AS TESLIMMIKTAR, " +
+                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sto_doviz_cinsi,0),2)),1) AS DOVIZCINSKURU, " +
                 "SIPARIS.sip_tutar AS TUTAR, " +
                 "SIPARIS.sip_iskonto_1 AS ISKONTO_1, " +
                 "SIPARIS.sip_iskonto_2 AS ISKONTO_2, " +
@@ -1037,6 +1048,7 @@ var QuerySql =
                 "MAX(sip_projekodu) AS PROJE, " +
                 "MAX(CONVERT(NVARCHAR(50),sip_yetkili_uid)) AS YETKILI, " +
                 "sip_Exp_Imp_Kodu AS EXIMKODU, " +
+                "STOK.sto_perakende_vergi AS PERAKENDEVERGIPNTR," +
                 "ISNULL(BARKOD.bar_partikodu,sip_parti_kodu) AS PARTI, " +
                 "ISNULL(BARKOD.bar_lotno,sip_lot_no) AS LOT " +
                 "FROM SIPARISLER AS SIPARIS  " +
@@ -1112,6 +1124,8 @@ var QuerySql =
                 "bar_lotno, " +
                 "BARKOD.bar_birimpntr, " +
                 "STOK.sto_beden_kodu, " +
+                "sto_perakende_vergi, " +
+                "sto_doviz_cinsi, " +
                 "STOK.sto_renk_kodu, " +
                 "BEDENHAR.BdnHar_BedenNo, " +
                 "STOK.sto_kod, " +
@@ -2567,7 +2581,7 @@ var QuerySql =
                 " WHERE  sth_Guid = @sth_Guid",
         param : ['sth_miktar:float','sth_miktar2:float','sth_tutar:float','sth_vergi_pntr:int','sth_iskonto1:float','sth_iskonto2:float','sth_iskonto3:float',
         'sth_iskonto4:float','sth_iskonto5:float','sth_iskonto6:float','sth_sat_iskmas1:bit','sth_sat_iskmas2:bit','sth_sat_iskmas3:bit','sth_sat_iskmas4:bit',
-        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_fat_uid:string|50','sth_Guid:string|50']
+        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:string|50']
     },
     MaxStokHarSira :
     {
