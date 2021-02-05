@@ -43,6 +43,7 @@ angular.module('app.controller', [])
 .controller('BankaRaporCtrl',['$scope','$window','db',BankaRaporCtrl])
 .controller('IsEmriDepoSevkEslestirmeCtrl',['$scope','$window','$timeout','db',IsEmriDepoSevkEslestirmeCtrl])
 .controller('RotaCtrl',['$scope','$window','$timeout','db',RotaCtrl])
+.controller('SiparisOperasyonlariCtrl',['$scope','$window','$timeout','db',SiparisOperasyonlariCtrl])
 
 
 

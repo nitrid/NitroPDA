@@ -203,6 +203,10 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/Rota.html"
     })
+    .when("/SiparisOperasyonlari",
+    {
+        templateUrl : "html/evraklar/SiparisOperasyonlari.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

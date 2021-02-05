@@ -2694,6 +2694,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 {
                     alertify.alert('Başarıyla Kaydedildi')
                     console.log(InsertResult)
+                    $scope.TbIslemSatirlariClick()
                 }
             })
         }

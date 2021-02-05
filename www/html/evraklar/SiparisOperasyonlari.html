@@ -1,0 +1,225 @@
+<style>
+    .rowheight
+    {
+        font-size: 12
+        421px;    
+    }
+</style>
+<div class="col px-0" ng-controller="SiparisOperasyonlariCtrl" ng-init="YeniEvrak()">
+    <div class="panel panel-bordered">
+        <div class="panel-body py-1">
+            <div class="tab-content">
+                <div id="TbMain" class="tab-pane active">
+                    <div class="row pb-40">
+                        <div class="col-8 px-1">
+                            <select class="form-control form-control" ng-model="CmbEvrakTip">
+                                <option value="0">Alınan Sipariş</option>       
+                                <option value="1">Verilen Sipariş</option>                                
+                            </select>
+                        </div>
+                        <div class="col-4 px-1">
+                            <button type="button" class="btn btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak()">Yeni Evrak</button>
+                                <button class="dropdown-item"  ng-click="ProjeEvrakGetirModal()" data-toggle="modal" role="menu-item">Evrak Getir</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">İlk Tarih :</div></div>
+                        <div class="col-8 px-1">
+                            <div class="input-group input-group-icon">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <span class="icon wb-calendar" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" id="SipTarih1" type="text" ng-model="SipTarih1" data-provide="datepicker" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Son Tarih :</div></div>
+                        <div class="col-8 px-1">
+                            <div class="input-group input-group-icon">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <span class="icon wb-calendar" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" id="SipTarih2" type="text" ng-model="SipTarih2" data-provide="datepicker" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">SERİ - SIRA:</div></div>
+                        <div class="col-2 col-md-1 px-1">
+                            <button type="submit" class="btn btn-primary btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
+                        </div>
+                        <div class="col-6 col-md-7 px-1">
+                            <input type="text" class="form-control" ng-model="SipSeriSira" ng-keypress = "BarkodSiparisAra($event)">
+                        </div>
+                    </div>
+                    <div class="row py-1">
+                        <div class="col-6">
+                            <button class="btn btn-block btn-primary" ng-click="BtnSiparisKabulSec()">Seç</button>
+                        </div> 
+                        <div class="col-6">
+                            <button class="btn btn-block btn-primary" ng-click="BtnSiparisKabulListele()">Listele</button>
+                        </div>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <div id="TblSiparisKabulListe" ng-show="TblLoading"></div>
+                    </div>
+                </div>
+                <div id="TbIslemSatirlari" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
+                        </div>
+                        <div class="col-4 px-1">
+                            <button type="button" class="btn btn-primary btn-block dropdown-toggle mb-1 h-40" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
+                                <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item"> Depo Düzenle</button>
+                                <button class="dropdown-item"  ng-click="BtnAciklamaGir()"  role="menu-item">Açıklama</button>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <div id="TblIslem"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Ara Toplam :</span> {{AraToplam | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam İndirim :</span> {{ToplamIndirim | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Net Toplam :</span> {{NetToplam | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Kdv :</span> {{ToplamKdv | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{GenelToplam | number:2}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="TblAciklama"  class="tab-pane">
+                    <div class="row">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="TbIslemSatirlariClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-form-label float-right py-1">EVRAK AÇIKLAMALARI</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8 text-info px-1">
+                            <div class="col-form-label float-right py-1">Her Satırlara En Fazla 120 Karakter İzin Verilmektedir!</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">1 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama1" onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">2 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama2"  onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">3 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama3" onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">4 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama4" onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group py-2">
+                            <div class="col-form-label float-right py-1">5 :</div>
+                            <div class="px-1"></div>
+                            <textarea class="form-control" ng-model="Aciklama5"  onkeyup="checkChar()" onkeydown="checkChar()" id="Aciklama" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 px-1">
+                            <button type="submit"  class="btn btn-primary btn-block btn-block h-40" ng-click="BtnAciklamaKaydet()">KAYDET</button>        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MODALLAR -->
+      <!--Düzenle Modal-->
+      <div class="modal fade" id="MdlDuzenle" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title"> Depo Düzenle</h4>
+                </div>
+                <div class="modal-body">
+                        <div class="form-group row my-5">
+                            <label class="form-control-label col-12 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>Lütfen Depo Seçiniz </b></span></div></label>
+                            <select class="form-control" ng-model="DepoNo"  ng-change="DepoChange()">
+                                <option ng-repeat="option in DepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            </select>
+                        </div>
+                    <div class="row px-10">
+                        <button type="submit" class="btn btn-primary btn-block col-12" ng-click="BtnDuzenleKaydet()">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+</div>
+<script>
+    function checkChar() 
+    {
+        var allowedChar = 120;
+        var content = document.getElementById("Aciklama");
+        var contLength = content.value.length;
+
+        if (contLength > allowedChar)
+        {
+            content.value = content.value.substring(0, allowedChar);
+            document.getElementById("report").innerHTML = "<span style='color:red;'>UYARI: En fazla " + allowedChar + " karakter girebilirsiniz</span>";
+        }
+    }
+    $("#Tarih").datepicker({
+    language: "tr"
+    });
+    $("#TesTarih").datepicker({
+    language: "tr"
+    });
+    $("#SipTarih1").datepicker({
+    language: "tr"
+    });
+    $("#SipTarih2").datepicker({
+    language: "tr"
+    });
+</script>
+<script>
+    $(document).ready(function() {
+    $(".js-example-basic-single").select2();
+    });
+</script>

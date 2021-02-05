@@ -322,7 +322,8 @@ var Param = [
 			"Vade Aralıklı Fatura Raporu": "1",
 			"Konsinye İrsaliye": "1",
 			"Cari Analiz": "1",
-			"Is Emri Depo Sevk": "1"
+			"Is Emri Depo Sevk": "1",
+			"Sipariş Operasyonları": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",

@@ -440,6 +440,7 @@ var ParamTemp =
 			"Gelen Havale" : {"Title" : "Gelen Havale","DefaultValue" : "1"},
 			"Vade Aralıklı Fatura Raporu" : {"Title" : "Vade Aralıklı Fatura Raporu","DefaultValue" : "1"},
 			"Proforma Alınan Siparis" : {"Title" : "Proforma Alınan Siparis","DefaultValue" : "1"},
+			"Sipariş Operasyonları" : {"Title" : "Sipariş Operasyonları","DefaultValue" : "1"},
 		},
 		"StokVirman" :
 		{
