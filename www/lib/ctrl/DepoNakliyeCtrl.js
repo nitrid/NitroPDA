@@ -512,7 +512,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         {
             if(pBarkod != '')
             {
-                db.StokBarkodGetir($scope.Firma,pBarkod,$scope.DepoNo,function(BarkodData)
+                db.StokBarkodGetir($scope.Firma,pBarkod,$scope.CDepo,function(BarkodData)
                 {
                     if(BarkodData.length > 0)
                     {
@@ -568,7 +568,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
         {
             if(pBarkod != '')
             {
-                db.StokBarkodGetir($scope.Firma,pBarkod,$scope.DepoNo,function(BarkodData)
+                db.StokBarkodGetir($scope.Firma,pBarkod,$scope.CDepo,function(BarkodData)
                 {
                     if(BarkodData.length > 0)
                     {
@@ -639,7 +639,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
     }
     $scope.MaxSira = function()
     {
-        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.CDepo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     }
     $scope.YeniEvrak = async function ()
     {
@@ -834,7 +834,7 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db)
             Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
         }
             
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.CDepo,''],function(StokData)
         {
             $scope.StokListe = StokData;
             if($scope.StokListe.length > 0)
