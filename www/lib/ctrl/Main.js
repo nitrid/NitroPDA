@@ -2,12 +2,15 @@
 {
     $scope.Firma = $window.sessionStorage.getItem('Firma');
     $scope.User = $window.sessionStorage.getItem('User');
+    $rootScope.Lock = false;
     $rootScope.LoadingShow = function() 
     {
+        $rootScope.Lock = true;
         $("#loading").show();
     }
     $rootScope.LoadingHide = function() 
     {
+        $rootScope.Lock = false;
         $("#loading").hide();
     }
     $rootScope.MessageBox = function(pMsg)

@@ -1,4 +1,4 @@
-function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
+function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
 {
     let CariSelectedRow = null;
     let IslemSelectedRow = null;
@@ -959,6 +959,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
             0,   //NAKLİYEDEPO
             0
         ];
+        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -2172,12 +2173,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter)
                                 TmpMiktar,
                                 TmpFiyat * TmpMiktar,
                                 $scope.Stok[0].TOPTANVERGIPNTR,
-                                value.sth_iskonto_1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
-                                value.sth_iskonto_2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
-                                value.sth_iskonto_3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
-                                value.sth_iskonto_4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
-                                value.sth_iskonto_5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
-                                value.sth_iskonto_6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
+                                value.sth_iskonto1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+                                value.sth_iskonto2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+                                value.sth_iskonto3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+                                value.sth_iskonto4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+                                value.sth_iskonto5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+                                value.sth_iskonto6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
                                 0, //SATIR ISKONTO TİP 1
                                 0, //SATIR ISKONTO TİP 2
                                 0, //SATIR ISKONTO TİP 3

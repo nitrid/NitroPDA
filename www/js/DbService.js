@@ -131,7 +131,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                     }
                 }
                 /********************************************************** */
-                $rootScope.LoadingShow();
+                $rootScope.LoadingShow();                
                 _Socket.emit('QMikroDb', TmpQuery, function (data) 
                 {
                     $rootScope.LoadingHide();
