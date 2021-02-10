@@ -12,7 +12,7 @@ var Param = [
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
 			"SiparisOlmayanBarkodKabul": "1",
-			"PartiLotKontrol": "1",
+			"PartiLotKontrol": "0",
 			"PartiLotMiktarKontrol": "0",
 			"KiloFlag": "26,27,28",
 			"KiloBaslangic": "7",

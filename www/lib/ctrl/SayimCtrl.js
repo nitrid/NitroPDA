@@ -414,29 +414,30 @@ function SayimCtrl($scope,$window,$timeout,db)
                 if(BarkodData.length > 0)
                 {
                     $scope.Stok = BarkodData;
-
+                    console.log(1)
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.Stok[0].TOPMIKTAR = 1;
-                    if(UserParam.Sistem.PartiLotKontrol == 1)
-                    {
-                        for(i = 0;i < $scope.IrsaliyeListe.length;i++)
-                        {   
-                            if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
-                            {
-                                if($scope.Stok[0].PARTI == $scope.IrsaliyeListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IrsaliyeListe[i].sth_lot_no)
-                                {
-                                    alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
-                                    $scope.InsertLock = false;
-                                    $scope.BtnTemizle();
-                                    return;
-                                }
-                            }
-                        }
-                    }
-
+                    // if(UserParam.Sistem.PartiLotKontrol == 1)
+                    // {
+                    //     for(i = 0;i < $scope.IrsaliyeListe.length;i++)
+                    //     {   
+                    //         if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
+                    //         {
+                    //             if($scope.Stok[0].PARTI == $scope.IrsaliyeListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IrsaliyeListe[i].sth_lot_no)
+                    //             {
+                    //                 alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
+                    //                 $scope.InsertLock = false;
+                    //                 $scope.BtnTemizle();
+                    //                 return;
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    console.log(1)
                     db.GetData($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {
                         $scope.BirimListe = data; 
+                        console.log(data)
                         $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
 
                         if($scope.BirimListe.length > 0)

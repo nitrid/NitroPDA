@@ -2118,82 +2118,100 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     }
     $scope.Insert = function()
     {
-        if(typeof($scope.Stok[0].KODU) != 'undefined')
-        {   
-            if(ParamName == "SatisFatura")
-            {
-                if($scope.RiskParam != 0)
+        if(String($scope.Miktar).length > 7)
+        {
+            alertify.alert("Miktar 7 haneden fazla olamaz")
+        }
+        else
+        {
+            if(typeof($scope.Stok[0].KODU) != 'undefined')
+            {   
+                if(ParamName == "SatisFatura")
                 {
-                    let TmpRiskOran = ($scope.CariBakiye / $scope.Risk) * 100;
-    
-                    if(TmpRiskOran >= 100)
+                    if($scope.RiskParam != 0)
                     {
-                        alertify.alert("Risk limitini aştınız");
-                        return;
-                    }
-                    if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
-                    {
-                        alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
-                    }
-                }
-            }   
-            if(UserParam.SatisFatura.EksiyeDusme == 1 &&  $scope.EvrakTip == 4 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
-            {
-                alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
-                return;
-            }
-            $scope.InsertLock = true
-
-            if(typeof $scope.CariHarListe == 'undefined' || $scope.CariHarListe.length == 0 )
-            {   
-                CariHarInsert(function(pResult)
-                {   
-                    if(pResult == true)
-                    {
-                        StokHarInsert();     
-                    }
-                });
-                $scope.InsertLock = false;
-            }
-            else
-            {   
-                //Liste İçerisinde StokKodu Aynı Olanlar Aranıyor. 17.09.2019 - MahiR
-                let value = db.ListEqual($scope.StokHarListe,{sth_stok_kod : $scope.Stok[0].KODU});
-                if(value != null)
-                {   
-                    if(value.FIYAT == $scope.Stok[0].FIYAT)
-                    {
-                        let TmpFiyat  = value.sth_tutar / value.sth_miktar
-                        let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
-                        let Data =
+                        let TmpRiskOran = ($scope.CariBakiye / $scope.Risk) * 100;
+        
+                        if(TmpRiskOran >= 100)
                         {
-                            Param :
-                            [
-                                TmpMiktar,
-                                TmpMiktar,
-                                TmpFiyat * TmpMiktar,
-                                $scope.Stok[0].TOPTANVERGIPNTR,
-                                value.sth_iskonto1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
-                                value.sth_iskonto2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
-                                value.sth_iskonto3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
-                                value.sth_iskonto4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
-                                value.sth_iskonto5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
-                                value.sth_iskonto6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
-                                0, //SATIR ISKONTO TİP 1
-                                0, //SATIR ISKONTO TİP 2
-                                0, //SATIR ISKONTO TİP 3
-                                0, //SATIR ISKONTO TİP 4
-                                0, //SATIR ISKONTO TİP 5
-                                0, //SATIR ISKONTO TİP 6
-                                value.sth_Guid
-                            ],
-                            BedenPntr : $scope.Stok[0].BEDENPNTR,
-                            RenkPntr : $scope.Stok[0].RENKPNTR,
-                            Miktar : TmpMiktar,
-                            Guid : value.sth_Guid
-                        };
-                        UpdateData(Data);
-                        $scope.InsertLock = false
+                            alertify.alert("Risk limitini aştınız");
+                            return;
+                        }
+                        if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
+                        {
+                            alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
+                        }
+                    }
+                }   
+                if(UserParam.SatisFatura.EksiyeDusme == 1 &&  $scope.EvrakTip == 4 && ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
+                {
+                    alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
+                    return;
+                }
+                $scope.InsertLock = true
+    
+                if(typeof $scope.CariHarListe == 'undefined' || $scope.CariHarListe.length == 0 )
+                {   
+                    CariHarInsert(function(pResult)
+                    {   
+                        if(pResult == true)
+                        {
+                            StokHarInsert();     
+                        }
+                    });
+                    $scope.InsertLock = false;
+                }
+                else
+                {   
+                    //Liste İçerisinde StokKodu Aynı Olanlar Aranıyor. 17.09.2019 - MahiR
+                    let value = db.ListEqual($scope.StokHarListe,{sth_stok_kod : $scope.Stok[0].KODU});
+                    if(value != null)
+                    {   
+                        if(value.FIYAT == $scope.Stok[0].FIYAT)
+                        {
+                            let TmpFiyat  = value.sth_tutar / value.sth_miktar
+                            let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+                            let Data =
+                            {
+                                Param :
+                                [
+                                    TmpMiktar,
+                                    TmpMiktar,
+                                    TmpFiyat * TmpMiktar,
+                                    $scope.Stok[0].TOPTANVERGIPNTR,
+                                    value.sth_iskonto1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+                                    value.sth_iskonto2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+                                    value.sth_iskonto3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+                                    value.sth_iskonto4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+                                    value.sth_iskonto5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+                                    value.sth_iskonto6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
+                                    0, //SATIR ISKONTO TİP 1
+                                    0, //SATIR ISKONTO TİP 2
+                                    0, //SATIR ISKONTO TİP 3
+                                    0, //SATIR ISKONTO TİP 4
+                                    0, //SATIR ISKONTO TİP 5
+                                    0, //SATIR ISKONTO TİP 6
+                                    value.sth_Guid
+                                ],
+                                BedenPntr : $scope.Stok[0].BEDENPNTR,
+                                RenkPntr : $scope.Stok[0].RENKPNTR,
+                                Miktar : TmpMiktar,
+                                Guid : value.sth_Guid
+                            };
+                            UpdateData(Data);
+                            $scope.InsertLock = false
+                        }
+                        else
+                        {
+                            StokHarInsert(function(pResult)
+                            {
+                                if(pResult)
+                                {
+                                    CariHarUpdate(); 
+                                }
+                            });
+                            $scope.InsertLock = false;
+                        }
                     }
                     else
                     {
@@ -2207,26 +2225,15 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                         $scope.InsertLock = false;
                     }
                 }
-                else
-                {
-                    StokHarInsert(function(pResult)
-                    {
-                        if(pResult)
-                        {
-                            CariHarUpdate(); 
-                        }
-                    });
-                    $scope.InsertLock = false;
-                }
             }
+            else
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Barkod Okutunuz !" + "</a>" );
+                console.log("Barkod Okutunuz!");
+                $scope.InsertLock = false;
+            }     
+            BarkodFocus();
         }
-        else
-        {
-            alertify.alert("<a style='color:#3e8ef7''>" + "Barkod Okutunuz !" + "</a>" );
-            console.log("Barkod Okutunuz!");
-            $scope.InsertLock = false;
-        }     
-        BarkodFocus();
     }
     $scope.IskontoValid = function(pTip,pIndex)
     {
