@@ -3216,8 +3216,11 @@ var QueryLocal =
     {
         tag : "PARAM",
         query : "CREATE TABLE IF NOT EXISTS PARAM (" +
-                "MENUDATA text)" ,
-            insert : "INSERT INTO PARAM VALUES (?)"
+                "MENUDATA text, " + 
+                "SAYIM_SIRA int, " +
+                "ALINAN_SIPARIS_SIRA int " +
+                ")" ,
+            insert : "INSERT INTO PARAM VALUES (?,?,?)"
     },
     NakliyeOnayTbl :
     {

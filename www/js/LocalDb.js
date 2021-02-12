@@ -7,7 +7,8 @@ var LocalDb =
         var _Filter = 
         {
             CARI : ['','','','','','','',''],
-            STOK : [0,'','','','','','','','','','']
+            STOK : [0,'','','','','','','','','',''],
+            PARAM : [0,new Date(),'']
         };
         function LocalDb(Service)
         {
@@ -223,6 +224,8 @@ var LocalDb =
                 await DataTransfer(QueryLocal.UretimStokTbl, QuerySql.UretimStokTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.VergiTbl, QuerySql.VergiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.NakliyeOnayTbl, QuerySql.NakliyeOnayTbl,true, DataTransferCallback);
+
+                await DataTransfer(QueryLocal.ParamTbl, QuerySql.ParamTbl,true, DataTransferCallback);
 
                 callback(true);
             }

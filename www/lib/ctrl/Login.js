@@ -1,11 +1,23 @@
 function Login ($scope,$rootScope,$window,db)
 {
     let Firma = "";
+    let UserParam;
     $scope.server_adress = localStorage.host;
     $scope.IsDbCreateWorking = false;
     $scope.TransferEventProgress = 0;    
     $scope.FirmLock = false;    
     
+    function UserControl()
+    {
+        for(i = 0;i < Param.length;i++)
+        {
+            if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     $scope.Init = function()
     {   
         $scope.Firm = ""
@@ -84,90 +96,89 @@ function Login ($scope,$rootScope,$window,db)
     }    
     $scope.FirmaClick = function()
     {
-        for(i = 0;i < Param.length;i++)
+        if(UserControl())
         {
-            if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
-            {
-                console.log("Kullanıcı adı ve şifre doğru");
+            console.log("Kullanıcı adı ve şifre doğru");
                 
-                $window.sessionStorage.setItem('User', i);
-                UserParam = Param[$window.sessionStorage.getItem('User')];
-                if(localStorage.mode == 'true')
-                {
-                    db.Connection(function(data)
-                    {       
-                        if(data == true)
-                        {
-                            $('#alert').alert('close');                    
+            $window.sessionStorage.setItem('User', i);
+            UserParam = Param[$window.sessionStorage.getItem('User')];
+            if(localStorage.mode == 'true')
+            {
+                db.Connection(function(data)
+                {       
+                    if(data == true)
+                    {
+                        $('#alert').alert('close');                    
 
-                            db.Emit('QMikroDb',QuerySql.Firma,(data) =>
+                        db.Emit('QMikroDb',QuerySql.Firma,(data) =>
+                        {
+                            if(typeof data.result.err == 'undefined')
                             {
-                                console.log(data.result.recordset)
-                                if(typeof data.result.err == 'undefined')
+                                setTimeout(function () 
                                 {
-                                    setTimeout(function () 
+                                    $('select').selectpicker('refresh');
+                                },500)
+                                if(Firma != '')
+                                {
+                                    $scope.Firm = Firma;
+                                    $scope.FirmLock = true
+                                    $scope.FirmList = data.result.recordset;
+                                }
+                                else
+                                {
+                                    if(UserParam.Sistem.FirmaListe == "")
                                     {
-                                        $('select').selectpicker('refresh');
-                                    },500)
-                                    if(Firma != '')
-                                    {
-                                        $scope.Firm = Firma;
-                                        $scope.FirmLock = true
                                         $scope.FirmList = data.result.recordset;
                                     }
                                     else
                                     {
-                                        if(UserParam.Sistem.FirmaListe == "")
-                                        {
-                                            $scope.FirmList = data.result.recordset;
-                                        }
-                                        else
-                                        {
-                                            let FirmDizi = UserParam.Sistem.FirmaListe.split(',')
+                                        let FirmDizi = UserParam.Sistem.FirmaListe.split(',')
 
-                                            FirmDizi.forEach(SipItem => 
-                                                    {
-                                                        console.log(SipItem)
-                                                        $scope.SecilenFirmalar.push({FIRM: SipItem})
-                                                    });
-                                            $scope.FirmList = $scope.SecilenFirmalar       
-                                        }
+                                        FirmDizi.forEach(SipItem => 
+                                                {
+                                                    console.log(SipItem)
+                                                    $scope.SecilenFirmalar.push({FIRM: SipItem})
+                                                });
+                                        $scope.FirmList = $scope.SecilenFirmalar       
                                     }
                                 }
-                                else
-                                {
-                                    console.log("Mikro Sql Query Çalıştırma Hatası : " + data.result.err);
-                                }
-                            });
-                        }
-                        else
-                        {
-                            $('#alert-box').html('<div class="alert alert-icon alert-danger alert-dismissible" role="alert" id="alert">' +
-                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                            '<span aria-hidden="true">&times;</span>' +
-                            '</button>' +
-                            '<i class="icon wb-bell" aria-hidden="true"></i> Sunucuya erişim sağlanamadı.' +
-                            '<p class="mt-15">' +
-                            '<button class="btn btn-primary" data-target="#server-settings" data-toggle="modal"' +
-                            'type="button">Ayarlar</button></p></div>');
-                            db.Disconnect();
-                        }
-                    });
-                }
-                else
-                {
-                    $scope.FirmList = JSON.parse(localStorage.localDb);
-                    setTimeout(function () 
+                            }
+                            else
+                            {
+                                console.log("Mikro Sql Query Çalıştırma Hatası : " + data.result.err);
+                            }
+                        });
+                    }
+                    else
                     {
-                        $('select').selectpicker('refresh');
-                    },500)
-                }
+                        $('#alert-box').html('<div class="alert alert-icon alert-danger alert-dismissible" role="alert" id="alert">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '<i class="icon wb-bell" aria-hidden="true"></i> Sunucuya erişim sağlanamadı.' +
+                        '<p class="mt-15">' +
+                        '<button class="btn btn-primary" data-target="#server-settings" data-toggle="modal"' +
+                        'type="button">Ayarlar</button></p></div>');
+                        db.Disconnect();
+                    }
+                });
+            }
+            else
+            {
+                $scope.FirmList = JSON.parse(localStorage.localDb);
+                setTimeout(function () 
+                {
+                    $('select').selectpicker('refresh');
+                },500)
+            }
 
-                return;
-            } 
-        }  
-         alertify.okBtn("Tamam");
-         alertify.alert("Kullanıcı adı veya şifre yanlış");
+            return;
+        }
+        else
+        {
+            alertify.okBtn("Tamam");
+            alertify.alert("Kullanıcı adı veya şifre yanlış");
+        }
     }
     $scope.BtnExit = function()
     {
@@ -221,6 +232,11 @@ function Login ($scope,$rootScope,$window,db)
                             $scope.VtFirm = data.result.recordset[0].FIRM;
                             $scope.VtFirmList = data.result.recordset;
                             db.Disconnect();
+
+                            setTimeout(function () 
+                            {
+                                $('select').selectpicker('refresh');
+                            },500)
                         }
                     });
                 }
@@ -239,6 +255,11 @@ function Login ($scope,$rootScope,$window,db)
                 {
                     $scope.VtFirm = data.result.recordset[0].FIRM;
                     $scope.VtFirmList = data.result.recordset;
+
+                    setTimeout(function () 
+                    {
+                        $('select').selectpicker('refresh');
+                    },500)
                 }
             });
         }
@@ -247,65 +268,63 @@ function Login ($scope,$rootScope,$window,db)
     {    
         db.Connection(function()
         {
-            let MenuData = "";
             $scope.IsDbCreateWorking = true;
             $scope.TransferEventMaster = "";
             $scope.TransferEventAlt = "";
             $scope.TransferEventProgress = 0;
-
+            console.log(UserParam)
             db.Emit('GetMenu','',function(pMenuData)
             {
-                MenuData = pMenuData;
-            });
+                db.LocalDb.Filter.STOK = [$scope.DepoNo,'','','','','','','','','','']
+                db.LocalDb.Filter.PARAM = [pMenuData,UserParam.Sayim.DepoNo,new Date(),UserParam.AlinanSiparis.Seri]
+                //QuerySql.StokTbl.value = [$scope.DepoNo];
+                QuerySql.NakliyeOnayTbl.value = [$scope.DepoNo];
 
-            db.LocalDb.Filter.STOK = [$scope.DepoNo,'','','','','','','','','','']
-            //QuerySql.StokTbl.value = [$scope.DepoNo];
-            QuerySql.NakliyeOnayTbl.value = [$scope.DepoNo];
-
-            db.LocalDb.OpenDatabase($scope.VtFirm,function(data)
-            {
-                if(data == 2)
+                db.LocalDb.OpenDatabase($scope.VtFirm,function(data)
                 {
-                    if(typeof localStorage.localDb == 'undefined')
+                    if(data == 2)
                     {
-                        localStorage.localDb = JSON.stringify(JSON.parse('[{"FIRM" : "' + $scope.VtFirm + '"}]'));                            
-                    }
-                    else
-                    {
-                        let TmpDbArr = JSON.parse(localStorage.localDb);
-                        let DuplicArr = TmpDbArr.filter(function(item)
+                        if(typeof localStorage.localDb == 'undefined')
                         {
-                            if(item.FIRM == $scope.VtFirm)
-                            {
-                                return item
-                            }
-                        });
-                        
-                        if(DuplicArr.length == 0)
-                        {
-                            TmpDbArr.push({"FIRM" : $scope.VtFirm });
-                            localStorage.localDb = JSON.stringify(TmpDbArr);
+                            localStorage.localDb = JSON.stringify(JSON.parse('[{"FIRM" : "' + $scope.VtFirm + '"}]'));                            
                         }
+                        else
+                        {
+                            let TmpDbArr = JSON.parse(localStorage.localDb);
+                            let DuplicArr = TmpDbArr.filter(function(item)
+                            {
+                                if(item.FIRM == $scope.VtFirm)
+                                {
+                                    return item
+                                }
+                            });
+                            
+                            if(DuplicArr.length == 0)
+                            {
+                                TmpDbArr.push({"FIRM" : $scope.VtFirm });
+                                localStorage.localDb = JSON.stringify(TmpDbArr);
+                            }
+                        }
+                        
+                        db.SafeApply($scope,function()
+                        {
+                            $scope.Firma = JSON.parse(localStorage.localDb)[0].FIRM;
+                            $scope.User = "0";
+                            $scope.FirmaList = JSON.parse(localStorage.localDb);
+                            $scope.UserList = Param;                        
+                            $scope.IsDbCreateWorking = false;      
+                        });  
+                        
+                        db.Disconnect();
+                        angular.element('#vt-aktarim').modal('hide');
+                        alertify.alert("<a style='color:#3e8ef7''>" + $scope.DepoNo + " " + "'nolu Deponun Stok Aktarımı Tamamlandı.. !" + "</a>" );
+                        
                     }
-                    
-                    db.LocalDb.Execute(QueryLocal.ParamInsert,[MenuData]);
-
-                    db.SafeApply($scope,function()
-                    {
-                        $scope.Firma = JSON.parse(localStorage.localDb)[0].FIRM;
-                        $scope.User = "0";
-                        $scope.FirmaList = JSON.parse(localStorage.localDb);
-                        $scope.UserList = Param;                        
-                        $scope.IsDbCreateWorking = false;      
-                    });  
-                    
-                    db.Disconnect();
-                    angular.element('#vt-aktarim').modal('hide');
-                    alertify.alert("<a style='color:#3e8ef7''>" + $scope.DepoNo + " " + "'nolu Deponun Stok Aktarımı Tamamlandı.. !" + "</a>" );
-                    
-                }
-                                
+                                    
+                });
             });
+
+            
         });
         if(db.SocketConnected)
         {

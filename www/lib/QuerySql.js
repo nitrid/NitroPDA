@@ -116,7 +116,7 @@ var QuerySql =
                 //"RISK, " +
                 //"RISKLIMIT, " +
                 "ODEMEPLANI, " +
-                "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE, " +
+                "BAKIYE, " +
                 "BELGETARIH, " +
                 "ADRES, " +
                 "IL, " +
@@ -4258,6 +4258,172 @@ var QuerySql =
         param:  ['kon_evrakno_seri','kon_evrakno_sira','kon_evraktip','BdnHar_Tipi'],
         type:   ['string|20','int','int','int']
     },
+    AciklamaInsert :
+    {
+        query : "INSERT INTO [dbo].[EVRAK_ACIKLAMALARI] " +
+        "([egk_Guid] " +
+        ",[egk_DBCno] " +
+        ",[egk_SpecRECno] " +
+        ",[egk_iptal] " +
+        ",[egk_fileid] " +
+        ",[egk_hidden] " +
+        ",[egk_kilitli] " +
+        ",[egk_degisti] " +
+        ",[egk_checksum] " +
+        ",[egk_create_user] " +
+        ",[egk_create_date] " +
+        ",[egk_lastup_user] " +
+        ",[egk_lastup_date] " +
+        ",[egk_special1] " +
+        ",[egk_special2] " +
+        ",[egk_special3] " +
+        ",[egk_dosyano] " +
+        ",[egk_hareket_tip] " +
+        ",[egk_evr_tip] " +
+        ",[egk_evr_seri] " +
+        ",[egk_evr_sira] " +
+        ",[egk_evr_ustkod] " +
+        ",[egk_evr_doksayisi] " +
+        ",[egk_evracik1] " +
+        ",[egk_evracik2] " +
+        ",[egk_evracik3] " +
+        ",[egk_evracik4] " +
+        ",[egk_evracik5] " +
+        ",[egk_evracik6] " +
+        ",[egk_evracik7] " +
+        ",[egk_evracik8] " +
+        ",[egk_evracik9] " +
+        ",[egk_evracik10] " +
+        ",[egk_sipgenkarorani] " +
+        ",[egk_kargokodu] " +
+        ",[egk_kargono] " +
+        ",[egk_tesaltarihi] " +
+        ",[egk_tesalkisi] " +
+        ",[egk_prevwiewsayisi] " +
+        ",[egk_emailsayisi] " +
+        ",[egk_Evrakopno_verildi_fl]) " +
+        "VALUES " +
+        "(NEWID()		--<egk_Guid, uniqueidentifier,> \n" +
+        ",0			--<egk_DBCno, smallint,> \n" +
+        ",0			--<egk_SpecRECno, int,> \n" +
+        ",0			--<egk_iptal, bit,> \n" +
+        ",66			--<egk_fileid, smallint,> \n" +
+        ",0			--<egk_hidden, bit,> \n" +
+        ",0			--<egk_kilitli, bit,> \n" +
+        ",0			--<egk_degisti, bit,> \n" +
+        ",0			--<egk_checksum, int,> \n" +
+        ",1			--<egk_create_user, smallint,> \n" +
+        ",GETDATE()	--<egk_create_date, datetime,> \n" +
+        ",1			--<egk_lastup_user, smallint,> \n" +
+        ",GETDATE()	--<egk_lastup_date, datetime,> \n" +
+        ",''			--<egk_special1, nvarchar(4),> \n" +
+        ",''			--<egk_special2, nvarchar(4),> \n" +
+        ",''			--<egk_special3, nvarchar(4),> \n" +
+        ",21			--<egk_dosyano, smallint,> \n" +
+        ",@HTIP		--<egk_hareket_tip, tinyint,> \n" +
+        ",@EVRAKTIP	--<egk_evr_tip, tinyint,> \n" +
+        ",@SERI		--<egk_evr_seri, [dbo].[evrakseri_str],> \n" +
+        ",@SIRA		--<egk_evr_sira, int,> \n" +
+        ",''			--<egk_evr_ustkod, nvarchar(25),> \n" +
+        ",0			--<egk_evr_doksayisi, smallint,> \n" +
+        ",@ACIKLAMA1	--<egk_evracik1, nvarchar(127),> \n" +
+        ",@ACIKLAMA2	--<egk_evracik2, nvarchar(127),> \n" +
+        ",@ACIKLAMA3	--<egk_evracik3, nvarchar(127),> \n" +
+        ",@ACIKLAMA4	--<egk_evracik4, nvarchar(127),> \n" +
+        ",@ACIKLAMA5	--<egk_evracik5, nvarchar(127),> \n" +
+        ",''			--<egk_evracik6, nvarchar(127),> \n" +
+        ",''			--<egk_evracik7, nvarchar(127),> \n" +
+        ",''			--<egk_evracik8, nvarchar(127),> \n" +
+        ",''			--<egk_evracik9, nvarchar(127),> \n" +
+        ",''			--<egk_evracik10, nvarchar(127),> \n" +
+        ",0			--<egk_sipgenkarorani, float,> \n" +
+        ",''			--<egk_kargokodu, nvarchar(25),> \n" +
+        ",''			--<egk_kargono, nvarchar(15),> \n" +
+        ",'1899-12-30 00:00:00.000' --<egk_tesaltarihi, datetime,> \n" +
+        ",''			--<egk_tesalkisi, nvarchar(50),> \n" +
+        ",0			--<egk_prevwiewsayisi, smallint,> \n" +
+        ",0			--<egk_emailsayisi, smallint,> \n" +
+        ",0			--<egk_Evrakopno_verildi_fl, bit,> \n" +
+        ")",
+        param:['HTIP:int','EVRAKTIP:int','SERI:string|25','SIRA:int','ACIKLAMA1:string|127','ACIKLAMA2:string|127','ACIKLAMA3:string|127','ACIKLAMA4:string|127','ACIKLAMA5:string|127']
+    },
+    AciklamaGetir:
+    {
+        query : "SELECT * FROM EVRAK_ACIKLAMALARI WHERE egk_hareket_tip = @HTIP AND egk_evr_tip = @EVRAKTIP AND egk_evr_seri = @SERI AND egk_evr_sira = @SIRA",
+        param: ['HTIP:int','EVRAKTIP:int','SERI:string|25','SIRA:int']
+    },
+    AciklamaUpdate : 
+    {
+        query : "UPDATE EVRAK_ACIKLAMALARI SET egk_evracik1 = @ACIKLAMA1,egk_evracik2 = @ACIKLAMA2,egk_evracik3 = @ACIKLAMA3,egk_evracik4 = @ACIKLAMA4,egk_evracik5 = @ACIKLAMA5 WHERE egk_Guid = @GUID ",
+        param : ['ACIKLAMA1:string|127','ACIKLAMA2:string|127','ACIKLAMA3:string|127','ACIKLAMA4:string|127','ACIKLAMA5:string|127','GUID:string|50']
+    },
+    BarkodInsert :
+    {
+        query : "INSERT INTO [dbo].[BARKOD_TANIMLARI] " +
+            "([bar_Guid] " +
+            ",[bar_DBCno] " +
+            ",[bar_SpecRECno] " +
+            ",[bar_iptal] " +
+            ",[bar_fileid] " +
+            ",[bar_hidden] " +
+            ",[bar_kilitli] " +
+            ",[bar_degisti] " +
+            ",[bar_checksum] " +
+            ",[bar_create_user] " +
+            ",[bar_create_date] " +
+            ",[bar_lastup_user] " +
+            ",[bar_lastup_date] " +
+            ",[bar_special1] " +
+            ",[bar_special2] " +
+            ",[bar_special3] " +
+            ",[bar_kodu] " +
+            ",[bar_stokkodu] " +
+            ",[bar_partikodu] " +
+            ",[bar_lotno] " +
+            ",[bar_serino_veya_bagkodu] " +
+            ",[bar_barkodtipi] " +
+            ",[bar_icerigi] " +
+            ",[bar_birimpntr] " +
+            ",[bar_master] " +
+            ",[bar_bedenpntr] " +
+            ",[bar_renkpntr] " +
+            ",[bar_baglantitipi] " +
+            ",[bar_har_uid] " +
+            ",[bar_asortitanimkodu]) " +
+            " VALUES " +
+            "(NEWID()       --<bar_Guid, uniqueidentifier,> \n" +
+            ",0         --<bar_DBCno, smallint,> \n" +
+            ",0         --<bar_SpecRECno, int,> \n" +
+            ",0         --<bar_iptal, bit,> \n" +
+            ",0         --<bar_fileid, smallint,> \n" +
+            ",0         --<bar_hidden, bit,> \n" +
+            ",0         --<bar_kilitli, bit,> \n" +
+            ",0         --<bar_degisti, bit,> \n" +
+            ",0         --<bar_checksum, int,> \n" +
+            ",1         --<bar_create_user, smallint,> \n" +
+            ",GETDATE()        --<bar_create_date, datetime,> \n" +
+            ",1         --<bar_lastup_user, smallint,> \n" +
+            ",GETDATE()     --<bar_lastup_date, datetime,> \n" +
+            ",''            --<bar_special1, nvarchar(4),> \n" +
+            ",''        --<bar_special2, nvarchar(4),> \n" +
+            ",''            --<bar_special3, nvarchar(4),> \n" +
+            ",@bar_kodu         --<bar_kodu, [dbo].[barkod_str],> \n" +
+            ",@bar_stokkodu     --<bar_stokkodu, nvarchar(25),> \n" +
+            ",''            --<bar_partikodu, nvarchar(25),> \n" +
+            ",0         --<bar_lotno, int,> \n" +
+            ",''            --<bar_serino_veya_bagkodu, nvarchar(25),> \n" +
+            ",0         --<bar_barkodtipi, tinyint,> \n" +
+            ",0         --<bar_icerigi, tinyint,> \n" + 
+            ",@bar_birimpntr        --<bar_birimpntr, tinyint,> \n" +
+            ",0         --<bar_master, bit,> \n" +
+            ",0         --<bar_bedenpntr, tinyint,> \n" +
+            ",0         --<bar_renkpntr, tinyint,> \n" +
+            ",0         --,<bar_baglantitipi, tinyint,> \n" +
+            ",'00000000-0000-0000-0000-000000000000'        --<bar_har_uid, uniqueidentifier,> \n" +
+            ",0         --<bar_asortitanimkodu, nvarchar(25),> \n" +
+           ") ",
+           param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int']
+    },  
     //E-Süreçler
     EIrsGetir : 
     {
@@ -5241,171 +5407,13 @@ var QuerySql =
         param : ['DEPONO'],
         type : ['int']
     },
-    AciklamaInsert :
+    ParamTbl : 
     {
-        query : "INSERT INTO [dbo].[EVRAK_ACIKLAMALARI] " +
-        "([egk_Guid] " +
-        ",[egk_DBCno] " +
-        ",[egk_SpecRECno] " +
-        ",[egk_iptal] " +
-        ",[egk_fileid] " +
-        ",[egk_hidden] " +
-        ",[egk_kilitli] " +
-        ",[egk_degisti] " +
-        ",[egk_checksum] " +
-        ",[egk_create_user] " +
-        ",[egk_create_date] " +
-        ",[egk_lastup_user] " +
-        ",[egk_lastup_date] " +
-        ",[egk_special1] " +
-        ",[egk_special2] " +
-        ",[egk_special3] " +
-        ",[egk_dosyano] " +
-        ",[egk_hareket_tip] " +
-        ",[egk_evr_tip] " +
-        ",[egk_evr_seri] " +
-        ",[egk_evr_sira] " +
-        ",[egk_evr_ustkod] " +
-        ",[egk_evr_doksayisi] " +
-        ",[egk_evracik1] " +
-        ",[egk_evracik2] " +
-        ",[egk_evracik3] " +
-        ",[egk_evracik4] " +
-        ",[egk_evracik5] " +
-        ",[egk_evracik6] " +
-        ",[egk_evracik7] " +
-        ",[egk_evracik8] " +
-        ",[egk_evracik9] " +
-        ",[egk_evracik10] " +
-        ",[egk_sipgenkarorani] " +
-        ",[egk_kargokodu] " +
-        ",[egk_kargono] " +
-        ",[egk_tesaltarihi] " +
-        ",[egk_tesalkisi] " +
-        ",[egk_prevwiewsayisi] " +
-        ",[egk_emailsayisi] " +
-        ",[egk_Evrakopno_verildi_fl]) " +
-        "VALUES " +
-        "(NEWID()		--<egk_Guid, uniqueidentifier,> \n" +
-        ",0			--<egk_DBCno, smallint,> \n" +
-        ",0			--<egk_SpecRECno, int,> \n" +
-        ",0			--<egk_iptal, bit,> \n" +
-        ",66			--<egk_fileid, smallint,> \n" +
-        ",0			--<egk_hidden, bit,> \n" +
-        ",0			--<egk_kilitli, bit,> \n" +
-        ",0			--<egk_degisti, bit,> \n" +
-        ",0			--<egk_checksum, int,> \n" +
-        ",1			--<egk_create_user, smallint,> \n" +
-        ",GETDATE()	--<egk_create_date, datetime,> \n" +
-        ",1			--<egk_lastup_user, smallint,> \n" +
-        ",GETDATE()	--<egk_lastup_date, datetime,> \n" +
-        ",''			--<egk_special1, nvarchar(4),> \n" +
-        ",''			--<egk_special2, nvarchar(4),> \n" +
-        ",''			--<egk_special3, nvarchar(4),> \n" +
-        ",21			--<egk_dosyano, smallint,> \n" +
-        ",@HTIP		--<egk_hareket_tip, tinyint,> \n" +
-        ",@EVRAKTIP	--<egk_evr_tip, tinyint,> \n" +
-        ",@SERI		--<egk_evr_seri, [dbo].[evrakseri_str],> \n" +
-        ",@SIRA		--<egk_evr_sira, int,> \n" +
-        ",''			--<egk_evr_ustkod, nvarchar(25),> \n" +
-        ",0			--<egk_evr_doksayisi, smallint,> \n" +
-        ",@ACIKLAMA1	--<egk_evracik1, nvarchar(127),> \n" +
-        ",@ACIKLAMA2	--<egk_evracik2, nvarchar(127),> \n" +
-        ",@ACIKLAMA3	--<egk_evracik3, nvarchar(127),> \n" +
-        ",@ACIKLAMA4	--<egk_evracik4, nvarchar(127),> \n" +
-        ",@ACIKLAMA5	--<egk_evracik5, nvarchar(127),> \n" +
-        ",''			--<egk_evracik6, nvarchar(127),> \n" +
-        ",''			--<egk_evracik7, nvarchar(127),> \n" +
-        ",''			--<egk_evracik8, nvarchar(127),> \n" +
-        ",''			--<egk_evracik9, nvarchar(127),> \n" +
-        ",''			--<egk_evracik10, nvarchar(127),> \n" +
-        ",0			--<egk_sipgenkarorani, float,> \n" +
-        ",''			--<egk_kargokodu, nvarchar(25),> \n" +
-        ",''			--<egk_kargono, nvarchar(15),> \n" +
-        ",'1899-12-30 00:00:00.000' --<egk_tesaltarihi, datetime,> \n" +
-        ",''			--<egk_tesalkisi, nvarchar(50),> \n" +
-        ",0			--<egk_prevwiewsayisi, smallint,> \n" +
-        ",0			--<egk_emailsayisi, smallint,> \n" +
-        ",0			--<egk_Evrakopno_verildi_fl, bit,> \n" +
-        ")",
-        param:['HTIP:int','EVRAKTIP:int','SERI:string|25','SIRA:int','ACIKLAMA1:string|127','ACIKLAMA2:string|127','ACIKLAMA3:string|127','ACIKLAMA4:string|127','ACIKLAMA5:string|127']
-    },
-    AciklamaGetir:
-    {
-        query : "SELECT * FROM EVRAK_ACIKLAMALARI WHERE egk_hareket_tip = @HTIP AND egk_evr_tip = @EVRAKTIP AND egk_evr_seri = @SERI AND egk_evr_sira = @SIRA",
-        param: ['HTIP:int','EVRAKTIP:int','SERI:string|25','SIRA:int']
-    },
-    AciklamaUpdate : 
-    {
-        query : "UPDATE EVRAK_ACIKLAMALARI SET egk_evracik1 = @ACIKLAMA1,egk_evracik2 = @ACIKLAMA2,egk_evracik3 = @ACIKLAMA3,egk_evracik4 = @ACIKLAMA4,egk_evracik5 = @ACIKLAMA5 WHERE egk_Guid = @GUID ",
-        param : ['ACIKLAMA1:string|127','ACIKLAMA2:string|127','ACIKLAMA3:string|127','ACIKLAMA4:string|127','ACIKLAMA5:string|127','GUID:string|50']
-    },
-    BarkodInsert :
-    {
-        query : "INSERT INTO [dbo].[BARKOD_TANIMLARI] " +
-            "([bar_Guid] " +
-            ",[bar_DBCno] " +
-            ",[bar_SpecRECno] " +
-            ",[bar_iptal] " +
-            ",[bar_fileid] " +
-            ",[bar_hidden] " +
-            ",[bar_kilitli] " +
-            ",[bar_degisti] " +
-            ",[bar_checksum] " +
-            ",[bar_create_user] " +
-            ",[bar_create_date] " +
-            ",[bar_lastup_user] " +
-            ",[bar_lastup_date] " +
-            ",[bar_special1] " +
-            ",[bar_special2] " +
-            ",[bar_special3] " +
-            ",[bar_kodu] " +
-            ",[bar_stokkodu] " +
-            ",[bar_partikodu] " +
-            ",[bar_lotno] " +
-            ",[bar_serino_veya_bagkodu] " +
-            ",[bar_barkodtipi] " +
-            ",[bar_icerigi] " +
-            ",[bar_birimpntr] " +
-            ",[bar_master] " +
-            ",[bar_bedenpntr] " +
-            ",[bar_renkpntr] " +
-            ",[bar_baglantitipi] " +
-            ",[bar_har_uid] " +
-            ",[bar_asortitanimkodu]) " +
-            " VALUES " +
-            "(NEWID()       --<bar_Guid, uniqueidentifier,> \n" +
-            ",0         --<bar_DBCno, smallint,> \n" +
-            ",0         --<bar_SpecRECno, int,> \n" +
-            ",0         --<bar_iptal, bit,> \n" +
-            ",0         --<bar_fileid, smallint,> \n" +
-            ",0         --<bar_hidden, bit,> \n" +
-            ",0         --<bar_kilitli, bit,> \n" +
-            ",0         --<bar_degisti, bit,> \n" +
-            ",0         --<bar_checksum, int,> \n" +
-            ",1         --<bar_create_user, smallint,> \n" +
-            ",GETDATE()        --<bar_create_date, datetime,> \n" +
-            ",1         --<bar_lastup_user, smallint,> \n" +
-            ",GETDATE()     --<bar_lastup_date, datetime,> \n" +
-            ",''            --<bar_special1, nvarchar(4),> \n" +
-            ",''        --<bar_special2, nvarchar(4),> \n" +
-            ",''            --<bar_special3, nvarchar(4),> \n" +
-            ",@bar_kodu         --<bar_kodu, [dbo].[barkod_str],> \n" +
-            ",@bar_stokkodu     --<bar_stokkodu, nvarchar(25),> \n" +
-            ",''            --<bar_partikodu, nvarchar(25),> \n" +
-            ",0         --<bar_lotno, int,> \n" +
-            ",''            --<bar_serino_veya_bagkodu, nvarchar(25),> \n" +
-            ",0         --<bar_barkodtipi, tinyint,> \n" +
-            ",0         --<bar_icerigi, tinyint,> \n" + 
-            ",@bar_birimpntr        --<bar_birimpntr, tinyint,> \n" +
-            ",0         --<bar_master, bit,> \n" +
-            ",0         --<bar_bedenpntr, tinyint,> \n" +
-            ",0         --<bar_renkpntr, tinyint,> \n" +
-            ",0         --,<bar_baglantitipi, tinyint,> \n" +
-            ",'00000000-0000-0000-0000-000000000000'        --<bar_har_uid, uniqueidentifier,> \n" +
-            ",0         --<bar_asortitanimkodu, nvarchar(25),> \n" +
-           ") ",
-           param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int']
-    }    
+        query : "SELECT " +
+        "@menudata AS MENUDATA, " +
+        "(SELECT ISNULL(MAX(sym_evrakno),0) AS MAXEVRSIRA FROM SAYIM_SONUCLARI WHERE sym_depono = @sym_depono AND sym_tarihi = @sym_tarihi) AS SAYIM_SIRA, " +
+        "(SELECT ISNULL(MAX(sip_evrakno_sira),0) AS MAXEVRSIRA FROM SIPARISLER WHERE sip_evrakno_seri=@sip_evrakno_seri AND sip_tip = 0 AND sip_cins = 0) AS ALINAN_SIPARIS_SIRA ",
+        param : ['menudata:string|max','sym_depono:int','sym_tarihi:date','sip_evrakno_seri:string|10'] 
+    }   
     //#endregion "AKTARIM"
 };
