@@ -159,10 +159,9 @@ angular.module('app.db', []).service('db',function($rootScope)
             }
         }
         else
-        {
-            
+        {            
             TmpQuery = JSON.parse(JSON.stringify(window["QueryLocal"][pParam.tag]));
-
+            
             if (typeof (TmpQuery.param) != 'undefined')
             {
                 for(i = 0;i < TmpQuery.param.length;i++)
@@ -193,12 +192,8 @@ angular.module('app.db', []).service('db',function($rootScope)
                             }
                         }
                     }
-                    
 
-                    TmpQuery.query = TmpQuery.query.replace('@' + pPrm,pVal);
-                    TmpQuery.query = TmpQuery.query.replace('@' + pPrm,pVal);
-                    TmpQuery.query = TmpQuery.query.replace('@' + pPrm,pVal);
-                    TmpQuery.query = TmpQuery.query.replace('@' + pPrm,pVal);
+                    TmpQuery.query = TmpQuery.query.replaceAll('@' + pPrm,pVal);
                 }
                 
                 pParam.param = [];

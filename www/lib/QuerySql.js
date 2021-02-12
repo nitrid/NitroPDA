@@ -4569,7 +4569,7 @@ var QuerySql =
                 "WHERE ((cari_grup_kodu >= @GRUP1) OR(@GRUP1 = '')) AND  ((cari_grup_kodu <= @GRUP2) OR(@GRUP2 = '')) AND  ((cari_bolge_kodu >= @BOLGE1) OR(@BOLGE1 = '')) AND  ((cari_bolge_kodu <= @BOLGE2) OR(@BOLGE2 = '')) " +
                 "AND ((cari_temsilci_kodu >= @TEMSILCI1) OR(@TEMSILCI1 = '')) AND  ((cari_temsilci_kodu <= @TEMSILCI2) OR(@TEMSILCI2 = '')) AND ((cari_sektor_kodu >= @SEKTOR1) OR(@SEKTOR1 = '')) AND  ((cari_sektor_kodu <= @SEKTOR2) OR(@SEKTOR2 = '')) ",
                 param : ['GRUP1','GRUP2','BOLGE1','BOLGE2','TEMSILCI1','TEMSILCI2','SEKTOR1','SEKTOR2'],
-                type : ['string','string','string','string','string','string','string','string',]
+                type : ['string','string','string','string','string','string','string','string']
     },
     CariFoyTbl :
      {
@@ -4593,7 +4593,7 @@ var QuerySql =
                  "order by [#msg_S_0092] DESC"
     },
     DepoTbl : 
-     {
+    {
         query : "SELECT dep_no AS DEPONO, " +
                  "dep_adi AS DEPOADI, " +
                  "dep_cadde AS DEPOCADDE, " +
@@ -4603,7 +4603,7 @@ var QuerySql =
                  "FROM DEPOLAR " 
     },
     DepoSiparisStok : 
-     {
+    {
          query : "SELECT CONVERT(NVARCHAR(50),DEPOSIPARIS.ssip_Guid) AS RECNO, " +
                  "BARKOD.bar_kodu AS BARKOD, " +
                  "DEPOSIPARIS.ssip_stok_kod AS KODU, " +
@@ -4637,10 +4637,10 @@ var QuerySql =
                  "DEPOSIPARIS.ssip_stok_kod=BARKOD.bar_stokkodu " +
                  "AND DEPOSIPARIS.ssip_birim_pntr=BARKOD.bar_birimpntr " +
                  "AND DEPOSIPARIS.ssip_teslim_miktar < DEPOSIPARIS.ssip_miktar " +
-                 "INNER JOIN STOKLAR AS STOK ON STOK.sto_kod = DEPOSIPARIS.ssip_stok_kod " +
-                 "WHERE DEPOSIPARIS.ssip_girdepo = @GDEPO AND DEPOSIPARIS.ssip_cikdepo = @CDEPO AND DEPOSIPARIS.ssip_evrakno_seri =@SERI AND DEPOSIPARIS.ssip_evrakno_sira = @SIRA AND BARKOD.bar_kodu = @BARKOD",
-                 param : ['GDEPO','CDEPO','SERI','SIRA','BARKOD'],
-                 type : ['int','int','string|10','int','string|25']
+                 "INNER JOIN STOKLAR AS STOK ON STOK.sto_kod = DEPOSIPARIS.ssip_stok_kod ",
+                 //"WHERE DEPOSIPARIS.ssip_girdepo = @GDEPO AND DEPOSIPARIS.ssip_cikdepo = @CDEPO AND DEPOSIPARIS.ssip_evrakno_seri =@SERI AND DEPOSIPARIS.ssip_evrakno_sira = @SIRA AND BARKOD.bar_kodu = @BARKOD",
+                //  param : ['GDEPO','CDEPO','SERI','SIRA','BARKOD'],
+                //  type : ['int','int','string|10','int','string|25']
     },
     FiyatTbl :
      {

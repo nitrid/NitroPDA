@@ -37,7 +37,7 @@ function Login ($scope,$rootScope,$window,db)
             UserParam.Sistem.Firma = localStorage.Firma
         }
         
-        $scope.DepoNo = "";
+        $scope.DepoNo = 1;
 
         if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
         {
@@ -84,10 +84,8 @@ function Login ($scope,$rootScope,$window,db)
     }    
     $scope.FirmaClick = function()
     {
-        console.log(1)
-         for(i = 0;i < Param.length;i++)
+        for(i = 0;i < Param.length;i++)
         {
-            console.log($scope.Kullanici )
             if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
             {
                 console.log("Kullanıcı adı ve şifre doğru");
@@ -104,6 +102,7 @@ function Login ($scope,$rootScope,$window,db)
 
                             db.Emit('QMikroDb',QuerySql.Firma,(data) =>
                             {
+                                console.log(data.result.recordset)
                                 if(typeof data.result.err == 'undefined')
                                 {
                                     setTimeout(function () 
@@ -154,6 +153,14 @@ function Login ($scope,$rootScope,$window,db)
                             db.Disconnect();
                         }
                     });
+                }
+                else
+                {
+                    $scope.FirmList = JSON.parse(localStorage.localDb);
+                    setTimeout(function () 
+                    {
+                        $('select').selectpicker('refresh');
+                    },500)
                 }
 
                 return;
@@ -251,7 +258,8 @@ function Login ($scope,$rootScope,$window,db)
                 MenuData = pMenuData;
             });
 
-            QuerySql.StokTbl.value = [$scope.DepoNo];
+            db.LocalDb.Filter.STOK = [$scope.DepoNo,'','','','','','','','','','']
+            //QuerySql.StokTbl.value = [$scope.DepoNo];
             QuerySql.NakliyeOnayTbl.value = [$scope.DepoNo];
 
             db.LocalDb.OpenDatabase($scope.VtFirm,function(data)

@@ -4,10 +4,16 @@ var LocalDb =
     {
         var Listeners = Object();
         var _FirmaDb;
+        var _Filter = 
+        {
+            CARI : ['','','','','','','',''],
+            STOK : [0,'','','','','','','','','','']
+        };
         function LocalDb(Service)
         {
             _Service = Service;
         }
+        LocalDb.prototype.Filter = _Filter;
         LocalDb.prototype.OpenDatabase = function(pDbName,callback)
         {
             _DbName = pDbName; 
@@ -186,37 +192,37 @@ var LocalDb =
         {
             try
             {   
-               // await DataTransfer(QueryLocal.AdresTbl, QuerySql.AdresTbl, DataTransferCallback);
-               //await DataTransfer(QueryLocal.AlisSartiTbl, QuerySql.AlisSartiTbl,DataTransferCallback);
+                await DataTransfer(QueryLocal.AdresTbl, QuerySql.AdresTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.AlisSartiTbl, QuerySql.AlisSartiTbl,true,DataTransferCallback);
                 await DataTransfer(QueryLocal.AltGrupTbl, QuerySql.AltGrupTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.AnaGrupTbl, QuerySql.AnaGrupTbl,true, DataTransferCallback);
-                //await DataTransfer(QueryLocal.BankaTbl, QuerySql.BankaTbl, DataTransferCallback);
-          //      await DataTransfer(QueryLocal.BarkodTbl, QuerySql.BarkodTbl, DataTransferCallback);
-            //    await DataTransfer(QueryLocal.BirimTbl, QuerySql.BirimTbl,true, DataTransferCallback);
-              //  await DataTransfer(QueryLocal.CariTbl, QuerySql.CariTbl, DataTransferCallback);
+                await DataTransfer(QueryLocal.BankaTbl, QuerySql.BankaTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.BarkodTbl, QuerySql.BarkodTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.BirimTbl, QuerySql.BirimTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.CariTbl, QuerySql.CariTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.CariFoyTbl, QuerySql.CariFoyTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.DepoTbl, QuerySql.DepoTbl,true, DataTransferCallback);
-               // await DataTransfer(QueryLocal.DepoSiparisStokTbl, QuerySql.DepoSiparisStok, DataTransferCallback);
-           //     await DataTransfer(QueryLocal.FiyatTbl, QuerySql.FiyatTbl, DataTransferCallback);
-                //await DataTransfer(QueryLocal.IsEmirleriTbl, QuerySql.IsEmirleriTbl, DataTransferCallback);
-               // await DataTransfer(QueryLocal.IskontoTbl, QuerySql.IskontoTbl, DataTransferCallback);
-                //await DataTransfer(QueryLocal.KasaTbl, QuerySql.KasaTbl, DataTransferCallback);
-                //await DataTransfer(QueryLocal.MarkaTbl, QuerySql.MarkaTbl, DataTransferCallback);
+                await DataTransfer(QueryLocal.DepoSiparisStokTbl, QuerySql.DepoSiparisStok,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.FiyatTbl, QuerySql.FiyatTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.IsEmirleriTbl, QuerySql.IsEmirleriTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.IskontoTbl, QuerySql.IskontoTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.KasaTbl, QuerySql.KasaTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.MarkaTbl, QuerySql.MarkaTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.OdemePlanTbl, QuerySql.OdemePlanTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.PersonelTbl, QuerySql.PersonelTbl, true,DataTransferCallback);
                 await DataTransfer(QueryLocal.ProjelerTbl, QuerySql.ProjelerTbl,true, DataTransferCallback); 
-                //await DataTransfer(QueryLocal.ReyonTbl, QuerySql.ReyonTbl, DataTransferCallback);
-               // await DataTransfer(QueryLocal.SatisSartiTbl, QuerySql.SatisSartiTbl, DataTransferCallback);
-                //await DataTransfer(QueryLocal.SenetTbl, QuerySql.SenetTbl, DataTransferCallback);
-         //       await DataTransfer(QueryLocal.SiparisStokTbl, QuerySql.SiparisStokTbl, DataTransferCallback);
-               // await DataTransfer(QueryLocal.SonAlisFiyatiTbl, QuerySql.SonAlisFiyatiTbl, DataTransferCallback);
-               // await DataTransfer(QueryLocal.SonSatisFiyatiTbl, QuerySql.SonSatisFiyatiTbl, DataTransferCallback);
-                await DataTransfer(QueryLocal.SorumlulukMrkzTbl, QuerySql.SorumlulukMrkzTbl,true, DataTransferCallback)
-         //       await DataTransfer(QueryLocal.StokTbl, QuerySql.StokTbl, DataTransferCallback);
-                //await DataTransfer(QueryLocal.UreticiTbl, QuerySql.UreticiTbl, DataTransferCallback);
-                //await DataTransfer(QueryLocal.UretimStokTbl, QuerySql.UretimStokTbl, DataTransferCallback);
+                await DataTransfer(QueryLocal.ReyonTbl, QuerySql.ReyonTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.SatisSartiTbl, QuerySql.SatisSartiTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.SenetTbl, QuerySql.SenetTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.SiparisStokTbl, QuerySql.SiparisStokTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.SonAlisFiyatiTbl, QuerySql.SonAlisFiyatiTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.SonSatisFiyatiTbl, QuerySql.SonSatisFiyatiTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.SorumlulukMrkzTbl, QuerySql.SorumlulukMrkzTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.StokTbl, QuerySql.StokTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.UreticiTbl, QuerySql.UreticiTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.UretimStokTbl, QuerySql.UretimStokTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.VergiTbl, QuerySql.VergiTbl,true, DataTransferCallback);
-           //     await DataTransfer(QueryLocal.NakliyeOnayTbl, QuerySql.NakliyeOnayTbl, DataTransferCallback);
+                await DataTransfer(QueryLocal.NakliyeOnayTbl, QuerySql.NakliyeOnayTbl,true, DataTransferCallback);
 
                 callback(true);
             }
@@ -263,10 +269,8 @@ var LocalDb =
         }    
         function DataTransfer(pLocal,pSql,pClear,callback)
         {
-
             return new Promise(resolve => 
             {
-
                 LocalEvent({MasterMsg : 'Kayıtlar Aktarılıyor.',AltMsg : pLocal.tag + ' Aktarımı İçin Kayıtlar Getiriliyor.'});
                 pSql.db = '{M}.' + _DbName;
 
@@ -283,8 +287,14 @@ var LocalDb =
                     });
                     
                 }
+                // SORGU İÇERİSİNDEKİ PARAMETRELER İÇİN YAPILDI.
+                if(typeof _Filter[pLocal.tag] != 'undefined')
+                {
+                    pSql.value = _Filter[pLocal.tag]
+                }
+                
                 _Service.Emit('QMikroDb',pSql,(data) =>
-                { console.log(pSql)          
+                { 
                     if(typeof data.result.err == 'undefined')
                     {
                         let status = {count:data.result.recordset.length,index:0,tag:pLocal.tag};        

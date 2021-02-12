@@ -209,6 +209,20 @@ var QueryLocal =
                 "AND ((STOK.MARKA LIKE '@MKODU') OR ('@MKODU' = '')) AND '@DEPO' <> ''" ,
         param : ['KODU','ADI','DEPO','MKODU']
     },
+    StokAdiGetir : 
+    {
+        query : "SELECT " +
+                "KODU AS KODU, " +
+                "ADI AS ADI, " +
+                "DEPOMIKTAR AS DEPOMIKTAR, " +
+                "'' AS BIRIM1, " +
+                "DOVIZCINSI AS DOVIZCINS, " +
+                "KODU AS BARKOD " +
+                "FROM STOK " +
+                "WHERE ((UPPER(KODU) LIKE UPPER('@KODU') OR LOWER(KODU) LIKE LOWER('@KODU')) OR ('@KODU' = '')) AND ((UPPER(ADI) LIKE UPPER('@KODU') OR LOWER(ADI) LIKE LOWER('@KODU')) OR ('@KODU' = '')) " ,
+        param : ['KODU',"ADI",'DEPONO'],
+        type :  ['string|25','string|50','int']
+    },
     SiparisKabulListele : 
     {
         query : "SELECT " +
@@ -892,7 +906,7 @@ var QueryLocal =
                "''," + 
                "''," + 
                "@sym_miktar1," + 
-               "0," + 
+               "@sym_miktar2," + 
                "0," + 
                "0," + 
                "0," + 
@@ -904,8 +918,8 @@ var QueryLocal =
                "@sym_lot_no," + 
                "'@sym_serino') ",
         param : ['sym_create_user','sym_lastup_user','sym_tarihi','sym_depono','sym_evrakno','sym_Stokkodu',
-                'sym_miktar1','sym_birim_pntr','sym_barkod','sym_renkno','sym_bedenno','sym_parti_kodu','sym_lot_no',
-                'sym_serino']
+                'sym_miktar1','sym_miktar2','sym_birim_pntr','sym_barkod','sym_renkno','sym_bedenno',
+                'sym_parti_kodu','sym_lot_no','sym_serino']
     },
     SayimEvrDelete :
     {

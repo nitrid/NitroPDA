@@ -25,7 +25,6 @@ function SayimCtrl($scope,$window,$timeout,db)
         $scope.Firma = $window.sessionStorage.getItem('Firma');
         
         $scope.EvrakNo = UserParam.Sayim.EvrakNo;
-        console.log($scope.EvrakNo)
         $scope.Barkod = "";
         $scope.Tarih = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.DepoNo;
@@ -305,7 +304,7 @@ function SayimCtrl($scope,$window,$timeout,db)
     }  
     function InsertData()
     {      
-         var InsertData = 
+        var InsertData = 
         [
             UserParam.MikroId,
             UserParam.MikroId,
@@ -323,7 +322,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             $scope.Stok[0].LOT,
             ''
         ];
-        console.log(InsertData)
+        
         db.ExecuteTag($scope.Firma,'SayimInsert',InsertData,function(InsertResult)
         {    
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -417,6 +416,7 @@ function SayimCtrl($scope,$window,$timeout,db)
                     console.log(1)
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.Stok[0].TOPMIKTAR = 1;
+                    $scope.Stok[0].LOT = 0;
                     // if(UserParam.Sistem.PartiLotKontrol == 1)
                     // {
                     //     for(i = 0;i < $scope.IrsaliyeListe.length;i++)
