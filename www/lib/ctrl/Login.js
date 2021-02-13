@@ -272,7 +272,7 @@ function Login ($scope,$rootScope,$window,db)
             $scope.TransferEventMaster = "";
             $scope.TransferEventAlt = "";
             $scope.TransferEventProgress = 0;
-            console.log(UserParam)
+            
             db.Emit('GetMenu','',function(pMenuData)
             {
                 db.LocalDb.Filter.STOK = [$scope.DepoNo,'','','','','','','','','','']

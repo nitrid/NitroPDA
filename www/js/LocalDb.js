@@ -286,7 +286,7 @@ var LocalDb =
                     }
                     LocalDb.prototype.Execute(TmpQuery,[],function()
                     {
-                        console.log(1)
+                        
                     });
                     
                 }
@@ -324,7 +324,6 @@ var LocalDb =
                                         status.index += 1;
                                         status.err = err;
                                         callback(status);
-                                        console.log(status)
                                         if(status.index == status.count)
                                         {
                                             resolve();   

@@ -130,7 +130,7 @@ sqllib.prototype.QueryPromise = function(pQuery,pResult)
                         {
                             var from = pQuery.value[i]; 
                             var numbers = from.match(/\d+/g); 
-                            var date = new Date(numbers[2] + "-" +numbers[1] + "-" + numbers[0]);
+                            var date = new Date(numbers[0],numbers[1],numbers[2]);
 
                             request.input(pQuery.param[i].split(":")[0],sql.Date,date);    
                         }
