@@ -193,7 +193,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                         }
                     }
 
-                    TmpQuery.query = TmpQuery.query.replaceAll('@' + pPrm,pVal);
+                    TmpQuery.query = TmpQuery.query.replace(/@pPrm/g,pVal);
                 }
                 
                 pParam.param = [];
