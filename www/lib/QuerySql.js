@@ -1427,7 +1427,7 @@ var QuerySql =
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sip_Guid AND BdnHar_Tipi = 9),0) AS BEDENPNTR , " +
                 "* FROM SIPARISLER WHERE sip_evrakno_seri = @sip_evrakno_seri AND " +
                 "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins " +
-                "ORDER BY sip_satirno ASC",
+                "ORDER BY sip_satirno ASC ",
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
         type:   ['string|20','int','int','int']
     },

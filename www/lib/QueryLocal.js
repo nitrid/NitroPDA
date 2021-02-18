@@ -1199,11 +1199,14 @@ var QueryLocal =
                 "ROUND(sip_tutar,2) AS TUTAR, " +
                 "(SELECT SORUMLULUKISMI FROM SORUMLULUKMRKZ WHERE SORUMLULUKKODU = sip_stok_sormerk) AS SORUMLUMERADI ," +
                 "(SELECT PERSONELADI FROM PERSONEL WHERE PERSONELKODU = sip_satici_kod) AS PERSONELADI," +
+                "(SELECT ORAN FROM VERGI WHERE PNTR = sip_vergi_pntr) AS VERGIPNTR, " +
+                "(SELECT BIRIM FROM BIRIM WHERE KODU = sip_stok_kod) AS BIRIMADI, " +
+                "(SELECT BIRIMPNTR FROM BIRIM WHERE KODU = sip_stok_kod) AS BIRIM, " +
                 "IFNULL((SELECT RENKPNTR FROM BARKOD WHERE KODU = sip_stok_kod),0) AS RENKPNTR , " +
                 "IFNULL((SELECT BEDENPNTR FROM BARKOD WHERE KODU = sip_stok_kod),0) AS BEDENPNTR , " +
                 "* FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND " +
                 "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins " +
-                "ORDER BY sip_satirno ASC",
+                "ORDER BY sip_satirno ASC ",
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
         type:   ['string','int','int','int']
     },
@@ -1222,7 +1225,7 @@ var QueryLocal =
                 "IFNULL((SELECT SERI from SIPARISSTOK WHERE RECNO = sth_sip_uid),'') AS SIPSERI ," +
                 "IFNULL((SELECT SIRA from SIPARISSTOK WHERE RECNO = sth_sip_uid),0) AS SIPSIRA ," +
                 "* FROM STOKHAR " +
-                "WHERE sth_evrakno_seri= ? AND sth_evrakno_sira = ? AND sth_evraktip = ? ORDER BY sth_satirno "
+                "WHERE sth_evrakno_seri= ? AND sth_evrakno_sira = ? AND sth_evraktip = ? ORDER BY sth_satirno ",
     },
     NakliyeGetir :
     {
