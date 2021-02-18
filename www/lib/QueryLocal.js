@@ -35,6 +35,14 @@ var QueryLocal =
                 "FROM PERSONEL AS PER1 INNER JOIN PERSONEL AS PER2 ON " +
                 "PER1.PERSONELKODU = PER2.PERSONELKODU --AND PER1.cari_per_tip = 0 "
     },
+    PersonelTipGetir : 
+    {
+        query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP UNION ALL SELECT PER1.PERSONELKODU AS KODU,PER1.PERSONELADI AS ADI,PER1.PERSONELSOYADI AS SOYADI,PER1.PERSONELTIP AS TIP " +
+                "FROM PERSONEL AS PER1 INNER JOIN PERSONEL AS PER2 ON " +
+                "PER1.PERSONELKODU = PER2.PERSONELKODU where PER1.PERSONELTIP in(@TIP,2) " ,
+                param : ['TIP'],
+                type : ['int'] 
+    },
     CmbProjeGetir : 
     {
         query : "SELECT '' AS KODU, '' AS ADI UNION ALL SELECT KODU AS KODU,ADI AS ADI FROM PROJELER"
@@ -183,28 +191,26 @@ var QueryLocal =
                 "STOK.BEDENKODU AS BEDENKODU, " +
                 "STOK.RENKKODU AS RENKKODU, " +
                 "STOK.AKTIFPASIF AS AKTIFPASIF, " +
-                "BARKOD.BARKOD AS BARKOD, " +
-                "BARKOD.BIRIMPNTR AS BIRIMPNTR, " +
-                "BARKOD.BEDENPNTR AS BEDENPNTR, " +
-                "BARKOD.RENKPNTR AS RENKPNTR, " +
-                "BARKOD.PARTI AS PARTI, " +
-                "BARKOD.LOT AS LOT, " +
-                "BARKOD.BARKODTIP AS BARKODTIP, " +
-                "BARKOD.BEDEN AS BEDEN, " +
-                "BARKOD.RENK AS RENK, " +
+                "'' AS BARKOD, " +
+                "1 AS BIRIMPNTR, " +
+                "0 AS BEDENPNTR, " +
+                "0 AS RENKPNTR, " +
+                "'' AS PARTI, " +
+                "0 AS LOT, " +
+                "0 AS BARKODTIP, " +
+                "'' AS BEDEN, " +
+                "'' AS RENK, " +
                 "STOK.PERAKENDEVERGI AS PERAKENDEVERGI, " +
                 "STOK.TOPTANVERGI AS TOPTANVERGI, " +
-                "BARKOD.KATSAYI AS KATSAYI, " +
-                "BARKOD.BIRIM AS BIRIM, " +
+                "1 AS KATSAYI, " +
+                "'' AS BIRIM, " +
                 "STOK.DETAYTAKIP AS DETAYTAKIP, " +
                 "STOK.DEPOMIKTAR AS DEPOMIKTAR, " +
-                "BARKOD.KIRILIMMIKTAR AS KIRILIMMIKTAR, " +
+                "0 AS KIRILIMMIKTAR, " +
                 "STOK.SIPARISDURSUN AS SIPARISDURSUN, " +
                 "STOK.MALKABULDURSUN as MALKABULDURSUN, " +
                 "STOK.OTVTUTAR AS OTVTUTAR " +
                 "FROM STOK AS STOK " +
-                "LEFT JOIN BARKOD AS BARKOD ON " +
-                "STOK.KODU = BARKOD.KODU " +
                 "WHERE ((STOK.KODU LIKE '@KODU') OR ('@KODU' = '')) AND ((STOK.ADI LIKE '@ADI') OR ('@ADI' = '')) " +
                 "AND ((STOK.MARKA LIKE '@MKODU') OR ('@MKODU' = '')) AND '@DEPO' <> ''" ,
         param : ['KODU','ADI','DEPO','MKODU']
@@ -222,6 +228,21 @@ var QueryLocal =
                 "WHERE ((UPPER(KODU) LIKE UPPER('@KODU') OR LOWER(KODU) LIKE LOWER('@KODU')) OR ('@KODU' = '')) AND ((UPPER(ADI) LIKE UPPER('@KODU') OR LOWER(ADI) LIKE LOWER('@KODU')) OR ('@KODU' = '')) " ,
         param : ['KODU',"ADI",'DEPONO'],
         type :  ['string|25','string|50','int']
+    },
+    PartiLotGetir :
+    {
+        query : "SELECT PARTI AS PARTI, " + 
+                "LOT AS LOT, " +
+                "STOK AS STOK, " +
+                "MIKTAR AS MIKTAR, " +
+                "0 AS KALAN, " +
+                "SKTTARIH AS SKTTARIH " + 
+                "FROM PARTI " +
+                "WHERE STOK = '@STOK' " +
+                "AND ((PARTI = '@PARTI') OR ('@PARTI' = '')) AND ((LOT = @LOT) OR (@LOT = 0)) " +
+                "ORDER BY PARTI ASC ",
+        param : ['STOK','DEPONO','PARTI','LOT'],
+        type : ['string|25','int','string|25','int']
     },
     SiparisKabulListele : 
     {
@@ -402,7 +423,7 @@ var QueryLocal =
                 ",@sip_cins					                   " +
                 ",'@sip_evrakno_seri'		                   " +
                 ",@sip_evrakno_sira			                   " +
-                ",(SELECT IFNULL(MAX(sip_satirno),-1) + 1 AS SATIRNO FROM SIPARIS WHERE sip_evrakno_seri = @sip_evrakno_seri AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins)" +
+                ",(SELECT IFNULL(MAX(sip_satirno),-1) + 1 AS SATIRNO FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins)" +
                 ",'@sip_belgeno'				                   " +
                 ",'@sip_belge_tarih'			                   " +
                 ",'@sip_satici_kod'				               " +
@@ -516,6 +537,52 @@ var QueryLocal =
         param : ['KODU','LISTENO','DEPO'],
         type : ['string','int','int']
     },
+    IskontoMatrisGetir : 
+    {
+        query : "SELECT " + 
+                "ISKONTO1, " + 
+                "ISKONTO2, " + 
+                "ISKONTO3, " + 
+                "ISKONTO4, " + 
+                "ISKONTO5, " + 
+                "ISKONTO6 " + 
+                "FROM ISKONTO WHERE STOK = '@STOK' AND CARI = '@CARI' AND ODEMEPLANI = @ODEME", 
+        param : ['STOK','CARI','ODEME'],
+        type : ['string','string','int']
+    },
+    SatisSartiGetir : 
+    {
+        query : "SELECT STOKKOD " +
+                ",CARIKOD " +
+                ",BITIS " +
+                ",BASLANGIC " +
+                ", FIYAT " +
+                ",BRUTFIYAT " +
+                ",ISKONTOM1 " +
+                ",ISKONTOM2 " +
+                ",ISKONTOM3 " +
+                ",ISKONTOM4 " +
+                ",ISKONTOM5 " +
+                ",ISKONTOM6 " +
+                ",ISKONTOY1 " +
+                ",ISKONTOY2 " +
+                ",ISKONTOY3 " +
+                ",ISKONTOY4 " +
+                ",ISKONTOY5 " +
+                ",ISKONTOY6 " +
+                ",ODEPLAN " +
+                ",DOVIZ " +
+                ",DEPO " +
+                ",LISTENO " +
+                ",DOVIZSEMBOL " +
+                ",DOVIZKUR " +
+                "FROM SATISSARTI " +
+                "WHERE " +
+                " CARIKOD = '@sat_cari_kod' AND STOKKOD = '@sat_stok_kod' AND (DEPO = '@sat_depo_no' OR DEPO = 0) " +
+                "ORDER BY BASLANGIC,DEPO DESC , BITIS ASC" , 
+        param : ['sat_cari_kod','sat_stok_kod','sat_depo_no'],
+        type : ['string','string','int']
+    },
     CmbBirimGetir : 
     {
         query : "SELECT  BIRIMPNTR, " + 
@@ -525,6 +592,20 @@ var QueryLocal =
         param : ['sto_kod'],
         type : ['string']
     }, 
+    RenkGetir :
+    {
+        query : "SELECT PNTR, KIRILIM, KODU " +
+                "FROM RENK WHERE KODU = '@KODU' " ,
+        param : ['KODU'],
+        type : ['string']
+    },
+    BedenGetir :
+    {
+        query : "SELECT PNTR, KIRILIM, KODU " +
+                "FROM BEDEN WHERE KODU = '@KODU' " ,
+        param : ['KODU'],
+        type : ['string']
+    },
     NakliyeListele :
     {
         query: "SELECT " +
@@ -941,7 +1022,7 @@ var QueryLocal =
     },
     MaxSayimSira :
     {
-        query : "SELECT IFNULL(MAX(sym_evrakno),0) + 1 AS MAXEVRSIRA FROM SAYIM " +
+        query : "SELECT IFNULL(MAX(sym_evrakno),?) + 1 AS MAXEVRSIRA FROM SAYIM " +
                 "WHERE sym_depono = ? AND sym_tarihi = ? " 
     },
     SayimSeriGetir :
@@ -1105,6 +1186,26 @@ var QueryLocal =
     {
         query : "UPDATE SIPARISSTOK SET TESLIMMIKTAR = (TESLIMMIKTAR + @sip_teslim_miktar) WHERE RECNO = '@sip_Guid' ",
         param : ['sip_teslim_miktar:int','sip_Guid:string|50']
+    },
+    MaxSiparisSira : 
+    {
+        query : "SELECT IFNULL(MAX(sip_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM SIPARIS " +
+                "WHERE sip_evrakno_seri=? AND sip_tip=? AND sip_cins=? "
+    },
+    SiparisGetir:
+    {
+        query:  "SELECT IFNULL((SELECT ADI FROM STOK WHERE KODU = sip_stok_kod),'') AS ADI, " +
+                "ROUND((sip_tutar / sip_miktar),2) AS FIYAT, " +
+                "ROUND(sip_tutar,2) AS TUTAR, " +
+                "(SELECT SORUMLULUKISMI FROM SORUMLULUKMRKZ WHERE SORUMLULUKKODU = sip_stok_sormerk) AS SORUMLUMERADI ," +
+                "(SELECT PERSONELADI FROM PERSONEL WHERE PERSONELKODU = sip_satici_kod) AS PERSONELADI," +
+                "IFNULL((SELECT RENKPNTR FROM BARKOD WHERE KODU = sip_stok_kod),0) AS RENKPNTR , " +
+                "IFNULL((SELECT BEDENPNTR FROM BARKOD WHERE KODU = sip_stok_kod),0) AS BEDENPNTR , " +
+                "* FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND " +
+                "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins " +
+                "ORDER BY sip_satirno ASC",
+        param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
+        type:   ['string','int','int','int']
     },
     //Stok Hareket
     StokHarGetir :
@@ -2334,6 +2435,28 @@ var QueryLocal =
                  "ISKONTOKOD nvarchar (4))",               
         insert : "INSERT INTO FIYAT VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"               
     },
+    FiyatListeTbl:
+    {
+        tag : "FIYAT",
+        query : "CREATE TABLE IF NOT EXISTS FIYAT (" +
+                 "STOKKODU NVARCHAR(25)," +
+                 "LISTENO int," +
+                 "LISTEADI nvarchar (25)," +
+                 "DEPONO int," +
+                 "ODEMENO int," +
+                 "FIYAT float," +
+                 "DOVIZ tinyint," +
+                 "DOVIZSEMBOL nvarchar (25)," +
+                 "DOVIZKUR float," +
+                 "STOKADI nvarchar (50)," +
+                 "ALTGRUP nvarchar (25)," +
+                 "URETICI nvarchar (25)," +
+                 "SEKTOR nvarchar (25)," +
+                 "REYON nvarchar (25)," +
+                 "MARKA nvarchar (25)," +
+                 "ISKONTOKOD nvarchar (4))",               
+        insert : "INSERT INTO FIYAT VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"               
+    },
     IsEmirleriTbl:
     {
          tag : "ISEMIRLERI",
@@ -2346,16 +2469,17 @@ var QueryLocal =
     {
          tag : "ISKONTO",
          query : "CREATE TABLE IF NOT EXISTS ISKONTO (" +
-                "STOK nvarchar (4)," +
-                "CARI nvarchar (4)," +
+                "STOK nvarchar (5)," +
+                "CARI nvarchar (5)," +
                 "ISIM nvarchar (50)," +
                 "ODEMEPLANI int," +
                 "ISKONTO1 float," +
                 "ISKONTO2 float," +
                 "ISKONTO3 float," +
                 "ISKONTO4 float," +
-                "ISKONTO5 float)",
-         insert : "INSERT INTO ISKONTO VALUES(?,?,?,?,?,?,?,?,?)"
+                "ISKONTO5 float," +
+                "ISKONTO6 float)",
+         insert : "INSERT INTO ISKONTO VALUES(?,?,?,?,?,?,?,?,?,?)"
     },
     KasaTbl : 
     {
@@ -2513,8 +2637,9 @@ var QueryLocal =
         query : "CREATE TABLE IF NOT EXISTS PERSONEL (" +
                 "PERSONELKODU nvarchar(25)," +
                 "PERSONELADI nvarchar(50)," +
-                "PERSONELSOYADI nvarchar(50))",
-        insert : "INSERT INTO PERSONEL VALUES (?,?,?)"
+                "PERSONELSOYADI nvarchar(50)," +
+                "PERSONELTIP int)",
+        insert : "INSERT INTO PERSONEL VALUES (?,?,?,?)"
     },
     ProjelerTbl : 
     {
@@ -2542,6 +2667,7 @@ var QueryLocal =
                 "BITIS datetime," +
                 "BASLANGIC datetime," +
                 "FIYAT float," +
+                "BRUTFIYAT float," +
                 "ISKONTOM1 float," +
                 "ISKONTOM2 float," +
                 "ISKONTOM3 float," +
@@ -2564,7 +2690,7 @@ var QueryLocal =
                 "BOLGE nvarchar (25)," +
                 "GRUP nvarchar (25)," +
                 "TEMSILCI nvarchar (25))",
-        insert : "INSERT INTO SATISSARTI VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+        insert : "INSERT INTO SATISSARTI VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
     SayimTbl : 
     {
@@ -2782,7 +2908,7 @@ var QueryLocal =
                 "ChHar_master_recno int)",
         insert : "INSERT INTO SERINOHAR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
-    SiparisTbL : 
+    SiparisTbl : 
     {
         tag : "SIPARIS",
         query : "CREATE TABLE IF NOT EXISTS SIPARIS (" +
@@ -2901,7 +3027,7 @@ var QueryLocal =
                 "sip_HareketGrupKodu1, " +
                 "sip_HareketGrupKodu2, " +
                 "sip_HareketGrupKodu3)" ,
-        insert : "INSERT INTO SIPARİS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+        insert : "INSERT INTO SIPARIS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
     SiparisStokTbl : 
     {
@@ -3179,6 +3305,39 @@ var QueryLocal =
               "KODU nvarchar (25)," +
               "ADI nvarchar (40))",
         insert : "INSERT INTO URETICI VALUES (?,?)"
+    },
+    PartiTbl :
+    {
+        tag : "PARTI",
+        query : "CREATE TABLE IF NOT EXISTS PARTI ( " +
+               "PARTI nvarchar (25), " +
+               "LOT int, " +
+               "STOK nvarchar (25), " +
+               "MIKTAR float, " +
+               "KALAN int, " + 
+               "SKTTARIH datetime " +
+               " ) ",
+         insert : "INSERT INTO PARTI VALUES (?,?,?,?,?,?)"
+    },
+    RenkTbl :
+    {
+        tag : "RENK",
+        query : "CREATE TABLE IF NOT EXISTS RENK ( " +
+               "PNTR int, " +
+               "KIRILIM int, " +
+               "KODU nvarchar (25) " +
+               " ) ",
+         insert : "INSERT INTO RENK VALUES (?,?,?)"
+    },
+    BedenTbl :
+    {
+        tag : "BEDEN",
+        query : "CREATE TABLE IF NOT EXISTS BEDEN ( " +
+               "PNTR int, " +
+               "KIRILIM int, " +
+               "KODU nvarchar (25) " +
+               " ) ",
+         insert : "INSERT INTO BEDEN VALUES (?,?,?)"
     },
     UretimStokTbl :
    {

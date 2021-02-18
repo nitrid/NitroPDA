@@ -3163,6 +3163,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         {
             $scope.DGenelToplam = db.SumColumn(Data,"TUTAR");
             $scope.DizaynListe = Data;
+            console.log($scope.DizaynListe)
             $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
             $("#TbDizayn").addClass('active');
         });
