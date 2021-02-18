@@ -214,54 +214,65 @@ function Login ($scope,$rootScope,$window,db)
     }
     $scope.BtnMenuDbTransfer = function()
     {   
-        if(localStorage.mode == 'false')
+        console.log(UserControl())
+        if(UserControl() == false)
         {
-            db.Connection(function(data)
-            {
-                if(data == true)
-                {
-                    $scope.IsDbCreateWorking = false;
-                    $scope.TransferEventMaster = "";
-                    $scope.TransferEventAlt = "";
-                    $scope.TransferEventProgress = 0;
-
-                    db.Emit('QMikroDb',QuerySql.Firma,(data) =>
-                    {
-                        if(typeof data.result.err == 'undefined')
-                        {
-                            $scope.VtFirm = data.result.recordset[0].FIRM;
-                            $scope.VtFirmList = data.result.recordset;
-                            db.Disconnect();
-
-                            setTimeout(function () 
-                            {
-                                $('select').selectpicker('refresh');
-                            },500)
-                        }
-                    });
-                }
-            });
+            alertify.okBtn("Tamam");
+            alertify.alert("Kullanıcı adı veya şifre yanlış");
+            $('#vt-aktarim').modal("hide");
         }
         else
         {
-            $scope.IsDbCreateWorking = false;
-            $scope.TransferEventMaster = "";
-            $scope.TransferEventAlt = "";
-            $scope.TransferEventProgress = 0;
-
-            db.Emit('QMikroDb',QuerySql.Firma,(data) =>
+            $('#vt-aktarim').modal("show");
+            if(localStorage.mode == 'false')
             {
-                if(typeof data.result.err == 'undefined')
+                db.Connection(function(data)
                 {
-                    $scope.VtFirm = data.result.recordset[0].FIRM;
-                    $scope.VtFirmList = data.result.recordset;
-
-                    setTimeout(function () 
+                    if(data == true)
                     {
-                        $('select').selectpicker('refresh');
-                    },500)
-                }
-            });
+                        $scope.IsDbCreateWorking = false;
+                        $scope.TransferEventMaster = "";
+                        $scope.TransferEventAlt = "";
+                        $scope.TransferEventProgress = 0;
+    
+                        db.Emit('QMikroDb',QuerySql.Firma,(data) =>
+                        {
+                            if(typeof data.result.err == 'undefined')
+                            {
+                                $scope.VtFirm = data.result.recordset[0].FIRM;
+                                $scope.VtFirmList = data.result.recordset;
+                                db.Disconnect();
+    
+                                setTimeout(function () 
+                                {
+                                    $('select').selectpicker('refresh');
+                                },500)
+                            }
+                        });
+                    }
+                });
+            }
+            else
+            {
+                $scope.IsDbCreateWorking = false;
+                $scope.TransferEventMaster = "";
+                $scope.TransferEventAlt = "";
+                $scope.TransferEventProgress = 0;
+    
+                db.Emit('QMikroDb',QuerySql.Firma,(data) =>
+                {
+                    if(typeof data.result.err == 'undefined')
+                    {
+                        $scope.VtFirm = data.result.recordset[0].FIRM;
+                        $scope.VtFirmList = data.result.recordset;
+    
+                        setTimeout(function () 
+                        {
+                            $('select').selectpicker('refresh');
+                        },500)
+                    }
+                });
+            }
         }
     }
     $scope.BtnDbCreate = function()
@@ -278,6 +289,7 @@ function Login ($scope,$rootScope,$window,db)
                 db.LocalDb.Filter.STOK = [$scope.DepoNo,'','','','','','','','','','']
                 db.LocalDb.Filter.PARAM = [pMenuData,UserParam.Sayim.DepoNo,new Date(),UserParam.AlinanSiparis.Seri]
                 //QuerySql.StokTbl.value = [$scope.DepoNo];
+                db.LocalDb.Filter.PARTI  = [$scope.DepoNo];
                 QuerySql.NakliyeOnayTbl.value = [$scope.DepoNo];
 
                 db.LocalDb.OpenDatabase($scope.VtFirm,function(data)

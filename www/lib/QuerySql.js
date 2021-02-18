@@ -732,14 +732,14 @@ var QuerySql =
         query : "SELECT pl_partikodu AS PARTI, " + 
                 "pl_lotno AS LOT, " +
                 "pl_stokkodu AS STOK, " +
-                "ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,@DepoNo,GETDATE(),pl_partikodu,pl_lotno)),0) AS MIKTAR, " +
+                "ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,@DEPONO,GETDATE(),pl_partikodu,pl_lotno)),0) AS MIKTAR, " +
                 "0 AS KALAN, " +
                 "pl_son_kullanim_tar AS SKTTARIH " + 
                 "FROM PARTILOT " +
                 "WHERE pl_stokkodu = @pl_stokkodu " +
                 "AND ((pl_partikodu = @pl_partikodu) OR (@pl_partikodu = '')) AND ((pl_lotno = @pl_lotno) OR (@pl_lotno = 0)) " +
                 "ORDER BY pl_partikodu ASC ",
-        param : ['pl_stokkodu','DepoNo','pl_partikodu','pl_lotno'],
+        param : ['pl_stokkodu','DEPONO','pl_partikodu','pl_lotno'],
         type : ['string|25','int','string|25','int']
     },
     PartiLotInsert :
@@ -1515,7 +1515,7 @@ var QuerySql =
                 "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
                 "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN " +
                 "FROM SIPARISLER LEFT OUTER JOIN BEDEN_HAREKETLERI ON sip_Guid = BdnHar_Har_uid " +
-                "WHERE sip_depono = @sip_depono AND sip_musteri_kod =@sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
+                "WHERE sip_depono = @sip_depono AND sip_musteri_kod = @sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
         param : ['sip_depono','sip_musteri_kod','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
         type : ['string|15','string|25','string|10','int','int']       
     },
@@ -4852,7 +4852,8 @@ var QuerySql =
                 "isk_isk2_yuzde AS ISKONTO2, " +
                 "isk_isk3_yuzde AS ISKONTO3, " +
                 "isk_isk4_yuzde AS ISKONTO4, " +
-                "isk_isk5_yuzde AS ISKONTO5 " +
+                "isk_isk5_yuzde AS ISKONTO5, " +
+                "isk_isk6_yuzde AS ORAN6 " + 
                 "FROM STOK_CARI_ISKONTO_TANIMLARI"                
     },
     KasaTbl :
@@ -4883,7 +4884,8 @@ var QuerySql =
     {
         query : "SELECT cari_per_kod AS PERSONELKODU, " +
                 "cari_per_adi AS PERSONELADI, " +
-                "cari_per_soyadi AS PERSONELSOYADI " +
+                "cari_per_soyadi AS PERSONELSOYADI," +
+                "cari_per_tip AS PERSONELTIP " +
                 "FROM CARI_PERSONEL_TANIMLARI"
     },
     ProjelerTbl : 
@@ -4892,6 +4894,28 @@ var QuerySql =
                 "pro_adi AS ADI, " +
                 "pro_musterikodu AS MUSTERI " +
                 "FROM PROJELER"
+    },
+    PartiTbl : 
+    {
+        query : "SELECT pl_partikodu AS PARTI, " + 
+        "pl_lotno AS LOT, " +
+        "pl_stokkodu AS STOK, " +
+        "ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,@DEPONO,GETDATE(),pl_partikodu,pl_lotno)),0) AS MIKTAR, " +
+        "0 AS KALAN, " +
+        "pl_son_kullanim_tar AS SKTTARIH " + 
+        "FROM PARTILOT AS PARTI ",
+        param : ['DEPONO'],
+        type : ['int']
+    },
+    RenkTbl :
+    {
+        query : "SELECT rnk_kirilimID AS PNTR , rnk_kirilim AS KIRILIM,rnk_kodu AS KODU " +
+                "FROM STOK_RENK_TANIMLARI_DIKEY AS RENK",
+    },
+    BedenTbl :
+    {
+        query : "SELECT bdn_kirilimID AS PNTR , bdn_kirilim AS KIRILIM,bdn_kodu AS KODU " +
+                "FROM STOK_BEDEN_TANIMLARI_DIKEY AS BEDEN "
     },
     ReyonTbl :
     {
@@ -4906,7 +4930,8 @@ var QuerySql =
                 "sat_cari_kod AS CARIKOD, " +
                 "sat_bitis_tarih AS BITIS, " +
                 "sat_basla_tarih AS BASLANGIC, " +
-                "sat_brut_fiyat AS FIYAT, " +
+                "sat_brut_fiyat -(sat_det_isk_miktar1 + sat_det_isk_miktar2 + sat_det_isk_miktar3 + sat_det_isk_miktar4 + sat_det_isk_miktar5 + sat_det_isk_miktar6) AS FIYAT, " +
+                "sat_brut_fiyat AS BRUTFIYAT, " +
                 "sat_det_isk_miktar1 AS ISKONTOM1, " +
                 "sat_det_isk_miktar2 AS ISKONTOM2, " +
                 "sat_det_isk_miktar3 AS ISKONTOM3, " +

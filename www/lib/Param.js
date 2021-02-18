@@ -46,7 +46,7 @@ var Param = [
 			"EvrakTip": "0"
 		},
 		"Sayim": {
-			"EvrakNo": "10",
+			"EvrakNo": "0",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"BelgeBilgisi": "",

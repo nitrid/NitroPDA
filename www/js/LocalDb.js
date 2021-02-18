@@ -8,7 +8,8 @@ var LocalDb =
         {
             CARI : ['','','','','','','',''],
             STOK : [0,'','','','','','','','','',''],
-            PARAM : [0,new Date(),'']
+            PARAM : [0,new Date(),''],
+            PARTI : [0]
         };
         function LocalDb(Service)
         {
@@ -168,7 +169,7 @@ var LocalDb =
                 //await CreateTable(QueryLocal.SenetCekTbl);
                 //await CreateTable(QueryLocal.SeriNoTbl);
                 //await CreateTable(QueryLocal.SeriNoHarTbl);
-                await CreateTable(QueryLocal.SiparisTbL);
+                await CreateTable(QueryLocal.SiparisTbl);
                 await CreateTable(QueryLocal.SiparisStokTbl);
                 await CreateTable(QueryLocal.SonAlisFiyatiTbl);
                 await CreateTable(QueryLocal.SonSatisFiyatiTbl);
@@ -179,9 +180,10 @@ var LocalDb =
                 //await CreateTable(QueryLocal.UretimStokTbl);
                 await CreateTable(QueryLocal.VergiTbl);  
                 await CreateTable(QueryLocal.NakliyeOnayTbl); 
-                
-                await CreateTable(QueryLocal.ParamTbl);  
-
+                await CreateTable(QueryLocal.PartiTbl);
+                await CreateTable(QueryLocal.ParamTbl);
+                await CreateTable(QueryLocal.RenkTbl);
+                await CreateTable(QueryLocal.BedenTbl);
                 callback(true);
             }
             catch(err)
@@ -216,6 +218,7 @@ var LocalDb =
                 await DataTransfer(QueryLocal.SatisSartiTbl, QuerySql.SatisSartiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SenetTbl, QuerySql.SenetTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SiparisStokTbl, QuerySql.SiparisStokTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.SiparisTbl, QuerySql.SiparisTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SonAlisFiyatiTbl, QuerySql.SonAlisFiyatiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SonSatisFiyatiTbl, QuerySql.SonSatisFiyatiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SorumlulukMrkzTbl, QuerySql.SorumlulukMrkzTbl,true, DataTransferCallback);
@@ -224,9 +227,10 @@ var LocalDb =
                 await DataTransfer(QueryLocal.UretimStokTbl, QuerySql.UretimStokTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.VergiTbl, QuerySql.VergiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.NakliyeOnayTbl, QuerySql.NakliyeOnayTbl,true, DataTransferCallback);
-
+                await DataTransfer(QueryLocal.PartiTbl,QuerySql.PartiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.ParamTbl, QuerySql.ParamTbl,true, DataTransferCallback);
-
+                await DataTransfer(QueryLocal.RenkTbl, QuerySql.RenkTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.BedenTbl, QuerySql.BedenTbl,true, DataTransferCallback);
                 callback(true);
             }
             catch(err)
@@ -298,6 +302,10 @@ var LocalDb =
                 
                 _Service.Emit('QMikroDb',pSql,(data) =>
                 { 
+                    if(pLocal.tag == 'SATISSARTI')
+                    {
+                        console.log(pSql)
+                    }
                     if(typeof data.result.err == 'undefined')
                     {
                         let status = {count:data.result.recordset.length,index:0,tag:pLocal.tag};        
