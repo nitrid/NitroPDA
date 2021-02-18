@@ -7,13 +7,13 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.tone.nitro"
-    },
-    "phonegap-plugin-contentsync": {
-      "PACKAGE_NAME": "com.tone.nitro"
-    },
     "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.tone.nitro"
+    },
+    "cordova-plugin-file-downloader": {
+      "PACKAGE_NAME": "com.tone.nitro"
+    },
+    "cordova-plugin-file-md5": {
       "PACKAGE_NAME": "com.tone.nitro"
     },
     "cordova-plugin-file-transfer": {
@@ -22,17 +22,17 @@
     "cordova-plugin-network-information": {
       "PACKAGE_NAME": "com.tone.nitro"
     },
-    "cordova-plugin-file-md5": {
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.tone.nitro"
     },
     "cordova-plugin-zip": {
       "PACKAGE_NAME": "com.tone.nitro"
     },
-    "cordova-plugin-file-downloader": {
-      "PACKAGE_NAME": "com.tone.nitro"
-    },
     "phonegap-plugin-barcodescanner": {
       "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "com.tone.nitro"
+    },
+    "phonegap-plugin-contentsync": {
       "PACKAGE_NAME": "com.tone.nitro"
     }
   },
