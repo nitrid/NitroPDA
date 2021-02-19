@@ -38,7 +38,7 @@ let IrsTemplate =
                         WebsiteURI : "",
                         PartyIdentification : 
                         {
-                            ID : {"#text":"1111111111","@_schemeID": "VKN"},
+                            ID : {"#text":"8360445507","@_schemeID": "VKN"},
                             Alias : ""
                         },
                         PartyName :
@@ -472,7 +472,7 @@ function eIrsXml(pUid,pData)
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DocumentDate = pData[0].BELGETARIH;
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DocumentTime = pData[0].BELGEZAMAN;
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.TransactionType  = pData[0].EVRAKTIP;
-        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.Party.PartyIdentification.ID = {"#text":pData[0].VKNNO ,"@_schemeID": "VKN"};
+        TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.Party.PartyIdentification.ID = {"#text":"8360445507","@_schemeID": "VKN"};
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.Party.PartyName.Name = pData[0].FIRMAUNVAN;
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.Party.PostalAddress.StreetName = pData[0].SUBESOKAK  +'/' + pData[0].SUBECADDE;
         TmpSema.MikroDocument.DespatchAdvices.DespatchAdvice.DespatchSupplierParty.Party.PostalAddress.CitySubdivisionName = pData[0].SUBEILCE;

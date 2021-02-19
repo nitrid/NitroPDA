@@ -54,7 +54,7 @@ var Param = [
 			"EvrakSil": "0"
 		},
 		"AlinanSiparis": {
-			"Seri": "SPR",
+			"Seri": "SP",
 			"BelgeNo": "",
 			"Cari": "E00007",
 			"DepoNo": "1",
