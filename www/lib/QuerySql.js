@@ -116,7 +116,7 @@ var QuerySql =
                 //"RISK, " +
                 //"RISKLIMIT, " +
                 "ODEMEPLANI, " +
-                "BAKIYE, " +
+                "CONVERT(NVARCHAR,CAST(BAKIYE AS MONEY),1) AS BAKIYE, " +
                 "BELGETARIH, " +
                 "ADRES, " +
                 "IL, " +

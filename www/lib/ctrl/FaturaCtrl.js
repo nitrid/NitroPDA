@@ -1840,7 +1840,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                $scope.DisTicaretTur = 0; 
                $scope.EvrakTip = 3;
                $scope.NormalIade = 0;
-               $scope.Tip = 1;
+               $scope.Tip = 0;
                $scope.Cins = 1;
                $scope.ChaEvrakTip = 0;
                $scope.ChaTip = 1;
