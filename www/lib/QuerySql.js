@@ -116,7 +116,7 @@ var QuerySql =
                 //"RISK, " +
                 //"RISKLIMIT, " +
                 "ODEMEPLANI, " +
-                "ISNULL(CONVERT(NVARCHAR,CAST(BAKIYE AS DECIMAL(10,2))),0) AS BAKIYE, " +
+                "BAKIYE, " +
                 "BELGETARIH, " +
                 "ADRES, " +
                 "IL, " +
