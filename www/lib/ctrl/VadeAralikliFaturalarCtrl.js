@@ -39,14 +39,6 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
                     width: 120
                 },
                 {
-                    name: "TIP",
-                    title: "EVRAK TİP",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                },
-           
-                {
                     name: "TUTAR",
                     title: "BORÇ",
                     type: "text",
@@ -219,7 +211,7 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
             "SIRA AS SIRA, SERI AS SERI, " +
             "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = CARIKODU) AS UNVAN , " +
             " convert(varchar,cast(TUTAR as money), 1) AS  TUTAR " +
-            "FROM  #FatTmp WHERE TUTAR > 0 --AND  VADE_TARIH >= @ILKTARIH AND VADE_TARIH <= @SONTARIH " ,
+            "FROM  #FatTmp WHERE TUTAR > 0 AND  VADE_TARIH >= @ILKTARIH AND VADE_TARIH <= @SONTARIH " ,
             param:  ['ILKTARIH','SONTARIH'],
             type:   ['date','date',],
             value:  [$scope.IlkTarih,$scope.SonTarih]
