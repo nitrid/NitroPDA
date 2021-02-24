@@ -2547,9 +2547,9 @@ var QuerySql =
     StokHarEvrDelete : 
     {
         query : "DELETE FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = @sth_evrakno_seri AND " +
-                "sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip" ,
-        param : ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
-        type : ['string|20','int','int']
+                "sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip AND sth_cins = @sth_cins" ,
+        param : ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip','sth_cins'],
+        type : ['string|20','int','int','sth_cins']
     },
     StokHarSatirDelete : 
     {
