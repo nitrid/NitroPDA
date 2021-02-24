@@ -161,7 +161,15 @@ angular.module('app.db', []).service('db',function($rootScope)
         else
         {            
             TmpQuery = JSON.parse(JSON.stringify(window["QueryLocal"][pParam.tag]));
-            
+            function Guid() 
+            {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                  var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                  return v.toString(16);
+                });
+            }
+            TmpQuery.query = TmpQuery.query.replace('@guid',Guid().toUpperCase());
+            console.log(Guid().toUpperCase())
             if (typeof (TmpQuery.param) != 'undefined')
             {
                 for(i = 0;i < TmpQuery.param.length;i++)
@@ -198,7 +206,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                 
                 pParam.param = [];
             } 
-            
             _LocalDb.GetData(TmpQuery,pParam.param,function(data)
             { 
                 if(typeof(data.result.err) == 'undefined')
@@ -495,6 +502,7 @@ angular.module('app.db', []).service('db',function($rootScope)
         }        
         _SqlExecute(m,function(data)
         {
+            console.log(data)
             if(pCallback)
             {
                 pCallback(data);
