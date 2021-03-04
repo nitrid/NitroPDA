@@ -4425,7 +4425,7 @@ var QuerySql =
            param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int']
     },  
     //E-Süreçler
-    EIrsGetir : 
+    EIrsSemaGetir : 
     {
         query : "SELECT sth_evrakno_seri AS SERI, " +
                 "sth_evraktip AS EVRAKTIP, " +
@@ -4433,8 +4433,8 @@ var QuerySql =
                 "CONVERT(VARCHAR,sth_tarih, 23) AS TARIH, " +
                 "CONVERT(VARCHAR,sth_belge_tarih, 23) AS BELGETARIH, " +
                 "CONVERT(VARCHAR, sth_lastup_date, 8) AS BELGEZAMAN, " +
-                "'4620553774' AS VKNNO, " +
-                //"'ISNULL((SELECT TOP 1 fir_FVergiNo FROM FIRMALAR WHERE fir_sirano = 0),'')' AS VKNNO, " +
+                //"'4620553774' AS VKNNO, " +
+                "ISNULL((SELECT TOP 1 fir_FVergiNo FROM FIRMALAR WHERE fir_sirano = 0),'') AS VKNNO, " +
                 "ISNULL((SELECT  TOP 1  fir_unvan FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN, " +
                 "ISNULL((SELECT TOP 1  fir_unvan2 FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN2, " +
                 "ISNULL((SELECT TOP 1  sube_Cadde FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBECADDE, " +
@@ -4451,7 +4451,7 @@ var QuerySql =
                 "ISNULL((SELECT TOP 1 cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN1, " +
                 "ISNULL((SELECT TOP 1 cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN2, " +
                 "ISNULL((SELECT TOP 1 cari_vdaire_adi FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVDADI, " +
-                "ISNULL((SELECT TOP 1 cari_VergiKimlikNo FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVKNO, " +
+                "ISNULL((SELECT TOP 1 cari_vdaire_no FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVKNO, " +
                 "ISNULL((SELECT TOP 1 adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARICADDE, " +
                 "ISNULL((SELECT TOP 1 adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARISOKAK, " +
                 "ISNULL((SELECT TOP 1 adr_mahalle FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIMAH, " +
@@ -4461,6 +4461,7 @@ var QuerySql =
                 "ISNULL((SELECT TOP 1 adr_ilce FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIILCE, " +
                 "ISNULL((SELECT TOP 1 adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIIL, " +
                 "ISNULL((SELECT TOP 1 adr_ulke FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIULKE, " +
+                "ISNULL((SELECT TOP 1 adr_eirsaliye_alias FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIALIAS, " +
                 "ISNULL((SELECT TOP 1 eir_sofor_adi FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS SOFORADI, " +
                 "ISNULL((SELECT TOP 1 eir_sofor_soyadi FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS SOFORSOYADI, " +
                 "ISNULL((SELECT TOP 1 eir_tasiyici_arac_plaka FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS ARACPLAKA, " +
@@ -4599,6 +4600,12 @@ var QuerySql =
         query : "UPDATE E_IRSALIYE_DETAYLARI SET eir_uuid = @eir_uuid WHERE eir_evrak_tip = 1 AND eir_tipi = 3 AND eir_evrakno_seri = @eir_evrakno_seri AND eir_evrakno_sira = @eir_evrakno_sira", 
         param: ['eir_uuid','eir_evrakno_seri','eir_evrakno_sira'],
         type:  ['string|50','string|25','int']
+    }, 
+    EIrsGetir : 
+    {
+        query : "SELECT * FROM E_IRSALIYE_DETAYLARI WHERE eir_evrak_tip = 1 AND eir_evrakno_seri = @eir_evrakno_seri AND eir_evrakno_sira = @eir_evrakno_sira", 
+        param: ['eir_evrakno_seri','eir_evrakno_sira'],
+        type:  ['string|25','int']
     }, 
     //#region "AKTARIM"
     AdresTbl : 

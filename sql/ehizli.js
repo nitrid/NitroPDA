@@ -14,8 +14,8 @@ let url = 'https://econnecttest.hizliteknoloji.com.tr/HizliApi/RestApi/'
 let headers = 
 {
     'Content-Type': 'application/json',
-    'username' : 'hizli',
-    'password' : 'rWBDkoA6'
+    'username' : 'teknoerp',
+    'password' : 't86ZKDw9'
 }
 
 let IrsTemplate = 
@@ -548,8 +548,8 @@ function eIrsXml(pUid,pId,pData)
     TmpSema.DespatchAdvice['cbc:UUID'] = pUid
     TmpSema.DespatchAdvice['cbc:IssueDate'] = pData[0].BELGETARIH
     TmpSema.DespatchAdvice['cbc:IssueTime'] = pData[0].BELGEZAMAN
-    TmpSema.DespatchAdvice['cac:Signature']['cbc:ID']['#text'] = ""
-    TmpSema.DespatchAdvice['cac:Signature']['cac:SignatoryParty']['cac:PartyIdentification']['cbc:ID']['#text'] = ""
+    TmpSema.DespatchAdvice['cac:Signature']['cbc:ID']['#text'] = pData[0].VKNNO
+    TmpSema.DespatchAdvice['cac:Signature']['cac:SignatoryParty']['cac:PartyIdentification']['cbc:ID']['#text'] = pData[0].VKNNO
     TmpSema.DespatchAdvice['cac:Signature']['cac:SignatoryParty']['cac:PostalAddress']['cbc:StreetName'] = ""
     TmpSema.DespatchAdvice['cac:Signature']['cac:SignatoryParty']['cac:PostalAddress']['cbc:BuildingNumber'] = ""
     TmpSema.DespatchAdvice['cac:Signature']['cac:SignatoryParty']['cac:PostalAddress']['cbc:CitySubdivisionName'] = ""
@@ -696,7 +696,6 @@ function eIrsXml(pUid,pId,pData)
         TmpSema.DespatchAdvice['cac:DespatchLine'].push(TmpDespatchLine)
     }
     
-    
     let options = 
     {
         attributeNamePrefix : "@_",
@@ -783,6 +782,39 @@ function GetDocumentListGUID(pAppType,pEttn)
         })
     });
 }
+function GetDocumentFile(pAppType,pEttn)
+{
+    return new Promise(resolve => 
+    {
+        let options =
+        {
+            url: url + 'GetDocumentFile?AppType=' + pAppType + '&Uuid=' + pEttn + '&Tur=HTML&IsDraft=false' ,
+            method: 'GET',
+            headers: headers
+        };
+    
+        request(options,function(err,response)
+        {            
+            let result ={}
+            if(err != null)
+            {
+                result.err = err;
+                resolve(result);
+            }
+            
+            if(JSON.parse(response.toJSON().body).Message != null)
+            {
+                result.err = JSON.parse(response.toJSON().body)
+            }
+            else
+            {
+                result.result = JSON.parse(response.toJSON().body)
+            }
+            
+            resolve(result);
+        })
+    });
+}
 function GetLastInvoiceIdAndDate(pAppType,pSeri)
 {
     return new Promise(resolve => 
@@ -834,13 +866,13 @@ function eIrsSend(pData)
         {
             TmpId = TmpSeri + (parseInt(TmpId.result.InvoiceId.substring(TmpSeri.length,TmpId.result.InvoiceId.length)) + 1).toString().padStart(9,"0")
         }
-
+        
         let body = 
         [{
             AppType : 5,
             DestinationIdentifier : pData[0].VKNNO,
-            DestinationUrn : 'urn:mail:testirsaliyepk@hizlibilisim.com',
-            SourceUrn : "urn:mail:testirsaliyegb@hizlibilisim.com",
+            DestinationUrn : 'urn:mail:irsaliyeepk@teknoerp.com',
+            SourceUrn : 'urn:mail:irsaliyegb@teknoerp.com',
             DocumentDate : pData[0].BELGETARIH,
             DocumentId : TmpId,
             DocumentUUID : TmpUid,
@@ -882,7 +914,17 @@ function eIrsSend(pData)
     });
 }
 module.exports.eIrsGonder =  eIrsSend;
-//GetDocumentListGUID(5,'6B1EB317-8554-48C9-8E77-CDBE3190DD36')
+module.exports.eIrsDurum =  GetDocumentListGUID;
+module.exports.eIrsGoster = GetDocumentFile;
+
+// GetDocumentFile(5,'1D3C5308-5C5C-46B1-B192-BADEC04F9571').then(a =>
+// {
+//     console.log(a.result.DocumentFile);
+// })
+// GetDocumentListGUID(5,'1D3C5308-5C5C-46B1-B192-BADEC04F9571').then(a =>
+// {
+//     console.log(a.result.documents)
+// })
 //console.log(eIrsXml())
 //console.log(JSON.stringify(eIrsExportXml()))
 //eIrsSend().then((d)=>{console.log(d)})

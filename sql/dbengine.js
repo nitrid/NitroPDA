@@ -304,15 +304,17 @@ io.on('connection', function(socket)
         {
             fn(pData)
         });
-        
-        // emikro.eIrsGonder(pParam,(pData)=>
-        // {
-        //     fn(pData);
-        // });
+    });
+    socket.on('EIrsDurum',async function(pParam,fn)
+    {
+        ehizli.eIrsDurum(5,pParam).then((pData) =>
+        {
+            fn(pData)
+        });
     });
     socket.on('EIrsGoster',async (pDocumentId,fn) =>
     {
-        let TmpData = await emikro.eIrsGoster(pDocumentId);
+        let TmpData = await ehizli.eIrsGoster(5,pDocumentId);
         fn(TmpData);
     });
 });
