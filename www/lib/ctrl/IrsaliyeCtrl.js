@@ -3019,16 +3019,23 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 db.EIrsGonder(TmpData,(pData) =>
                 {
                     $('#MdlEIrsGonder').modal("hide");
-
-                    if(typeof pData.id != 'undefined')
+                    
+                    if(typeof pData.err == 'undefined')
                     {
-                        db.ExecuteTag($scope.Firma,'EIrsUpdate',[pData.id,$scope.Seri,$scope.Sira],function(pResult)
-                        {                         
-                        });
+                        if(typeof pData.result.UUID != 'undefined')
+                        {
+                            db.ExecuteTag($scope.Firma,'EIrsUpdate',[pData.result.UUID,$scope.Seri,$scope.Sira],function(pResult)
+                            {                         
+                            });
+                        }
+                        else
+                        {
+                            alertify.alert("E-Irsaliye gönderilemedi !")
+                        }
                     }
                     else
                     {
-                        alertify.alert("E-Irsaliye gönderilemedi !")
+                        alertify.alert("E-Irsaliye gönderilemedi ! " + pData.err.Message)
                     }
                 });
             }

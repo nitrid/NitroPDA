@@ -4433,7 +4433,7 @@ var QuerySql =
                 "CONVERT(VARCHAR,sth_tarih, 23) AS TARIH, " +
                 "CONVERT(VARCHAR,sth_belge_tarih, 23) AS BELGETARIH, " +
                 "CONVERT(VARCHAR, sth_lastup_date, 8) AS BELGEZAMAN, " +
-                "'1111111111' AS VKNNO, " +
+                "'4620553774' AS VKNNO, " +
                 //"'ISNULL((SELECT TOP 1 fir_FVergiNo FROM FIRMALAR WHERE fir_sirano = 0),'')' AS VKNNO, " +
                 "ISNULL((SELECT  TOP 1  fir_unvan FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN, " +
                 "ISNULL((SELECT TOP 1  fir_unvan2 FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN2, " +
@@ -4447,10 +4447,11 @@ var QuerySql =
                 "ISNULL((SELECT TOP 1  sube_Il FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEIL, " +
                 "ISNULL((SELECT TOP 1  sube_Ulke FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEULKE, " +
                 "ISNULL((SELECT TOP 1 Vgd_adi FROM MikroDB_V16..VERGI_DAIRELERI WHERE Vgd_orj_kod = (SELECT TOP 1 fir_FVergiDaire FROM FIRMALAR WHERE fir_sirano = 0)),'') AS VDADI, " +
+                "sth_cari_kodu AS CARIKODU, " +
                 "ISNULL((SELECT TOP 1 cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN1, " +
                 "ISNULL((SELECT TOP 1 cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN2, " +
                 "ISNULL((SELECT TOP 1 cari_vdaire_adi FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVDADI, " +
-                "ISNULL((SELECT TOP 1 cari_vdaire_no FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVKNO, " +
+                "ISNULL((SELECT TOP 1 cari_VergiKimlikNo FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVKNO, " +
                 "ISNULL((SELECT TOP 1 adr_cadde FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARICADDE, " +
                 "ISNULL((SELECT TOP 1 adr_sokak FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARISOKAK, " +
                 "ISNULL((SELECT TOP 1 adr_mahalle FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIMAH, " +
