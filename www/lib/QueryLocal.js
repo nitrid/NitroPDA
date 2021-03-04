@@ -284,8 +284,10 @@ var QueryLocal =
     },
     SiparisInsert : 
     {
-        query:  "INSERT INTO [SIPARIS] " +
-                "([sip_DBCno] " +
+        query:  
+                "INSERT INTO [SIPARIS] " +
+                "([sip_Guid] " +
+                ",[sip_DBCno] " +
                 ",[sip_SpecRECno] " +
                 ",[sip_iptal] " +
                 ",[sip_fileid] " +
@@ -400,7 +402,8 @@ var QueryLocal =
                 ",[sip_HareketGrupKodu3] " +
                 ") " +
                 "VALUES ( " +
-                "0						" +
+                "'@guid' " +
+                ",0						" +
                 ",0						" +
                 ",0						" +
                 ",21					" +
@@ -504,7 +507,7 @@ var QueryLocal =
                 ",0                                            " +
                 ",cast(cast(0 as binary) as uniqueidentifier)  " +
                 ",''							               " +
-                ",date('now')		   " +
+                ",date('now')		                           " +
                 ",0							                   " +
                 ",''							               " +
                 ",0							                   " +
@@ -512,7 +515,7 @@ var QueryLocal =
                 ",@sip_rezerveden_teslim_edilen			       " +
                 ",''							               " +
                 ",''							               " +
-                ",'')							               " ,
+                ",'')							               ",
         param : ['sip_create_user','sip_lastup_user','sip_firmano','sip_subeno','sip_tarih:date','sip_teslim_tarih:date','sip_tip',
                  'sip_cins','sip_evrakno_seri','sip_evrakno_sira','sip_belgeno','sip_belge_tarih','sip_satici_kod',
                  'sip_musteri_kod','sip_stok_kod','sip_b_fiyat','sip_miktar','sip_birim_pntr','sip_teslim_miktar',
@@ -1199,11 +1202,14 @@ var QueryLocal =
                 "ROUND(sip_tutar,2) AS TUTAR, " +
                 "(SELECT SORUMLULUKISMI FROM SORUMLULUKMRKZ WHERE SORUMLULUKKODU = sip_stok_sormerk) AS SORUMLUMERADI ," +
                 "(SELECT PERSONELADI FROM PERSONEL WHERE PERSONELKODU = sip_satici_kod) AS PERSONELADI," +
+                "(SELECT ORAN FROM VERGI WHERE PNTR = sip_vergi_pntr) AS VERGIPNTR, " +
+                "(SELECT BIRIM FROM BIRIM WHERE KODU = sip_stok_kod) AS BIRIMADI, " +
+                "(SELECT BIRIMPNTR FROM BIRIM WHERE KODU = sip_stok_kod) AS BIRIM, " +
                 "IFNULL((SELECT RENKPNTR FROM BARKOD WHERE KODU = sip_stok_kod),0) AS RENKPNTR , " +
                 "IFNULL((SELECT BEDENPNTR FROM BARKOD WHERE KODU = sip_stok_kod),0) AS BEDENPNTR , " +
                 "* FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND " +
                 "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins " +
-                "ORDER BY sip_satirno ASC",
+                "ORDER BY sip_satirno ASC ",
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
         type:   ['string','int','int','int']
     },
@@ -1222,7 +1228,7 @@ var QueryLocal =
                 "IFNULL((SELECT SERI from SIPARISSTOK WHERE RECNO = sth_sip_uid),'') AS SIPSERI ," +
                 "IFNULL((SELECT SIRA from SIPARISSTOK WHERE RECNO = sth_sip_uid),0) AS SIPSIRA ," +
                 "* FROM STOKHAR " +
-                "WHERE sth_evrakno_seri= ? AND sth_evrakno_sira = ? AND sth_evraktip = ? ORDER BY sth_satirno "
+                "WHERE sth_evrakno_seri= ? AND sth_evrakno_sira = ? AND sth_evraktip = ? ORDER BY sth_satirno ",
     },
     NakliyeGetir :
     {
@@ -2912,6 +2918,7 @@ var QueryLocal =
     {
         tag : "SIPARIS",
         query : "CREATE TABLE IF NOT EXISTS SIPARIS (" +
+                "sip_Guid nvarchar," +
                 "sip_DBCno smallint," +
                 "sip_SpecRECno int," +
                 "sip_iptal bit," +
@@ -3027,7 +3034,7 @@ var QueryLocal =
                 "sip_HareketGrupKodu1, " +
                 "sip_HareketGrupKodu2, " +
                 "sip_HareketGrupKodu3)" ,
-        insert : "INSERT INTO SIPARIS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+        insert : "INSERT INTO SIPARIS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
     SiparisStokTbl : 
     {

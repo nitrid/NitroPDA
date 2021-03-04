@@ -767,24 +767,25 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             0, //REZERVASYON MİKTARI
             0  //REZERVASYON TESLİM MİKTARI
         ];
-        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'SiparisInsert',InsertData,function(InsertResult)
         {          
+            console.log(InsertResult)
             if(typeof(InsertResult.result.err) == 'undefined')
             {                                        
                 db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(SiparisData)
-                {   
+                {
+                    console.log(SiparisData)
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
                         BedenHarInsert(InsertResult.result.recordset[0].sip_Guid);
                     } 
                     InsertAfterRefresh(SiparisData);
                     FisData(SiparisData);  
-                    $scope.InsertLock = false  
+                    $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
                     {
                         Confirmation();
-                    }                 
+                    }
                 });
             }
             else
