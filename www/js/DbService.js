@@ -922,13 +922,23 @@ angular.module('app.db', []).service('db',function($rootScope)
             }
         });
     }
+    this.EIrsDurum = function(pParam,pCallback)
+    {
+        _Socket.emit('EIrsDurum', pParam,(Data) =>
+        {
+            if(typeof pCallback != 'undefined')
+            {
+                pCallback(Data)
+            }
+        });
+    }
     this.EIrsGoster = function(pDocumentId,pCallback)
     {
         _Socket.emit('EIrsGoster', pDocumentId,(Data) =>
         {
             if(typeof pCallback != 'undefined')
             {
-                pCallback(Data)
+                pCallback(decodeURIComponent(escape(window.atob( Data.result.DocumentFile ))))
             }
         });
     }
