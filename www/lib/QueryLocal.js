@@ -515,7 +515,9 @@ var QueryLocal =
                 ",@sip_rezerveden_teslim_edilen			       " +
                 ",''							               " +
                 ",''							               " +
-                ",'')							               ",
+                ",''							               " +
+                "); " +
+                "SELECT sip_Guid FROM SIPARIS",
         param : ['sip_create_user','sip_lastup_user','sip_firmano','sip_subeno','sip_tarih:date','sip_teslim_tarih:date','sip_tip',
                  'sip_cins','sip_evrakno_seri','sip_evrakno_sira','sip_belgeno','sip_belge_tarih','sip_satici_kod',
                  'sip_musteri_kod','sip_stok_kod','sip_b_fiyat','sip_miktar','sip_birim_pntr','sip_teslim_miktar',
@@ -1594,7 +1596,7 @@ var QueryLocal =
     BedenHarInsert : 
     {
         query:  "INSERT INTO BEDEN_HAREKETLERI (" +
-                "BdnHar_DBCno " + 
+                "BdnHar_DBCno, " + 
                 "BdnHar_Spec_Rec_no, " +
                 "BdnHar_iptal, " +
                 "BdnHar_fileid, " +

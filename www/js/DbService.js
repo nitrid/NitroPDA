@@ -169,7 +169,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                 });
             }
             TmpQuery.query = TmpQuery.query.replace('@guid',Guid().toUpperCase());
-            console.log(Guid().toUpperCase())
             if (typeof (TmpQuery.param) != 'undefined')
             {
                 for(i = 0;i < TmpQuery.param.length;i++)
@@ -753,8 +752,6 @@ angular.module('app.db', []).service('db',function($rootScope)
         // İSKONTO MATRİS
         if(pEvrParam.IskontoMatris == "1")
         {
-            console.log('girdi')
-            console.log([BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo])
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
             { 
                 
@@ -809,8 +806,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                 {
                     if(SatisSartiData.length > 0)
                     {   
-                        console.log(SatisSartiData)
-                        console.log(BarkodData[0])
                         BarkodData[0].ODEPLAN = SatisSartiData[0].ODEPLAN
                         BarkodData[0].INDIRIM = SatisSartiData[0].INDIRIM
                         BarkodData[0].ISK.ORAN1 = SatisSartiData[0].ISKONTOY1 

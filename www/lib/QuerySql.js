@@ -4258,6 +4258,7 @@ var QuerySql =
         param:  ['kon_evrakno_seri','kon_evrakno_sira','kon_evraktip','BdnHar_Tipi'],
         type:   ['string|20','int','int','int']
     },
+    // Açıklama
     AciklamaInsert :
     {
         query : "INSERT INTO [dbo].[EVRAK_ACIKLAMALARI] " +
