@@ -890,13 +890,13 @@ var QuerySql =
                 "CONVERT(VARCHAR(10),SIPARIS.sip_teslim_tarih,104) AS TESLIMTARIH, " +
                 "SIPARIS.sip_evrakno_seri AS SERI, " +
                 "SIPARIS.sip_evrakno_sira AS SIRA, " +
-                "SUM(SIPARIS.sip_miktar) AS SIPMIKTAR, " +                     
-                "SUM(SIPARIS.sip_teslim_miktar) AS TESLIMMIKTAR, " + 
-                "SIPARIS.sip_depono AS DEPO, " + 
-                "SIPARIS.sip_adresno AS ADRESNO, " +                    
+                "SUM(SIPARIS.sip_miktar) AS SIPMIKTAR,                      " +
+                "SUM(SIPARIS.sip_teslim_miktar) AS TESLIMMIKTAR,  " +
+                "SIPARIS.sip_depono AS DEPO,  " +
+                "SIPARIS.sip_adresno AS ADRESNO,                     " +
                 "SUM(SIPARIS.sip_miktar - SIPARIS.sip_teslim_miktar) AS BMIKTAR, " +
                 "COUNT(SIPARIS.sip_satirno) AS SATIR, " +
-                "CARI_HESAPLAR.cari_kod AS CARIKOD, " +             
+                "CARI_HESAPLAR.cari_kod AS CARIKOD,              " +
                 "CARI_HESAPLAR.cari_unvan1 AS CARIADI, " +
                 "SIPARIS.sip_doviz_cinsi AS DOVIZCINSI, " +
                 "MAX(SIPARIS.sip_cari_sormerk) AS SORUMLULUK, " +
@@ -906,18 +906,16 @@ var QuerySql =
                 "MAX(SIPARIS.sip_opno) AS ODEMENO, " +
                 "SIPARIS.sip_aciklama AS ACIKLAMA " +
                 "FROM SIPARISLER AS SIPARIS INNER JOIN " +
-                "BARKOD_TANIMLARI AS BARKOD ON SIPARIS.sip_stok_kod = BARKOD.bar_stokkodu " +
-                "AND SIPARIS.sip_teslim_miktar < SIPARIS.sip_miktar INNER JOIN " +
                 "CARI_HESAPLAR ON SIPARIS.sip_musteri_kod = CARI_HESAPLAR.cari_kod " +
                 "WHERE SIPARIS.sip_teslim_tarih>=@ILKTARIH AND SIPARIS.sip_teslim_tarih<=@SONTARIH AND " +
                 "((CARI_HESAPLAR.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) AND SIPARIS.sip_OnaylayanKulNo <> @ONAYLAYANKULNO AND ((SIPARIS.sip_musteri_kod = @CARIKODU) OR (@CARIKODU = '')) " +
-                "AND ((SIPARIS.sip_depono=@DEPONO) OR (@DEPONO = 0))AND SIPARIS.sip_tip=@TIP " +
-                "GROUP BY SIPARIS.sip_teslim_tarih,SIPARIS.sip_evrakno_seri,SIPARIS.sip_evrakno_sira,SIPARIS.sip_depono, " +
+                "AND ((SIPARIS.sip_depono=@DEPONO) OR (@DEPONO = 0))AND SIPARIS.sip_tip=@TIP AND SIPARIS.sip_cins=@CINS " +
+                "GROUP BY SIPARIS.sip_teslim_tarih,SIPARIS.sip_evrakno_seri,SIPARIS.sip_evrakno_sira,SIPARIS.sip_depono,SIPARIS.sip_cins, " +
                 "SIPARIS.sip_adresno,CARI_HESAPLAR.cari_kod,CARI_HESAPLAR.cari_unvan1,SIPARIS.sip_aciklama,SIPARIS.sip_doviz_cinsi " +
                 "HAVING SUM(SIPARIS.sip_miktar - SIPARIS.sip_teslim_miktar) > 0 " +
                 "ORDER BY sip_teslim_tarih",
-        param : ['ILKTARIH','SONTARIH','DEPONO','TIP','PLASIYERKODU','ONAYLAYANKULNO','CARIKODU'],
-        type : ['date','date','int','int','string|25','int','string|25']
+        param : ['ILKTARIH','SONTARIH','DEPONO','TIP','PLASIYERKODU','ONAYLAYANKULNO','CARIKODU','CINS'],
+        type : ['date','date','int','int','string|25','int','string|25','int']
     }, 
     SiparisSeriSiraListele : 
     {
@@ -1060,7 +1058,7 @@ var QuerySql =
                 "BARKOD.bar_stokkodu = SIPARIS.sip_stok_kod AND BARKOD.bar_bedenpntr = " +
                 "CASE WHEN STOK.sto_beden_kodu <> '' THEN ISNULL(dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),0) ELSE 0 END " +
                 "AND BARKOD.bar_renkpntr = CASE WHEN STOK.sto_renk_kodu <> '' THEN  ISNULL(dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),0) ELSE 0 END " +
-                "WHERE SIPARIS.sip_musteri_kod = @CARI " + 
+                "WHERE SIPARIS.sip_musteri_kod = @CARI AND sip_cins = @CINS " + 
                 "AND ((SIPARIS.sip_evrakno_seri = @SERI OR (@SERI = '')) AND ((SIPARIS.sip_evrakno_sira = @SIRA) OR (@SIRA = 0))) " +
                 "AND ((BARKOD.bar_kodu = @BARKOD OR STOK.sto_kod = @BARKOD) OR (@BARKOD = '')) " +
                 "AND ISNULL(BEDENHAR.BdnHar_HarGor,SIPARIS.sip_miktar) > ISNULL(BEDENHAR.BdnHar_TesMik,SIPARIS.sip_teslim_miktar) " +
@@ -1134,8 +1132,8 @@ var QuerySql =
                 "BEDENHAR.BdnHar_TesMik," +
                 "sip_parti_kodu," +
                 "sip_lot_no " ,
-        param : ['DEPONO','CARI','SERI','SIRA','BARKOD'],
-        type : ['int','string|25','string|10','int','string|25']
+        param : ['DEPONO','CARI','SERI','SIRA','BARKOD','CINS'],
+        type : ['int','string|25','string|10','int','string|25','int']
     },
     EslestirmeOtukmaSayı :
     {
@@ -1515,9 +1513,9 @@ var QuerySql =
                 "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
                 "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN " +
                 "FROM SIPARISLER LEFT OUTER JOIN BEDEN_HAREKETLERI ON sip_Guid = BdnHar_Har_uid " +
-                "WHERE sip_depono = @sip_depono AND sip_musteri_kod =@sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
-        param : ['sip_depono','sip_musteri_kod','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
-        type : ['string|15','string|25','string|10','int','int']       
+                "WHERE sip_depono = @sip_depono AND sip_musteri_kod =@sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and sip_cins = @sip_cins and (sip_miktar - sip_teslim_miktar) > 0",
+        param : ['sip_depono','sip_musteri_kod','sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
+        type : ['string|15','string|25','string|10','int','int','int']       
     },
     SipBedenHarGetir:
     {
@@ -2549,9 +2547,9 @@ var QuerySql =
     StokHarEvrDelete : 
     {
         query : "DELETE FROM STOK_HAREKETLERI WHERE sth_evrakno_seri = @sth_evrakno_seri AND " +
-                "sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip" ,
-        param : ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
-        type : ['string|20','int','int']
+                "sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip AND sth_cins = @sth_cins" ,
+        param : ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip','sth_cins'],
+        type : ['string|20','int','int','sth_cins']
     },
     StokHarSatirDelete : 
     {

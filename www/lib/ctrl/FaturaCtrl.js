@@ -2018,7 +2018,24 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 $scope.KasaKodu = "";
                 $scope.KasaAdi = "";
             }
-            else if($scope.CmbEvrakTip == 4) // Kapalı Toptan Satış Faturası
+            else if($scope.CmbEvrakTip == 4)
+            {
+                $scope.VergisizFl = 0
+                $scope.DisTicaretTur = 3;
+                $scope.EvrakTip = 4;
+                $scope.NormalIade = 0;
+                $scope.Tip = 1;
+                $scope.Cins = 12;
+                $scope.ChaEvrakTip = 63;
+                $scope.ChaTip = 0;
+                $scope.ChaCins = 29;
+                $scope.ChaTicaretTuru = 4;
+                $scope.Tpoz = 0;
+                $scope.CariCinsi = 0;
+                $scope.KasaKodu = "";
+                $scope.KasaAdi = "";
+            }
+            else if($scope.CmbEvrakTip == 5) // Kapalı Toptan Satış Faturası
             {
                 $scope.VergisizFl = 0
                 $scope.DisTicaretTur = 0;
@@ -2061,7 +2078,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             {
                 if(UserParam[ParamName].EvrakSil == 0)
                 {
-                    db.ExecuteTag($scope.Firma,'StokHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
+                    db.ExecuteTag($scope.Firma,'StokHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.EvrakTip,$scope.Cins],function(data)
                     {
                         if(typeof(data.result.err) == 'undefined')
                         {

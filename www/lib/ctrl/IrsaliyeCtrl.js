@@ -2077,6 +2077,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Tip = 1;
                 $scope.Cins = 2;
             }
+            else if($scope.CmbEvrakTip == 5) // İhracat İrsaliye
+            {
+                $scope.EvrakTip = 1;
+                $scope.NormalIade = 0;
+                $scope.Tip = 1;
+                $scope.Cins = 12;
+            }
         }
         await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
@@ -2403,7 +2410,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {
                 if(UserParam[ParamName].EvrakSil == 0)
                 {
-                    db.ExecuteTag($scope.Firma,'StokHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
+                    db.ExecuteTag($scope.Firma,'StokHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.EvrakTip,$scope.Cins],function(data)
                     {
                         if(typeof(data.result.err) == 'undefined')
                         {
