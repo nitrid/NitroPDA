@@ -517,4 +517,5 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $("#TbMain").removeClass('active');
         $scope.BtnSubeListele();
     }
+
 }

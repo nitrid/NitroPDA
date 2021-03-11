@@ -27,7 +27,6 @@ function BuildConfig(pServer,pDatabase,pUser,pPassword,pTrust)
             TmpInstance = TmpInstance.split(';')[0];
         }
     }
-
     config = 
     {
         server: TmpServer,

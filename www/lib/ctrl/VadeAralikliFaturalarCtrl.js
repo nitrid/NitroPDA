@@ -75,7 +75,25 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
 
         InitVadeAralikGrid();
     }
-    $scope.BtnVadeAralikliFaturaGetir = function()
+    $scope.deneme = function()
+    {
+        $scope.TumFaturalar = []
+        let TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT cha_kod FROM CARI_HESAP_HAREKETLERI WHERE cha_tarihi  >= @ILKTARIH AND cha_tarihi  <= @SONTARIH GROUP BY cha_kod",
+            param:  ['ILKTARIH','SONTARIH'],
+            type:   ['date','date',],
+            value:  [$scope.IlkTarih,$scope.SonTarih]
+        }
+
+        db.GetDataQuery(TmpQuery,function(Data)
+        {
+            for(i = 0;i < Data.length;i++)
+            $scope.BtnVadeAralikliFaturaGetir(Data[i].cha_kod)
+        });
+    }
+    $scope.BtnVadeAralikliFaturaGetir = function(pCari)
     {
        
 
@@ -117,7 +135,7 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
             "[#msg_S_0103\\T], " +
             "'', " +
             "0 " +
-            "FROM dbo.fn_CariFoy('',0,'',0,'20200101','20200101','20211231',0,'') WHERE [#msg_S_0103\\T] < 0 ORDER BY [#msg_S_0200],[msg_S_0098] ASC " +
+            "FROM dbo.fn_CariFoy('',0,@carikodu,0,'20200101','20200101','20211231',0,'') WHERE [#msg_S_0103\\T] < 0 ORDER BY [#msg_S_0200],[msg_S_0098] ASC " +
             " " +
             "CREATE TABLE #FatTmp " +
             "( " +
@@ -153,7 +171,7 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
             "'', " +
             "0, " +
             "dbo.fn_CariHesapBakiye(0,0,[#msg_S_0200],'','',0,0,0,0,0,0) " +
-            "FROM dbo.fn_CariFoy('',0,'',0,'20200101','20200101','20211231',0,'') WHERE [#msg_S_0103\\T] > 0 ORDER BY [#msg_S_0200],[msg_S_0098] ASC " +
+            "FROM dbo.fn_CariFoy('',0,@carikodu,0,'20200101','20200101','20211231',0,'') WHERE [#msg_S_0103\\T] > 0 ORDER BY [#msg_S_0200],[msg_S_0098] ASC " +
             " " +
             "DECLARE @TahGuid UNIQUEIDENTIFIER, @TahTutar FLOAT,@TahSeri NVARCHAR(20),@TahSira INT " +
             "DECLARE @FatGuid UNIQUEIDENTIFIER, @FatTutar FLOAT,@FatSeri NVARCHAR(20),@FatSira INT " +
@@ -211,26 +229,30 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
             "SIRA AS SIRA, SERI AS SERI, " +
             "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = CARIKODU) AS UNVAN , " +
             " convert(varchar,cast(TUTAR as money), 1) AS  TUTAR " +
-            "FROM  #FatTmp WHERE TUTAR > 0 AND  VADE_TARIH >= @ILKTARIH AND VADE_TARIH <= @SONTARIH " ,
-            param:  ['ILKTARIH','SONTARIH'],
-            type:   ['date','date',],
-            value:  [$scope.IlkTarih,$scope.SonTarih]
+            "FROM  #FatTmp WHERE TUTAR > 0 AND  VADE_TARIH >= @ILKTARIH AND VADE_TARIH <= @SONTARIH  ORDER BY VADE_TARIH" ,
+            param:  ['carikodu','ILKTARIH','SONTARIH'],
+            type:   ['string|50','date','date',],
+            value:  [pCari,$scope.IlkTarih,$scope.SonTarih]
         }
 
         db.GetDataQuery(TmpQuery,function(Data)
         {
-            console.log(Data)
-            if($scope.VadeAralikliFaturaListe.length >= 0)
-            {
-                $scope.VadeAralikliFaturaListe = Data;                
-                $scope.Bakiye = db.SumColumn($scope.VadeAralikliFaturaListe,"TUTAR");
-    
-                $("#TblVadeAralikliFatura").jsGrid({data : $scope.VadeAralikliFaturaListe});
-            }
-            else
-            {
-                alertify.alert("Bu Tarihler Arasında Fatura Bulunamadı")
-            }
+                
+                $scope.VadeAralikliFaturaListe = Data 
+                for(i = 0;i < $scope.VadeAralikliFaturaListe.length;i++)
+                {
+                    if($scope.TumFaturalar.length == 0)
+                    {
+                        $scope.TumFaturalar[0] = $scope.VadeAralikliFaturaListe[i] 
+                    }
+                    else
+                    {
+                        $scope.TumFaturalar[$scope.TumFaturalar.length] = $scope.VadeAralikliFaturaListe[i]
+                    }
+                }
+                
+                console.log($scope.TumFaturalar)
+                $("#TblVadeAralikliFatura").jsGrid({data : $scope.TumFaturalar});
         });
     }
     $scope.MainClick = function() 
