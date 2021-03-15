@@ -51,11 +51,16 @@ var LocalDb =
         LocalDb.prototype.CreateDatabase = CreateDatabase;
         LocalDb.prototype.GetData = function(pQuery,pParam,Callback)
         {
+            let TmpGuid = ""
+            if(typeof pQuery.guid != 'undefined')
+            {
+                TmpGuid = Guid().toUpperCase();
+                pQuery.query = pQuery.query.replace('@' + pQuery.guid,TmpGuid);
+            }
+
             _FirmaDb.transaction(function(pTrans)
             {
-                pTrans.executeSql(pQuery.query
-                ,pParam,
-                function(pTran,pResult)
+                pTrans.executeSql(pQuery.query,pParam,function(pTran,pResult)
                 {
                     var recordset = [];
                     var result =
@@ -63,11 +68,18 @@ var LocalDb =
                         result : {recordset : []}
                     }    
 
+                    if(typeof pQuery.guid != 'undefined')
+                    {
+                        let TmpObj = {}
+                        TmpObj[pQuery.guid] = TmpGuid
+                        recordset.push(TmpObj)
+                    }
+                    
                     for(i = 0;i < pResult.rows.length;i++)
                     {
                         recordset.push(pResult.rows[i]);
                     }
-                     
+                    
                     if(typeof Callback != 'undefined')               
                     {
                         Callback({result:{recordset:recordset}});                                   
@@ -87,9 +99,9 @@ var LocalDb =
             });
         };
         LocalDb.prototype.Execute = function(pQuery,pParam,Callback)
-        {
+        {            
             _FirmaDb.transaction(function(pTrans)
-            {
+            {                
                 pTrans.executeSql(pQuery.query
                 ,pParam,
                 function(pTran,pResult)
@@ -117,6 +129,13 @@ var LocalDb =
             });
         }
         LocalDb.prototype.DataTransfer = DataTransfers;
+        function Guid() 
+        {
+            return 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
         function CreateDatabase(callback)
         {
             callback(1); //AKTARIM BAŞLADI
