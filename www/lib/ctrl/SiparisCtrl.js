@@ -3021,7 +3021,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
 
             for(let i=0; i < $scope.DizaynListe.length; i++)
             {
-                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI,20) + " " + SpaceLength($scope.DizaynListe[i].SAAT,5) + " " +SpaceLength($scope.DizaynListe[i].SERI + "-" + $scope.DizaynListe[i].SIRA,10) + " " + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),8) + "\n";
+                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI,20) + " " + SpaceLength($scope.DizaynListe[i].SERI + "-" + $scope.DizaynListe[i].SIRA,10) + " " + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),8) + "\n";
             } 
             let i = 48 - $scope.DizaynListe.length;
             let Satır = "";
@@ -3036,11 +3036,13 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             FisDizayn = "                                             " + "\n" + 
                         FisDeger + "\n" +
                         "           CARI SATIŞ DURUM RAPORU              " + "\n" +
-                        "CARIADI              SAAT  F.SERI    F.TUTAR" + "\n" +
+                        "CARIADI              F.SERI    F.TUTAR" + "\n" +
                         $scope.GunSonuData + 
-                        "------------------------------------------------" + "\n" + 
-                        "                      Genel Toplam: " + $scope.DGenelToplam.toFixed(2) + "\n" + 
-                        Satır +
+                        "------------------------------" + "\n" + 
+                        "              Genel Toplam: " + $scope.DGenelToplam.toFixed(2) + "\n" + 
+                        "                                          -" + "\n" +
+                        "                                          -" + "\n" +
+                        "                                          -" + "\n" +
                         "                                          -" + "\n" +
                         "                                          -" + "\n" +
                         "                                          -" + "\n" +
@@ -3049,7 +3051,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         "                                          -" + "\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
 
-            
+            console.log(FisDizayn)
             db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
             {
                 if(pStatus)
