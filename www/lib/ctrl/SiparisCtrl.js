@@ -1926,6 +1926,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         CariSelectedRow = $row;
+        console.log($scope.CariListe[pIndex])
         $scope.CariKodu = $scope.CariListe[pIndex].KODU;
         $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
         $scope.CariFiyatListe = $scope.CariListe[pIndex].SATISFK;      
@@ -2738,28 +2739,57 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
         );
     }
-    $scope.BtnFisYazdir = function()
+    $scope.BtnFisYazdir = async function()
     {
         var FisBilgi = document.getElementById('FisBilgi').textContent;
         if($scope.FisDizaynTip == 0)
         {
-            let FisDizayn = "";
-
-            var TmpQuery = 
+            let FisDizayn = ""; 
+            if(typeof ($scope.TahToplam) == 'undefined')
             {
-                db : '{M}.' + $scope.Firma,
-                query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
-                        "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
-                param:  ['CARIKODU'],
-                type:   ['string|25'],
-                value:  [$scope.CariKodu]    
+                $scope.TahToplam = 0;
+                $scope.FatSeri = "";
+                $scope.FatSira = 0;
             }
-            db.GetDataQuery(TmpQuery,function(Data)
+            console.log(localStorage.mode)
+            if(localStorage.mode == 'true')
             {
-                $scope.CariBakiye = Data[0].BAKIYE
-            });
-    
+                var TmpQuery = 
+                {
+                    db : '{M}.' + $scope.Firma,
+                    query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
+                            "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
+                    param:  ['CARIKODU'],
+                    type:   ['string|25'],
+                    value:  [$scope.CariKodu]    
+                }
+                db.GetDataQuery(TmpQuery,function(Data)
+                {
+                    $scope.CariBakiye = Data[0].BAKIYE
+                });
+            }
+            else if(localStorage.mode == 'false')
+            {
+                var TmpQuery = 
+                {
+                    db : '{M}.' + $scope.Firma,
+                    query:  "SELECT BAKIYE AS BAKIYE " +
+                            "FROM CARI WHERE KODU = '@CARIKODU' " ,
+                    param:  ['CARIKODU'],
+                    type:   ['string|25'],
+                    value:  [$scope.CariKodu]    
+                }
+                console.log(TmpQuery)
+                await db.GetPromiseQuery(TmpQuery,async function(Data)
+                {
+                    console.log(Data)
+                    $scope.CariBakiye = Data[0].BAKIYE
+                });
+            }
+            console.log($scope.CariBakiye,$scope.GenelToplam,$scope.TahToplam )
+
             $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
+            console.log($scope.CariBakiye)
             KalanBakiye = $scope.CariBakiye + $scope.GenelToplam
             OncekiBakiye = KalanBakiye - $scope.GenelToplam
             
@@ -2783,6 +2813,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             FisDizayn = FisDizayn + "Kalan Bak.:  " + SpaceLength(parseFloat(KalanBakiye).toFixed(2),10) + "   " + SpaceLength("Top. KDV:",10) + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" + "                       Genel Top. : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
             "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n"
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
+            console.log(FisDizayn)
             db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
             {
                 if(pStatus)
@@ -3068,22 +3099,43 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
 
-        var TmpQuery = 
+        if(localStorage.mode == 'true')
         {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT  " +
-                    "sip_evrakno_seri AS SERI,  " +
-                    "sip_evrakno_sira AS SIRA,  " +
-                    "LEFT(CONVERT(VARCHAR(8),MAX(sip_create_date),108),5) AS SAAT,  " +
-                    "MAX(sip_musteri_kod) AS CARIKOD,  " +
-                    "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sip_musteri_kod)) + ' ' + " +
-                    "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sip_musteri_kod)) AS CARIADI,  " +
-                    "ISNULL((SELECT cari_per_adi  FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = MAX(sip_satici_kod)),'') AS PERSONEL, " +
-                    "ROUND(SUM(sip_tutar),2) TUTAR " +
-                    "FROM SIPARISLER  " +
-                    "WHERE sip_tip = 0 AND sip_cins = 0 AND sip_create_date = CONVERT(VARCHAR(10),GETDATE(),112) " +
-                    "AND sip_evrakno_seri = '" + $scope.Seri + "' " + 
-                    "GROUP BY sip_evrakno_seri,sip_evrakno_sira " 
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT  " +
+                        "sip_evrakno_seri AS SERI,  " +
+                        "sip_evrakno_sira AS SIRA,  " +
+                        "LEFT(CONVERT(VARCHAR(8),MAX(sip_create_date),108),5) AS SAAT,  " +
+                        "MAX(sip_musteri_kod) AS CARIKOD,  " +
+                        "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sip_musteri_kod)) + ' ' + " +
+                        "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sip_musteri_kod)) AS CARIADI,  " +
+                        "ISNULL((SELECT cari_per_adi  FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = MAX(sip_satici_kod)),'') AS PERSONEL, " +
+                        "ROUND(SUM(sip_tutar),2) TUTAR " +
+                        "FROM SIPARISLER  " +
+                        "WHERE sip_tip = 0 AND sip_cins = 0 AND sip_create_date = CONVERT(VARCHAR(10),GETDATE(),112) " +
+                        "AND sip_evrakno_seri = '" + $scope.Seri + "' " + 
+                        "GROUP BY sip_evrakno_seri,sip_evrakno_sira " 
+            }
+        }
+        else if(localStorage.mode == 'false')
+        {
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT  " +
+                "sip_evrakno_seri AS SERI,  " +
+                "sip_evrakno_sira AS SIRA,  " +
+                "MAX(sip_musteri_kod) AS CARIKOD,  " +
+                "(SELECT UNVAN1 FROM CARI WHERE KODU = sip_musteri_kod) AS CARIADI,  " +
+                "IFNULL((SELECT PERSONELADI FROM PERSONEL WHERE PERSONELKODU = sip_satici_kod),'') AS PERSONEL, " +
+                "ROUND(SUM(sip_tutar),2) TUTAR " +
+                "FROM SIPARIS  " +
+                "WHERE sip_tip = 0 AND sip_cins = 0 AND sip_create_date = date('now') " +
+                "AND sip_evrakno_seri = '" + $scope.Seri + "' " + 
+                "GROUP BY sip_evrakno_seri,sip_evrakno_sira ",
+            }
         }
 
         await db.GetPromiseQuery(TmpQuery,async function(Data)
