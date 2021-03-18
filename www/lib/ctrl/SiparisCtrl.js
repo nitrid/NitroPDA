@@ -763,7 +763,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FIRMA NO
-            1, //ŞUBE NO
+            0, //ŞUBE NO
             $scope.Tarih,
             $scope.TeslimTarihi,
             $scope.EvrakTip,
