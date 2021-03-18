@@ -57,6 +57,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.DizaynListe = [];
 
         $scope.Tutar = "";
+        $scope.IrsTutar = "";
 
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = ""; 
@@ -589,6 +590,11 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             $scope.CariKodu = JSON.parse(localStorage.FaturaParam).CariKodu
         }
+        if(typeof (localStorage.IrsaliyeParam) != 'undefined')
+        {
+            $scope.CariKodu = JSON.parse(localStorage.IrsaliyeParam).CariKodu;
+            $scope.Tutar = JSON.parse(localStorage.IrsaliyeParam).Tutar;
+        }
         if($scope.CariKodu != "")
         {       
             db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
@@ -765,6 +771,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 {
                     $('#MdlDoviz').modal('show');
                 }
+                $scope.Tutar = "";
             }
             else
             {
