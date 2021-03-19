@@ -24,7 +24,7 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "XP-P323B-8ED0",
+			"BTYaziciAdi": "SW_C58B",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "70",
@@ -56,7 +56,7 @@ var Param = [
 		"AlinanSiparis": {
 			"Seri": "SPR",
 			"BelgeNo": "",
-			"Cari": "E00007",
+			"Cari": "0101",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",

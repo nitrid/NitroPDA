@@ -244,290 +244,6 @@ var QueryLocal =
         param : ['STOK','DEPONO','PARTI','LOT'],
         type : ['string|25','int','string|25','int']
     },
-    SiparisKabulListele : 
-    {
-        query : "SELECT " +
-                "TESLIMTARIH " +
-                ",SERI " +
-                ",SIRA " +
-                ",SIPMIKTAR " +
-                ",TESLIMMIKTAR " +
-                ",CARI.KODU AS CARIKOD" +
-                ",CARI.UNVAN1 AS CARIADI" +
-                ",DEPO " +
-                ",CARISORUMLU AS SORUMLULUK" +
-                ",SATICIKOD AS PERSONEL" +
-                ",ADRESNO " +
-                ",SUM(SIPMIKTAR-TESLIMMIKTAR) AS BMIKTAR " +
-                ",SIPARIS.SATIRNO AS SATIR " +
-                ",BIRIMPNTR " +
-                ",TIP " +
-                ",CARI " +
-                ",TOPTANVERGIPNTR " +
-                ",PROJE " +
-                ",VERGI " +
-                ",SIPARIS.DOVIZCINSI " +
-                ",DEPOMIKTAR " +
-                ",BIRIM " +
-                ",CINS " +
-                ",ODEMENO " +
-                ",ACIKLAMA " +
-                "FROM SIPARISSTOK AS SIPARIS INNER JOIN " +
-                "CARI ON SIPARIS.CARI = CARI.KODU " +
-                "WHERE SIPARIS.TESLIMTARIH>= '@ILKTARIH' AND SIPARIS.TESLIMTARIH<='@SONTARIH' " +
-                "AND SIPARIS.DEPO=@DEPONO AND SIPARIS.TIP=@TIP " +
-                "AND TESLIMMIKTAR < SIPMIKTAR " +
-                "GROUP BY TESLIMTARIH,SIPARIS.SERI,SIPARIS.SIRA,SIPARIS.DEPO,PROJE," +
-                "SIPARIS.ADRESNO,CARI.KODU,CARI.UNVAN1,SIPARIS.ACIKLAMA,SIPARIS.DOVIZCINSI ORDER BY TESLIMTARIH ASC",
-        param : ['ILKTARIH','SONTARIH','DEPONO','TIP'],
-        type : ['date','date','int','int']
-    },
-    SiparisInsert : 
-    {
-        query:  
-                "INSERT INTO [SIPARIS] " +
-                "([sip_Guid] " +
-                ",[sip_DBCno] " +
-                ",[sip_SpecRECno] " +
-                ",[sip_iptal] " +
-                ",[sip_fileid] " +
-                ",[sip_hidden] " +
-                ",[sip_kilitli] " +
-                ",[sip_degisti] " +
-                ",[sip_checksum] " +
-                ",[sip_create_user] " +
-                ",[sip_create_date] " +
-                ",[sip_lastup_user] " +
-                ",[sip_lastup_date] " +
-                ",[sip_special1] " +
-                ",[sip_special2] " +
-                ",[sip_special3] " +
-                ",[sip_firmano] " +
-                ",[sip_subeno] " +
-                ",[sip_tarih] " +
-                ",[sip_teslim_tarih] " +
-                ",[sip_tip] " +
-                ",[sip_cins] " +
-                ",[sip_evrakno_seri] " +
-                ",[sip_evrakno_sira] " +
-                ",[sip_satirno] " +
-                ",[sip_belgeno] " +
-                ",[sip_belge_tarih] " +
-                ",[sip_satici_kod] " +
-                ",[sip_musteri_kod] " +
-                ",[sip_stok_kod] " +
-                ",[sip_b_fiyat] " +
-                ",[sip_miktar] " +
-                ",[sip_birim_pntr] " +
-                ",[sip_teslim_miktar] " +
-                ",[sip_tutar] " +
-                ",[sip_iskonto_1] " +
-                ",[sip_iskonto_2] " +
-                ",[sip_iskonto_3] " +
-                ",[sip_iskonto_4] " +
-                ",[sip_iskonto_5] " +
-                ",[sip_iskonto_6] " +
-                ",[sip_masraf_1] " +
-                ",[sip_masraf_2] " +
-                ",[sip_masraf_3] " +
-                ",[sip_masraf_4] " +
-                ",[sip_vergi_pntr] " +
-                ",[sip_vergi] " +
-                ",[sip_masvergi_pntr] " +
-                ",[sip_masvergi] " +
-                ",[sip_opno] " +
-                ",[sip_aciklama] " +
-                ",[sip_aciklama2] " +
-                ",[sip_depono] " +
-                ",[sip_OnaylayanKulNo] " +
-                ",[sip_vergisiz_fl] " +
-                ",[sip_kapat_fl] " +
-                ",[sip_cari_sormerk] " +
-                ",[sip_stok_sormerk] " +
-                ",[sip_cari_grupno] " +
-                ",[sip_doviz_cinsi] " +
-                ",[sip_doviz_kuru] " +
-                ",[sip_alt_doviz_kuru] " +
-                ",[sip_adresno] " +
-                ",[sip_teslimturu] " +
-                ",[sip_cagrilabilir_fl] " +
-                ",[sip_prosip_uid] " +
-                ",[sip_iskonto1] " +
-                ",[sip_iskonto2] " +
-                ",[sip_iskonto3] " +
-                ",[sip_iskonto4] " +
-                ",[sip_iskonto5] " +
-                ",[sip_iskonto6] " +
-                ",[sip_masraf1] " +
-                ",[sip_masraf2] " +
-                ",[sip_masraf3] " +
-                ",[sip_masraf4] " +
-                ",[sip_isk1] " +
-                ",[sip_isk2] " +
-                ",[sip_isk3] " +
-                ",[sip_isk4] " +
-                ",[sip_isk5] " +
-                ",[sip_isk6] " +
-                ",[sip_mas1] " +
-                ",[sip_mas2] " +
-                ",[sip_mas3] " +
-                ",[sip_mas4] " +
-                ",[sip_Exp_Imp_Kodu] " +
-                ",[sip_kar_orani] " +
-                ",[sip_durumu] " +
-                ",[sip_stal_uid] " +
-                ",[sip_planlananmiktar] " +
-                ",[sip_teklif_uid] " +
-                ",[sip_parti_kodu] " +
-                ",[sip_lot_no] " +
-                ",[sip_projekodu] " +
-                ",[sip_fiyat_liste_no] " +
-                ",[sip_Otv_Pntr] " +
-                ",[sip_Otv_Vergi] " +
-                ",[sip_otvtutari] " +
-                ",[sip_OtvVergisiz_Fl] " +
-                ",[sip_paket_kod] " +
-                ",[sip_Rez_uid] " +
-                ",[sip_harekettipi] " +
-                ",[sip_yetkili_uid] " +
-                ",[sip_kapatmanedenkod] " +
-                ",[sip_gecerlilik_tarihi] " +
-                ",[sip_onodeme_evrak_tip] " +
-                ",[sip_onodeme_evrak_seri] " +
-                ",[sip_onodeme_evrak_sira] " +
-                ",[sip_rezervasyon_miktari] " +
-                ",[sip_rezerveden_teslim_edilen] " +
-                ",[sip_HareketGrupKodu1] " +
-                ",[sip_HareketGrupKodu2] " +
-                ",[sip_HareketGrupKodu3] " +
-                ") " +
-                "VALUES ( " +
-                "'@guid' " +
-                ",0						" +
-                ",0						" +
-                ",0						" +
-                ",21					" +
-                ",0						" +
-                ",0						" +
-                ",0							                   " +
-                ",0							                   " +
-                ",@sip_create_user			                   " +
-                ",date('now')		   " +
-                ",@sip_lastup_user			                   " +
-                ",date('now')		   " +
-                ",''							               " +
-                ",''							               " +
-                ",''							               " +
-                ",@sip_firmano					               " +
-                ",@sip_subeno						           " +
-                ",'@sip_tarih'					               " +
-                ",'@sip_teslim_tarih'			                   " +
-                ",@sip_tip					                   " +
-                ",@sip_cins					                   " +
-                ",'@sip_evrakno_seri'		                   " +
-                ",@sip_evrakno_sira			                   " +
-                ",(SELECT IFNULL(MAX(sip_satirno),-1) + 1 AS SATIRNO FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins)" +
-                ",'@sip_belgeno'				                   " +
-                ",'@sip_belge_tarih'			                   " +
-                ",'@sip_satici_kod'				               " +
-                ",'@sip_musteri_kod'			                   " +
-                ",'@sip_stok_kod'				               " +
-                ",@sip_b_fiyat				                   " +
-                ",@sip_miktar					               " +
-                ",@sip_birim_pntr				               " +
-                ",@sip_teslim_miktar			               " +
-                ",@sip_tutar					               " +
-                ",@sip_iskonto_1				               " +
-                ",@sip_iskonto_2				               " +
-                ",@sip_iskonto_3				               " +
-                ",@sip_iskonto_4				               " +
-                ",@sip_iskonto_5				               " +
-                ",@sip_iskonto_6				               " +
-                ",0							                   " +
-                ",0							                   " +
-                ",0							                   " +
-                ",0							                   " +
-                ",@sip_vergi_pntr				               " +
-                ",@sip_vergi					               " +
-                ",0							                   " +
-                ",0							                   " +
-                ",@sip_opno					                   " +
-                ",'@sip_aciklama'				                   " +
-                ",''							               " +
-                ",@sip_depono					               " +
-                ",@sip_OnaylayanKulNo					       " +
-                ",0							                   " +
-                ",0							                   " +
-                ",'@sip_cari_sormerk'			                   " +
-                ",'@sip_stok_sormerk'			                   " +
-                ",0							                   " +
-                ",@sip_doviz_cinsi			                   " +
-                ",@sip_doviz_kuru				               " +
-                ",@sip_alt_doviz_kuru			               " +
-                ",@sip_adresno							       " +
-                ",''							               " +
-                ",1							                   " +
-                ",cast(cast(0 as binary) as uniqueidentifier)  " +
-                ",@sip_iskonto1				                   " +
-                ",@sip_iskonto2				                   " +
-                ",@sip_iskonto3				                   " +
-                ",@sip_iskonto4				                   " +
-                ",@sip_iskonto5				                   " +
-                ",@sip_iskonto6				                   " +
-                ",1							                   " +
-                ",1							                   " +
-                ",1							                   " +
-                ",1							                   " +
-                ",@sip_isk1					                   " +
-                ",@sip_isk2					                   " +
-                ",@sip_isk3					                   " +
-                ",@sip_isk4					                   " +
-                ",@sip_isk5					                   " +
-                ",@sip_isk6					                   " +
-                ",0							                   " +
-                ",0							                   " +
-                ",0							                   " +
-                ",0							                   " +
-                ",''							               " +
-                ",0							                   " +
-                ",0							                   " +
-                ",cast(cast(0 as binary) as uniqueidentifier)  " +
-                ",0							                   " +
-                ",cast(cast(0 as binary) as uniqueidentifier)  " +
-                ",'@sip_parti_kodu'					           " +
-                ",@sip_lot_no						           " +
-                ",'@sip_projekodu'					           " +
-                ",@sip_fiyat_liste_no					       " +
-                ",0							                   " +
-                ",0							                   " +
-                ",0							                   " +
-                ",0							                   " +
-                ",''							               " +
-                ",cast(cast(0 as binary) as uniqueidentifier)  " +
-                ",0                                            " +
-                ",cast(cast(0 as binary) as uniqueidentifier)  " +
-                ",''							               " +
-                ",date('now')		                           " +
-                ",0							                   " +
-                ",''							               " +
-                ",0							                   " +
-                ",@sip_rezervasyon_miktari 				       " +
-                ",@sip_rezerveden_teslim_edilen			       " +
-                ",''							               " +
-                ",''							               " +
-                ",''							               " +
-                "); " +
-                "SELECT sip_Guid FROM SIPARIS",
-        param : ['sip_create_user','sip_lastup_user','sip_firmano','sip_subeno','sip_tarih:date','sip_teslim_tarih:date','sip_tip',
-                 'sip_cins','sip_evrakno_seri','sip_evrakno_sira','sip_belgeno','sip_belge_tarih','sip_satici_kod',
-                 'sip_musteri_kod','sip_stok_kod','sip_b_fiyat','sip_miktar','sip_birim_pntr','sip_teslim_miktar',
-                 'sip_tutar','sip_iskonto_1','sip_iskonto_2','sip_iskonto_3','sip_iskonto_4','sip_iskonto_5',
-                 'sip_iskonto_6','sip_vergi_pntr','sip_vergi','sip_opno','sip_aciklama','sip_depono','sip_OnaylayanKulNo',
-                 'sip_cari_sormerk','sip_stok_sormerk','sip_doviz_cinsi','sip_doviz_kuru','sip_alt_doviz_kuru',
-                 'sip_adresno','sip_iskonto1','sip_iskonto2','sip_iskonto3','sip_iskonto4','sip_iskonto5','sip_iskonto6',
-                 'sip_isk1:bit','sip_isk2:bit','sip_isk3:bit','sip_isk4:bit','sip_isk5:bit','sip_isk6:bit','sip_parti_kodu','sip_lot_no',
-                 'sip_projekodu','sip_fiyat_liste_no','sip_rezervasyon_miktari','sip_rezerveden_teslim_edilen']
-    },
     FiyatGetir : 
     {
         query : "SELECT  " + 
@@ -545,12 +261,12 @@ var QueryLocal =
     IskontoMatrisGetir : 
     {
         query : "SELECT " + 
-                "ISKONTO1, " + 
-                "ISKONTO2, " + 
-                "ISKONTO3, " + 
-                "ISKONTO4, " + 
-                "ISKONTO5, " + 
-                "ISKONTO6 " + 
+                "ORAN1, " + 
+                "ORAN2, " + 
+                "ORAN3, " + 
+                "ORAN4, " + 
+                "ORAN5, " + 
+                "ORAN6 " + 
                 "FROM ISKONTO WHERE STOK = '@STOK' AND CARI = '@CARI' AND ODEMEPLANI = @ODEME", 
         param : ['STOK','CARI','ODEME'],
         type : ['string','string','int']
@@ -1039,9 +755,296 @@ var QueryLocal =
         type : ['date','date']
     },
     //Sipariş
+    SiparisKabulListele : 
+    {
+        query : "SELECT " +
+                "TESLIMTARIH " +
+                ",SERI " +
+                ",SIRA " +
+                ",SIPMIKTAR " +
+                ",TESLIMMIKTAR " +
+                ",CARI.KODU AS CARIKOD" +
+                ",CARI.UNVAN1 AS CARIADI" +
+                ",DEPO " +
+                ",CARISORUMLU AS SORUMLULUK" +
+                ",SATICIKOD AS PERSONEL" +
+                ",ADRESNO " +
+                ",SUM(SIPMIKTAR-TESLIMMIKTAR) AS BMIKTAR " +
+                ",SIPARIS.SATIRNO AS SATIR " +
+                ",BIRIMPNTR " +
+                ",TIP " +
+                ",CARI " +
+                ",TOPTANVERGIPNTR " +
+                ",PROJE " +
+                ",VERGI " +
+                ",SIPARIS.DOVIZCINSI " +
+                ",DEPOMIKTAR " +
+                ",BIRIM " +
+                ",CINS " +
+                ",ODEMENO " +
+                ",ACIKLAMA " +
+                "FROM SIPARISSTOK AS SIPARIS INNER JOIN " +
+                "CARI ON SIPARIS.CARI = CARI.KODU " +
+                "WHERE SIPARIS.TESLIMTARIH>= '@ILKTARIH' AND SIPARIS.TESLIMTARIH<='@SONTARIH' " +
+                "AND SIPARIS.DEPO=@DEPONO AND SIPARIS.TIP=@TIP " +
+                "AND TESLIMMIKTAR < SIPMIKTAR " +
+                "GROUP BY TESLIMTARIH,SIPARIS.SERI,SIPARIS.SIRA,SIPARIS.DEPO,PROJE," +
+                "SIPARIS.ADRESNO,CARI.KODU,CARI.UNVAN1,SIPARIS.ACIKLAMA,SIPARIS.DOVIZCINSI ORDER BY TESLIMTARIH ASC",
+        param : ['ILKTARIH','SONTARIH','DEPONO','TIP'],
+        type : ['date','date','int','int']
+    },
+    SiparisInsert : 
+    {
+        query:  
+                "INSERT INTO [SIPARIS] " +
+                "([sip_Guid] " +
+                ",[sip_DBCno] " +
+                ",[sip_SpecRECno] " +
+                ",[sip_iptal] " +
+                ",[sip_fileid] " +
+                ",[sip_hidden] " +
+                ",[sip_kilitli] " +
+                ",[sip_degisti] " +
+                ",[sip_checksum] " +
+                ",[sip_create_user] " +
+                ",[sip_create_date] " +
+                ",[sip_lastup_user] " +
+                ",[sip_lastup_date] " +
+                ",[sip_special1] " +
+                ",[sip_special2] " +
+                ",[sip_special3] " +
+                ",[sip_firmano] " +
+                ",[sip_subeno] " +
+                ",[sip_tarih] " +
+                ",[sip_teslim_tarih] " +
+                ",[sip_tip] " +
+                ",[sip_cins] " +
+                ",[sip_evrakno_seri] " +
+                ",[sip_evrakno_sira] " +
+                ",[sip_satirno] " +
+                ",[sip_belgeno] " +
+                ",[sip_belge_tarih] " +
+                ",[sip_satici_kod] " +
+                ",[sip_musteri_kod] " +
+                ",[sip_stok_kod] " +
+                ",[sip_b_fiyat] " +
+                ",[sip_miktar] " +
+                ",[sip_birim_pntr] " +
+                ",[sip_teslim_miktar] " +
+                ",[sip_tutar] " +
+                ",[sip_iskonto_1] " +
+                ",[sip_iskonto_2] " +
+                ",[sip_iskonto_3] " +
+                ",[sip_iskonto_4] " +
+                ",[sip_iskonto_5] " +
+                ",[sip_iskonto_6] " +
+                ",[sip_masraf_1] " +
+                ",[sip_masraf_2] " +
+                ",[sip_masraf_3] " +
+                ",[sip_masraf_4] " +
+                ",[sip_vergi_pntr] " +
+                ",[sip_vergi] " +
+                ",[sip_masvergi_pntr] " +
+                ",[sip_masvergi] " +
+                ",[sip_opno] " +
+                ",[sip_aciklama] " +
+                ",[sip_aciklama2] " +
+                ",[sip_depono] " +
+                ",[sip_OnaylayanKulNo] " +
+                ",[sip_vergisiz_fl] " +
+                ",[sip_kapat_fl] " +
+                ",[sip_cari_sormerk] " +
+                ",[sip_stok_sormerk] " +
+                ",[sip_cari_grupno] " +
+                ",[sip_doviz_cinsi] " +
+                ",[sip_doviz_kuru] " +
+                ",[sip_alt_doviz_kuru] " +
+                ",[sip_adresno] " +
+                ",[sip_teslimturu] " +
+                ",[sip_cagrilabilir_fl] " +
+                ",[sip_prosip_uid] " +
+                ",[sip_iskonto1] " +
+                ",[sip_iskonto2] " +
+                ",[sip_iskonto3] " +
+                ",[sip_iskonto4] " +
+                ",[sip_iskonto5] " +
+                ",[sip_iskonto6] " +
+                ",[sip_masraf1] " +
+                ",[sip_masraf2] " +
+                ",[sip_masraf3] " +
+                ",[sip_masraf4] " +
+                ",[sip_isk1] " +
+                ",[sip_isk2] " +
+                ",[sip_isk3] " +
+                ",[sip_isk4] " +
+                ",[sip_isk5] " +
+                ",[sip_isk6] " +
+                ",[sip_mas1] " +
+                ",[sip_mas2] " +
+                ",[sip_mas3] " +
+                ",[sip_mas4] " +
+                ",[sip_Exp_Imp_Kodu] " +
+                ",[sip_kar_orani] " +
+                ",[sip_durumu] " +
+                ",[sip_stal_uid] " +
+                ",[sip_planlananmiktar] " +
+                ",[sip_teklif_uid] " +
+                ",[sip_parti_kodu] " +
+                ",[sip_lot_no] " +
+                ",[sip_projekodu] " +
+                ",[sip_fiyat_liste_no] " +
+                ",[sip_Otv_Pntr] " +
+                ",[sip_Otv_Vergi] " +
+                ",[sip_otvtutari] " +
+                ",[sip_OtvVergisiz_Fl] " +
+                ",[sip_paket_kod] " +
+                ",[sip_Rez_uid] " +
+                ",[sip_harekettipi] " +
+                ",[sip_yetkili_uid] " +
+                ",[sip_kapatmanedenkod] " +
+                ",[sip_gecerlilik_tarihi] " +
+                ",[sip_onodeme_evrak_tip] " +
+                ",[sip_onodeme_evrak_seri] " +
+                ",[sip_onodeme_evrak_sira] " +
+                ",[sip_rezervasyon_miktari] " +
+                ",[sip_rezerveden_teslim_edilen] " +
+                ",[sip_HareketGrupKodu1] " +
+                ",[sip_HareketGrupKodu2] " +
+                ",[sip_HareketGrupKodu3] " +
+                ",[status] " +
+                ") " +
+                "VALUES ( " +
+                "'@sip_Guid' " +
+                ",0						" +
+                ",0						" +
+                ",0						" +
+                ",21					" +
+                ",0						" +
+                ",0						" +
+                ",0							                   " +
+                ",0							                   " +
+                ",@sip_create_user			                   " +
+                ",date('now')		   " +
+                ",@sip_lastup_user			                   " +
+                ",date('now')		   " +
+                ",''							               " +
+                ",''							               " +
+                ",''							               " +
+                ",@sip_firmano					               " +
+                ",@sip_subeno						           " +
+                ",'@sip_tarih'					               " +
+                ",'@sip_teslim_tarih'			                   " +
+                ",@sip_tip					                   " +
+                ",@sip_cins					                   " +
+                ",'@sip_evrakno_seri'		                   " +
+                ",@sip_evrakno_sira			                   " +
+                ",(SELECT IFNULL(MAX(sip_satirno),-1) + 1 AS SATIRNO FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins)" +
+                ",'@sip_belgeno'				                   " +
+                ",'@sip_belge_tarih'			                   " +
+                ",'@sip_satici_kod'				               " +
+                ",'@sip_musteri_kod'			                   " +
+                ",'@sip_stok_kod'				               " +
+                ",@sip_b_fiyat				                   " +
+                ",@sip_miktar					               " +
+                ",@sip_birim_pntr				               " +
+                ",@sip_teslim_miktar			               " +
+                ",@sip_tutar					               " +
+                ",@sip_iskonto_1				               " +
+                ",@sip_iskonto_2				               " +
+                ",@sip_iskonto_3				               " +
+                ",@sip_iskonto_4				               " +
+                ",@sip_iskonto_5				               " +
+                ",@sip_iskonto_6				               " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",@sip_vergi_pntr				               " +
+                ",@sip_vergi					               " +
+                ",0							                   " +
+                ",0							                   " +
+                ",@sip_opno					                   " +
+                ",'@sip_aciklama'				                   " +
+                ",''							               " +
+                ",@sip_depono					               " +
+                ",@sip_OnaylayanKulNo					       " +
+                ",0							                   " +
+                ",0							                   " +
+                ",'@sip_cari_sormerk'			                   " +
+                ",'@sip_stok_sormerk'			                   " +
+                ",0							                   " +
+                ",@sip_doviz_cinsi			                   " +
+                ",@sip_doviz_kuru				               " +
+                ",@sip_alt_doviz_kuru			               " +
+                ",@sip_adresno							       " +
+                ",''							               " +
+                ",1							                   " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",@sip_iskonto1				                   " +
+                ",@sip_iskonto2				                   " +
+                ",@sip_iskonto3				                   " +
+                ",@sip_iskonto4				                   " +
+                ",@sip_iskonto5				                   " +
+                ",@sip_iskonto6				                   " +
+                ",1							                   " +
+                ",1							                   " +
+                ",1							                   " +
+                ",1							                   " +
+                ",@sip_isk1					                   " +
+                ",@sip_isk2					                   " +
+                ",@sip_isk3					                   " +
+                ",@sip_isk4					                   " +
+                ",@sip_isk5					                   " +
+                ",@sip_isk6					                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",''							               " +
+                ",0							                   " +
+                ",0							                   " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",0							                   " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",'@sip_parti_kodu'					           " +
+                ",@sip_lot_no						           " +
+                ",'@sip_projekodu'					           " +
+                ",@sip_fiyat_liste_no					       " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",''							               " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",0                                            " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",''							               " +
+                ",date('now')		                           " +
+                ",0							                   " +
+                ",''							               " +
+                ",0							                   " +
+                ",@sip_rezervasyon_miktari 				       " +
+                ",@sip_rezerveden_teslim_edilen			       " +
+                ",''							               " +
+                ",''							               " +
+                ",''							               " +
+                ",0                                            " +
+                ") ",
+        param : ['sip_create_user','sip_lastup_user','sip_firmano','sip_subeno','sip_tarih:date','sip_teslim_tarih:date','sip_tip',
+                 'sip_cins','sip_evrakno_seri','sip_evrakno_sira','sip_belgeno','sip_belge_tarih','sip_satici_kod',
+                 'sip_musteri_kod','sip_stok_kod','sip_b_fiyat','sip_miktar','sip_birim_pntr','sip_teslim_miktar',
+                 'sip_tutar','sip_iskonto_1','sip_iskonto_2','sip_iskonto_3','sip_iskonto_4','sip_iskonto_5',
+                 'sip_iskonto_6','sip_vergi_pntr','sip_vergi','sip_opno','sip_aciklama','sip_depono','sip_OnaylayanKulNo',
+                 'sip_cari_sormerk','sip_stok_sormerk','sip_doviz_cinsi','sip_doviz_kuru','sip_alt_doviz_kuru',
+                 'sip_adresno','sip_iskonto1','sip_iskonto2','sip_iskonto3','sip_iskonto4','sip_iskonto5','sip_iskonto6',
+                 'sip_isk1:bit','sip_isk2:bit','sip_isk3:bit','sip_isk4:bit','sip_isk5:bit','sip_isk6:bit','sip_parti_kodu','sip_lot_no',
+                 'sip_projekodu','sip_fiyat_liste_no','sip_rezervasyon_miktari','sip_rezerveden_teslim_edilen'],
+        guid : "sip_Guid"
+    },
     SipBedenHarGetir :
     {
-        query: "SELECT * FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid IN ((SELECT sip_Guid FROM SIPARIS WHERE sip_evrakno_seri = ? AND sip_evrakno_sira = ? AND sip_tip = ?)) AND BdnHar_Tipi = ? "
+        query: "SELECT * FROM BEDENHAR WHERE BdnHar_Har_uid IN (SELECT sip_Guid FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip) AND BdnHar_Tipi = @BdnHar_Tipi ",
+        param:  ['sip_evrakno_seri:string|20','sip_evrakno_sira:int','sip_tip:int','BdnHar_Tipi:int'],
     },
     SiparisListeGetir :
     {
@@ -1214,6 +1217,47 @@ var QueryLocal =
                 "ORDER BY sip_satirno ASC ",
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
         type:   ['string','int','int','int']
+    },
+    SiparisUpdate:
+    {
+        query:  "UPDATE SIPARIS " +
+                "SET sip_b_fiyat=@sip_b_fiyat " + 
+                ",sip_miktar=@sip_miktar " +
+                ",sip_tutar=@sip_tutar " +
+                ",sip_vergi = (@sip_tutar - (@sip_iskonto_1 + @sip_iskonto_2 + @sip_iskonto_3 + @sip_iskonto_4 + @sip_iskonto_5))  * (SELECT ORAN / 100 FROM VERGI WHERE PNTR = (@sip_vergi_pntr) / 100) " +
+                ",sip_iskonto_1=@sip_iskonto_1 " +
+                ",sip_iskonto_2=@sip_iskonto_2 " +
+                ",sip_iskonto_3=@sip_iskonto_3 " +
+                ",sip_iskonto_4=@sip_iskonto_4 " +
+                ",sip_iskonto_5=@sip_iskonto_5 " +
+                ",sip_iskonto_6=@sip_iskonto_6 " +
+                ",sip_isk1=@sip_isk1 " +
+                ",sip_isk2=@sip_isk2 " +
+                ",sip_isk3=@sip_isk3 " +
+                ",sip_isk4=@sip_isk4 " +
+                ",sip_isk5=@sip_isk5 " +
+                ",sip_isk6=@sip_isk6 " +
+                "WHERE sip_Guid = '@sip_Guid' ",
+        param : ['sip_b_fiyat:float','sip_miktar:float','sip_tutar:float','sip_vergi_pntr:int','sip_iskonto_1:float','sip_iskonto_2:float','sip_iskonto_3:float',
+        'sip_iskonto_4:float','sip_iskonto_5:float','sip_iskonto_6:float','sip_isk1:bit','sip_isk2:bit','sip_isk3:bit','sip_isk4:bit',
+        'sip_isk5:bit','sip_isk6:bit','sip_Guid:string|50']
+    },
+    SiparisSatirDelete:
+    {
+        query:  "DELETE FROM SIPARIS WHERE sip_Guid = '@sip_Guid'",
+        param:  ['sip_Guid'],
+        type:   ['string|50']
+    },
+    SiparisEvrDelete:
+    {
+        query:  "DELETE FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND " + 
+                "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins",
+        param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
+        type:   ['string|20','int','int','int']
+    },
+    SiparisGonderGetir:
+    {
+        query:  "SELECT status AS STATUS,* FROM SIPARIS WHERE status = 0 GROUP BY sip_evrakno_seri,sip_evrakno_sira",
     },
     //Stok Hareket
     StokHarGetir :
@@ -1595,15 +1639,8 @@ var QueryLocal =
     //Beden Hareket
     BedenHarInsert : 
     {
-        query:  "INSERT INTO BEDEN_HAREKETLERI (" +
-                "BdnHar_DBCno, " + 
-                "BdnHar_Spec_Rec_no, " +
-                "BdnHar_iptal, " +
-                "BdnHar_fileid, " +
-                "BdnHar_hidden, " +
-                "BdnHar_kilitli, " +
-                "BdnHar_degisti, " +
-                "BdnHar_checksum, " +
+        query:  "INSERT INTO BEDENHAR (" +
+                "BdnHar_Guid, " +
                 "BdnHar_create_user, " +
                 "BdnHar_create_date, " +
                 "BdnHar_lastup_user, " +
@@ -1617,36 +1654,27 @@ var QueryLocal =
                 "BdnHar_HarGor, " +
                 "BdnHar_KnsIsGor, " +
                 "BdnHar_KnsFat, " +
-                "BdnHar_TesMik, " +
-                "BdnHar_rezervasyon_miktari, " +
-                "BdnHar_rezerveden_teslim_edilen " +
+                "BdnHar_TesMik " +
                 ") VALUES ( " +
-                "0," +
-                "0," +
-                "0," +
-                "113," +
-                "0," +
-                "0," +
-                "0," +
-                "0," +
+                "'@BdnHar_Guid', " +
                 "@BdnHar_create_user," +
-                "CONVERT(VARCHAR(10),GETDATE(),112)," +
+                "date('now')," +
                 "@BdnHar_lastup_user," +
-                "CONVERT(VARCHAR(10),GETDATE(),112)," +
+                "date('now')," +
                 "''," +
                 "''," +
                 "''," +
                 "@BdnHar_Tipi," +
-                "@BdnHar_Har_uid," +
+                "'@BdnHar_Har_uid'," +
                 "@BdnHar_BedenNo," +
                 "@BdnHar_HarGor," +
                 "0," +
                 "0," +
-                "0," +
-                "@BdnHar_rezervasyon_miktari," +
-                "@BdnHar_rezerveden_teslim_edilen ) ",
+                "0 " +
+                ")",
         param:  ['BdnHar_create_user','BdnHar_lastup_user','BdnHar_Tipi','BdnHar_Har_uid','BdnHar_BedenNo','BdnHar_HarGor',
-        'BdnHar_rezervasyon_miktari','BdnHar_rezerveden_teslim_edilen'] 
+        'BdnHar_rezervasyon_miktari','BdnHar_rezerveden_teslim_edilen'],
+        guid : "BdnHar_Guid"
     },
     BedenHarUpdate :
     {
@@ -2105,7 +2133,7 @@ var QueryLocal =
     {
         tag : "BEDENHAR",
         query : "CREATE TABLE IF NOT EXISTS BEDENHAR (" +
-                "BdnHar_Guid INTEGER PRIMARY KEY AUTOINCREMENT," + 
+                "BdnHar_Guid NVARCHAR," + 
                 "BdnHar_create_user SMALLINT," + 
                 "BdnHar_create_date DATETIME," + 
                 "BdnHar_lastup_user SMALLINT," + 
@@ -2114,7 +2142,7 @@ var QueryLocal =
                 "BdnHar_special2 NVARCHAR(4)," + 
                 "BdnHar_special3 NVARCHAR(4)," + 
                 "BdnHar_Tipi SMALLINT," + 
-                "BdnHar_DRECid_RECno INTEGER," + 
+                "BdnHar_Har_uid NVARCHAR," + 
                 "BdnHar_BedenNo SMALLINT," + 
                 "BdnHar_HarGor FLOAT," + 
                 "BdnHar_KnsIsGor FLOAT," + 
@@ -2481,12 +2509,12 @@ var QueryLocal =
                 "CARI nvarchar (5)," +
                 "ISIM nvarchar (50)," +
                 "ODEMEPLANI int," +
-                "ISKONTO1 float," +
-                "ISKONTO2 float," +
-                "ISKONTO3 float," +
-                "ISKONTO4 float," +
-                "ISKONTO5 float," +
-                "ISKONTO6 float)",
+                "ORAN1 float," +
+                "ORAN2 float," +
+                "ORAN3 float," +
+                "ORAN4 float," +
+                "ORAN5 float," +
+                "ORAN6 float)",
          insert : "INSERT INTO ISKONTO VALUES(?,?,?,?,?,?,?,?,?,?)"
     },
     KasaTbl : 
@@ -3025,18 +3053,19 @@ var QueryLocal =
                 "sip_paket_kod nvarchar (25)," +
                 "sip_Rez_uid smallint," +
                 "sip_harekettipi tinyint, " +
-                "sip_yetkili_uid, " +
-                "sip_kapatmanedenkod, " +
-                "sip_gecerlilik_tarihi, " +
-                "sip_onodeme_evrak_tip, " +
-                "sip_onodeme_evrak_seri, " +
-                "sip_onodeme_evrak_sira, " +
-                "sip_rezervasyon_miktari, " +
-                "sip_rezerveden_teslim_edilen, " +
-                "sip_HareketGrupKodu1, " +
-                "sip_HareketGrupKodu2, " +
-                "sip_HareketGrupKodu3)" ,
-        insert : "INSERT INTO SIPARIS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                "sip_yetkili_uid nvarchar, " +
+                "sip_kapatmanedenkod nvarchar (25), " +
+                "sip_gecerlilik_tarihi datetime, " +
+                "sip_onodeme_evrak_tip tinyint, " +
+                "sip_onodeme_evrak_seri nvarchar, " +
+                "sip_onodeme_evrak_sira int, " +
+                "sip_rezervasyon_miktari float, " +
+                "sip_rezerveden_teslim_edilen float, " +
+                "sip_HareketGrupKodu1 nvarchar (25), " +
+                "sip_HareketGrupKodu2 nvarchar (25), " +
+                "sip_HareketGrupKodu3 nvarchar (25), " +
+                "status bit)",
+        insert : "INSERT INTO SIPARIS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
     SiparisStokTbl : 
     {

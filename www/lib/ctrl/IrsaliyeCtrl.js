@@ -3124,4 +3124,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.SonSatisMiktar = $scope.SonSatisListe.MIKTAR
         });
     }
+    $scope.BtnTahClick = function()
+    {
+        let Param =
+        {
+            "Seri" : $scope.Seri,
+            "Sira" : $scope.Sira,
+            "CariKodu" : $scope.CariKodu,
+            "Tutar" : parseFloat($scope.GenelToplam.toFixed(2))
+        }
+        localStorage.IrsaliyeParam = JSON.stringify(Param);
+    }
 }
