@@ -160,7 +160,7 @@ var LocalDb =
                 await CreateTable(QueryLocal.AlisSartiTbl);
                 await CreateTable(QueryLocal.AltGrupTbl);
                 await CreateTable(QueryLocal.AnaGrupTbl);
-                //await CreateTable(QueryLocal.BankaTbl);
+                await CreateTable(QueryLocal.BankaTbl);
                 await CreateTable(QueryLocal.BarkodTbl);
                 await CreateTable(QueryLocal.BedenHarTbl);
                 await CreateTable(QueryLocal.BirimTbl);
@@ -175,7 +175,7 @@ var LocalDb =
                 await CreateTable(QueryLocal.FiyatTbl);
                 //await CreateTable(QueryLocal.IsEmirleriTbl);
                 await CreateTable(QueryLocal.IskontoTbl)
-                //await CreateTable(QueryLocal.KasaTbl);
+                await CreateTable(QueryLocal.KasaTbl);
                 //await CreateTable(QueryLocal.KonharTbl);
                 //await CreateTable(QueryLocal.MarkaTbl);
                 await CreateTable(QueryLocal.OdemePlanTbl);
@@ -250,6 +250,7 @@ var LocalDb =
                 await DataTransfer(QueryLocal.ParamTbl, QuerySql.ParamTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.RenkTbl, QuerySql.RenkTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.BedenTbl, QuerySql.BedenTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.KasaTbl, QuerySql.KasaTbl,true, DataTransferCallback);
                 callback(true);
             }
             catch(err)

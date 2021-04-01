@@ -1667,29 +1667,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
 
         $("#MdlDuzenle").modal('show');
     }
-    $scope.BtnGonder = function()
-    {
-        db.GetData($scope.Firma,'SiparisGonderGetir',[],function(Data)
-            {
-                $scope.SiparisGonderListe = Data;
-                if($scope.SiparisGonderListe.length > 0)
-                {
-                    $scope.Loading = false;
-                    $scope.TblLoading = true;
-                    $("#TblSipListe").jsGrid({data : $scope.SiparisGonderListe});
-                    $("#TblSipListe").jsGrid({pageIndex: true});
-                    $("#MdlGonder").modal('show');
-                }
-                else
-                {
-                    alertify.alert("Sipariş Bulunamadı");
-                    $scope.Loading = false;
-                    $scope.TblLoading = true;
-                    $("#TblSipListe").jsGrid({data : $scope.SiparisGonderListe});
-                    $("#TblSipListe").jsGrid({pageIndex: true});
-                }   
-            });
-    }
     $scope.BtnDuzenleKaydet = function(pIndex)
     {
         let TmpTutar = $scope.FiyatEdit * $scope.MiktarEdit;
@@ -3169,6 +3146,29 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
             $("#TbDizayn").addClass('active');
         });
+    }
+    $scope.BtnGonder = function()
+    {
+        db.GetData($scope.Firma,'SiparisGonderGetir',[],function(Data)
+            {
+                $scope.SiparisGonderListe = Data;
+                if($scope.SiparisGonderListe.length > 0)
+                {
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblSipListe").jsGrid({data : $scope.SiparisGonderListe});
+                    $("#TblSipListe").jsGrid({pageIndex: true});
+                    $("#MdlGonder").modal('show');
+                }
+                else
+                {
+                    alertify.alert("Sipariş Bulunamadı");
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblSipListe").jsGrid({data : $scope.SiparisGonderListe});
+                    $("#TblSipListe").jsGrid({pageIndex: true});
+                }   
+            });
     }
     $scope.EvrakGonder = async function()
     {

@@ -35,6 +35,16 @@ var QueryLocal =
                 "FROM PERSONEL AS PER1 INNER JOIN PERSONEL AS PER2 ON " +
                 "PER1.PERSONELKODU = PER2.PERSONELKODU --AND PER1.cari_per_tip = 0 "
     },
+    CmbKasaGetir : 
+    {
+        query : "SELECT KASAKODU AS KODU,KASAISMI AS ADI,KASADOVIZCINSI AS DOVIZCINSI,DOVIZKUR AS DOVIZKUR, CASE KASADOVIZCINSI WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZSEMBOL1,DOVIZSEMBOL FROM KASA WHERE KASATIP = @KASTIP" ,
+        param : ['KASTIP'],
+        type : ['int']
+    }, 
+    CmbBankaGetir : 
+    {
+        query : "SELECT BANKAKODU AS KODU,BANKAISMI AS ADI,BANKADOVIZCINSI AS DOVIZCINSI,DOVIZKUR AS DOVIZKUR, CASE BANKADOVIZCINSI WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZSEMBOL1,DOVIZSEMBOL FROM BANKA " ,
+    },
     PersonelTipGetir : 
     {
         query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP UNION ALL SELECT PER1.PERSONELKODU AS KODU,PER1.PERSONELADI AS ADI,PER1.PERSONELSOYADI AS SOYADI,PER1.PERSONELTIP AS TIP " +
@@ -926,7 +936,7 @@ var QueryLocal =
                 ",@sip_create_user			                   " +
                 ",date('now')		   " +
                 ",@sip_lastup_user			                   " +
-                ",date('now')		   " +
+                ",date('now')		                           " +
                 ",''							               " +
                 ",''							               " +
                 ",''							               " +
@@ -1691,324 +1701,329 @@ var QueryLocal =
     //Cari Hareket
     CariHarGetir : 
     {
-        query:  "SELECT *, " +
-                "CONVERT(VARCHAR(10),GETDATE(),112) AS cha_d_kurtar " +
-                "FROM CARI_HESAP_HAREKETLERI " +
+        query:  "SELECT  " +
+                "*, " +
+                "(SELECT UNVAN1 FROM CARI WHERE KODU=cha_kod) AS CARIADI, " +
+                "ROUND(cha_meblag,2) AS TUTAR, " +
+                "CASE cha_cinsi WHEN 19 THEN IFNULL((SELECT BANKAISMI FROM BANKA WHERE BANKAKODU = cha_kasa_hizkod),'') " +
+                "ELSE IFNULL((SELECT KASAISMI FROM KASA WHERE KASAKODU = cha_kasa_hizkod),'') END AS KASAADI " +
+                "FROM CARIHAR " +
                 "WHERE cha_evrakno_seri = ? AND cha_evrakno_sira = ? " +
                 "AND cha_evrak_tip = ? " 
     },
     CariHarInsert : 
     {
-        query : "INSERT INTO CARI_HESAP_HAREKETLERI (" +
-                "cha_DBCno " +
-                ",cha_SpecRecNo " +
-                ",cha_iptal " +
-                ",cha_fileid " +
-                ",cha_hidden " +
-                ",cha_kilitli " +
-                ",cha_degisti " +
-                ",cha_CheckSum " +
-                ",cha_create_user " +
-                ",cha_create_date " +
-                ",cha_lastup_user " +
-                ",cha_lastup_date " +
-                ",cha_special1 " +
-                ",cha_special2 " +
-                ",cha_special3 " +
-                ",cha_firmano " +
-                ",cha_subeno " +
-                ",cha_evrak_tip " +
-                ",cha_evrakno_seri " +
-                ",cha_evrakno_sira " +
-                ",cha_satir_no " +
-                ",cha_tarihi " +
-                ",cha_tip " +
-                ",cha_cinsi " +
-                ",cha_normal_Iade " +
-                ",cha_tpoz " +
-                ",cha_ticaret_turu " +
-                ",cha_belge_no " +
-                ",cha_belge_tarih " +
-                ",cha_aciklama " +
-                ",cha_satici_kodu " +
-                ",cha_EXIMkodu " +
-                ",cha_projekodu " +
-                ",cha_yat_tes_kodu " +
-                ",cha_cari_cins " +
-                ",cha_kod " +
-                ",cha_ciro_cari_kodu " +
-                ",cha_d_cins " +
-                ",cha_d_kur " +
-                ",cha_altd_kur " +
-                ",cha_grupno " +
-                ",cha_srmrkkodu " +
-                ",cha_kasa_hizmet " +
-                ",cha_kasa_hizkod " +
-                ",cha_karsidcinsi " +
-                ",cha_karsid_kur " +
-                ",cha_karsidgrupno " +
-                ",cha_karsisrmrkkodu " +
-                ",cha_miktari " +
-                ",cha_meblag " +
-                ",cha_aratoplam " +
-                ",cha_vade " +
-                ",cha_Vade_Farki_Yuz " +
-                ",cha_ft_iskonto1 " +
-                ",cha_ft_iskonto2 " +
-                ",cha_ft_iskonto3 " +
-                ",cha_ft_iskonto4 " +
-                ",cha_ft_iskonto5 " +
-                ",cha_ft_iskonto6 " +
-                ",cha_ft_masraf1 " +
-                ",cha_ft_masraf2 " +
-                ",cha_ft_masraf3 " +
-                ",cha_ft_masraf4 " +
-                ",cha_isk_mas1 " +
-                ",cha_isk_mas2 " +
-                ",cha_isk_mas3 " +
-                ",cha_isk_mas4 " +
-                ",cha_isk_mas5 " +
-                ",cha_isk_mas6 " +
-                ",cha_isk_mas7 " +
-                ",cha_isk_mas8 " +
-                ",cha_isk_mas9 " +
-                ",cha_isk_mas10 " +
-                ",cha_sat_iskmas1 " +
-                ",cha_sat_iskmas2 " +
-                ",cha_sat_iskmas3 " +
-                ",cha_sat_iskmas4 " +
-                ",cha_sat_iskmas5 " +
-                ",cha_sat_iskmas6 " +
-                ",cha_sat_iskmas7 " +
-                ",cha_sat_iskmas8 " +
-                ",cha_sat_iskmas9 " +
-                ",cha_sat_iskmas10 " +
-                ",cha_yuvarlama " +
-                ",cha_StFonPntr " +
-                ",cha_stopaj " +
-                ",cha_savsandesfonu " +
-                ",cha_avansmak_damgapul " +
-                ",cha_vergipntr " +
-                ",cha_vergi1 " +
-                ",cha_vergi2 " +
-                ",cha_vergi3 " +
-                ",cha_vergi4 " +
-                ",cha_vergi5 " +
-                ",cha_vergi6 " +
-                ",cha_vergi7 " +
-                ",cha_vergi8 " +
-                ",cha_vergi9 " +
-                ",cha_vergi10 " +
-                ",cha_vergisiz_fl " +
-                ",cha_otvtutari " +
-                ",cha_otvvergisiz_fl " +
-                ",cha_oiv_pntr " +
-                ",cha_oivtutari " +
-                ",cha_oiv_vergi " +
-                ",cha_oivergisiz_fl " +
-                ",cha_fis_tarih " +
-                ",cha_fis_sirano " +
-                ",cha_trefno " +
-                ",cha_sntck_poz " +
-                ",cha_reftarihi " +
-                ",cha_istisnakodu " +
-                ",cha_pos_hareketi " +
-                ",cha_meblag_ana_doviz_icin_gecersiz_fl " +
-                ",cha_meblag_alt_doviz_icin_gecersiz_fl " +
-                ",cha_meblag_orj_doviz_icin_gecersiz_fl " +
-                ",cha_sip_uid " +
-                ",cha_kirahar_uid " +
-                ",cha_vardiya_tarihi " +
-                ",cha_vardiya_no " +
-                ",cha_vardiya_evrak_ti " +
-                ",cha_ebelge_turu " +
-                ",cha_tevkifat_toplam " +
-                ",cha_ilave_edilecek_kdv1 " +
-                ",cha_ilave_edilecek_kdv2 " +
-                ",cha_ilave_edilecek_kdv3 " +
-                ",cha_ilave_edilecek_kdv4 " +
-                ",cha_ilave_edilecek_kdv5 " +
-                ",cha_ilave_edilecek_kdv6 " +
-                ",cha_ilave_edilecek_kdv7 " +
-                ",cha_ilave_edilecek_kdv8 " +
-                ",cha_ilave_edilecek_kdv9 " +
-                ",cha_ilave_edilecek_kdv10 " +
-                ",cha_e_islem_turu " +
-                ",cha_fatura_belge_turu " +
-                ",cha_diger_belge_adi " +
-                ",cha_uuid " +
-                ",cha_adres_no " +
-                ",cha_vergifon_toplam " +
-                ",cha_ilk_belge_tarihi " +
-                ",cha_ilk_belge_doviz_kuru " +
-                ",cha_HareketGrupKodu1 " +
-                ",cha_HareketGrupKodu2 " +
-                ",cha_HareketGrupKodu3 " +
+        query : "INSERT INTO CARIHAR (" +
+                "[cha_DBCno] " +
+                ",[cha_SpecRecNo] " +
+                ",[cha_iptal] " +
+                ",[cha_fileid] " +
+                ",[cha_hidden] " +
+                ",[cha_kilitli] " +
+                ",[cha_degisti] " +
+                ",[cha_CheckSum] " +
+                ",[cha_create_user] " +
+                ",[cha_create_date] " +
+                ",[cha_lastup_user] " +
+                ",[cha_lastup_date] " +
+                ",[cha_special1] " +
+                ",[cha_special2] " +
+                ",[cha_special3] " +
+                ",[cha_firmano] " +
+                ",[cha_subeno] " +
+                ",[cha_evrak_tip] " +
+                ",[cha_evrakno_seri] " +
+                ",[cha_evrakno_sira] " +
+                ",[cha_satir_no] " +
+                ",[cha_tarihi] " +
+                ",[cha_tip] " +
+                ",[cha_cinsi] " +
+                ",[cha_normal_Iade] " +
+                ",[cha_tpoz] " +
+                ",[cha_ticaret_turu] " +
+                ",[cha_belge_no] " +
+                ",[cha_belge_tarih] " +
+                ",[cha_aciklama] " +
+                ",[cha_satici_kodu] " +
+                ",[cha_EXIMkodu] " +
+                ",[cha_projekodu] " +
+                ",[cha_yat_tes_kodu] " +
+                ",[cha_cari_cins] " +
+                ",[cha_kod] " +
+                ",[cha_ciro_cari_kodu] " +
+                ",[cha_d_cins] " +
+                ",[cha_d_kur] " +
+                ",[cha_altd_kur] " +
+                ",[cha_grupno] " +
+                ",[cha_srmrkkodu] " +
+                ",[cha_kasa_hizmet] " +
+                ",[cha_kasa_hizkod] " +
+                ",[cha_karsidcinsi] " +
+                ",[cha_karsid_kur] " +
+                ",[cha_karsidgrupno] " +
+                ",[cha_karsisrmrkkodu] " +
+                ",[cha_miktari] " +
+                ",[cha_meblag] " +
+                ",[cha_aratoplam] " +
+                ",[cha_vade] " +
+                ",[cha_Vade_Farki_Yuz] " +
+                ",[cha_ft_iskonto1] " +
+                ",[cha_ft_iskonto2] " +
+                ",[cha_ft_iskonto3] " +
+                ",[cha_ft_iskonto4] " +
+                ",[cha_ft_iskonto5] " +
+                ",[cha_ft_iskonto6] " +
+                ",[cha_ft_masraf1] " +
+                ",[cha_ft_masraf2] " +
+                ",[cha_ft_masraf3] " +
+                ",[cha_ft_masraf4] " +
+                ",[cha_isk_mas1] " +
+                ",[cha_isk_mas2] " +
+                ",[cha_isk_mas3] " +
+                ",[cha_isk_mas4] " +
+                ",[cha_isk_mas5] " +
+                ",[cha_isk_mas6] " +
+                ",[cha_isk_mas7] " +
+                ",[cha_isk_mas8] " +
+                ",[cha_isk_mas9] " +
+                ",[cha_isk_mas10] " +
+                ",[cha_sat_iskmas1] " +
+                ",[cha_sat_iskmas2] " +
+                ",[cha_sat_iskmas3] " +
+                ",[cha_sat_iskmas4] " +
+                ",[cha_sat_iskmas5] " +
+                ",[cha_sat_iskmas6] " +
+                ",[cha_sat_iskmas7] " +
+                ",[cha_sat_iskmas8] " +
+                ",[cha_sat_iskmas9] " +
+                ",[cha_sat_iskmas10] " +
+                ",[cha_yuvarlama] " +
+                ",[cha_StFonPntr] " +
+                ",[cha_stopaj] " +
+                ",[cha_savsandesfonu] " +
+                ",[cha_avansmak_damgapul] " +
+                ",[cha_vergipntr] " +
+                ",[cha_vergi1] " +
+                ",[cha_vergi2] " +
+                ",[cha_vergi3] " +
+                ",[cha_vergi4] " +
+                ",[cha_vergi5] " +
+                ",[cha_vergi6] " +
+                ",[cha_vergi7] " +
+                ",[cha_vergi8] " +
+                ",[cha_vergi9] " +
+                ",[cha_vergi10] " +
+                ",[cha_vergisiz_fl] " +
+                ",[cha_otvtutari] " +
+                ",[cha_otvvergisiz_fl] " +
+                ",[cha_oiv_pntr] " +
+                ",[cha_oivtutari] " +
+                ",[cha_oiv_vergi] " +
+                ",[cha_oivergisiz_fl] " +
+                ",[cha_fis_tarih] " +
+                ",[cha_fis_sirano] " +
+                ",[cha_trefno] " +
+                ",[cha_sntck_poz] " +
+                ",[cha_reftarihi] " +
+                ",[cha_istisnakodu] " +
+                ",[cha_pos_hareketi] " +
+                ",[cha_meblag_ana_doviz_icin_gecersiz_fl] " +
+                ",[cha_meblag_alt_doviz_icin_gecersiz_fl] " +
+                ",[cha_meblag_orj_doviz_icin_gecersiz_fl] " +
+                ",[cha_sip_uid] " +
+                ",[cha_kirahar_uid] " +
+                ",[cha_vardiya_tarihi] " +
+                ",[cha_vardiya_no] " +
+                ",[cha_vardiya_evrak_ti] " +
+                ",[cha_ebelge_turu] " +
+                ",[cha_tevkifat_toplam] " +
+                ",[cha_ilave_edilecek_kdv1] " +
+                ",[cha_ilave_edilecek_kdv2] " +
+                ",[cha_ilave_edilecek_kdv3] " +
+                ",[cha_ilave_edilecek_kdv4] " +
+                ",[cha_ilave_edilecek_kdv5] " +
+                ",[cha_ilave_edilecek_kdv6] " +
+                ",[cha_ilave_edilecek_kdv7] " +
+                ",[cha_ilave_edilecek_kdv8] " +
+                ",[cha_ilave_edilecek_kdv9] " +
+                ",[cha_ilave_edilecek_kdv10] " +
+                ",[cha_e_islem_turu] " +
+                ",[cha_fatura_belge_turu] " +
+                ",[cha_diger_belge_adi] " +
+                ",[cha_uuid] " +
+                ",[cha_adres_no] " +
+                ",[cha_vergifon_toplam] " +
+                ",[cha_ilk_belge_tarihi] " +
+                ",[cha_ilk_belge_doviz_kuru] " +
+                ",[cha_HareketGrupKodu1] " +
+                ",[cha_HareketGrupKodu2] " +
+                ",[cha_HareketGrupKodu3] " +
                 ") VALUES ( " + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "51," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "@cha_create_user," + 
-                "GETDATE()," + 
-                "@cha_lastup_user," + 
-                "GETDATE()," + 
-                "''," + 
-                "''," + 
-                "''," + 
-                "@cha_firmano," + 
-                "@cha_subeno," + 
-                "@cha_evrak_tip," + 
-                "'@cha_evrakno_seri'," + 
-                "@cha_evrakno_sira," + 
-                "@cha_satir_no," + 
-                "@cha_tarihi," + 
-                "@cha_tip," + 
-                "@cha_cinsi," + 
-                "@cha_normal_Iade," + 
-                "@cha_tpoz," + 
-                "@cha_ticaret_turu," + 
-                "@cha_belge_no," + 
-                "@cha_belge_tarih," + 
-                "'@cha_aciklama'," + 
-                "'@cha_satici_kodu'," + 
-                "'@cha_EXIMkodu'," + 
-                "'@cha_projekodu'," + 
-                "''," + 
-                "@cha_cari_cins," + 
-                "'@cha_kod'," + 
-                "'@cha_ciro_cari_kodu'," + 
-                "@cha_d_cins," + 
-                "@cha_d_kur," + 
-                "@cha_altd_kur," + 
-                "@cha_grupno," + 
-                "'@cha_srmrkkodu'," + 
-                "@cha_kasa_hizmet," + 
-                "'@cha_kasa_hizkod'," + 
-                "0," + 
-                "1," + 
-                "@cha_karsidgrupno," + 
-                "''," + 
-                "0," + 
-                "@cha_meblag," + 
-                "@cha_aratoplam," + 
-                "@cha_vade," + 
-                "0," + 
-                "@cha_ft_iskonto1," + 
-                "@cha_ft_iskonto2," + 
-                "@cha_ft_iskonto3," + 
-                "@cha_ft_iskonto4," + 
-                "@cha_ft_iskonto5," + 
-                "@cha_ft_iskonto6," + 
-                "@cha_ft_masraf1," + 
-                "@cha_ft_masraf2," + 
-                "@cha_ft_masraf3," + 
-                "@cha_ft_masraf4," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "@cha_vergipntr," + 
-                "@cha_vergi1," + 
-                "@cha_vergi2," + 
-                "@cha_vergi3," + 
-                "@cha_vergi4," + 
-                "@cha_vergi5," + 
-                "@cha_vergi6," + 
-                "@cha_vergi7," + 
-                "@cha_vergi8," + 
-                "@cha_vergi9," + 
-                "@cha_vergi10," + 
-                "@cha_vergisiz_fl," + 
-                "@cha_otvtutari," + 
-                "@cha_otvvergisiz_fl," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "@cha_oivergisiz_fl," + 
-                "'18991230'," + 
-                "0," + 
-                "@cha_trefno," + 
-                "@cha_sntck_poz," + 
-                "'18991230'," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "cast(cast(0 as binary) as uniqueidentifier)," + 
-                "cast(cast(0 as binary) as uniqueidentifier)," + 
-                "'18991230'," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "@cha_e_islem_turu," + 
-                "0," + 
-                "''," + 
-                "'00000000-0000-0000-0000-00000000000000'," + 
-                "1," + 
-                "0," + 
-                "'18991230'," + 
-                "0," + 
-                "''," + 
-                "''," + 
-                "'')" ,
-        param : ['cha_create_user','cha_lastup_user','cha_firmano','cha_subeno','cha_evrak_tip','cha_evrakno_seri','cha_evrakno_sira',
-            'cha_tarihi','cha_tip','cha_cinsi','cha_normal_Iade','cha_tpoz','cha_ticaret_turu','cha_belge_no','cha_belge_tarih',
-            'cha_aciklama','cha_satici_kodu','cha_EXIMkodu','cha_projekodu','cha_cari_cins','cha_kod','cha_ciro_cari_kodu',
-            'cha_d_cins','cha_d_kur','cha_altd_kur','cha_grupno','cha_srmrkkodu','cha_kasa_hizmet','cha_kasa_hizkod','cha_karsidgrupno',
-            'cha_meblag','cha_aratoplam','cha_vade','cha_ft_iskonto1','cha_ft_iskonto2','cha_ft_iskonto3','cha_ft_iskonto4','cha_ft_iskonto5',
-            'cha_ft_iskonto6','cha_ft_masraf1','cha_ft_masraf2','cha_ft_masraf3','cha_ft_masraf4','cha_vergipntr','cha_vergi1','cha_vergi2',
-            'cha_vergi3','cha_vergi4','cha_vergi5','cha_vergi6','cha_vergi7','cha_vergi8','cha_vergi9','cha_vergi10','cha_vergisiz_fl',
-            'cha_otvtutari','cha_otvvergisiz_fl','cha_oivergisiz_fl','cha_trefno','cha_sntck_poz','cha_e_islem_turu']    
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "51,                                    " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "@cha_create_user,                      " + 
+                "date('now'),                           " + 
+                "@cha_lastup_user,                      " + 
+                "date('now'),                           " + 
+                "'',                                    " + 
+                "'',                                    " + 
+                "'',                                    " + 
+                "@cha_firmano,                          " + 
+                "@cha_subeno,                           " + 
+                "@cha_evrak_tip,                        " + 
+                "'@cha_evrakno_seri',                   " + 
+                "@cha_evrakno_sira,                     " + 
+                "(SELECT IFNULL(MAX(cha_satir_no),-1) + 1 AS SATIRNO FROM CARIHAR WHERE cha_evrakno_seri = '@cha_evrakno_seri' AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip), " + 
+                "'@cha_tarihi',                         " + 
+                "@cha_tip,                              " + 
+                "@cha_cinsi,                            " + 
+                "@cha_normal_Iade,                      " + 
+                "@cha_tpoz,                             " + 
+                "@cha_ticaret_turu,                     " + 
+                "'@cha_belge_no',                       " + 
+                "'@cha_belge_tarih',                    " + 
+                "'@cha_aciklama',                       " + 
+                "'@cha_satici_kodu',                    " + 
+                "'@cha_EXIMkodu',                       " + 
+                "'@cha_projekodu',                      " + 
+                "'',                                    " + 
+                "@cha_cari_cins,                        " + 
+                "'@cha_kod',                            " + 
+                "'@cha_ciro_cari_kodu',                 " + 
+                "@cha_d_cins,                           " + 
+                "@cha_d_kur,                            " + 
+                "@cha_altd_kur,                         " + 
+                "@cha_grupno,                           " + 
+                "'@cha_srmrkkodu',                      " + 
+                "@cha_kasa_hizmet,                      " + 
+                "'@cha_kasa_hizkod',                    " + 
+                "@cha_kasaidcinsi,		                " +
+                "@cha_kasaid_kur,   	                " +
+                "@cha_karsidgrupno ,	                " +
+                "'@cha_karsisrmrkkodu',	                " +
+                "0,                                     " + 
+                "@cha_meblag,                           " + 
+                "@cha_aratoplam,                        " + 
+                "'@cha_vade',                             " + 
+                "0,                                     " + 
+                "@cha_ft_iskonto1,                      " + 
+                "@cha_ft_iskonto2,                      " + 
+                "@cha_ft_iskonto3,                      " + 
+                "@cha_ft_iskonto4,                      " + 
+                "@cha_ft_iskonto5,                      " + 
+                "@cha_ft_iskonto6,                      " + 
+                "@cha_ft_masraf1,                       " + 
+                "@cha_ft_masraf2,                       " + 
+                "@cha_ft_masraf3,                       " + 
+                "@cha_ft_masraf4,                       " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "@cha_vergipntr,                        " + 
+                "@cha_vergi1,                           " + 
+                "@cha_vergi2,                           " + 
+                "@cha_vergi3,                           " + 
+                "@cha_vergi4,                           " + 
+                "@cha_vergi5,                           " + 
+                "@cha_vergi6,                           " + 
+                "@cha_vergi7,                           " + 
+                "@cha_vergi8,                           " + 
+                "@cha_vergi9,                           " + 
+                "@cha_vergi10,                          " + 
+                "@cha_vergisiz_fl,                      " + 
+                "@cha_otvtutari,                        " + 
+                "@cha_otvvergisiz_fl,                   " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "@cha_oivergisiz_fl,                    " + 
+                "'18991230',                            " + 
+                "0,                                     " + 
+                "'@cha_trefno',                           " + 
+                "@cha_sntck_poz,                        " + 
+                "'18991230',                            " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "cast(cast(0 as binary) as uniqueidentifier), " + 
+                "cast(cast(0 as binary) as uniqueidentifier), " + 
+                "'18991230',                            " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "@cha_e_islem_turu,                     " + 
+                "0,                                     " + 
+                "'',                                    " + 
+                "'00000000-0000-0000-0000-00000000000000', " + 
+                "1,                                     " + 
+                "0,                                     " + 
+                "'18991230',                            " + 
+                "0,                                     " + 
+                "'',                                    " + 
+                "'',                                    " + 
+                "''                                     " +
+                ")  " ,
+                param : ['cha_create_user:int','cha_lastup_user:int','cha_firmano:int','cha_subeno:int','cha_evrak_tip:int','cha_evrakno_seri:string|25','cha_evrakno_sira:int',
+                'cha_tarihi:date','cha_tip:int','cha_cinsi:int','cha_normal_Iade:int','cha_tpoz:int','cha_ticaret_turu:int','cha_belge_no:string|25','cha_belge_tarih:date',
+                'cha_aciklama:string|40','cha_satici_kodu:string|25','cha_EXIMkodu:string|25','cha_projekodu:string|25','cha_cari_cins:int','cha_kod:string|25','cha_ciro_cari_kodu:string|25',
+                'cha_d_cins:int','cha_d_kur:float','cha_altd_kur:float','cha_grupno:int','cha_srmrkkodu:string|25','cha_kasa_hizmet:int','cha_kasa_hizkod:string|25','cha_kasaidcinsi:int','cha_kasaid_kur:float','cha_karsidgrupno:int','cha_karsisrmrkkodu:string|25',
+                'cha_meblag:float','cha_aratoplam:float','cha_vade:string|10','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float','cha_ft_iskonto4:float','cha_ft_iskonto5:float',
+                'cha_ft_iskonto6:float','cha_ft_masraf1:float','cha_ft_masraf2:float','cha_ft_masraf3:float','cha_ft_masraf4:float','cha_vergipntr:int','cha_vergi1:float','cha_vergi2:float',
+                'cha_vergi3:float','cha_vergi4:float','cha_vergi5:float','cha_vergi6:float','cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_vergisiz_fl:bit',
+                'cha_otvtutari:float','cha_otvvergisiz_fl:bit','cha_oivergisiz_fl:bit','cha_trefno:string|25','cha_sntck_poz:int','cha_e_islem_turu:int']
     },
     CariHarEvrDelete : 
     {
-        query : "DELETE FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = ? AND cha_evrakno_sira = ? AND cha_evrak_tip = ? " 
+        query : "DELETE FROM CARIHAR WHERE cha_evrakno_seri = ? AND cha_evrakno_sira = ? AND cha_evrak_tip = ? " 
     },
     CariHarSatirDelete : 
     {
-        query : "DELETE FROM CARI_HESAP_HAREKETLERI WHERE cha_Guid = ? "
+        query : "DELETE FROM CARIHAR WHERE cha_Guid = ? "
     },
     CariHarUpdate : 
     {
-        query : "UPDATE CARI_HESAP_HAREKETLERI " +
+        query : "UPDATE CARIHAR " +
                 "SET cha_meblag = ? " +
                 ",cha_aratoplam = ? " +
                 ",cha_vergi1 = ? " +
@@ -2032,7 +2047,7 @@ var QueryLocal =
     },
     MaxCariHarSira : 
     {
-        query : "SELECT IFNULL(MAX(cha_evrakno_sira),0) AS MAXEVRSIRA FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = ? AND cha_evrak_tip = ? "
+        query : "SELECT IFNULL(MAX(cha_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM CARIHAR WHERE cha_evrakno_seri = ? AND cha_evrak_tip = ? "
     },
     //#region "LOCAL TABLOLAR OLUŞTURMA VE AKTARIM"
     AdresTbl : 
@@ -2220,6 +2235,14 @@ var QueryLocal =
         tag : "CARIHAR",
         query : "CREATE TABLE IF NOT EXISTS CARIHAR (" +
                 "cha_Guid INTEGER PRIMARY KEY AUTOINCREMENT," + 
+                "cha_DBCno INTEGER" +
+                ",cha_SpecRecNo INTEGER" +
+                ",cha_iptal INTEGER" +
+                ",cha_fileid INTEGER" +
+                ",cha_hidden INTEGER" +
+                ",cha_kilitli INTEGER" +
+                ",cha_degisti INTEGER" +
+                ",cha_CheckSum INTEGER," +
                 "cha_create_user SMALLINT," + 
                 "cha_create_date DATETIME," + 
                 "cha_lastup_user SMALLINT," + 
@@ -2243,6 +2266,8 @@ var QueryLocal =
                 "cha_belge_tarih DATETIME," + 
                 "cha_aciklama NVARCHAR(40)," + 
                 "cha_satici_kodu NVARCHAR(25)," + 
+                "cha_EXIMkodu NVARCHAR(25)," +
+                "cha_yat_tes_kodu NVARCHAR(25), " +
                 "cha_projekodu NVARCHAR(25)," + 
                 "cha_cari_cins TINYINT," + 
                 "cha_kod NVARCHAR(25)," + 
@@ -2262,6 +2287,7 @@ var QueryLocal =
                 "cha_meblag FLOAT," + 
                 "cha_aratoplam FLOAT," + 
                 "cha_vade INTEGER," + 
+                "cha_Vade_Farki_Yuz FLOAT," +
                 "cha_ft_iskonto1 FLOAT," + 
                 "cha_ft_iskonto2 FLOAT," + 
                 "cha_ft_iskonto3 FLOAT," + 
@@ -2282,6 +2308,21 @@ var QueryLocal =
                 "cha_isk_mas8 TINYINT," + 
                 "cha_isk_mas9 TINYINT," + 
                 "cha_isk_mas10 TINYINT," + 
+                "cha_sat_iskmas1 TINYINT," +
+                "cha_sat_iskmas2 TINYINT," +
+                "cha_sat_iskmas3 TINYINT," +
+                "cha_sat_iskmas4 TINYINT," +
+                "cha_sat_iskmas5 TINYINT," +
+                "cha_sat_iskmas6 TINYINT," +
+                "cha_sat_iskmas7 TINYINT," +
+                "cha_sat_iskmas8 TINYINT," +
+                "cha_sat_iskmas9 TINYINT," +
+                "cha_sat_iskmas10 TINYINT," +
+                "cha_yuvarlama FLOAT," +
+                "cha_StFonPntr TINYINT," +
+                "cha_stopaj FLOAT," +
+                "cha_savsandesfonu FLOAT," +
+                "cha_avansmak_damgapul FLOAT," +
                 "cha_vergipntr TINYINT," + 
                 "cha_vergi1 FLOAT," + 
                 "cha_vergi2 FLOAT," + 
@@ -2300,14 +2341,45 @@ var QueryLocal =
                 "cha_oivtutari FLOAT," + 
                 "cha_oiv_vergi FLOAT," + 
                 "cha_oivergisiz_fl BIT," + 
+                "cha_fis_tarih DATETIME, " +
+                "cha_fis_sirano INTEGER, " +
                 "cha_trefno NVARCHAR(25)," + 
                 "cha_sntck_poz TINYINT," + 
                 "cha_reftarihi DATETIME," + 
+                "cha_istisnakodu TINYINT, " +
+                "cha_pos_hareketi TINYINT, " +
+                "cha_meblag_ana_doviz_icin_gecersiz_fl TINYINT, " +
+                "cha_meblag_alt_doviz_icin_gecersiz_fl TINYINT, " +
+                "cha_meblag_orj_doviz_icin_gecersiz_fl TINYINT, " +
+                "cha_sip_uid  UNIQUEIDENTIFIER, " +
+                "cha_kirahar_uid UNIQUEIDENTIFIER, " +
+                "cha_vardiya_tarihi DATETIME, " +
+                "cha_vardiya_no TINYINT, " +
+                "cha_vardiya_evrak_ti TINYINT, " +
+                "cha_ebelge_turu TINYINT, " +
+                "cha_tevkifat_toplam FLOAT, " +
+                "cha_ilave_edilecek_kdv1 FLOAT, " +
+                "cha_ilave_edilecek_kdv2 FLOAT, " +
+                "cha_ilave_edilecek_kdv3 FLOAT, " +
+                "cha_ilave_edilecek_kdv4 FLOAT, " +
+                "cha_ilave_edilecek_kdv5 FLOAT, " +
+                "cha_ilave_edilecek_kdv6 FLOAT, " +
+                "cha_ilave_edilecek_kdv7 FLOAT, " +
+                "cha_ilave_edilecek_kdv8 FLOAT, " +
+                "cha_ilave_edilecek_kdv9 FLOAT, " +
+                "cha_ilave_edilecek_kdv10 FLOAT, " +
                 "cha_e_islem_turu TINYINT," + 
                 "cha_fatura_belge_turu TINYINT," + 
                 "cha_diger_belge_adi NVARCHAR(50)," + 
-                "cha_adres_no INTEGER)",
-        insert : "INSERT INTO CARIHAR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"                
+                "cha_uuid UNIQUEIDENTIFIER, " +
+                "cha_adres_no INTEGER," +
+                "cha_vergifon_toplam FLOAT," +
+                "cha_ilk_belge_tarihi DATETIME," +
+                "cha_ilk_belge_doviz_kuru FLOAT," +
+                "cha_HareketGrupKodu1 NVARCHAR(25)," +
+                "cha_HareketGrupKodu2 NVARCHAR(25)," +
+                "cha_HareketGrupKodu3 NVARCHAR(25) )" ,
+        insert : "INSERT INTO CARIHAR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"                
     },
     DepoTbl : 
     {

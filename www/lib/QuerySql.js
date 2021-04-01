@@ -116,7 +116,7 @@ var QuerySql =
                 //"RISK, " +
                 //"RISKLIMIT, " +
                 "ODEMEPLANI, " +
-                "BAKIYE, " +
+                "CONVERT(NVARCHAR,CAST(BAKIYE AS MONEY),1) AS BAKIYE, " +
                 "BELGETARIH, " +
                 "ADRES, " +
                 "IL, " +
@@ -591,7 +591,7 @@ var QuerySql =
                 "END AS FIYAT, " + 
                 "sfiyat_doviz AS DOVIZ, " + 
                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
-                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),1)),1) AS DOVIZKUR, " + 
                 "sfiyat_iskontokod AS ISKONTOKOD " + 
                 "FROM STOK_SATIS_FIYAT_LISTELERI " +
                 "WHERE sfiyat_stokkod = @KODU AND sfiyat_listesirano = @LISTENO AND sfiyat_deposirano IN (0,@DEPO) " +
@@ -2799,7 +2799,7 @@ var QuerySql =
                 ",@cha_evrak_tip								--<cha_evrak_tip, tinyint,> \n" + 
                 ",@cha_evrakno_seri								--<cha_evrakno_seri, nvarchar_evrakseri,> \n" + 
                 ",@cha_evrakno_sira								--<cha_evrakno_sira, int,> \n" + 
-                ",@cha_satir_no				--<cha_satir_no, int,> \n" + 
+                ",@cha_satir_no				    --<cha_satir_no, int,> \n" + 
                 ",@cha_tarihi									--<cha_tarihi, datetime,> \n" + 
                 ",@cha_tip										--<cha_tip, tinyint,> \n" + 
                 ",@cha_cinsi									--<cha_cinsi, tinyint,> \n" + 
@@ -4867,7 +4867,9 @@ var QuerySql =
     },
     KasaTbl :
     {
-        query : "kas_kod AS KASAKODU, " +
+        query : 
+                "SELECT " +
+                "kas_kod AS KASAKODU, " +
                 "kas_isim AS KASAISMI, " +
                 "kas_tip AS KASATIP, " +
                 "kas_doviz_cinsi AS KASADOVIZCINSI, " +

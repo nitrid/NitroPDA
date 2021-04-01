@@ -65,6 +65,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.Combo = true;
         $scope.FiyatGizle = true;
         $scope.StokResim = false;
+        $scope.OtoEkle = false;
         
         $scope.Loading = false;
         $scope.TblLoading = true
@@ -386,9 +387,9 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         db : '{M}.' + $scope.Firma,
                         query : "SELECT TOP 1 " + 
                                 "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) * ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1),2) " + 
                                 "ELSE " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                                "ROUND(dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1),2) " + 
                                 "END AS FIYAT, " + 
                                 "sfiyat_doviz AS DOVIZ, " + 
                                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
@@ -403,6 +404,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     }
                     db.GetDataQuery(Fiyat,function(pFiyat)
                     {  
+                        console.log(pFiyat)
                         $scope.Fiyat = pFiyat[0].FIYAT
                         $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
                         $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
@@ -450,18 +452,17 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                             console.log("Veri Yok (SKT)");
                         }
                     });
-                     //Son Alış Getir
-                     db.GetData($scope.Firma,'TumSonAlisGetir',[BarkodData[0].KODU],function(data)
-                     {
-                         if(typeof(data) != 'undefined')
-                         {
-                             $scope.SonAlis = data[0].SONFIYAT
-                             $scope.SonAlisDoviz = data[0].DOVIZSEMBOL
-                         }
-                     });
+                    //Son Alış Getir
+                    db.GetData($scope.Firma,'TumSonAlisGetir',[BarkodData[0].KODU],function(data)
+                    {
+                        if(typeof(data) != 'undefined')
+                        {
+                            $scope.SonAlis = data[0].SONFIYAT
+                            $scope.SonAlisDoviz = data[0].DOVIZSEMBOL
+                        }
+                    });
                     if($scope.Barkod == '')
                     {
-                        console.log(1)
                         var BarkodGetir =
                         {
                             db : '{M}.' + $scope.Firma,
@@ -479,7 +480,11 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                             
                         });
                     }
-                    BarkodFocus()
+                    if($scope.OtoEkle == true)
+                    {
+                        $timeout( function(){$scope.Insert();},150); 
+                    }
+                    BarkodFocus();
                     $scope._Barkod = $scope.Barkod
                     $scope.Barkod = "";
                 }
@@ -496,6 +501,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     {   
         console.log(InsertData)
         console.log($scope._Barkod)
+        console.log($scope.StokKodu)
         if($scope._Barkod > 0)
         {   
             var InsertData = 
@@ -551,7 +557,11 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         }
         else
         {
-            alertify.alert("Barkod Okutmadan Ekleme Yapılmaz!");
+            if($scope.StokKodu == "" && $scope._Barkod == "")
+            {
+                alertify.alert("Barkod Okutmadan Ekleme Yapılmaz!");
+            }
+            
         }
     }
     function BarkodFocus()

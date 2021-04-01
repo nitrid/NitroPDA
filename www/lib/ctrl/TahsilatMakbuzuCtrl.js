@@ -337,9 +337,11 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.TrefNo, //TREFNO
                 $scope.SntckPoz, //SNTCKPOZ
                 0 //EISLEMTURU
-                ];
+            ];
+            console.log(InsertData)
             db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
             {   
+                console.log(InsertResult)
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(CariHarGetir)
                 {
                     $scope.CariHarListe = CariHarGetir;
@@ -594,6 +596,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             $scope.CariKodu = JSON.parse(localStorage.IrsaliyeParam).CariKodu;
             $scope.Tutar = JSON.parse(localStorage.IrsaliyeParam).Tutar;
+            localStorage.removeItem('IrsaliyeParam');
         }
         if($scope.CariKodu != "")
         {       
@@ -634,6 +637,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         await db.GetData($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
         {
             $scope.KasaListe = data;
+            console.log(data)
             $scope.KasaBankaListe = $scope.KasaListe;
             $scope.KasaBanka = UserParam[ParamName].NakitKasa;
             $scope.KasaListe.forEach(function(item)
@@ -651,7 +655,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             $scope.BankaListe = data;
         });  
-        await db.MaxSiraPromiseTag($scope.Firma,'MaxCariHarSira',[$scope.Seri,$scope.ChaEvrakTip],function(data){$scope.Sira = data});
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxCariHarSira',[$scope.Seri,$scope.ChaEvrakTip],function(data){$scope.Sira = data; console.log(data)});
     }
     $scope.TahsilatCinsiChange = async function()
     {

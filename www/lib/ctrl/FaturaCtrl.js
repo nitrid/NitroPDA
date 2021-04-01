@@ -627,7 +627,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             0, //SNTCKPOZ
             0 //EISLEMTURU
         ];
-
+        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
         {   
             if(typeof InsertResult.result.err == 'undefined')
