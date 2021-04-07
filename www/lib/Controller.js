@@ -44,6 +44,9 @@ angular.module('app.controller', [])
 .controller('IsEmriDepoSevkEslestirmeCtrl',['$scope','$window','$timeout','db',IsEmriDepoSevkEslestirmeCtrl])
 .controller('RotaCtrl',['$scope','$window','$timeout','db',RotaCtrl])
 .controller('SiparisOperasyonlariCtrl',['$scope','$window','$timeout','db',SiparisOperasyonlariCtrl])
+.controller('ProformaSiparisRaporuCtrl',['$scope','$window','db',ProformaSiparisRaporuCtrl])
+.controller('CariStokHesapHareketCtrl',['$scope','$window','db',CariStokHesapHareketCtrl])
+
 
 
 

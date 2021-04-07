@@ -445,6 +445,8 @@ var ParamTemp =
 			"Vade Aralıklı Fatura Raporu" : {"Title" : "Vade Aralıklı Fatura Raporu","DefaultValue" : "1"},
 			"Proforma Alınan Siparis" : {"Title" : "Proforma Alınan Siparis","DefaultValue" : "1"},
 			"Sipariş Operasyonları" : {"Title" : "Sipariş Operasyonları","DefaultValue" : "1"},
+			"Proforma Siparis Raporu" : {"Title" : "Proforma Siparis Raporu","DefaultValue" : "1"},
+			"Stok Cari Hareket Raporu" : {"Title" : "Stok Cari Hareket Raporu","DefaultValue" : "1"},
 		},
 		"StokVirman" :
 		{

@@ -207,6 +207,14 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/SiparisOperasyonlari.html"
     })
+    .when("/ProformaSiparisRaporu",
+    {
+        templateUrl : "html/rapor/ProformaSiparisRaporu.html"
+    })
+    .when("/CariStokHesapHareket",
+    {
+        templateUrl : "html/rapor/CariStokHesapHareket.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

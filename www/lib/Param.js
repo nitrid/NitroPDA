@@ -322,7 +322,10 @@ var Param = [
 			"Konsinye İrsaliye": "1",
 			"Cari Analiz": "1",
 			"Is Emri Depo Sevk": "1",
-			"Sipariş Operasyonları": "1"
+			"Sipariş Operasyonları": "1",
+			"Proforma Sipariş Raporu": "1",
+			"Proforma Alınan Siparis": "1",
+			"Stok Cari Hareket Raporu":"1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -479,7 +482,7 @@ var Param = [
 			"IskontoMatris": "0"
 		},
 		"RaporParams": {
-			"Depo": ""
+			"Depo": "1"
 		}
 	},
 	{
