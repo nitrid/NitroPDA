@@ -441,10 +441,12 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             0,  // OTVVERGİSİZFL
             0,  // OİVVERGİSİZ
             0,   // FİYATLİSTENO
+            0,
             0   //NAKLİYEDEPO
         ];
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
+            console.log(InsertResult.result.err)
             if(typeof(InsertResult.result.err) == 'undefined')
             {      
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(DepoSevkData)
@@ -899,7 +901,6 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                 $("#TblStok").jsGrid({data : $scope.StokListe});
                 $("#TblStok").jsGrid({pageIndex: true});
             }
-            
         });
     }
     $scope.BtnStokGridSec = function()
@@ -1294,6 +1295,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         db.DepoGetir($scope.Firma,UserParam.DepoSevk.CDepoListe,function(data)
         {
             $scope.CDepoListe = data; 
+            console.log(data)
             $scope.CDepo = UserParam.DepoSevk.CDepo;
             $scope.CDepoListe.forEach(function(item) 
             {

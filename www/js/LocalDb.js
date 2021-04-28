@@ -173,12 +173,15 @@ var LocalDb =
                 await CreateTable(QueryLocal.EtiketBasTbl);
                 //await CreateTable(QueryLocal.EvrakAciklamaTbl);
                 await CreateTable(QueryLocal.FiyatTbl);
+                await CreateTable(QueryLocal.FiyatListeTbl);
                 //await CreateTable(QueryLocal.IsEmirleriTbl);
                 await CreateTable(QueryLocal.IskontoTbl)
                 await CreateTable(QueryLocal.KasaTbl);
                 //await CreateTable(QueryLocal.KonharTbl);
                 //await CreateTable(QueryLocal.MarkaTbl);
                 await CreateTable(QueryLocal.OdemePlanTbl);
+                await CreateTable(QueryLocal.OdemeEmirleriTbl);
+                console.log(QueryLocal.OdemeEmirleriTbl)
                 await CreateTable(QueryLocal.PersonelTbl);
                 await CreateTable(QueryLocal.ProjelerTbl);
                 await CreateTable(QueryLocal.ReyonTbl);
@@ -226,6 +229,7 @@ var LocalDb =
                 await DataTransfer(QueryLocal.DepoTbl, QuerySql.DepoTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.DepoSiparisStokTbl, QuerySql.DepoSiparisStok,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.FiyatTbl, QuerySql.FiyatTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.FiyatListeTbl, QuerySql.FiyatListeTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.IsEmirleriTbl, QuerySql.IsEmirleriTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.IskontoTbl, QuerySql.IskontoTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.KasaTbl, QuerySql.KasaTbl,true, DataTransferCallback);
@@ -235,7 +239,6 @@ var LocalDb =
                 await DataTransfer(QueryLocal.ProjelerTbl, QuerySql.ProjelerTbl,true, DataTransferCallback); 
                 await DataTransfer(QueryLocal.ReyonTbl, QuerySql.ReyonTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SatisSartiTbl, QuerySql.SatisSartiTbl,true, DataTransferCallback);
-                await DataTransfer(QueryLocal.SenetTbl, QuerySql.SenetTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SiparisStokTbl, QuerySql.SiparisStokTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SiparisTbl, QuerySql.SiparisTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SonAlisFiyatiTbl, QuerySql.SonAlisFiyatiTbl,true, DataTransferCallback);

@@ -538,7 +538,6 @@ angular.module('app.db', []).service('db',function($rootScope)
         }        
         _SqlExecute(m,function(data)
         {
-            console.log(data)
             if(pCallback)
             {
                 pCallback(data);
@@ -777,8 +776,10 @@ angular.module('app.db', []).service('db',function($rootScope)
         {   
             if(FiyatData.length > 0)
             {   
+                console.log(FiyatData)
                 BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
-                BarkodData[0].FIYAT = (FiyatData[0].FIYAT * FiyatData[0].DOVIZKUR) / pFiyatParam.CariDovizKuru;
+                BarkodData[0].FIYAT = (FiyatData[0].FIYAT)
+                console.log(FiyatData[0].DOVIZKUR,pFiyatParam.CariDovizKuru)
             }
             else
             {
@@ -789,10 +790,8 @@ angular.module('app.db', []).service('db',function($rootScope)
         // İSKONTO MATRİS
         if(pEvrParam.IskontoMatris == "1")
         {
-            console.log([BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo])
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
             { 
-                console.log(Data)
                 if(Data.length > 0)
                 {
                     BarkodData[0].ISK.ORAN1 =  Data[0].ORAN1;
@@ -801,7 +800,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                     BarkodData[0].ISK.ORAN4 =  Data[0].ORAN4;
                     BarkodData[0].ISK.ORAN5 =  Data[0].ORAN5;
                     BarkodData[0].ISK.ORAN6 =  Data[0].ORAN6;
-                    console.log(Data[0].ORAN1)
                 }
             });
         }
@@ -853,7 +851,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                         BarkodData[0].ISK.ORAN4 = SatisSartiData[0].ISKONTOY4 
                         BarkodData[0].ISK.ORAN5 = SatisSartiData[0].ISKONTOY5 
                         BarkodData[0].ISK.ORAN6 = SatisSartiData[0].ISKONTOY6 
-                        console.log(SatisSartiData[0])
                         if(SatisSartiData[0].FIYAT == SatisSartiData[0].BRUTFIYAT)
                         {
                             BarkodData[0].FIYAT = SatisSartiData[0].FIYAT;

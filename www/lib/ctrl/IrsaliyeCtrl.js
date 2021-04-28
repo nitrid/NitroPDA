@@ -752,6 +752,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(IrsaliyeData)
                 {  
                     $scope.IrsaliyeListe = IrsaliyeData;
+                    console.log($scope.Stok[0])
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {   
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
@@ -877,48 +878,49 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Stok[0].INDIRIM = 0;
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
-                    // Fiyat Getir (Stok Detay)
-                    var Fiyat = 
-                    {
-                        db : '{M}.' + $scope.Firma,
-                        query : "SELECT TOP 1 " + 
-                                "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) " + 
-                                "ELSE " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
-                                "END AS FIYAT, " + 
-                                "sfiyat_doviz AS DOVIZ, " + 
-                                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
-                                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
-                                "sfiyat_iskontokod AS ISKONTOKOD " + 
-                                "FROM STOK_SATIS_FIYAT_LISTELERI " +
-                                "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
-                                "ORDER BY sfiyat_deposirano DESC", 
-                        param: ['STOKKODU','FIYATLISTE','DEPONO'],
-                        type:  ['string|50','int','int'],
-                        value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
-                    }
-                    db.GetDataQuery(Fiyat,function(pFiyat)
-                    {                         
-                        $scope.Fiyat = pFiyat[0].FIYAT
-                        $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
-                        $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
-                    });
+                    //----------OFFLINE ICIN GEÇİCİ OLARAK KAPATILDI------------\\ 
+                    // // Fiyat Getir (Stok Detay)
+                    // var Fiyat = 
+                    // {
+                    //     db : '{M}.' + $scope.Firma,
+                    //     query : "SELECT TOP 1 " + 
+                    //             "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                    //             "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) " + 
+                    //             "ELSE " + 
+                    //             "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                    //             "END AS FIYAT, " + 
+                    //             "sfiyat_doviz AS DOVIZ, " + 
+                    //             "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
+                    //             "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                    //             "sfiyat_iskontokod AS ISKONTOKOD " + 
+                    //             "FROM STOK_SATIS_FIYAT_LISTELERI " +
+                    //             "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
+                    //             "ORDER BY sfiyat_deposirano DESC", 
+                    //     param: ['STOKKODU','FIYATLISTE','DEPONO'],
+                    //     type:  ['string|50','int','int'],
+                    //     value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
+                    // }
+                    // db.GetDataQuery(Fiyat,function(pFiyat)
+                    // {                         
+                    //     $scope.Fiyat = pFiyat[0].FIYAT
+                    //     $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
+                    //     $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
+                    // });
                     
-                    //Depo Miktar Getir (Stok Detay)
-                    var DepoMiktar =
-                    {
-                        db : '{M}.' + $scope.Firma,
-                        query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
-                        param : ['STOKKODU'],
-                        type : ['string|50'],
-                        value : [$scope.StokKodu]
-                    }
-                    db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
-                    {   
-                        $scope.DepoMiktarListe = pDepoMiktar
-                        $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
-                    });
+                    // //Depo Miktar Getir (Stok Detay)
+                    // var DepoMiktar =
+                    // {
+                    //     db : '{M}.' + $scope.Firma,
+                    //     query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
+                    //     param : ['STOKKODU'],
+                    //     type : ['string|50'],
+                    //     value : [$scope.StokKodu]
+                    // }
+                    // db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
+                    // {   
+                    //     $scope.DepoMiktarListe = pDepoMiktar
+                    //     $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
+                    // });
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
@@ -1012,7 +1014,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         $window.document.getElementById("Miktar").focus();
                         $window.document.getElementById("Miktar").select();
                     }
-                    $scope.SonSatisGetir();
+                   // offline için kapatıldı $scope.SonSatisGetir();
                 }
                 else
                 {   
@@ -1061,6 +1063,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     function FisData(pData)
     { 
         $scope.KirilimGetir();
+        //Offline'da ISNULL Hatasını KirilimGetir fonksiyonu çalışıyor diye yapıyor.
         $scope.FisLength = pData;
         if($scope.FisDizaynTip == "0")
         {
@@ -2178,7 +2181,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                     BedenHarInsert(value.sth_Guid)
                                 }
                             });
-                           
 
                             let TmpFiyat  = value.sth_tutar / value.sth_miktar
                             let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
@@ -2223,7 +2225,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 else
                 {
                     let UpdateStatus = false;
-
+                console.log("Girdi")
                     angular.forEach($scope.IrsaliyeListe,function(value)
                     {
                         if(value.sth_stok_kod == $scope.Stok[0].KODU)

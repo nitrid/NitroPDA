@@ -4845,6 +4845,12 @@ var QuerySql =
                  "INNER JOIN BARKOD_TANIMLARI AS BARKOD WITH (NOLOCK,INDEX=NDX_BARKOD_TANIMLARI_02) ON " +
                  "STOK.sto_kod = BARKOD.bar_stokkodu"
     },
+    FiyatListeTbl :
+    {
+        query : "SELECT sfl_sirano AS LISTENO, " + 
+        "sfl_aciklama AS LISTEADI " +
+        "FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI "  
+    },
     IsEmirleriTbl :
     {
         query : "SELECT is_Kod AS KODU, " +

@@ -339,6 +339,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 0 //EISLEMTURU
             ];
             console.log(InsertData)
+            console.log($scope.Tutar)
             db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
             {   
                 console.log(InsertResult)
@@ -353,8 +354,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                     
                     if($scope.TahsilatCinsi != 0)
                     {
+                        console.log($scope.Tutar)
                         OdemeEmirleriInsert();
                     }
+                    $scope.Tutar = "";   
                 });
             });
         } 
@@ -396,9 +399,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.Sorumluluk,   //SORUMLULUKMERKEZI
                 ""                   //PROJE
                 ];
-
+                console.log(InsertData)
             db.ExecuteTag($scope.Firma,'CekHarInsert',InsertData,function(InsertResult)
             {   
+                console.log(InsertResult)
                 //$scope.TahsilatCinsi = "0"
                 $scope.TahsilatCinsiChange();
             });
@@ -769,13 +773,13 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             {
                 if($scope.KasaDoviz == $scope.CariDovizCinsi)
                 {
-                    CariHarInsert();                    
+                    CariHarInsert();                 
                 }
                 else
                 {
                     $('#MdlDoviz').modal('show');
                 }
-                $scope.Tutar = "";
+                
             }
             else
             {
