@@ -51,11 +51,16 @@ var LocalDb =
         LocalDb.prototype.CreateDatabase = CreateDatabase;
         LocalDb.prototype.GetData = function(pQuery,pParam,Callback)
         {
+            let TmpGuid = ""
+            if(typeof pQuery.guid != 'undefined')
+            {
+                TmpGuid = Guid().toUpperCase();
+                pQuery.query = pQuery.query.replace('@' + pQuery.guid,TmpGuid);
+            }
+
             _FirmaDb.transaction(function(pTrans)
             {
-                pTrans.executeSql(pQuery.query
-                ,pParam,
-                function(pTran,pResult)
+                pTrans.executeSql(pQuery.query,pParam,function(pTran,pResult)
                 {
                     var recordset = [];
                     var result =
@@ -63,11 +68,18 @@ var LocalDb =
                         result : {recordset : []}
                     }    
 
+                    if(typeof pQuery.guid != 'undefined')
+                    {
+                        let TmpObj = {}
+                        TmpObj[pQuery.guid] = TmpGuid
+                        recordset.push(TmpObj)
+                    }
+                    
                     for(i = 0;i < pResult.rows.length;i++)
                     {
                         recordset.push(pResult.rows[i]);
                     }
-                     
+                    
                     if(typeof Callback != 'undefined')               
                     {
                         Callback({result:{recordset:recordset}});                                   
@@ -87,9 +99,9 @@ var LocalDb =
             });
         };
         LocalDb.prototype.Execute = function(pQuery,pParam,Callback)
-        {
+        {            
             _FirmaDb.transaction(function(pTrans)
-            {
+            {                
                 pTrans.executeSql(pQuery.query
                 ,pParam,
                 function(pTran,pResult)
@@ -117,6 +129,13 @@ var LocalDb =
             });
         }
         LocalDb.prototype.DataTransfer = DataTransfers;
+        function Guid() 
+        {
+            return 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
         function CreateDatabase(callback)
         {
             callback(1); //AKTARIM BAŞLADI
@@ -141,7 +160,7 @@ var LocalDb =
                 await CreateTable(QueryLocal.AlisSartiTbl);
                 await CreateTable(QueryLocal.AltGrupTbl);
                 await CreateTable(QueryLocal.AnaGrupTbl);
-                //await CreateTable(QueryLocal.BankaTbl);
+                await CreateTable(QueryLocal.BankaTbl);
                 await CreateTable(QueryLocal.BarkodTbl);
                 await CreateTable(QueryLocal.BedenHarTbl);
                 await CreateTable(QueryLocal.BirimTbl);
@@ -154,12 +173,15 @@ var LocalDb =
                 await CreateTable(QueryLocal.EtiketBasTbl);
                 //await CreateTable(QueryLocal.EvrakAciklamaTbl);
                 await CreateTable(QueryLocal.FiyatTbl);
+                await CreateTable(QueryLocal.FiyatListeTbl);
                 //await CreateTable(QueryLocal.IsEmirleriTbl);
                 await CreateTable(QueryLocal.IskontoTbl)
-                //await CreateTable(QueryLocal.KasaTbl);
+                await CreateTable(QueryLocal.KasaTbl);
                 //await CreateTable(QueryLocal.KonharTbl);
                 //await CreateTable(QueryLocal.MarkaTbl);
                 await CreateTable(QueryLocal.OdemePlanTbl);
+                await CreateTable(QueryLocal.OdemeEmirleriTbl);
+                console.log(QueryLocal.OdemeEmirleriTbl)
                 await CreateTable(QueryLocal.PersonelTbl);
                 await CreateTable(QueryLocal.ProjelerTbl);
                 await CreateTable(QueryLocal.ReyonTbl);
@@ -207,6 +229,7 @@ var LocalDb =
                 await DataTransfer(QueryLocal.DepoTbl, QuerySql.DepoTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.DepoSiparisStokTbl, QuerySql.DepoSiparisStok,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.FiyatTbl, QuerySql.FiyatTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.FiyatListeTbl, QuerySql.FiyatListeTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.IsEmirleriTbl, QuerySql.IsEmirleriTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.IskontoTbl, QuerySql.IskontoTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.KasaTbl, QuerySql.KasaTbl,true, DataTransferCallback);
@@ -216,7 +239,6 @@ var LocalDb =
                 await DataTransfer(QueryLocal.ProjelerTbl, QuerySql.ProjelerTbl,true, DataTransferCallback); 
                 await DataTransfer(QueryLocal.ReyonTbl, QuerySql.ReyonTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SatisSartiTbl, QuerySql.SatisSartiTbl,true, DataTransferCallback);
-                await DataTransfer(QueryLocal.SenetTbl, QuerySql.SenetTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SiparisStokTbl, QuerySql.SiparisStokTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SiparisTbl, QuerySql.SiparisTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SonAlisFiyatiTbl, QuerySql.SonAlisFiyatiTbl,true, DataTransferCallback);
@@ -231,6 +253,7 @@ var LocalDb =
                 await DataTransfer(QueryLocal.ParamTbl, QuerySql.ParamTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.RenkTbl, QuerySql.RenkTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.BedenTbl, QuerySql.BedenTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.KasaTbl, QuerySql.KasaTbl,true, DataTransferCallback);
                 callback(true);
             }
             catch(err)

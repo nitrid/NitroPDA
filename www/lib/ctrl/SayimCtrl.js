@@ -304,9 +304,11 @@ function SayimCtrl($scope,$window,$timeout,db)
     }
     function InsertAfterRefresh(pData)
     {      
+        console.log(pData)
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
-        $scope.SayimListe = pData;        
+        $scope.SayimListe = pData;      
+        console.log($scope.SayimListe)  
         $scope.BtnTemizle();        
         $window.document.getElementById("Barkod").focus();
         ToplamMiktarHesapla();        
@@ -331,7 +333,6 @@ function SayimCtrl($scope,$window,$timeout,db)
             $scope.Stok[0].LOT,
             ''
         ];
-        
         db.ExecuteTag($scope.Firma,'SayimInsert',InsertData,function(InsertResult)
         {    
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -339,7 +340,7 @@ function SayimCtrl($scope,$window,$timeout,db)
                 if(localStorage.mode == 'true')
                 {
                     $scope.SayimListe.push(InsertResult.result.recordset[0]);
-                    InsertAfterRefresh($scope.SayimListe); 
+                    InsertAfterRefresh($scope.SayimListe);
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
                     {
@@ -348,19 +349,7 @@ function SayimCtrl($scope,$window,$timeout,db)
                 }
                 else
                 {
-                    var TmpQuery = 
-                    {
-                        db : '{M}.' + $scope.Firma,
-                        query:  "SELECT IFNULL((SELECT ADI FROM STOK WHERE KODU = sym_Stokkodu),'') AS ADI, " +
-                                "sym_satirno AS NO, " +
-                                "* FROM SAYIM WHERE sym_tarihi = @sym_tarihi AND " +
-                                "sym_depono = @sym_depono AND sym_evrakno = @sym_evrakno " + 
-                                "AND sym_satirno = (SELECT IFNULL(MAX(sym_satirno),0) FROM SAYIM WHERE sym_evrakno=@sym_evrakno AND sym_depono=@sym_depono AND sym_tarihi='@sym_tarihi') ORDER BY sym_lastup_date ASC ",
-                        param:  ['sym_tarihi','sym_depono','sym_evrakno'],
-                        type:   ['date','int','int'],
-                        value:  [$scope.Tarih,$scope.DepoNo,$scope.EvrakNo]
-                    }
-                    db.GetDataQuery(TmpQuery,function(SayimData)
+                    db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
                     {
                         $scope.SayimListe.push(SayimData[0]);
                         InsertAfterRefresh($scope.SayimListe);     
@@ -380,23 +369,55 @@ function SayimCtrl($scope,$window,$timeout,db)
     }
     function UpdateData(pData) 
     {  
-        db.ExecuteTag($scope.Firma,'SayimUpdate',pData.Param,function(InsertResult)
-        {  
-            if(typeof(InsertResult.result.err) == 'undefined')
-            {   
-                db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
-                {
-                    InsertAfterRefresh(SayimData);
-                    $("#TblIslem").jsGrid({data : $scope.SayimListe});
-                    Confirmation();
-                    //ToplamMiktarHesapla();
+        if($scope.SayimListe.find(s=>s.sym_Stokkodu == $scope.Stok[0].KODU))
+        {
+            console.log(13213132132132121321312)
+            console.log($scope.SayimListe.find(s=>s.sym_Stokkodu == $scope.Stok[0].KODU))
+            alertify.okBtn('Evet');
+            alertify.cancelBtn('Hayır');
+
+            alertify.confirm('Bu Stokun ' + $scope.SayimListe.find(s=>s.sym_Stokkodu == $scope.Stok[0].KODU).sym_miktar1 + ' Tanesi Sayılmış! Yinede Eklemek İstediğinize Emin Misiniz? ', 
+            function()
+            { 
+                db.ExecuteTag($scope.Firma,'SayimUpdate',pData.Param,function(InsertResult)
+                {  
+                    if(typeof(InsertResult.result.err) == 'undefined')
+                    {   
+                        db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
+                        {
+                            InsertAfterRefresh(SayimData);
+                            $("#TblIslem").jsGrid({data : $scope.SayimListe});
+                            Confirmation();
+                            //ToplamMiktarHesapla();
+                        });
+                    }
+                    else
+                    {
+                        console.log(InsertResult.result.err);
+                    }
                 });
-            }
-            else
-            {
-                console.log(InsertResult.result.err);
-            }
-        });
+            });
+        }
+        else
+        {
+            db.ExecuteTag($scope.Firma,'SayimUpdate',pData.Param,function(InsertResult)
+            {  
+                if(typeof(InsertResult.result.err) == 'undefined')
+                {   
+                    db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
+                    {
+                        InsertAfterRefresh(SayimData);
+                        $("#TblIslem").jsGrid({data : $scope.SayimListe});
+                        Confirmation();
+                        //ToplamMiktarHesapla();
+                    });
+                }
+                else
+                {
+                    console.log(InsertResult.result.err);
+                }
+            });
+        }
     }
     function StokBarkodGetir(pBarkod)
     {
@@ -614,7 +635,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             });     
         }); 
         
-       await db.MaxSiraPromiseTag($scope.Firma,'MaxSayimSira',[UserParam.Sayim.EvrakNo,$scope.DepoNo,$scope.Tarih],function(data)
+       await db.MaxSiraPromiseTag($scope.Firma,'MaxSayimSira',[$scope.DepoNo,$scope.Tarih],function(data)
         {  
             console.log(data)
             $scope.EvrakNo = data;
@@ -937,7 +958,7 @@ function SayimCtrl($scope,$window,$timeout,db)
             else
             {   
                 let UpdateStatus = false;
-
+                console.log($scope.SayimListe)
                 angular.forEach($scope.SayimListe,function(value)
                 {   
                     if($scope.CmbEvrakTip == 0)

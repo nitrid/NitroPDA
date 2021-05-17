@@ -97,7 +97,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                     pCallback(data)   
                 }
 
-                resolve();
+                resolve(data);
             });
         });
     }
@@ -148,6 +148,15 @@ angular.module('app.db', []).service('db',function($rootScope)
                     }
                     else
                     {     
+                        var args = arguments;
+                        $rootScope.$apply(function () 
+                        {
+                            if (pCallback) 
+                            {
+                                pCallback.apply(_Socket, args);
+                            }
+                        });
+
                         $rootScope.MessageBox(data.result.err);                 
                         console.log("Mikro Sql Query Çalıştırma Hatası : " + data.result.err);
                     }
@@ -207,7 +216,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                 
                 pParam.param = [];
             } 
-            
             _LocalDb.GetData(TmpQuery,pParam.param,function(data)
             { 
                 if(typeof(data.result.err) == 'undefined')
@@ -287,6 +295,41 @@ angular.module('app.db', []).service('db',function($rootScope)
         }
         else
         {
+            if (typeof (pQuery.param) != 'undefined')
+            {
+                for(i = 0;i < pQuery.param.length;i++)
+                {  
+                    let pVal = pQuery.value[i];
+                    let pPrm = pQuery.param[i];
+
+                    if(typeof pQuery.type != 'undefined')
+                    {
+                        if(pQuery.type[i] == "date")
+                        {
+                            let TmpDate = moment(pQuery.value[i],'DD.MM.YYYY');
+    
+                            pVal = TmpDate.year().toString() + '-' + (TmpDate.month() + 1).toString().padStart(2,'0') + '-' + TmpDate.date().toString().padStart(2,'0')
+                        }
+                    }
+                    else
+                    {
+                        if(pQuery.param[i].split(":").length > 1)
+                        {
+                            pPrm = pQuery.param[i].split(':')[0];
+
+                            if(pQuery.param[i].split(':')[1] == "date")
+                            {
+                                let TmpDate = moment(pQuery.value[i],'DD.MM.YYYY');
+    
+                                pVal = TmpDate.year().toString() + '-' + (TmpDate.month() + 1).toString().padStart(2,'0') + '-' + TmpDate.date().toString().padStart(2,'0')  
+                            }
+                        }
+                    }
+                    pQuery.query = pQuery.query.replace(new RegExp("@" + pPrm,"g"),pVal);
+                }
+                pQuery.value = [];
+            } 
+            console.log(pQuery)
             _LocalDb.GetData(pQuery,pQuery.value,function(data)
             {
                 if(typeof(data.result.err) == 'undefined')
@@ -742,8 +785,10 @@ angular.module('app.db', []).service('db',function($rootScope)
         {   
             if(FiyatData.length > 0)
             {   
+                console.log(FiyatData)
                 BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
-                BarkodData[0].FIYAT = (FiyatData[0].FIYAT * FiyatData[0].DOVIZKUR) / pFiyatParam.CariDovizKuru;
+                BarkodData[0].FIYAT = (FiyatData[0].FIYAT)
+                console.log(FiyatData[0].DOVIZKUR,pFiyatParam.CariDovizKuru)
             }
             else
             {
@@ -754,11 +799,8 @@ angular.module('app.db', []).service('db',function($rootScope)
         // İSKONTO MATRİS
         if(pEvrParam.IskontoMatris == "1")
         {
-            console.log('girdi')
-            console.log([BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo])
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
             { 
-                
                 if(Data.length > 0)
                 {
                     BarkodData[0].ISK.ORAN1 =  Data[0].ORAN1;
@@ -810,8 +852,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                 {
                     if(SatisSartiData.length > 0)
                     {   
-                        console.log(SatisSartiData)
-                        console.log(BarkodData[0])
                         BarkodData[0].ODEPLAN = SatisSartiData[0].ODEPLAN
                         BarkodData[0].INDIRIM = SatisSartiData[0].INDIRIM
                         BarkodData[0].ISK.ORAN1 = SatisSartiData[0].ISKONTOY1 
@@ -829,8 +869,8 @@ angular.module('app.db', []).service('db',function($rootScope)
                             BarkodData[0].FIYAT = SatisSartiData[0].BRUTFIYAT;
                         }
                     }
-                    else
-                    {
+                    else if(pEvrParam.IskontoMatris != "1")
+                    {                        
                         BarkodData[0].ISK.ORAN1 = 0
                         BarkodData[0].ISK.ORAN2 = 0
                         BarkodData[0].ISK.ORAN3 = 0
@@ -928,13 +968,23 @@ angular.module('app.db', []).service('db',function($rootScope)
             }
         });
     }
+    this.EIrsDurum = function(pParam,pCallback)
+    {
+        _Socket.emit('EIrsDurum', pParam,(Data) =>
+        {
+            if(typeof pCallback != 'undefined')
+            {
+                pCallback(Data)
+            }
+        });
+    }
     this.EIrsGoster = function(pDocumentId,pCallback)
     {
         _Socket.emit('EIrsGoster', pDocumentId,(Data) =>
         {
             if(typeof pCallback != 'undefined')
             {
-                pCallback(Data)
+                pCallback(decodeURIComponent(escape(window.atob( Data.result.DocumentFile ))))
             }
         });
     }

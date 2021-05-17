@@ -14,6 +14,20 @@ var QueryLocal =
     {
         query : "SELECT * FROM PARAM"
     },
+    CmbAdresNo : 
+    {
+        query : "SELECT " +
+                "ADRESNO AS KODU, " +
+                "CADDE AS ADI,  " +
+                "ADRESNO - 1 AS SIRANO," +
+                "SOKAK AS ADRES2," +
+                "IL," +
+                "ILCE " +
+                "FROM ADRES " +
+                "WHERE CARIKODU = @adr_cari_kod  ORDER BY CADDE ASC" ,
+        param : ['adr_cari_kod'],
+        type : ['string|25']
+    },
     CmbDepoGetir : 
     {
         query : "SELECT DEPONO AS KODU,DEPOADI AS ADI FROM DEPO"
@@ -35,6 +49,16 @@ var QueryLocal =
                 "FROM PERSONEL AS PER1 INNER JOIN PERSONEL AS PER2 ON " +
                 "PER1.PERSONELKODU = PER2.PERSONELKODU --AND PER1.cari_per_tip = 0 "
     },
+    CmbKasaGetir : 
+    {
+        query : "SELECT KASAKODU AS KODU,KASAISMI AS ADI,KASADOVIZCINSI AS DOVIZCINSI,DOVIZKUR AS DOVIZKUR, CASE KASADOVIZCINSI WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZSEMBOL1,DOVIZSEMBOL FROM KASA WHERE KASATIP = @KASTIP" ,
+        param : ['KASTIP'],
+        type : ['int']
+    }, 
+    CmbBankaGetir : 
+    {
+        query : "SELECT BANKAKODU AS KODU,BANKAISMI AS ADI,BANKADOVIZCINSI AS DOVIZCINSI,DOVIZKUR AS DOVIZKUR, CASE BANKADOVIZCINSI WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZSEMBOL1,DOVIZSEMBOL FROM BANKA " ,
+    },
     PersonelTipGetir : 
     {
         query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP UNION ALL SELECT PER1.PERSONELKODU AS KODU,PER1.PERSONELADI AS ADI,PER1.PERSONELSOYADI AS SOYADI,PER1.PERSONELTIP AS TIP " +
@@ -51,6 +75,165 @@ var QueryLocal =
     {
         query : "SELECT '0' AS KODU, 'PEŞİN' AS ADI UNION ALL SELECT ODEMENO AS KODU, " +
                 "ODEMEADI  AS ADI FROM ODEMEPLAN"
+    },
+    MaxCekRefNo : 
+    {
+        query: "SELECT 'MC-000-000-00000001' AS MAXREFNO" ,
+        param : ['sck_tip'],
+        type : ['int']
+    },
+    CekHarInsert:
+    {
+        query:  "INSERT INTO [ODEMEEMIRLERI] " + 
+                "([sck_Guid] " + 
+                ",[sck_DBCno] " +
+                ",[sck_SpecRECno] " +
+                ",[sck_iptal] " +
+                ",[sck_fileid] " +
+                ",[sck_hidden] " +
+                ",[sck_kilitli] " +
+                ",[sck_degisti] " +
+                ",[sck_checksum] " +
+                ",[sck_create_user] " +
+                ",[sck_create_date] " +
+                ",[sck_lastup_user] " +
+                ",[sck_lastup_date] " +
+                ",[sck_special1] " +
+                ",[sck_special2] " +
+                ",[sck_special3] " +
+                ",[sck_firmano] " +
+                ",[sck_subeno] " +
+                ",[sck_tip] " +
+                ",[sck_refno] " +
+                ",[sck_bankano] " +
+                ",[sck_borclu] " +
+                ",[sck_vdaire_no] " +
+                ",[sck_vade] " +
+                ",[sck_tutar] " +
+                ",[sck_doviz] " +
+                ",[sck_odenen] " +
+                ",[sck_degerleme_islendi] " +
+                ",[sck_banka_adres1] " +
+                ",[sck_sube_adres2] " +
+                ",[sck_borclu_tel] " +
+                ",[sck_hesapno_sehir] " +
+                ",[sck_no] " +
+                ",[sck_duzen_tarih] " +
+                ",[sck_sahip_cari_cins] " +
+                ",[sck_sahip_cari_kodu] " +
+                ",[sck_sahip_cari_grupno] " +
+                ",[sck_nerede_cari_cins] " +
+                ",[sck_nerede_cari_kodu] " +
+                ",[sck_nerede_cari_grupno] " +
+                ",[sck_ilk_hareket_tarihi] " +
+                ",[sck_ilk_evrak_seri] " +
+                ",[sck_ilk_evrak_sira_no] " +
+                ",[sck_ilk_evrak_satir_no] " +
+                ",[sck_son_hareket_tarihi] " +
+                ",[sck_doviz_kur] " +
+                ",[sck_sonpoz] " +
+                ",[sck_imza] " +
+                ",[sck_srmmrk] " +
+                ",[sck_kesideyeri] " +
+                ",[Sck_TCMB_Banka_kodu] " +
+                ",[Sck_TCMB_Sube_kodu] " +
+                ",[Sck_TCMB_il_kodu] " +
+                ",[SckTasra_fl] " +
+                ",[sck_projekodu] " +
+                ",[sck_masraf1] " +
+                ",[sck_masraf1_isleme] " +
+                ",[sck_masraf2] " +
+                ",[sck_masraf2_isleme] " +
+                ",[sck_odul_katkisi_tutari] " +
+                ",[sck_servis_komisyon_tutari] " +
+                ",[sck_erken_odeme_faiz_tutari] " +
+                ",[sck_odul_katkisi_tutari_islendi_fl] " +
+                ",[sck_servis_komisyon_tutari_islendi_fl] " +
+                ",[sck_erken_odeme_faiz_tutari_islendi_fl] " +
+                ",[sck_kredi_karti_tipi] " +
+                ",[sck_taksit_sayisi] " +
+                ",[sck_kacinci_taksit] " +
+                ",[sck_uye_isyeri_no] " +
+                ",[sck_kredi_karti_no] " +
+                ",[sck_provizyon_kodu]) " +
+                "VALUES ( " +
+                " '@sck_Guid' " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",54                        " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",@sck_create_user          " +
+                ",date('now')               " +
+                ",@sck_lastup_user          " +
+                ",date('now')               " +
+                ",''                        " +
+                ",''                        " +
+                ",''                        " +
+                ",@sck_firmano              " +
+                ",@sck_subeno               " +
+                ",@sck_tip                  " +
+                ",'@sck_refno'              " +
+                ",''                        " +
+                ",'@sck_borclu'             " +
+                ",''                        " +
+                ",@sck_vade                 " +
+                ",@sck_tutar                " +
+                ",@sck_doviz                " +
+                ",@sck_odenen               " +
+                ",0                         " +
+                ",''                        " +
+                ",''                        " +
+                ",''                        " +
+                ",''                        " +
+                ",''                        " +
+                ",'18991230'                " +
+                ",@sck_sahip_cari_cins      " +
+                ",'@sck_sahip_cari_kodu'    " +
+                ",@sck_sahip_cari_grupno    " +
+                ",@sck_nerede_cari_cins     " +
+                ",'@sck_nerede_cari_kodu'   " +
+                ",@sck_nerede_cari_grupno   " +
+                ",'@sck_ilk_hareket_tarihi'   " +
+                ",'@sck_ilk_evrak_seri'       " +
+                ",@sck_ilk_evrak_sira_no    " +
+                ",@sck_ilk_evrak_satir_no   " +
+                ",'@sck_son_hareket_tarihi'   " +
+                ",'@sck_doviz_kur'            " +
+                ",@sck_sonpoz               " +
+                ",0                         " +
+                ",'@sck_srmmrk'             " +
+                ",''                        " +
+                ",''                        " +
+                ",''                        " +
+                ",''                        " +
+                ",0                         " +
+                ",'@sck_projekodu'          " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",0                         " +
+                ",''                        " +
+                ",''                        " +
+                ",''                        " +
+                " ) ",
+        param : ['sck_create_user:int','sck_lastup_user:int','sck_firmano:int','sck_subeno:int','sck_tip:int','sck_refno:string|25','sck_borclu:string|25',
+                 'sck_vade:date','sck_tutar:float','sck_doviz:int','sck_odenen:float','sck_sahip_cari_cins:int','sck_sahip_cari_kodu:string|25','sck_sahip_cari_grupno:int','sck_nerede_cari_cins:int',
+                 'sck_nerede_cari_kodu:string|25','sck_nerede_cari_grupno:int','sck_ilk_hareket_tarihi:date','sck_ilk_evrak_seri:string|25','sck_ilk_evrak_sira_no:int',
+                 'sck_ilk_evrak_satir_no:int','sck_son_hareket_tarihi:date','sck_doviz_kur:float','sck_sonpoz:int','sck_srmmrk:string|25','sck_projekodu:string|25'],
+        guid : "sck_Guid"
     },
     CariGetir : 
     {
@@ -177,6 +360,7 @@ var QueryLocal =
                 "STOK.KISAAD AS KISAAD, " +
                 "STOK.YABANCIAD AS YABANCIAD, " +
                 "STOK.DOVIZCINSI AS DOVIZCINSI, " +
+                "0 AS DOVIZCINSKURU, " +
                 "STOK.PERAKENDEVERGIPNTR AS PERAKENDEVERGIPNTR, " +
                 "STOK.TOPTANVERGIPNTR AS TOPTANVERGIPNTR, " +
                 "STOK.ALTGRUP AS ALTGRUP, " +
@@ -225,7 +409,7 @@ var QueryLocal =
                 "DOVIZCINSI AS DOVIZCINS, " +
                 "KODU AS BARKOD " +
                 "FROM STOK " +
-                "WHERE ((UPPER(KODU) LIKE UPPER('@KODU') OR LOWER(KODU) LIKE LOWER('@KODU')) OR ('@KODU' = '')) AND ((UPPER(ADI) LIKE UPPER('@KODU') OR LOWER(ADI) LIKE LOWER('@KODU')) OR ('@KODU' = '')) " ,
+                "WHERE ((UPPER(STOK.KODU) LIKE UPPER('@KODU') OR LOWER(STOK.KODU) LIKE LOWER('@KODU')) OR ('@KODU' = '')) AND ((UPPER(STOK.ADI) LIKE UPPER('@ADI') OR LOWER(STOK.ADI) LIKE LOWER('@ADI')) OR ('@ADI' = '')) " ,
         param : ['KODU',"ADI",'DEPONO'],
         type :  ['string|25','string|50','int']
     },
@@ -244,6 +428,7 @@ var QueryLocal =
         param : ['STOK','DEPONO','PARTI','LOT'],
         type : ['string|25','int','string|25','int']
     },
+<<<<<<< HEAD
     SiparisKabulListele : 
     {
         query : "SELECT " +
@@ -525,6 +710,8 @@ var QueryLocal =
                  'sip_isk1:bit','sip_isk2:bit','sip_isk3:bit','sip_isk4:bit','sip_isk5:bit','sip_isk6:bit','sip_parti_kodu','sip_lot_no',
                  'sip_projekodu','sip_fiyat_liste_no','sip_rezervasyon_miktari','sip_rezerveden_teslim_edilen']
     },
+=======
+>>>>>>> 4498ae21a973b3bc22ad1cc8b4d32a69e8b1bfa1
     FiyatGetir : 
     {
         query : "SELECT  " + 
@@ -539,15 +726,21 @@ var QueryLocal =
         param : ['KODU','LISTENO','DEPO'],
         type : ['string','int','int']
     },
+    FiyatListeGetir :
+    {
+        query : "SELECT LISTENO,LISTEADI FROM FIYATLISTE ",
+        param : ['KODU'],
+        type : ['int']
+    },
     IskontoMatrisGetir : 
     {
         query : "SELECT " + 
-                "ISKONTO1, " + 
-                "ISKONTO2, " + 
-                "ISKONTO3, " + 
-                "ISKONTO4, " + 
-                "ISKONTO5, " + 
-                "ISKONTO6 " + 
+                "ORAN1, " + 
+                "ORAN2, " + 
+                "ORAN3, " + 
+                "ORAN4, " + 
+                "ORAN5, " + 
+                "ORAN6 " + 
                 "FROM ISKONTO WHERE STOK = '@STOK' AND CARI = '@CARI' AND ODEMEPLANI = @ODEME", 
         param : ['STOK','CARI','ODEME'],
         type : ['string','string','int']
@@ -924,7 +1117,7 @@ var QueryLocal =
         query: "SELECT IFNULL((SELECT ADI FROM STOK WHERE KODU = sym_Stokkodu),'') AS ADI, " +
                 "sym_satirno AS NO, " +
                 "* FROM SAYIM " +
-                "WHERE sym_depono = ? AND sym_evrakno = ? AND sym_tarihi = ? ORDER BY sym_satirno ASC" 
+                "WHERE sym_depono = ? AND sym_evrakno = ? AND sym_tarihi = ? ORDER BY sym_satirno ASC",
     },
     SayimInsert :
     {
@@ -1036,9 +1229,296 @@ var QueryLocal =
         type : ['date','date']
     },
     //Sipariş
+    SiparisKabulListele : 
+    {
+        query : "SELECT " +
+                "TESLIMTARIH " +
+                ",SERI " +
+                ",SIRA " +
+                ",SIPMIKTAR " +
+                ",TESLIMMIKTAR " +
+                ",CARI.KODU AS CARIKOD" +
+                ",CARI.UNVAN1 AS CARIADI" +
+                ",DEPO " +
+                ",CARISORUMLU AS SORUMLULUK" +
+                ",SATICIKOD AS PERSONEL" +
+                ",ADRESNO " +
+                ",SUM(SIPMIKTAR-TESLIMMIKTAR) AS BMIKTAR " +
+                ",SIPARIS.SATIRNO AS SATIR " +
+                ",BIRIMPNTR " +
+                ",TIP " +
+                ",CARI " +
+                ",TOPTANVERGIPNTR " +
+                ",PROJE " +
+                ",VERGI " +
+                ",SIPARIS.DOVIZCINSI " +
+                ",DEPOMIKTAR " +
+                ",BIRIM " +
+                ",CINS " +
+                ",ODEMENO " +
+                ",ACIKLAMA " +
+                "FROM SIPARISSTOK AS SIPARIS INNER JOIN " +
+                "CARI ON SIPARIS.CARI = CARI.KODU " +
+                "WHERE SIPARIS.TESLIMTARIH>= '@ILKTARIH' AND SIPARIS.TESLIMTARIH<='@SONTARIH' " +
+                "AND SIPARIS.DEPO=@DEPONO AND SIPARIS.TIP=@TIP " +
+                "AND TESLIMMIKTAR < SIPMIKTAR " +
+                "GROUP BY TESLIMTARIH,SIPARIS.SERI,SIPARIS.SIRA,SIPARIS.DEPO,PROJE," +
+                "SIPARIS.ADRESNO,CARI.KODU,CARI.UNVAN1,SIPARIS.ACIKLAMA,SIPARIS.DOVIZCINSI ORDER BY TESLIMTARIH ASC",
+        param : ['ILKTARIH','SONTARIH','DEPONO','TIP'],
+        type : ['date','date','int','int']
+    },
+    SiparisInsert : 
+    {
+        query:  
+                "INSERT INTO [SIPARIS] " +
+                "([sip_Guid] " +
+                ",[sip_DBCno] " +
+                ",[sip_SpecRECno] " +
+                ",[sip_iptal] " +
+                ",[sip_fileid] " +
+                ",[sip_hidden] " +
+                ",[sip_kilitli] " +
+                ",[sip_degisti] " +
+                ",[sip_checksum] " +
+                ",[sip_create_user] " +
+                ",[sip_create_date] " +
+                ",[sip_lastup_user] " +
+                ",[sip_lastup_date] " +
+                ",[sip_special1] " +
+                ",[sip_special2] " +
+                ",[sip_special3] " +
+                ",[sip_firmano] " +
+                ",[sip_subeno] " +
+                ",[sip_tarih] " +
+                ",[sip_teslim_tarih] " +
+                ",[sip_tip] " +
+                ",[sip_cins] " +
+                ",[sip_evrakno_seri] " +
+                ",[sip_evrakno_sira] " +
+                ",[sip_satirno] " +
+                ",[sip_belgeno] " +
+                ",[sip_belge_tarih] " +
+                ",[sip_satici_kod] " +
+                ",[sip_musteri_kod] " +
+                ",[sip_stok_kod] " +
+                ",[sip_b_fiyat] " +
+                ",[sip_miktar] " +
+                ",[sip_birim_pntr] " +
+                ",[sip_teslim_miktar] " +
+                ",[sip_tutar] " +
+                ",[sip_iskonto_1] " +
+                ",[sip_iskonto_2] " +
+                ",[sip_iskonto_3] " +
+                ",[sip_iskonto_4] " +
+                ",[sip_iskonto_5] " +
+                ",[sip_iskonto_6] " +
+                ",[sip_masraf_1] " +
+                ",[sip_masraf_2] " +
+                ",[sip_masraf_3] " +
+                ",[sip_masraf_4] " +
+                ",[sip_vergi_pntr] " +
+                ",[sip_vergi] " +
+                ",[sip_masvergi_pntr] " +
+                ",[sip_masvergi] " +
+                ",[sip_opno] " +
+                ",[sip_aciklama] " +
+                ",[sip_aciklama2] " +
+                ",[sip_depono] " +
+                ",[sip_OnaylayanKulNo] " +
+                ",[sip_vergisiz_fl] " +
+                ",[sip_kapat_fl] " +
+                ",[sip_cari_sormerk] " +
+                ",[sip_stok_sormerk] " +
+                ",[sip_cari_grupno] " +
+                ",[sip_doviz_cinsi] " +
+                ",[sip_doviz_kuru] " +
+                ",[sip_alt_doviz_kuru] " +
+                ",[sip_adresno] " +
+                ",[sip_teslimturu] " +
+                ",[sip_cagrilabilir_fl] " +
+                ",[sip_prosip_uid] " +
+                ",[sip_iskonto1] " +
+                ",[sip_iskonto2] " +
+                ",[sip_iskonto3] " +
+                ",[sip_iskonto4] " +
+                ",[sip_iskonto5] " +
+                ",[sip_iskonto6] " +
+                ",[sip_masraf1] " +
+                ",[sip_masraf2] " +
+                ",[sip_masraf3] " +
+                ",[sip_masraf4] " +
+                ",[sip_isk1] " +
+                ",[sip_isk2] " +
+                ",[sip_isk3] " +
+                ",[sip_isk4] " +
+                ",[sip_isk5] " +
+                ",[sip_isk6] " +
+                ",[sip_mas1] " +
+                ",[sip_mas2] " +
+                ",[sip_mas3] " +
+                ",[sip_mas4] " +
+                ",[sip_Exp_Imp_Kodu] " +
+                ",[sip_kar_orani] " +
+                ",[sip_durumu] " +
+                ",[sip_stal_uid] " +
+                ",[sip_planlananmiktar] " +
+                ",[sip_teklif_uid] " +
+                ",[sip_parti_kodu] " +
+                ",[sip_lot_no] " +
+                ",[sip_projekodu] " +
+                ",[sip_fiyat_liste_no] " +
+                ",[sip_Otv_Pntr] " +
+                ",[sip_Otv_Vergi] " +
+                ",[sip_otvtutari] " +
+                ",[sip_OtvVergisiz_Fl] " +
+                ",[sip_paket_kod] " +
+                ",[sip_Rez_uid] " +
+                ",[sip_harekettipi] " +
+                ",[sip_yetkili_uid] " +
+                ",[sip_kapatmanedenkod] " +
+                ",[sip_gecerlilik_tarihi] " +
+                ",[sip_onodeme_evrak_tip] " +
+                ",[sip_onodeme_evrak_seri] " +
+                ",[sip_onodeme_evrak_sira] " +
+                ",[sip_rezervasyon_miktari] " +
+                ",[sip_rezerveden_teslim_edilen] " +
+                ",[sip_HareketGrupKodu1] " +
+                ",[sip_HareketGrupKodu2] " +
+                ",[sip_HareketGrupKodu3] " +
+                ",[status] " +
+                ") " +
+                "VALUES ( " +
+                "'@sip_Guid' " +
+                ",0						" +
+                ",0						" +
+                ",0						" +
+                ",21					" +
+                ",0						" +
+                ",0						" +
+                ",0							                   " +
+                ",0							                   " +
+                ",@sip_create_user			                   " +
+                ",date('now')		   " +
+                ",@sip_lastup_user			                   " +
+                ",date('now')		                           " +
+                ",''							               " +
+                ",''							               " +
+                ",''							               " +
+                ",@sip_firmano					               " +
+                ",@sip_subeno						           " +
+                ",'@sip_tarih'					               " +
+                ",'@sip_teslim_tarih'			                   " +
+                ",@sip_tip					                   " +
+                ",@sip_cins					                   " +
+                ",'@sip_evrakno_seri'		                   " +
+                ",@sip_evrakno_sira			                   " +
+                ",(SELECT IFNULL(MAX(sip_satirno),-1) + 1 AS SATIRNO FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins)" +
+                ",'@sip_belgeno'				                   " +
+                ",'@sip_belge_tarih'			                   " +
+                ",'@sip_satici_kod'				               " +
+                ",'@sip_musteri_kod'			                   " +
+                ",'@sip_stok_kod'				               " +
+                ",@sip_b_fiyat				                   " +
+                ",@sip_miktar					               " +
+                ",@sip_birim_pntr				               " +
+                ",@sip_teslim_miktar			               " +
+                ",@sip_tutar					               " +
+                ",@sip_iskonto_1				               " +
+                ",@sip_iskonto_2				               " +
+                ",@sip_iskonto_3				               " +
+                ",@sip_iskonto_4				               " +
+                ",@sip_iskonto_5				               " +
+                ",@sip_iskonto_6				               " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",@sip_vergi_pntr				               " +
+                ",@sip_vergi					               " +
+                ",0							                   " +
+                ",0							                   " +
+                ",@sip_opno					                   " +
+                ",'@sip_aciklama'				               " +
+                ",''							               " +
+                ",@sip_depono					               " +
+                ",@sip_OnaylayanKulNo					       " +
+                ",0							                   " +
+                ",0							                   " +
+                ",'@sip_cari_sormerk'			               " +
+                ",'@sip_stok_sormerk'			               " +
+                ",0							                   " +
+                ",@sip_doviz_cinsi			                   " +
+                ",@sip_doviz_kuru				               " +
+                ",@sip_alt_doviz_kuru			               " +
+                ",@sip_adresno							       " +
+                ",''							               " +
+                ",1							                   " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",@sip_iskonto1				                   " +
+                ",@sip_iskonto2				                   " +
+                ",@sip_iskonto3				                   " +
+                ",@sip_iskonto4				                   " +
+                ",@sip_iskonto5				                   " +
+                ",@sip_iskonto6				                   " +
+                ",1							                   " +
+                ",1							                   " +
+                ",1							                   " +
+                ",1							                   " +
+                ",@sip_isk1					                   " +
+                ",@sip_isk2					                   " +
+                ",@sip_isk3					                   " +
+                ",@sip_isk4					                   " +
+                ",@sip_isk5					                   " +
+                ",@sip_isk6					                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",''							               " +
+                ",0							                   " +
+                ",0							                   " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",0							                   " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",'@sip_parti_kodu'					           " +
+                ",@sip_lot_no						           " +
+                ",'@sip_projekodu'					           " +
+                ",@sip_fiyat_liste_no					       " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",0							                   " +
+                ",''							               " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",0                                            " +
+                ",cast(cast(0 as binary) as uniqueidentifier)  " +
+                ",''							               " +
+                ",date('now')		                           " +
+                ",0							                   " +
+                ",''							               " +
+                ",0							                   " +
+                ",@sip_rezervasyon_miktari 				       " +
+                ",@sip_rezerveden_teslim_edilen			       " +
+                ",''							               " +
+                ",''							               " +
+                ",''							               " +
+                ",0                                            " +
+                ") ",
+        param : ['sip_create_user','sip_lastup_user','sip_firmano','sip_subeno','sip_tarih:date','sip_teslim_tarih:date','sip_tip',
+                 'sip_cins','sip_evrakno_seri','sip_evrakno_sira','sip_belgeno','sip_belge_tarih','sip_satici_kod',
+                 'sip_musteri_kod','sip_stok_kod','sip_b_fiyat','sip_miktar','sip_birim_pntr','sip_teslim_miktar',
+                 'sip_tutar','sip_iskonto_1','sip_iskonto_2','sip_iskonto_3','sip_iskonto_4','sip_iskonto_5',
+                 'sip_iskonto_6','sip_vergi_pntr','sip_vergi','sip_opno','sip_aciklama','sip_depono','sip_OnaylayanKulNo',
+                 'sip_cari_sormerk','sip_stok_sormerk','sip_doviz_cinsi','sip_doviz_kuru','sip_alt_doviz_kuru',
+                 'sip_adresno','sip_iskonto1','sip_iskonto2','sip_iskonto3','sip_iskonto4','sip_iskonto5','sip_iskonto6',
+                 'sip_isk1:bit','sip_isk2:bit','sip_isk3:bit','sip_isk4:bit','sip_isk5:bit','sip_isk6:bit','sip_parti_kodu','sip_lot_no',
+                 'sip_projekodu','sip_fiyat_liste_no','sip_rezervasyon_miktari','sip_rezerveden_teslim_edilen'],
+        guid : "sip_Guid"
+    },
     SipBedenHarGetir :
     {
-        query: "SELECT * FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid IN ((SELECT sip_Guid FROM SIPARIS WHERE sip_evrakno_seri = ? AND sip_evrakno_sira = ? AND sip_tip = ?)) AND BdnHar_Tipi = ? "
+        query: "SELECT * FROM BEDENHAR WHERE BdnHar_Har_uid IN (SELECT sip_Guid FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip) AND BdnHar_Tipi = @BdnHar_Tipi ",
+        param:  ['sip_evrakno_seri:string|20','sip_evrakno_sira:int','sip_tip:int','BdnHar_Tipi:int'],
     },
     SiparisListeGetir :
     {
@@ -1212,6 +1692,47 @@ var QueryLocal =
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
         type:   ['string','int','int','int']
     },
+    SiparisUpdate:
+    {
+        query:  "UPDATE SIPARIS " +
+                "SET sip_b_fiyat=@sip_b_fiyat " + 
+                ",sip_miktar=@sip_miktar " +
+                ",sip_tutar=@sip_tutar " +
+                ",sip_vergi = (@sip_tutar - (@sip_iskonto_1 + @sip_iskonto_2 + @sip_iskonto_3 + @sip_iskonto_4 + @sip_iskonto_5))  * (SELECT ORAN / 100 FROM VERGI WHERE PNTR = (@sip_vergi_pntr) / 100) " +
+                ",sip_iskonto_1=@sip_iskonto_1 " +
+                ",sip_iskonto_2=@sip_iskonto_2 " +
+                ",sip_iskonto_3=@sip_iskonto_3 " +
+                ",sip_iskonto_4=@sip_iskonto_4 " +
+                ",sip_iskonto_5=@sip_iskonto_5 " +
+                ",sip_iskonto_6=@sip_iskonto_6 " +
+                ",sip_isk1=@sip_isk1 " +
+                ",sip_isk2=@sip_isk2 " +
+                ",sip_isk3=@sip_isk3 " +
+                ",sip_isk4=@sip_isk4 " +
+                ",sip_isk5=@sip_isk5 " +
+                ",sip_isk6=@sip_isk6 " +
+                "WHERE sip_Guid = '@sip_Guid' ",
+        param : ['sip_b_fiyat:float','sip_miktar:float','sip_tutar:float','sip_vergi_pntr:int','sip_iskonto_1:float','sip_iskonto_2:float','sip_iskonto_3:float',
+        'sip_iskonto_4:float','sip_iskonto_5:float','sip_iskonto_6:float','sip_isk1:bit','sip_isk2:bit','sip_isk3:bit','sip_isk4:bit',
+        'sip_isk5:bit','sip_isk6:bit','sip_Guid:string|50']
+    },
+    SiparisSatirDelete:
+    {
+        query:  "DELETE FROM SIPARIS WHERE sip_Guid = '@sip_Guid'",
+        param:  ['sip_Guid'],
+        type:   ['string|50']
+    },
+    SiparisEvrDelete:
+    {
+        query:  "DELETE FROM SIPARIS WHERE sip_evrakno_seri = '@sip_evrakno_seri' AND " + 
+                "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins",
+        param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
+        type:   ['string|20','int','int','int']
+    },
+    SiparisGonderGetir:
+    {
+        query:  "SELECT status AS STATUS,* FROM SIPARIS WHERE status = 0 GROUP BY sip_evrakno_seri,sip_evrakno_sira",
+    },
     //Stok Hareket
     StokHarGetir :
     {
@@ -1222,12 +1743,18 @@ var QueryLocal =
                 "(select SORUMLULUKISMI from SORUMLULUKMRKZ where SORUMLULUKKODU=sth_stok_srm_merkezi) AS SORUMLUMERADI, " +
                 "(select PERSONELADI from PERSONEL where PERSONELKODU=sth_plasiyer_kodu) AS PERSONELADI," +
                 "sth_miktar AS MIKTAR , " +
+                "sth_tutar AS TUTAR , " +
+                "(sth_satirno + 1) AS NO, " +
                 "sth_miktar2 AS MIKTAR2 , " +
                 "sth_vergi AS TOPTANVERGI, " +
+                "IFNULL((SELECT RENKPNTR FROM BARKOD WHERE KODU = sth_stok_kod),0) AS RENKPNTR , " +
+                "IFNULL((SELECT BEDENPNTR FROM BARKOD WHERE KODU = sth_stok_kod),0) AS BEDENPNTR , " +
                 "IFNULL((SELECT SERI from SIPARISSTOK WHERE RECNO = sth_sip_uid),'') AS SIPSERI ," +
                 "IFNULL((SELECT SIRA from SIPARISSTOK WHERE RECNO = sth_sip_uid),0) AS SIPSIRA ," +
                 "* FROM STOKHAR " +
-                "WHERE sth_evrakno_seri= ? AND sth_evrakno_sira = ? AND sth_evraktip = ? ORDER BY sth_satirno ",
+                "WHERE sth_evrakno_seri = '@sth_evrakno_seri' AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip ORDER BY sth_satirno ",
+                param:  ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
+                type:   ['string','int','int']
     },
     NakliyeGetir :
     {
@@ -1248,6 +1775,7 @@ var QueryLocal =
     StokHarInsert : 
     {
         query:  "INSERT INTO STOKHAR (" +
+                "sth_Guid, " +
                 "sth_DBCno, " +
                 "sth_SpecRECno, " +
                 "sth_iptal, " +
@@ -1376,7 +1904,9 @@ var QueryLocal =
                 "sth_Olcu5, " +
                 "sth_FormulMiktarNo, " +
                 "sth_FormulMiktar " +
+                ",status " +
                 ") VALUES ( " +
+                "'@sth_Guid', " +
                 "0," +
                 "0," +
                 "0," +
@@ -1394,13 +1924,13 @@ var QueryLocal =
                 "''," +
                 "@sth_firmano," +
                 "@sth_subeno," +
-                "@sth_tarih," +
+                "'@sth_tarih'," +
                 "@sth_tip," +
                 "@sth_cins," +
                 "@sth_normal_iade," +
                 "@sth_evraktip," +
                 "'@sth_evrakno_seri'," +
-                "@sth_evrakno_sira," +
+                " @sth_evrakno_sira ," +
                 "(SELECT IFNULL(MAX(sth_satirno),-1) + 1 AS SATIRNO FROM STOKHAR WHERE sth_evrakno_seri = '@sth_evrakno_seri' AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip)," +
                 "'@sth_belge_no'," +
                 "'@sth_belge_tarih'," +
@@ -1414,7 +1944,7 @@ var QueryLocal =
                 "@sth_isk_mas7," +
                 "@sth_isk_mas8," +
                 "@sth_isk_mas9," +
-                "@sth-isk_mas10," +
+                "@sth_isk_mas10," +
                 "@sth_sat_iskmas1," +
                 "@sth_sat_iskmas2," +
                 "@sth_sat_iskmas3," +
@@ -1424,13 +1954,13 @@ var QueryLocal =
                 "@sth_sat_iskmas7," +
                 "@sth_sat_iskmas8," +
                 "@sth_sat_iskmas9," +
-                "@sth-sat_iskmas10," +
+                "@sth_sat_iskmas10," +
                 "0," +
                 "0," +
                 "@sth_cari_cinsi," +
                 "'@sth_cari_kodu'," +
                 "0," +
-                "''," +
+                "'@sth_isemri_gider_kodu'," +
                 "'@sth_plasiyer_kodu'," +
                 "@sth_har_doviz_cinsi," +
                 "@sth_har_doviz_kuru," +
@@ -1438,7 +1968,7 @@ var QueryLocal =
                 "@sth_stok_doviz_cinsi," +
                 "@sth_stok_doviz_kuru," +
                 "@sth_miktar," +
-                "@sth-miktar2," +
+                "@sth_miktar2," +
                 "@sth_birim_pntr," +
                 "@sth_tutar," +
                 "@sth_iskonto1," +
@@ -1459,7 +1989,7 @@ var QueryLocal =
                 "@sth_odeme_op," +
                 "'@sth_aciklama'," +
                 "'@sth_sip_uid'," +
-                "@sth_fat_uid," +
+                "'@sth_fat_uid'," +
                 "@sth_giris_depo_no," +
                 "@sth_cikis_depo_no," +
                 "'@sth_malkbl_sevk_tarihi'," +
@@ -1467,7 +1997,7 @@ var QueryLocal =
                 "'@sth_stok_srm_merkezi'," +
                 "'18991230', " +
                 "0," +
-                "@sth-vergisiz_fl," +
+                "@sth_vergsiz_fl," +
                 "0," +
                 "0," +
                 "0," +
@@ -1490,7 +2020,7 @@ var QueryLocal =
                 "0," +
                 "0," +
                 "@sth_nakliyedeposu," +
-                "0," +
+                "@sth_nakliyedurumu," +
                 "'00000000-0000-0000-0000-000000000000'," +
                 "0," +
                 "0," +
@@ -1504,18 +2034,21 @@ var QueryLocal =
                 "0," +
                 "0," +
                 "0," +
-                "0 ) " ,
-        param : ['sth_create_user:int','sth_lastup_user:int','sth_firmano:int','sth_subeno:int','sth_tarih:date','sth_tip:int','sth_cins:int',
-        'sth_normal_iade:int','sth_evraktip:int','sth_evrakno_seri:string','sth_evrakno_sira:int','sth_belge_no:string','sth_belge_tarih:date',
-        'sth_stok_kod:string','sth_isk_mas1:int','sth_isk_mas2:int','sth_isk_mas3:int','sth_isk_mas4:int','sth_isk_mas5:int','sth_isk_mas6:int','sth_isk_mas7:int',
-        'sth_isk_mas8:int','sth_isk_mas9:int','sth-isk_mas10:int','sth_sat_iskmas1:int','sth_sat_iskmas2:int','sth_sat_iskmas3:int','sth_sat_iskmas4:int','sth_sat_iskmas5:int',
-        'sth_sat_iskmas6:int','sth_sat_iskmas7:int','sth_sat_iskmas8:int','sth_sat_iskmas9:int','sth-sat_iskmas10:int','sth_cari_cinsi:int','sth_cari_kodu:string',
-        'sth_plasiyer_kodu:string','sth_har_doviz_cinsi:int','sth_har_doviz_kuru:int','sth_alt_doviz_kuru:int','sth_stok_doviz_cinsi:int','sth_stok_doviz_kuru:int',
-        'sth_miktar:int','sth-miktar2:int','sth_birim_pntr:int','sth_tutar:int','sth_iskonto1:int','sth_iskonto2:int','sth_iskonto3:int','sth_iskonto4:int',
-        'sth_iskonto5:int','sth_iskonto6:int','sth_masraf1:int','sth_masraf2:int','sth_masraf3:int','sth_masraf4:int','sth_vergi_pntr:int','sth_vergi:int','sth_masraf_vergi_pntr:int',
-        'sth_masraf_vergi:int','sth_odeme_op:int','sth_aciklama:string','sth_sip_uid:string','sth_fat_uid:int','sth_giris_depo_no:int','sth_cikis_depo_no:int','sth_malkbl_sevk_tarihi:date',
-        'sth_cari_srm_merkezi:string','sth_stok_srm_merkezi:string','sth-vergisiz_fl:int','sth_adres_no:int','sth_parti_kodu:string','sth_lot_no:int','sth_proje_kodu:string',
-        'sth_exim_kodu:string','sth_disticaret_turu:int','sth_otvvergisiz_fl:bit','sth_oivvergisiz_fl:bit','sth_fiyat_liste_no:int','sth_nakliyedeposu:int']           
+                "0, " +
+                "0" + //status
+                " ) " ,
+                param : ['sth_create_user:int','sth_lastup_user:int','sth_firmano:int','sth_subeno:int','sth_tarih:date','sth_tip:int','sth_cins:int',
+                'sth_normal_iade:int','sth_evraktip:int','sth_evrakno_seri:string','sth_evrakno_sira:int','sth_belge_no:string','sth_belge_tarih:date',
+                'sth_stok_kod:string','sth_isk_mas1:int','sth_isk_mas2:int','sth_isk_mas3:int','sth_isk_mas4:int','sth_isk_mas5:int','sth_isk_mas6:int','sth_isk_mas7:int',
+                'sth_isk_mas8:int','sth_isk_mas9:int','sth_isk_mas10:int','sth_sat_iskmas1:int','sth_sat_iskmas2:int','sth_sat_iskmas3:int','sth_sat_iskmas4:int','sth_sat_iskmas5:int',
+                'sth_sat_iskmas6:int','sth_sat_iskmas7:int','sth_sat_iskmas8:int','sth_sat_iskmas9:int','sth_sat_iskmas10:int','sth_cari_cinsi:int','sth_cari_kodu:string','sth_isemri_gider_kodu:string',
+                'sth_plasiyer_kodu:string','sth_har_doviz_cinsi:int','sth_har_doviz_kuru:float','sth_alt_doviz_kuru:float','sth_stok_doviz_cinsi:int','sth_stok_doviz_kuru:float',
+                'sth_miktar:float','sth_miktar2:float','sth_birim_pntr:int','sth_tutar:float','sth_iskonto1:float','sth_iskonto2:float','sth_iskonto3:float','sth_iskonto4:float',
+                'sth_iskonto5:float','sth_iskonto6:float','sth_masraf1:float','sth_masraf2:float','sth_masraf3:float','sth_masraf4:float','sth_vergi_pntr:int','sth_vergi:float','sth_masraf_vergi_pntr:int',
+                'sth_masraf_vergi:float','sth_odeme_op:int','sth_aciklama:string','sth_sip_uid:string','sth_fat_uid:string','sth_giris_depo_no:int','sth_cikis_depo_no:int','sth_malkbl_sevk_tarihi:date',
+                'sth_cari_srm_merkezi:string','sth_stok_srm_merkezi:string','sth_vergsiz_fl:int','sth_adres_no:int','sth_parti_kodu:string','sth_lot_no:int','sth_proje_kodu:string',
+                'sth_exim_kodu:string','sth_disticaret_turu:int','sth_otvvergisiz_fl:int','sth_oivvergisiz_fl:int','sth_fiyat_liste_no:int','sth_nakliyedeposu:int','sth_nakliyedurumu:int'],
+        guid: "sth_Guid"           
     },
     StokHarEvrDelete : 
     {
@@ -1544,7 +2077,7 @@ var QueryLocal =
                 ",sth_sat_iskmas4=@sth_sat_iskmas4 " +
                 ",sth_sat_iskmas5=@sth_sat_iskmas5 " +
                 ",sth_sat_iskmas6=@sth_sat_iskmas6 " +
-                " WHERE  sth_Guid = @sth_Guid",
+                " WHERE  sth_Guid = '@sth_Guid'",
         param : ['sth_miktar:float','sth_miktar2:float','sth_tutar:float','sth_vergi_pntr:int','sth_iskonto1:float','sth_iskonto2:float','sth_iskonto3:float',
         'sth_iskonto4:float','sth_iskonto5:float','sth_iskonto6:float','sth_sat_iskmas1:bit','sth_sat_iskmas2:bit','sth_sat_iskmas3:bit','sth_sat_iskmas4:bit',
         'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:int']
@@ -1555,7 +2088,7 @@ var QueryLocal =
     },
     StokBedenHarGetir : 
     {
-        query:  "SELECT * FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid IN ((SELECT sth_Guid FROM STOKHAR WHERE sth_evrakno_seri = ? AND sth_evrakno_sira = ? AND sth_evraktip = ?)) AND BdnHar_Tipi = ?",
+        query:  "SELECT * FROM BEDENHAR WHERE BdnHar_Har_uid IN ((SELECT sth_Guid FROM STOKHAR WHERE sth_evrakno_seri = ? AND sth_evrakno_sira = ? AND sth_evraktip = ?)) AND BdnHar_Tipi = ?",
     },
     NakliyeAktarimSatirGetir :
     {
@@ -1592,15 +2125,8 @@ var QueryLocal =
     //Beden Hareket
     BedenHarInsert : 
     {
-        query:  "INSERT INTO BEDEN_HAREKETLERI (" +
-                "BdnHar_DBCno " + 
-                "BdnHar_Spec_Rec_no, " +
-                "BdnHar_iptal, " +
-                "BdnHar_fileid, " +
-                "BdnHar_hidden, " +
-                "BdnHar_kilitli, " +
-                "BdnHar_degisti, " +
-                "BdnHar_checksum, " +
+        query:  "INSERT INTO BEDENHAR (" +
+                "BdnHar_Guid, " +
                 "BdnHar_create_user, " +
                 "BdnHar_create_date, " +
                 "BdnHar_lastup_user, " +
@@ -1614,40 +2140,31 @@ var QueryLocal =
                 "BdnHar_HarGor, " +
                 "BdnHar_KnsIsGor, " +
                 "BdnHar_KnsFat, " +
-                "BdnHar_TesMik, " +
-                "BdnHar_rezervasyon_miktari, " +
-                "BdnHar_rezerveden_teslim_edilen " +
+                "BdnHar_TesMik " +
                 ") VALUES ( " +
-                "0," +
-                "0," +
-                "0," +
-                "113," +
-                "0," +
-                "0," +
-                "0," +
-                "0," +
+                "'@BdnHar_Guid', " +
                 "@BdnHar_create_user," +
-                "CONVERT(VARCHAR(10),GETDATE(),112)," +
+                "date('now')," +
                 "@BdnHar_lastup_user," +
-                "CONVERT(VARCHAR(10),GETDATE(),112)," +
+                "date('now')," +
                 "''," +
                 "''," +
                 "''," +
                 "@BdnHar_Tipi," +
-                "@BdnHar_Har_uid," +
+                "'@BdnHar_Har_uid'," +
                 "@BdnHar_BedenNo," +
                 "@BdnHar_HarGor," +
                 "0," +
                 "0," +
-                "0," +
-                "@BdnHar_rezervasyon_miktari," +
-                "@BdnHar_rezerveden_teslim_edilen ) ",
+                "0 " +
+                ")",
         param:  ['BdnHar_create_user','BdnHar_lastup_user','BdnHar_Tipi','BdnHar_Har_uid','BdnHar_BedenNo','BdnHar_HarGor',
-        'BdnHar_rezervasyon_miktari','BdnHar_rezerveden_teslim_edilen'] 
+        'BdnHar_rezervasyon_miktari','BdnHar_rezerveden_teslim_edilen'],
+        guid : "BdnHar_Guid"
     },
     BedenHarUpdate :
     {
-        query:  "UPDATE BEDEN_HAREKETLERI " +
+        query:  "UPDATE BEDENHAR " +
                 "SET BdnHar_HarGor = ? " +
                 ",BdnHar_rezervasyon_miktari = ? " + 
                 ",BdnHar_rezerveden_teslim_edilen = ? " +
@@ -1655,357 +2172,367 @@ var QueryLocal =
     },
     BedenHarDelete : 
     {
-        query:  "DELETE BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = ? AND BdnHar_Tipi = ? "
+        query:  "DELETE FROM BEDENHAR WHERE BdnHar_Har_uid = ? AND BdnHar_Tipi = ? "
     },
     //Cari Hareket
     CariHarGetir : 
     {
-        query:  "SELECT *, " +
-                "CONVERT(VARCHAR(10),GETDATE(),112) AS cha_d_kurtar " +
-                "FROM CARI_HESAP_HAREKETLERI " +
+        query:  "SELECT  " +
+                "*, " +
+                "(SELECT UNVAN1 FROM CARI WHERE KODU=cha_kod) AS CARIADI, " +
+                "ROUND(cha_meblag,2) AS TUTAR, " +
+                "CASE cha_cinsi WHEN 19 THEN IFNULL((SELECT BANKAISMI FROM BANKA WHERE BANKAKODU = cha_kasa_hizkod),'') " +
+                "ELSE IFNULL((SELECT KASAISMI FROM KASA WHERE KASAKODU = cha_kasa_hizkod),'') END AS KASAADI " +
+                "FROM CARIHAR " +
                 "WHERE cha_evrakno_seri = ? AND cha_evrakno_sira = ? " +
                 "AND cha_evrak_tip = ? " 
     },
     CariHarInsert : 
     {
-        query : "INSERT INTO CARI_HESAP_HAREKETLERI (" +
-                "cha_DBCno " +
-                ",cha_SpecRecNo " +
-                ",cha_iptal " +
-                ",cha_fileid " +
-                ",cha_hidden " +
-                ",cha_kilitli " +
-                ",cha_degisti " +
-                ",cha_CheckSum " +
-                ",cha_create_user " +
-                ",cha_create_date " +
-                ",cha_lastup_user " +
-                ",cha_lastup_date " +
-                ",cha_special1 " +
-                ",cha_special2 " +
-                ",cha_special3 " +
-                ",cha_firmano " +
-                ",cha_subeno " +
-                ",cha_evrak_tip " +
-                ",cha_evrakno_seri " +
-                ",cha_evrakno_sira " +
-                ",cha_satir_no " +
-                ",cha_tarihi " +
-                ",cha_tip " +
-                ",cha_cinsi " +
-                ",cha_normal_Iade " +
-                ",cha_tpoz " +
-                ",cha_ticaret_turu " +
-                ",cha_belge_no " +
-                ",cha_belge_tarih " +
-                ",cha_aciklama " +
-                ",cha_satici_kodu " +
-                ",cha_EXIMkodu " +
-                ",cha_projekodu " +
-                ",cha_yat_tes_kodu " +
-                ",cha_cari_cins " +
-                ",cha_kod " +
-                ",cha_ciro_cari_kodu " +
-                ",cha_d_cins " +
-                ",cha_d_kur " +
-                ",cha_altd_kur " +
-                ",cha_grupno " +
-                ",cha_srmrkkodu " +
-                ",cha_kasa_hizmet " +
-                ",cha_kasa_hizkod " +
-                ",cha_karsidcinsi " +
-                ",cha_karsid_kur " +
-                ",cha_karsidgrupno " +
-                ",cha_karsisrmrkkodu " +
-                ",cha_miktari " +
-                ",cha_meblag " +
-                ",cha_aratoplam " +
-                ",cha_vade " +
-                ",cha_Vade_Farki_Yuz " +
-                ",cha_ft_iskonto1 " +
-                ",cha_ft_iskonto2 " +
-                ",cha_ft_iskonto3 " +
-                ",cha_ft_iskonto4 " +
-                ",cha_ft_iskonto5 " +
-                ",cha_ft_iskonto6 " +
-                ",cha_ft_masraf1 " +
-                ",cha_ft_masraf2 " +
-                ",cha_ft_masraf3 " +
-                ",cha_ft_masraf4 " +
-                ",cha_isk_mas1 " +
-                ",cha_isk_mas2 " +
-                ",cha_isk_mas3 " +
-                ",cha_isk_mas4 " +
-                ",cha_isk_mas5 " +
-                ",cha_isk_mas6 " +
-                ",cha_isk_mas7 " +
-                ",cha_isk_mas8 " +
-                ",cha_isk_mas9 " +
-                ",cha_isk_mas10 " +
-                ",cha_sat_iskmas1 " +
-                ",cha_sat_iskmas2 " +
-                ",cha_sat_iskmas3 " +
-                ",cha_sat_iskmas4 " +
-                ",cha_sat_iskmas5 " +
-                ",cha_sat_iskmas6 " +
-                ",cha_sat_iskmas7 " +
-                ",cha_sat_iskmas8 " +
-                ",cha_sat_iskmas9 " +
-                ",cha_sat_iskmas10 " +
-                ",cha_yuvarlama " +
-                ",cha_StFonPntr " +
-                ",cha_stopaj " +
-                ",cha_savsandesfonu " +
-                ",cha_avansmak_damgapul " +
-                ",cha_vergipntr " +
-                ",cha_vergi1 " +
-                ",cha_vergi2 " +
-                ",cha_vergi3 " +
-                ",cha_vergi4 " +
-                ",cha_vergi5 " +
-                ",cha_vergi6 " +
-                ",cha_vergi7 " +
-                ",cha_vergi8 " +
-                ",cha_vergi9 " +
-                ",cha_vergi10 " +
-                ",cha_vergisiz_fl " +
-                ",cha_otvtutari " +
-                ",cha_otvvergisiz_fl " +
-                ",cha_oiv_pntr " +
-                ",cha_oivtutari " +
-                ",cha_oiv_vergi " +
-                ",cha_oivergisiz_fl " +
-                ",cha_fis_tarih " +
-                ",cha_fis_sirano " +
-                ",cha_trefno " +
-                ",cha_sntck_poz " +
-                ",cha_reftarihi " +
-                ",cha_istisnakodu " +
-                ",cha_pos_hareketi " +
-                ",cha_meblag_ana_doviz_icin_gecersiz_fl " +
-                ",cha_meblag_alt_doviz_icin_gecersiz_fl " +
-                ",cha_meblag_orj_doviz_icin_gecersiz_fl " +
-                ",cha_sip_uid " +
-                ",cha_kirahar_uid " +
-                ",cha_vardiya_tarihi " +
-                ",cha_vardiya_no " +
-                ",cha_vardiya_evrak_ti " +
-                ",cha_ebelge_turu " +
-                ",cha_tevkifat_toplam " +
-                ",cha_ilave_edilecek_kdv1 " +
-                ",cha_ilave_edilecek_kdv2 " +
-                ",cha_ilave_edilecek_kdv3 " +
-                ",cha_ilave_edilecek_kdv4 " +
-                ",cha_ilave_edilecek_kdv5 " +
-                ",cha_ilave_edilecek_kdv6 " +
-                ",cha_ilave_edilecek_kdv7 " +
-                ",cha_ilave_edilecek_kdv8 " +
-                ",cha_ilave_edilecek_kdv9 " +
-                ",cha_ilave_edilecek_kdv10 " +
-                ",cha_e_islem_turu " +
-                ",cha_fatura_belge_turu " +
-                ",cha_diger_belge_adi " +
-                ",cha_uuid " +
-                ",cha_adres_no " +
-                ",cha_vergifon_toplam " +
-                ",cha_ilk_belge_tarihi " +
-                ",cha_ilk_belge_doviz_kuru " +
-                ",cha_HareketGrupKodu1 " +
-                ",cha_HareketGrupKodu2 " +
-                ",cha_HareketGrupKodu3 " +
+        query : "INSERT INTO CARIHAR (" +
+                "[cha_DBCno] " +
+                ",[cha_SpecRecNo] " +
+                ",[cha_iptal] " +
+                ",[cha_fileid] " +
+                ",[cha_hidden] " +
+                ",[cha_kilitli] " +
+                ",[cha_degisti] " +
+                ",[cha_CheckSum] " +
+                ",[cha_create_user] " +
+                ",[cha_create_date] " +
+                ",[cha_lastup_user] " +
+                ",[cha_lastup_date] " +
+                ",[cha_special1] " +
+                ",[cha_special2] " +
+                ",[cha_special3] " +
+                ",[cha_firmano] " +
+                ",[cha_subeno] " +
+                ",[cha_evrak_tip] " +
+                ",[cha_evrakno_seri] " +
+                ",[cha_evrakno_sira] " +
+                ",[cha_satir_no] " +
+                ",[cha_tarihi] " +
+                ",[cha_tip] " +
+                ",[cha_cinsi] " +
+                ",[cha_normal_Iade] " +
+                ",[cha_tpoz] " +
+                ",[cha_ticaret_turu] " +
+                ",[cha_belge_no] " +
+                ",[cha_belge_tarih] " +
+                ",[cha_aciklama] " +
+                ",[cha_satici_kodu] " +
+                ",[cha_EXIMkodu] " +
+                ",[cha_projekodu] " +
+                ",[cha_yat_tes_kodu] " +
+                ",[cha_cari_cins] " +
+                ",[cha_kod] " +
+                ",[cha_ciro_cari_kodu] " +
+                ",[cha_d_cins] " +
+                ",[cha_d_kur] " +
+                ",[cha_altd_kur] " +
+                ",[cha_grupno] " +
+                ",[cha_srmrkkodu] " +
+                ",[cha_kasa_hizmet] " +
+                ",[cha_kasa_hizkod] " +
+                ",[cha_karsidcinsi] " +
+                ",[cha_karsid_kur] " +
+                ",[cha_karsidgrupno] " +
+                ",[cha_karsisrmrkkodu] " +
+                ",[cha_miktari] " +
+                ",[cha_meblag] " +
+                ",[cha_aratoplam] " +
+                ",[cha_vade] " +
+                ",[cha_Vade_Farki_Yuz] " +
+                ",[cha_ft_iskonto1] " +
+                ",[cha_ft_iskonto2] " +
+                ",[cha_ft_iskonto3] " +
+                ",[cha_ft_iskonto4] " +
+                ",[cha_ft_iskonto5] " +
+                ",[cha_ft_iskonto6] " +
+                ",[cha_ft_masraf1] " +
+                ",[cha_ft_masraf2] " +
+                ",[cha_ft_masraf3] " +
+                ",[cha_ft_masraf4] " +
+                ",[cha_isk_mas1] " +
+                ",[cha_isk_mas2] " +
+                ",[cha_isk_mas3] " +
+                ",[cha_isk_mas4] " +
+                ",[cha_isk_mas5] " +
+                ",[cha_isk_mas6] " +
+                ",[cha_isk_mas7] " +
+                ",[cha_isk_mas8] " +
+                ",[cha_isk_mas9] " +
+                ",[cha_isk_mas10] " +
+                ",[cha_sat_iskmas1] " +
+                ",[cha_sat_iskmas2] " +
+                ",[cha_sat_iskmas3] " +
+                ",[cha_sat_iskmas4] " +
+                ",[cha_sat_iskmas5] " +
+                ",[cha_sat_iskmas6] " +
+                ",[cha_sat_iskmas7] " +
+                ",[cha_sat_iskmas8] " +
+                ",[cha_sat_iskmas9] " +
+                ",[cha_sat_iskmas10] " +
+                ",[cha_yuvarlama] " +
+                ",[cha_StFonPntr] " +
+                ",[cha_stopaj] " +
+                ",[cha_savsandesfonu] " +
+                ",[cha_avansmak_damgapul] " +
+                ",[cha_vergipntr] " +
+                ",[cha_vergi1] " +
+                ",[cha_vergi2] " +
+                ",[cha_vergi3] " +
+                ",[cha_vergi4] " +
+                ",[cha_vergi5] " +
+                ",[cha_vergi6] " +
+                ",[cha_vergi7] " +
+                ",[cha_vergi8] " +
+                ",[cha_vergi9] " +
+                ",[cha_vergi10] " +
+                ",[cha_vergisiz_fl] " +
+                ",[cha_otvtutari] " +
+                ",[cha_otvvergisiz_fl] " +
+                ",[cha_oiv_pntr] " +
+                ",[cha_oivtutari] " +
+                ",[cha_oiv_vergi] " +
+                ",[cha_oivergisiz_fl] " +
+                ",[cha_fis_tarih] " +
+                ",[cha_fis_sirano] " +
+                ",[cha_trefno] " +
+                ",[cha_sntck_poz] " +
+                ",[cha_reftarihi] " +
+                ",[cha_istisnakodu] " +
+                ",[cha_pos_hareketi] " +
+                ",[cha_meblag_ana_doviz_icin_gecersiz_fl] " +
+                ",[cha_meblag_alt_doviz_icin_gecersiz_fl] " +
+                ",[cha_meblag_orj_doviz_icin_gecersiz_fl] " +
+                ",[cha_sip_uid] " +
+                ",[cha_kirahar_uid] " +
+                ",[cha_vardiya_tarihi] " +
+                ",[cha_vardiya_no] " +
+                ",[cha_vardiya_evrak_ti] " +
+                ",[cha_ebelge_turu] " +
+                ",[cha_tevkifat_toplam] " +
+                ",[cha_ilave_edilecek_kdv1] " +
+                ",[cha_ilave_edilecek_kdv2] " +
+                ",[cha_ilave_edilecek_kdv3] " +
+                ",[cha_ilave_edilecek_kdv4] " +
+                ",[cha_ilave_edilecek_kdv5] " +
+                ",[cha_ilave_edilecek_kdv6] " +
+                ",[cha_ilave_edilecek_kdv7] " +
+                ",[cha_ilave_edilecek_kdv8] " +
+                ",[cha_ilave_edilecek_kdv9] " +
+                ",[cha_ilave_edilecek_kdv10] " +
+                ",[cha_e_islem_turu] " +
+                ",[cha_fatura_belge_turu] " +
+                ",[cha_diger_belge_adi] " +
+                ",[cha_uuid] " +
+                ",[cha_adres_no] " +
+                ",[cha_vergifon_toplam] " +
+                ",[cha_ilk_belge_tarihi] " +
+                ",[cha_ilk_belge_doviz_kuru] " +
+                ",[cha_HareketGrupKodu1] " +
+                ",[cha_HareketGrupKodu2] " +
+                ",[cha_HareketGrupKodu3] " +
                 ") VALUES ( " + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "51," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "@cha_create_user," + 
-                "GETDATE()," + 
-                "@cha_lastup_user," + 
-                "GETDATE()," + 
-                "''," + 
-                "''," + 
-                "''," + 
-                "@cha_firmano," + 
-                "@cha_subeno," + 
-                "@cha_evrak_tip," + 
-                "'@cha_evrakno_seri'," + 
-                "@cha_evrakno_sira," + 
-                "@cha_satir_no," + 
-                "@cha_tarihi," + 
-                "@cha_tip," + 
-                "@cha_cinsi," + 
-                "@cha_normal_Iade," + 
-                "@cha_tpoz," + 
-                "@cha_ticaret_turu," + 
-                "@cha_belge_no," + 
-                "@cha_belge_tarih," + 
-                "'@cha_aciklama'," + 
-                "'@cha_satici_kodu'," + 
-                "'@cha_EXIMkodu'," + 
-                "'@cha_projekodu'," + 
-                "''," + 
-                "@cha_cari_cins," + 
-                "'@cha_kod'," + 
-                "'@cha_ciro_cari_kodu'," + 
-                "@cha_d_cins," + 
-                "@cha_d_kur," + 
-                "@cha_altd_kur," + 
-                "@cha_grupno," + 
-                "'@cha_srmrkkodu'," + 
-                "@cha_kasa_hizmet," + 
-                "'@cha_kasa_hizkod'," + 
-                "0," + 
-                "1," + 
-                "@cha_karsidgrupno," + 
-                "''," + 
-                "0," + 
-                "@cha_meblag," + 
-                "@cha_aratoplam," + 
-                "@cha_vade," + 
-                "0," + 
-                "@cha_ft_iskonto1," + 
-                "@cha_ft_iskonto2," + 
-                "@cha_ft_iskonto3," + 
-                "@cha_ft_iskonto4," + 
-                "@cha_ft_iskonto5," + 
-                "@cha_ft_iskonto6," + 
-                "@cha_ft_masraf1," + 
-                "@cha_ft_masraf2," + 
-                "@cha_ft_masraf3," + 
-                "@cha_ft_masraf4," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "@cha_vergipntr," + 
-                "@cha_vergi1," + 
-                "@cha_vergi2," + 
-                "@cha_vergi3," + 
-                "@cha_vergi4," + 
-                "@cha_vergi5," + 
-                "@cha_vergi6," + 
-                "@cha_vergi7," + 
-                "@cha_vergi8," + 
-                "@cha_vergi9," + 
-                "@cha_vergi10," + 
-                "@cha_vergisiz_fl," + 
-                "@cha_otvtutari," + 
-                "@cha_otvvergisiz_fl," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "@cha_oivergisiz_fl," + 
-                "'18991230'," + 
-                "0," + 
-                "@cha_trefno," + 
-                "@cha_sntck_poz," + 
-                "'18991230'," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "cast(cast(0 as binary) as uniqueidentifier)," + 
-                "cast(cast(0 as binary) as uniqueidentifier)," + 
-                "'18991230'," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "0," + 
-                "@cha_e_islem_turu," + 
-                "0," + 
-                "''," + 
-                "'00000000-0000-0000-0000-00000000000000'," + 
-                "1," + 
-                "0," + 
-                "'18991230'," + 
-                "0," + 
-                "''," + 
-                "''," + 
-                "'')" ,
-        param : ['cha_create_user','cha_lastup_user','cha_firmano','cha_subeno','cha_evrak_tip','cha_evrakno_seri','cha_evrakno_sira',
-            'cha_tarihi','cha_tip','cha_cinsi','cha_normal_Iade','cha_tpoz','cha_ticaret_turu','cha_belge_no','cha_belge_tarih',
-            'cha_aciklama','cha_satici_kodu','cha_EXIMkodu','cha_projekodu','cha_cari_cins','cha_kod','cha_ciro_cari_kodu',
-            'cha_d_cins','cha_d_kur','cha_altd_kur','cha_grupno','cha_srmrkkodu','cha_kasa_hizmet','cha_kasa_hizkod','cha_karsidgrupno',
-            'cha_meblag','cha_aratoplam','cha_vade','cha_ft_iskonto1','cha_ft_iskonto2','cha_ft_iskonto3','cha_ft_iskonto4','cha_ft_iskonto5',
-            'cha_ft_iskonto6','cha_ft_masraf1','cha_ft_masraf2','cha_ft_masraf3','cha_ft_masraf4','cha_vergipntr','cha_vergi1','cha_vergi2',
-            'cha_vergi3','cha_vergi4','cha_vergi5','cha_vergi6','cha_vergi7','cha_vergi8','cha_vergi9','cha_vergi10','cha_vergisiz_fl',
-            'cha_otvtutari','cha_otvvergisiz_fl','cha_oivergisiz_fl','cha_trefno','cha_sntck_poz','cha_e_islem_turu']    
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "51,                                    " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "@cha_create_user,                      " + 
+                "date('now'),                           " + 
+                "@cha_lastup_user,                      " + 
+                "date('now'),                           " + 
+                "'',                                    " + 
+                "'',                                    " + 
+                "'',                                    " + 
+                "@cha_firmano,                          " + 
+                "@cha_subeno,                           " + 
+                "@cha_evrak_tip,                        " + 
+                "'@cha_evrakno_seri',                   " + 
+                "@cha_evrakno_sira,                     " + 
+                "(SELECT IFNULL(MAX(cha_satir_no),-1) + 1 AS SATIRNO FROM CARIHAR WHERE cha_evrakno_seri = '@cha_evrakno_seri' AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip), " + 
+                "'@cha_tarihi',                         " + 
+                "@cha_tip,                              " + 
+                "@cha_cinsi,                            " + 
+                "@cha_normal_Iade,                      " + 
+                "@cha_tpoz,                             " + 
+                "@cha_ticaret_turu,                     " + 
+                "'@cha_belge_no',                       " + 
+                "'@cha_belge_tarih',                    " + 
+                "'@cha_aciklama',                       " + 
+                "'@cha_satici_kodu',                    " + 
+                "'@cha_EXIMkodu',                       " + 
+                "'@cha_projekodu',                      " + 
+                "'',                                    " + 
+                "@cha_cari_cins,                        " + 
+                "'@cha_kod',                            " + 
+                "'@cha_ciro_cari_kodu',                 " + 
+                "@cha_d_cins,                           " + 
+                "@cha_d_kur,                            " + 
+                "@cha_altd_kur,                         " + 
+                "@cha_grupno,                           " + 
+                "'@cha_srmrkkodu',                      " + 
+                "@cha_kasa_hizmet,                      " + 
+                "'@cha_kasa_hizkod',                    " + 
+                "@cha_kasaidcinsi,		                " +
+                "@cha_kasaid_kur,   	                " +
+                "@cha_karsidgrupno ,	                " +
+                "'@cha_karsisrmrkkodu',	                " +
+                "0,                                     " + 
+                "@cha_meblag,                           " + 
+                "@cha_aratoplam,                        " + 
+                "'@cha_vade',                             " + 
+                "0,                                     " + 
+                "@cha_ft_iskonto1,                      " + 
+                "@cha_ft_iskonto2,                      " + 
+                "@cha_ft_iskonto3,                      " + 
+                "@cha_ft_iskonto4,                      " + 
+                "@cha_ft_iskonto5,                      " + 
+                "@cha_ft_iskonto6,                      " + 
+                "@cha_ft_masraf1,                       " + 
+                "@cha_ft_masraf2,                       " + 
+                "@cha_ft_masraf3,                       " + 
+                "@cha_ft_masraf4,                       " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "@cha_vergipntr,                        " + 
+                "@cha_vergi1,                           " + 
+                "@cha_vergi2,                           " + 
+                "@cha_vergi3,                           " + 
+                "@cha_vergi4,                           " + 
+                "@cha_vergi5,                           " + 
+                "@cha_vergi6,                           " + 
+                "@cha_vergi7,                           " + 
+                "@cha_vergi8,                           " + 
+                "@cha_vergi9,                           " + 
+                "@cha_vergi10,                          " + 
+                "@cha_vergisiz_fl,                      " + 
+                "@cha_otvtutari,                        " + 
+                "@cha_otvvergisiz_fl,                   " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "@cha_oivergisiz_fl,                    " + 
+                "'18991230',                            " + 
+                "0,                                     " + 
+                "'@cha_trefno',                           " + 
+                "@cha_sntck_poz,                        " + 
+                "'18991230',                            " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "cast(cast(0 as binary) as uniqueidentifier), " + 
+                "cast(cast(0 as binary) as uniqueidentifier), " + 
+                "'18991230',                            " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "0,                                     " + 
+                "@cha_e_islem_turu,                     " + 
+                "0,                                     " + 
+                "'',                                    " + 
+                "'00000000-0000-0000-0000-00000000000000', " + 
+                "1,                                     " + 
+                "0,                                     " + 
+                "'18991230',                            " + 
+                "0,                                     " + 
+                "'',                                    " + 
+                "'',                                    " + 
+                "''                                     " +
+                ")  " ,
+                param : ['cha_create_user:int','cha_lastup_user:int','cha_firmano:int','cha_subeno:int','cha_evrak_tip:int','cha_evrakno_seri:string|25','cha_evrakno_sira:int',
+                'cha_tarihi:date','cha_tip:int','cha_cinsi:int','cha_normal_Iade:int','cha_tpoz:int','cha_ticaret_turu:int','cha_belge_no:string|25','cha_belge_tarih:date',
+                'cha_aciklama:string|40','cha_satici_kodu:string|25','cha_EXIMkodu:string|25','cha_projekodu:string|25','cha_cari_cins:int','cha_kod:string|25','cha_ciro_cari_kodu:string|25',
+                'cha_d_cins:int','cha_d_kur:float','cha_altd_kur:float','cha_grupno:int','cha_srmrkkodu:string|25','cha_kasa_hizmet:int','cha_kasa_hizkod:string|25','cha_kasaidcinsi:int','cha_kasaid_kur:float','cha_karsidgrupno:int','cha_karsisrmrkkodu:string|25',
+                'cha_meblag:float','cha_aratoplam:float','cha_vade:string|10','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float','cha_ft_iskonto4:float','cha_ft_iskonto5:float',
+                'cha_ft_iskonto6:float','cha_ft_masraf1:float','cha_ft_masraf2:float','cha_ft_masraf3:float','cha_ft_masraf4:float','cha_vergipntr:int','cha_vergi1:float','cha_vergi2:float',
+                'cha_vergi3:float','cha_vergi4:float','cha_vergi5:float','cha_vergi6:float','cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_vergisiz_fl:bit',
+                'cha_otvtutari:float','cha_otvvergisiz_fl:bit','cha_oivergisiz_fl:bit','cha_trefno:string|25','cha_sntck_poz:int','cha_e_islem_turu:int']
     },
     CariHarEvrDelete : 
     {
-        query : "DELETE FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = ? AND cha_evrakno_sira = ? AND cha_evrak_tip = ? " 
+        query : "DELETE FROM CARIHAR WHERE cha_evrakno_seri = ? AND cha_evrakno_sira = ? AND cha_evrak_tip = ? " 
     },
     CariHarSatirDelete : 
     {
-        query : "DELETE FROM CARI_HESAP_HAREKETLERI WHERE cha_Guid = ? "
+        query : "DELETE FROM CARIHAR WHERE cha_Guid = ? "
     },
     CariHarUpdate : 
     {
-        query : "UPDATE CARI_HESAP_HAREKETLERI " +
-                "SET cha_meblag = ? " +
-                ",cha_aratoplam = ? " +
-                ",cha_vergi1 = ? " +
-                ",cha_vergi2 = ? " +
-                ",cha_vergi3 = ? " + 
-                ",cha_vergi4 = ? " + 
-                ",cha_vergi5 = ? " + 
-                ",cha_vergi6 = ? " + 
-                ",cha_vergi7 = ? " + 
-                ",cha_vergi8 = ? " + 
-                ",cha_vergi9 = ? " + 
-                ",cha_vergi10 = ? " +
-                ",cha_ft_iskonto1 = ? " +
-                ",cha_ft_iskonto2 = ? " +
-                ",cha_ft_iskonto3 = ? " +
-                ",cha_ft_iskonto4 = ? " +
-                ",cha_ft_iskonto5 = ? " +
-                ",cha_ft_iskonto6 = ? " +
-                ",cha_otvtutari = ? " +
-                "WHERE  cha_Guid = ? "
+        query : "UPDATE CARIHAR " + 
+        "SET cha_meblag= '@cha_meblag' " + 
+        ",cha_aratoplam= @cha_aratoplam " + 
+        ",cha_vergi1= @cha_vergi1 " +
+        ",cha_vergi2= @cha_vergi2 " + 
+        ",cha_vergi3= @cha_vergi3 " + 
+        ",cha_vergi4= @cha_vergi4 " + 
+        ",cha_vergi5= @cha_vergi5 " + 
+        ",cha_vergi6= @cha_vergi6 " + 
+        ",cha_vergi7= @cha_vergi7 " + 
+        ",cha_vergi8= @cha_vergi8 " + 
+        ",cha_vergi9= @cha_vergi9 " + 
+        ",cha_vergi10= @cha_vergi10 " +
+        ",cha_ft_iskonto1= @cha_ft_iskonto1 " +
+        ",cha_ft_iskonto2= @cha_ft_iskonto2 " +
+        ",cha_ft_iskonto3= @cha_ft_iskonto3 " +
+        ",cha_ft_iskonto4= @cha_ft_iskonto4 " +
+        ",cha_ft_iskonto5= @cha_ft_iskonto5 " +
+        ",cha_ft_iskonto6= @cha_ft_iskonto6 " +
+        ",cha_otvtutari = @cha_otvtutari " +
+        "WHERE cha_Guid = (SELECT cha_Guid FROM CARIHAR WHERE cha_evrakno_seri = '@cha_evrakno_seri' " +
+        "AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip AND cha_satir_no = @cha_satir_no LIMIT 1) " ,
+        param : ['cha_meblag:float','cha_aratoplam:float','cha_vergi1:float','cha_vergi2:float','cha_vergi3:float','cha_vergi4:float','cha_vergi5:float','cha_vergi6:float',
+        'cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float',
+        'cha_ft_iskonto4:float','cha_ft_iskonto5:float','cha_ft_iskonto6:float','cha_otvtutari:float','cha_evrakno_seri:string','cha_evrakno_sira:int',
+        'cha_evrak_tip:int','cha_satir_no:int']
     },
     MaxCariHarSira : 
     {
-        query : "SELECT IFNULL(MAX(cha_evrakno_sira),0) AS MAXEVRSIRA FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = ? AND cha_evrak_tip = ? "
+        query : "SELECT IFNULL(MAX(cha_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM CARIHAR WHERE cha_evrakno_seri = ? AND cha_evrak_tip = ? "
     },
     //#region "LOCAL TABLOLAR OLUŞTURMA VE AKTARIM"
     AdresTbl : 
-    {
+    { 
         tag : "ADRES",
         query : "CREATE TABLE IF NOT EXISTS ADRES (" +
                 "CARIKODU NVARCHAR (25)," + 
@@ -2102,7 +2629,7 @@ var QueryLocal =
     {
         tag : "BEDENHAR",
         query : "CREATE TABLE IF NOT EXISTS BEDENHAR (" +
-                "BdnHar_Guid INTEGER PRIMARY KEY AUTOINCREMENT," + 
+                "BdnHar_Guid NVARCHAR," + 
                 "BdnHar_create_user SMALLINT," + 
                 "BdnHar_create_date DATETIME," + 
                 "BdnHar_lastup_user SMALLINT," + 
@@ -2111,7 +2638,7 @@ var QueryLocal =
                 "BdnHar_special2 NVARCHAR(4)," + 
                 "BdnHar_special3 NVARCHAR(4)," + 
                 "BdnHar_Tipi SMALLINT," + 
-                "BdnHar_DRECid_RECno INTEGER," + 
+                "BdnHar_Har_uid NVARCHAR," + 
                 "BdnHar_BedenNo SMALLINT," + 
                 "BdnHar_HarGor FLOAT," + 
                 "BdnHar_KnsIsGor FLOAT," + 
@@ -2189,6 +2716,14 @@ var QueryLocal =
         tag : "CARIHAR",
         query : "CREATE TABLE IF NOT EXISTS CARIHAR (" +
                 "cha_Guid INTEGER PRIMARY KEY AUTOINCREMENT," + 
+                "cha_DBCno INTEGER" +
+                ",cha_SpecRecNo INTEGER" +
+                ",cha_iptal INTEGER" +
+                ",cha_fileid INTEGER" +
+                ",cha_hidden INTEGER" +
+                ",cha_kilitli INTEGER" +
+                ",cha_degisti INTEGER" +
+                ",cha_CheckSum INTEGER," +
                 "cha_create_user SMALLINT," + 
                 "cha_create_date DATETIME," + 
                 "cha_lastup_user SMALLINT," + 
@@ -2212,6 +2747,8 @@ var QueryLocal =
                 "cha_belge_tarih DATETIME," + 
                 "cha_aciklama NVARCHAR(40)," + 
                 "cha_satici_kodu NVARCHAR(25)," + 
+                "cha_EXIMkodu NVARCHAR(25)," +
+                "cha_yat_tes_kodu NVARCHAR(25), " +
                 "cha_projekodu NVARCHAR(25)," + 
                 "cha_cari_cins TINYINT," + 
                 "cha_kod NVARCHAR(25)," + 
@@ -2231,6 +2768,7 @@ var QueryLocal =
                 "cha_meblag FLOAT," + 
                 "cha_aratoplam FLOAT," + 
                 "cha_vade INTEGER," + 
+                "cha_Vade_Farki_Yuz FLOAT," +
                 "cha_ft_iskonto1 FLOAT," + 
                 "cha_ft_iskonto2 FLOAT," + 
                 "cha_ft_iskonto3 FLOAT," + 
@@ -2251,6 +2789,21 @@ var QueryLocal =
                 "cha_isk_mas8 TINYINT," + 
                 "cha_isk_mas9 TINYINT," + 
                 "cha_isk_mas10 TINYINT," + 
+                "cha_sat_iskmas1 TINYINT," +
+                "cha_sat_iskmas2 TINYINT," +
+                "cha_sat_iskmas3 TINYINT," +
+                "cha_sat_iskmas4 TINYINT," +
+                "cha_sat_iskmas5 TINYINT," +
+                "cha_sat_iskmas6 TINYINT," +
+                "cha_sat_iskmas7 TINYINT," +
+                "cha_sat_iskmas8 TINYINT," +
+                "cha_sat_iskmas9 TINYINT," +
+                "cha_sat_iskmas10 TINYINT," +
+                "cha_yuvarlama FLOAT," +
+                "cha_StFonPntr TINYINT," +
+                "cha_stopaj FLOAT," +
+                "cha_savsandesfonu FLOAT," +
+                "cha_avansmak_damgapul FLOAT," +
                 "cha_vergipntr TINYINT," + 
                 "cha_vergi1 FLOAT," + 
                 "cha_vergi2 FLOAT," + 
@@ -2269,14 +2822,45 @@ var QueryLocal =
                 "cha_oivtutari FLOAT," + 
                 "cha_oiv_vergi FLOAT," + 
                 "cha_oivergisiz_fl BIT," + 
+                "cha_fis_tarih DATETIME, " +
+                "cha_fis_sirano INTEGER, " +
                 "cha_trefno NVARCHAR(25)," + 
                 "cha_sntck_poz TINYINT," + 
                 "cha_reftarihi DATETIME," + 
+                "cha_istisnakodu TINYINT, " +
+                "cha_pos_hareketi TINYINT, " +
+                "cha_meblag_ana_doviz_icin_gecersiz_fl TINYINT, " +
+                "cha_meblag_alt_doviz_icin_gecersiz_fl TINYINT, " +
+                "cha_meblag_orj_doviz_icin_gecersiz_fl TINYINT, " +
+                "cha_sip_uid  UNIQUEIDENTIFIER, " +
+                "cha_kirahar_uid UNIQUEIDENTIFIER, " +
+                "cha_vardiya_tarihi DATETIME, " +
+                "cha_vardiya_no TINYINT, " +
+                "cha_vardiya_evrak_ti TINYINT, " +
+                "cha_ebelge_turu TINYINT, " +
+                "cha_tevkifat_toplam FLOAT, " +
+                "cha_ilave_edilecek_kdv1 FLOAT, " +
+                "cha_ilave_edilecek_kdv2 FLOAT, " +
+                "cha_ilave_edilecek_kdv3 FLOAT, " +
+                "cha_ilave_edilecek_kdv4 FLOAT, " +
+                "cha_ilave_edilecek_kdv5 FLOAT, " +
+                "cha_ilave_edilecek_kdv6 FLOAT, " +
+                "cha_ilave_edilecek_kdv7 FLOAT, " +
+                "cha_ilave_edilecek_kdv8 FLOAT, " +
+                "cha_ilave_edilecek_kdv9 FLOAT, " +
+                "cha_ilave_edilecek_kdv10 FLOAT, " +
                 "cha_e_islem_turu TINYINT," + 
                 "cha_fatura_belge_turu TINYINT," + 
                 "cha_diger_belge_adi NVARCHAR(50)," + 
-                "cha_adres_no INTEGER)",
-        insert : "INSERT INTO CARIHAR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"                
+                "cha_uuid UNIQUEIDENTIFIER, " +
+                "cha_adres_no INTEGER," +
+                "cha_vergifon_toplam FLOAT," +
+                "cha_ilk_belge_tarihi DATETIME," +
+                "cha_ilk_belge_doviz_kuru FLOAT," +
+                "cha_HareketGrupKodu1 NVARCHAR(25)," +
+                "cha_HareketGrupKodu2 NVARCHAR(25)," +
+                "cha_HareketGrupKodu3 NVARCHAR(25) )" ,
+        insert : "INSERT INTO CARIHAR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"                
     },
     DepoTbl : 
     {
@@ -2442,25 +3026,11 @@ var QueryLocal =
     },
     FiyatListeTbl:
     {
-        tag : "FIYAT",
-        query : "CREATE TABLE IF NOT EXISTS FIYAT (" +
-                 "STOKKODU NVARCHAR(25)," +
+        tag : "FIYATLISTE",
+        query : "CREATE TABLE IF NOT EXISTS FIYATLISTE (" +
                  "LISTENO int," +
-                 "LISTEADI nvarchar (25)," +
-                 "DEPONO int," +
-                 "ODEMENO int," +
-                 "FIYAT float," +
-                 "DOVIZ tinyint," +
-                 "DOVIZSEMBOL nvarchar (25)," +
-                 "DOVIZKUR float," +
-                 "STOKADI nvarchar (50)," +
-                 "ALTGRUP nvarchar (25)," +
-                 "URETICI nvarchar (25)," +
-                 "SEKTOR nvarchar (25)," +
-                 "REYON nvarchar (25)," +
-                 "MARKA nvarchar (25)," +
-                 "ISKONTOKOD nvarchar (4))",               
-        insert : "INSERT INTO FIYAT VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"               
+                 "LISTEADI nvarchar (25) )" ,
+        insert : "INSERT INTO FIYATLISTE VALUES (?,?)"               
     },
     IsEmirleriTbl:
     {
@@ -2478,12 +3048,12 @@ var QueryLocal =
                 "CARI nvarchar (5)," +
                 "ISIM nvarchar (50)," +
                 "ODEMEPLANI int," +
-                "ISKONTO1 float," +
-                "ISKONTO2 float," +
-                "ISKONTO3 float," +
-                "ISKONTO4 float," +
-                "ISKONTO5 float," +
-                "ISKONTO6 float)",
+                "ORAN1 float," +
+                "ORAN2 float," +
+                "ORAN3 float," +
+                "ORAN4 float," +
+                "ORAN5 float," +
+                "ORAN6 float)",
          insert : "INSERT INTO ISKONTO VALUES(?,?,?,?,?,?,?,?,?,?)"
     },
     KasaTbl : 
@@ -2636,6 +3206,83 @@ var QueryLocal =
                 "ODEMEADI nvarchar(50))",
         insert : "INSERT INTO ODEMEPLAN VALUES (?,?,?)" 
     },
+    OdemeEmirleriTbl :
+    {
+        tag: "ODEMEEMIRLERI",
+        query: "CREATE TABLE IF NOT EXISTS ODEMEEMIRLERI( " +
+        "[sck_Guid] [nvarchar](50) , " +
+        "[sck_DBCno] [smallint] , " +
+        "[sck_SpecRECno] [int] , " +
+        "[sck_iptal] [bit] , " +
+        "[sck_fileid] [smallint] , " +
+        "[sck_hidden] [bit] , " +
+        "[sck_kilitli] [bit] , " +
+        "[sck_degisti] [bit] , " +
+        "[sck_checksum] [int] , " +
+        "[sck_create_user] [smallint] , " +
+        "[sck_create_date] [datetime] , " +
+        "[sck_lastup_user] [smallint] , " +
+        "[sck_lastup_date] [datetime] , " +
+        "[sck_special1] [nvarchar](4) , " +
+        "[sck_special2] [nvarchar](4) , " +
+        "[sck_special3] [nvarchar](4) , " +
+        "[sck_firmano] [int] , " +
+        "[sck_subeno] [int] , " +
+        "[sck_tip] [tinyint] , " +
+        "[sck_refno] [nvarchar](25) , " +
+        "[sck_bankano] [nvarchar](25) , " +
+        "[sck_borclu] [nvarchar](50) , " +
+        "[sck_vdaire_no] [nvarchar](40) , " +
+        "[sck_vade] [datetime] , " +
+        "[sck_tutar] [float] , " +
+        "[sck_doviz] [tinyint] , " +
+        "[sck_odenen] [float] , " +
+        "[sck_degerleme_islendi] [tinyint] , " +
+        "[sck_banka_adres1] [nvarchar](50) , " +
+        "[sck_sube_adres2] [nvarchar](50) , " +
+        "[sck_borclu_tel] [nvarchar](15) , " +
+        "[sck_hesapno_sehir] [nvarchar](30) , " +
+        "[sck_no] [nvarchar](25) , " +
+        "[sck_duzen_tarih] [datetime] , " +
+        "[sck_sahip_cari_cins] [tinyint] , " +
+        "[sck_sahip_cari_kodu] [nvarchar](25) , " +
+        "[sck_sahip_cari_grupno] [tinyint] , " +
+        "[sck_nerede_cari_cins] [tinyint] , " +
+        "[sck_nerede_cari_kodu] [nvarchar](25) , " +
+        "[sck_nerede_cari_grupno] [tinyint] , " +
+        "[sck_ilk_hareket_tarihi] [datetime] , " +
+        "[sck_ilk_evrak_seri] [nvarchar](25) , " +
+        "[sck_ilk_evrak_sira_no] [int] , " +
+        "[sck_ilk_evrak_satir_no] [int] , " +
+        "[sck_son_hareket_tarihi] [datetime] , " +
+        "[sck_doviz_kur] [float] , " +
+        "[sck_sonpoz] [tinyint] , " +
+        "[sck_imza] [tinyint] , " +
+        "[sck_srmmrk] [nvarchar](25) , " +
+        "[sck_kesideyeri] [nvarchar](14) , " +
+        "[Sck_TCMB_Banka_kodu] [nvarchar](4) , " +
+        "[Sck_TCMB_Sube_kodu] [nvarchar](8) , " +
+        "[Sck_TCMB_il_kodu] [nvarchar](3) , " +
+        "[SckTasra_fl] [bit] , " +
+        "[sck_projekodu] [nvarchar](25) , " +
+        "[sck_masraf1] [float] , " +
+        "[sck_masraf1_isleme] [tinyint] , " +
+        "[sck_masraf2] [float] , " +
+        "[sck_masraf2_isleme] [tinyint] , " +
+        "[sck_odul_katkisi_tutari] [float] , " +
+        "[sck_servis_komisyon_tutari] [float] , " +
+        "[sck_erken_odeme_faiz_tutari] [float] , " +
+        "[sck_odul_katkisi_tutari_islendi_fl] [bit] , " +
+        "[sck_servis_komisyon_tutari_islendi_fl] [bit] , " +
+        "[sck_erken_odeme_faiz_tutari_islendi_fl] [bit] , " +
+        "[sck_kredi_karti_tipi] [tinyint] , " +
+        "[sck_taksit_sayisi] [smallint] , " +
+        "[sck_kacinci_taksit] [smallint] , " +
+        "[sck_uye_isyeri_no] [nvarchar](25) , " +
+        "[sck_kredi_karti_no] [nvarchar](16) , " +
+        "[sck_provizyon_kodu] [nvarchar](10) ) ",
+        insert: "INSERT INTO ODEMEEMIRLERI VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    },
     PersonelTbl : 
     {
         tag : "PERSONEL",
@@ -2738,27 +3385,6 @@ var QueryLocal =
                 "sym_lot_no int," +
                 "sym_serino nvarchar (25))", 
         insert : "INSERT INTO SAYIM VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-    },
-    SenetTbl : 
-    {
-        tag : "SENET",
-        query : "CREATE TABLE IF NOT EXISTS SENET (" +
-                "REFNO nvarchar(50)," +
-                "VADE datetime," +
-                "TUTAR float," +
-                "ODENEN float," +
-                "SONPOZ tinyint," +
-                "NEREDECARI nvarchar(25)," +
-                "CARIADI nvarchar(50)," +
-                "TIP tinyint," +
-                "DOVIZ tinyint," +
-                "DOVIZKUR float," +
-                "RECNO int," +
-                "SEKTOR nvarchar (25)," +
-                "BOLGE nvarchar (25)," +
-                "GRUP nvarchar (25)," +
-                "TEMSILCI nvarchar (25))",
-        insert : "INSERT INTO SENET VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
     SenetCekTbl : 
     {
@@ -3022,6 +3648,7 @@ var QueryLocal =
                 "sip_paket_kod nvarchar (25)," +
                 "sip_Rez_uid smallint," +
                 "sip_harekettipi tinyint, " +
+<<<<<<< HEAD
                 "sip_yetkili_uid, " +
                 "sip_kapatmanedenkod, " +
                 "sip_gecerlilik_tarihi, " +
@@ -3034,6 +3661,21 @@ var QueryLocal =
                 "sip_HareketGrupKodu2, " +
                 "sip_HareketGrupKodu3)" ,
         insert : "INSERT INTO SIPARIS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+=======
+                "sip_yetkili_uid nvarchar, " +
+                "sip_kapatmanedenkod nvarchar (25), " +
+                "sip_gecerlilik_tarihi datetime, " +
+                "sip_onodeme_evrak_tip tinyint, " +
+                "sip_onodeme_evrak_seri nvarchar, " +
+                "sip_onodeme_evrak_sira int, " +
+                "sip_rezervasyon_miktari float, " +
+                "sip_rezerveden_teslim_edilen float, " +
+                "sip_HareketGrupKodu1 nvarchar (25), " +
+                "sip_HareketGrupKodu2 nvarchar (25), " +
+                "sip_HareketGrupKodu3 nvarchar (25), " +
+                "status bit)",
+        insert : "INSERT INTO SIPARIS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+>>>>>>> 4498ae21a973b3bc22ad1cc8b4d32a69e8b1bfa1
     },
     SiparisStokTbl : 
     {
@@ -3173,7 +3815,7 @@ var QueryLocal =
     {
         tag : "STOKHAR",
         query : "CREATE TABLE IF NOT EXISTS STOKHAR (" +
-        "sth_Guid integer primary key autoincrement," +
+        "sth_Guid nvarchar," +
         "sth_DBCno smallint ," +
         "sth_SpecRECno int , " +
         "sth_iptal bit ," +
@@ -3301,8 +3943,9 @@ var QueryLocal =
         "sth_Olcu4 float , " +
         "sth_Olcu5 float , " +
         "sth_FormulMiktarNo tinyint , " +
-        "sth_FormulMiktar float)" ,
-        insert : "INSERT INTO STOKHAR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"           
+        "sth_FormulMiktar float , " +
+        " status bit )" ,
+        insert : "INSERT INTO STOKHAR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"           
     },
     UreticiTbl :
    {

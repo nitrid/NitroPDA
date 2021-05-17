@@ -57,6 +57,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.DizaynListe = [];
 
         $scope.Tutar = "";
+        $scope.IrsTutar = "";
 
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = ""; 
@@ -336,9 +337,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.TrefNo, //TREFNO
                 $scope.SntckPoz, //SNTCKPOZ
                 0 //EISLEMTURU
-                ];
+            ];
+            console.log(InsertData)
+            console.log($scope.Tutar)
             db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
             {   
+                console.log(InsertResult)
                 db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(CariHarGetir)
                 {
                     $scope.CariHarListe = CariHarGetir;
@@ -350,8 +354,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                     
                     if($scope.TahsilatCinsi != 0)
                     {
+                        console.log($scope.Tutar)
                         OdemeEmirleriInsert();
                     }
+                    $scope.Tutar = "";   
                 });
             });
         } 
@@ -393,9 +399,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.Sorumluluk,   //SORUMLULUKMERKEZI
                 ""                   //PROJE
                 ];
-
+                console.log(InsertData)
             db.ExecuteTag($scope.Firma,'CekHarInsert',InsertData,function(InsertResult)
             {   
+                console.log(InsertResult)
                 //$scope.TahsilatCinsi = "0"
                 $scope.TahsilatCinsiChange();
             });
@@ -589,6 +596,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             $scope.CariKodu = JSON.parse(localStorage.FaturaParam).CariKodu
         }
+        if(typeof (localStorage.IrsaliyeParam) != 'undefined')
+        {
+            $scope.CariKodu = JSON.parse(localStorage.IrsaliyeParam).CariKodu;
+            $scope.Tutar = JSON.parse(localStorage.IrsaliyeParam).Tutar;
+            localStorage.removeItem('IrsaliyeParam');
+        }
         if($scope.CariKodu != "")
         {       
             db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
@@ -628,6 +641,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         await db.GetData($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
         {
             $scope.KasaListe = data;
+            console.log(data)
             $scope.KasaBankaListe = $scope.KasaListe;
             $scope.KasaBanka = UserParam[ParamName].NakitKasa;
             $scope.KasaListe.forEach(function(item)
@@ -645,7 +659,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {
             $scope.BankaListe = data;
         });  
-        await db.MaxSiraPromiseTag($scope.Firma,'MaxCariHarSira',[$scope.Seri,$scope.ChaEvrakTip],function(data){$scope.Sira = data});
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxCariHarSira',[$scope.Seri,$scope.ChaEvrakTip],function(data){$scope.Sira = data; console.log(data)});
     }
     $scope.TahsilatCinsiChange = async function()
     {
@@ -759,12 +773,13 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             {
                 if($scope.KasaDoviz == $scope.CariDovizCinsi)
                 {
-                    CariHarInsert();                    
+                    CariHarInsert();                 
                 }
                 else
                 {
                     $('#MdlDoviz').modal('show');
                 }
+                
             }
             else
             {

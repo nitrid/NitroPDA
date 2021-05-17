@@ -3,6 +3,7 @@ var _sql = require("./sqllib");
 var io = require('socket.io')();
 var lic = require('./license');
 var emikro = require('./emikro');
+var ehizli = require('./ehizli');
 
 var msql;
 var tsql;
@@ -297,16 +298,23 @@ io.on('connection', function(socket)
     {
         fn(config);
     });
-    socket.on('EIrsGonder',function(pParam,fn)
+    socket.on('EIrsGonder',async function(pParam,fn)
     {
-        emikro.eIrsGonder(pParam,(pData)=>
+        ehizli.eIrsGonder(pParam).then((pData) =>
         {
-            fn(pData);
+            fn(pData)
+        });
+    });
+    socket.on('EIrsDurum',async function(pParam,fn)
+    {
+        ehizli.eIrsDurum(5,pParam).then((pData) =>
+        {
+            fn(pData)
         });
     });
     socket.on('EIrsGoster',async (pDocumentId,fn) =>
     {
-        let TmpData = await emikro.eIrsGoster(pDocumentId);
+        let TmpData = await ehizli.eIrsGoster(5,pDocumentId);
         fn(TmpData);
     });
 });

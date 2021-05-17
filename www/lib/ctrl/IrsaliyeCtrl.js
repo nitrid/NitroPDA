@@ -95,6 +95,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.ProjeListe = [];
         $scope.OdemePlanListe = [];
         $scope.IrsaliyeListe = [];
+        $scope.EIrsListe = []
         $scope.BedenHarListe = [];
         $scope.BirimListe = [];
         $scope.StokListe = [];
@@ -751,6 +752,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(IrsaliyeData)
                 {  
                     $scope.IrsaliyeListe = IrsaliyeData;
+                    console.log($scope.Stok[0])
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {   
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
@@ -876,48 +878,49 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Stok[0].INDIRIM = 0;
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
-                    // Fiyat Getir (Stok Detay)
-                    var Fiyat = 
-                    {
-                        db : '{M}.' + $scope.Firma,
-                        query : "SELECT TOP 1 " + 
-                                "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) " + 
-                                "ELSE " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
-                                "END AS FIYAT, " + 
-                                "sfiyat_doviz AS DOVIZ, " + 
-                                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
-                                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
-                                "sfiyat_iskontokod AS ISKONTOKOD " + 
-                                "FROM STOK_SATIS_FIYAT_LISTELERI " +
-                                "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
-                                "ORDER BY sfiyat_deposirano DESC", 
-                        param: ['STOKKODU','FIYATLISTE','DEPONO'],
-                        type:  ['string|50','int','int'],
-                        value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
-                    }
-                    db.GetDataQuery(Fiyat,function(pFiyat)
-                    {                         
-                        $scope.Fiyat = pFiyat[0].FIYAT
-                        $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
-                        $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
-                    });
+                    //----------OFFLINE ICIN GEÇİCİ OLARAK KAPATILDI------------\\ 
+                    // // Fiyat Getir (Stok Detay)
+                    // var Fiyat = 
+                    // {
+                    //     db : '{M}.' + $scope.Firma,
+                    //     query : "SELECT TOP 1 " + 
+                    //             "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                    //             "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) " + 
+                    //             "ELSE " + 
+                    //             "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,0) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                    //             "END AS FIYAT, " + 
+                    //             "sfiyat_doviz AS DOVIZ, " + 
+                    //             "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
+                    //             "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                    //             "sfiyat_iskontokod AS ISKONTOKOD " + 
+                    //             "FROM STOK_SATIS_FIYAT_LISTELERI " +
+                    //             "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
+                    //             "ORDER BY sfiyat_deposirano DESC", 
+                    //     param: ['STOKKODU','FIYATLISTE','DEPONO'],
+                    //     type:  ['string|50','int','int'],
+                    //     value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
+                    // }
+                    // db.GetDataQuery(Fiyat,function(pFiyat)
+                    // {                         
+                    //     $scope.Fiyat = pFiyat[0].FIYAT
+                    //     $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
+                    //     $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
+                    // });
                     
-                    //Depo Miktar Getir (Stok Detay)
-                    var DepoMiktar =
-                    {
-                        db : '{M}.' + $scope.Firma,
-                        query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
-                        param : ['STOKKODU'],
-                        type : ['string|50'],
-                        value : [$scope.StokKodu]
-                    }
-                    db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
-                    {   
-                        $scope.DepoMiktarListe = pDepoMiktar
-                        $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
-                    });
+                    // //Depo Miktar Getir (Stok Detay)
+                    // var DepoMiktar =
+                    // {
+                    //     db : '{M}.' + $scope.Firma,
+                    //     query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
+                    //     param : ['STOKKODU'],
+                    //     type : ['string|50'],
+                    //     value : [$scope.StokKodu]
+                    // }
+                    // db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
+                    // {   
+                    //     $scope.DepoMiktarListe = pDepoMiktar
+                    //     $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
+                    // });
 
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                     {   
@@ -1011,7 +1014,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         $window.document.getElementById("Miktar").focus();
                         $window.document.getElementById("Miktar").select();
                     }
-                    $scope.SonSatisGetir();
+                   // offline için kapatıldı $scope.SonSatisGetir();
                 }
                 else
                 {   
@@ -1060,6 +1063,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     function FisData(pData)
     { 
         $scope.KirilimGetir();
+        //Offline'da ISNULL Hatasını KirilimGetir fonksiyonu çalışıyor diye yapıyor.
         $scope.FisLength = pData;
         if($scope.FisDizaynTip == "0")
         {
@@ -2177,7 +2181,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                     BedenHarInsert(value.sth_Guid)
                                 }
                             });
-                           
 
                             let TmpFiyat  = value.sth_tutar / value.sth_miktar
                             let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
@@ -2222,7 +2225,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 else
                 {
                     let UpdateStatus = false;
-
+                console.log("Girdi")
                     angular.forEach($scope.IrsaliyeListe,function(value)
                     {
                         if(value.sth_stok_kod == $scope.Stok[0].KODU)
@@ -2365,7 +2368,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(e){$scope.OdemePlanListe = e; $scope.OdemeNo = data[0].sth_odeme_op.toString()});
                 
                 $scope.IrsaliyeListe = data;
-                console.log($scope.IrsaliyeListe)
+                
                 $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});  
                 DipToplamHesapla();
                 ToplamMiktarHesapla()
@@ -2966,69 +2969,108 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             alertify.alert("Reis parametreni kontrol et ya yazamıyorum bir şey")
         }
     }
-    $scope.BtnEIrsModalAc = function()
+    $scope.BtnEIrsModalAc = async function()
     {
-        let TmpQuery = 
+        if($scope.IrsaliyeListe.length == 0)
         {
-            db : '{M}.' + $scope.Firma,
-            query : "SELECT * FROM E_IRSALIYE_DETAYLARI WHERE eir_evrak_tip = 1 AND eir_tipi = 3 AND eir_evrakno_seri = @eir_evrakno_seri AND eir_evrakno_sira = @eir_evrakno_sira", 
-            param: ['eir_evrakno_seri','eir_evrakno_sira'],
-            type:  ['string|25','int'],
-            value: [$scope.Seri,$scope.Sira]
+            alertify.alert("İrsaliye kayıt etmeden gönderemezsiniz !")
+            return;
         }
-        db.GetDataQuery(TmpQuery,function(pData)
-        {                         
-            if(pData.length == 0)
+
+        $scope.EIrsListe = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
+
+        if($scope.EIrsListe.length == 0)
+        {
+            $scope.TxtSfrAd = "";
+            $scope.TxtSrfSoyAd = "";
+            $scope.TxtSfrTckn = "";
+            $scope.TxtPlaka = "";      
+
+            $('#MdlEIrsGonder').modal("show");      
+        }
+        else
+        {            
+            db.SafeApply($scope,() =>
+            {
+                $scope.TxtSfrAd = $scope.EIrsListe[0].eir_sofor_adi;
+                $scope.TxtSrfSoyAd = $scope.EIrsListe[0].eir_sofor_soyadi;
+                $scope.TxtSfrTckn = $scope.EIrsListe[0].eir_sofor_tckn;
+                $scope.TxtPlaka = $scope.EIrsListe[0].eir_tasiyici_arac_plaka;    
+            });             
+
+            if($scope.EIrsListe[0].eir_uuid == '00000000-0000-0000-0000-000000000000')
             {
                 $('#MdlEIrsGonder').modal("show");
             }
             else
             {
-                alertify.alert("Bu evrak zaten gönderilmiş !")
+                db.EIrsDurum($scope.EIrsListe[0].eir_uuid,(pData) => 
+                {
+                    if(typeof pData.err != 'undefined')
+                    {
+                        alertify.alert(pData.err.Message)
+                    }
+                    if(pData.result.Message == 'Başarılı')
+                    {
+                        alertify.alert("E-İrsaliye Durumu : " + pData.result.documents[0].Messsage)
+                    }
+                })
             }
-        });
+        }
+
         
     }
     $scope.BtnEIrsKaydet = async function()
     {
         if($scope.TxtSrfSoyAd != '' && $scope.TxtSfrAd != '' && $scope.TxtSfrTckn != '' && $scope.TxtPlaka != '')
-        {
-            let InsertData = 
-            [
-                $scope.EvrakTip,
-                3,
-                $scope.Seri,
-                $scope.Sira,
-                '',
-                $scope.TxtPlaka,
-                '',
-                '',
-                $scope.TxtSfrAd,
-                $scope.TxtSrfSoyAd,
-                '',
-                '',
-                $scope.TxtSfrTckn,
-                ''
-            ];
-
-            await db.ExecutePromiseTag($scope.Firma,'EIrsDetayInsert',InsertData);
-            let TmpData = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
+        {            
+            if($scope.EIrsListe.length == 0)
+            {
+                let InsertData = 
+                [
+                    $scope.EvrakTip,
+                    3,
+                    $scope.Seri,
+                    $scope.Sira,
+                    '',
+                    $scope.TxtPlaka,
+                    '',
+                    '',
+                    $scope.TxtSfrAd,
+                    $scope.TxtSrfSoyAd,
+                    '',
+                    '',
+                    $scope.TxtSfrTckn,
+                    ''
+                ];
+    
+                await db.ExecutePromiseTag($scope.Firma,'EIrsDetayInsert',InsertData);
+            }
+            
+            let TmpData = await db.GetPromiseTag($scope.Firma,'EIrsSemaGetir',[$scope.Seri,$scope.Sira]);
 
             if(TmpData.length > 0)
             {
                 db.EIrsGonder(TmpData,(pData) =>
                 {
                     $('#MdlEIrsGonder').modal("hide");
-
-                    if(typeof pData.id != 'undefined')
+                    
+                    if(typeof pData.err == 'undefined')
                     {
-                        db.ExecuteTag($scope.Firma,'EIrsUpdate',[pData.id,$scope.Seri,$scope.Sira],function(pResult)
-                        {                         
-                        });
+                        if(typeof pData.result.UUID != 'undefined')
+                        {
+                            db.ExecuteTag($scope.Firma,'EIrsUpdate',[pData.result.UUID,$scope.Seri,$scope.Sira],function(pResult)
+                            {                         
+                            });
+                        }
+                        else
+                        {
+                            alertify.alert("E-Irsaliye gönderilemedi !")
+                        }
                     }
                     else
                     {
-                        alertify.alert("E-Irsaliye gönderilemedi !")
+                        alertify.alert("E-Irsaliye gönderilemedi ! " + pData.err.Message)
                     }
                 });
             }
@@ -3038,27 +3080,34 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             alert("Lütfen Tüm Alanları Doldurun")           
         }
     }
-    $scope.BtnEIrsGoster = function()
-    {
-        let TmpQuery = 
+    $scope.BtnEIrsGoster = async function()
+    {                
+        if($scope.IrsaliyeListe.length == 0)
         {
-            db : '{M}.' + $scope.Firma,
-            query : "SELECT * FROM E_IRSALIYE_DETAYLARI WHERE eir_evrak_tip = 1 AND eir_tipi = 3 AND eir_evrakno_seri = @eir_evrakno_seri AND eir_evrakno_sira = @eir_evrakno_sira", 
-            param: ['eir_evrakno_seri','eir_evrakno_sira'],
-            type:  ['string|25','int'],
-            value: [$scope.Seri,$scope.Sira]
+            alertify.alert("İrsaliye kayıt etmeden gösteremezsiniz !")
+            return;
         }
-        db.GetDataQuery(TmpQuery,function(pIrsDetay)
-        {                 
-            if(pIrsDetay.length > 0)
+
+        $scope.EIrsListe = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
+        if($scope.EIrsListe.length == 0)
+        {
+            alertify.alert("E-İrsaliye göndermeden gösteremezsiniz !")
+            return;
+        }
+        else
+        {
+            if($scope.EIrsListe[0].eir_uuid == '00000000-0000-0000-0000-000000000000')
             {
-                db.EIrsGoster(pIrsDetay[0].eir_uuid,(pData) =>
-                {
-                    let win = window.open("","E-Irsaliye");
-                    win.document.write(pData);
-                })
-            }        
-        });        
+                alertify.alert("E-İrsaliye göndermeden gösteremezsiniz !")
+                return;
+            }
+
+            db.EIrsGoster($scope.EIrsListe[0].eir_uuid,(pData) =>
+            {
+                let win = window.open("","E-Irsaliye");
+                win.document.write(pData);
+            })
+        }
     }
     $scope.SonSatisGetir = function()
     {
@@ -3076,5 +3125,16 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.SonSatisListe = data.result.recordset[0];
             $scope.SonSatisMiktar = $scope.SonSatisListe.MIKTAR
         });
+    }
+    $scope.BtnTahClick = function()
+    {
+        let Param =
+        {
+            "Seri" : $scope.Seri,
+            "Sira" : $scope.Sira,
+            "CariKodu" : $scope.CariKodu,
+            "Tutar" : parseFloat($scope.GenelToplam.toFixed(2))
+        }
+        localStorage.IrsaliyeParam = JSON.stringify(Param);
     }
 }

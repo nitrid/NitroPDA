@@ -116,7 +116,7 @@ var QuerySql =
                 //"RISK, " +
                 //"RISKLIMIT, " +
                 "ODEMEPLANI, " +
-                "BAKIYE, " +
+                "CONVERT(NVARCHAR,CAST(BAKIYE AS MONEY),1) AS BAKIYE, " +
                 "BELGETARIH, " +
                 "ADRES, " +
                 "IL, " +
@@ -591,7 +591,7 @@ var QuerySql =
                 "END AS FIYAT, " + 
                 "sfiyat_doviz AS DOVIZ, " + 
                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
-                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),1)),1) AS DOVIZKUR, " + 
                 "sfiyat_iskontokod AS ISKONTOKOD " + 
                 "FROM STOK_SATIS_FIYAT_LISTELERI " +
                 "WHERE sfiyat_stokkod = @KODU AND sfiyat_listesirano = @LISTENO AND sfiyat_deposirano IN (0,@DEPO) " +
@@ -2799,7 +2799,7 @@ var QuerySql =
                 ",@cha_evrak_tip								--<cha_evrak_tip, tinyint,> \n" + 
                 ",@cha_evrakno_seri								--<cha_evrakno_seri, nvarchar_evrakseri,> \n" + 
                 ",@cha_evrakno_sira								--<cha_evrakno_sira, int,> \n" + 
-                ",@cha_satir_no				--<cha_satir_no, int,> \n" + 
+                ",@cha_satir_no				    --<cha_satir_no, int,> \n" + 
                 ",@cha_tarihi									--<cha_tarihi, datetime,> \n" + 
                 ",@cha_tip										--<cha_tip, tinyint,> \n" + 
                 ",@cha_cinsi									--<cha_cinsi, tinyint,> \n" + 
@@ -4258,6 +4258,7 @@ var QuerySql =
         param:  ['kon_evrakno_seri','kon_evrakno_sira','kon_evraktip','BdnHar_Tipi'],
         type:   ['string|20','int','int','int']
     },
+    // Açıklama
     AciklamaInsert :
     {
         query : "INSERT INTO [dbo].[EVRAK_ACIKLAMALARI] " +
@@ -4425,7 +4426,7 @@ var QuerySql =
            param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int']
     },  
     //E-Süreçler
-    EIrsGetir : 
+    EIrsSemaGetir : 
     {
         query : "SELECT sth_evrakno_seri AS SERI, " +
                 "sth_evraktip AS EVRAKTIP, " +
@@ -4433,8 +4434,8 @@ var QuerySql =
                 "CONVERT(VARCHAR,sth_tarih, 23) AS TARIH, " +
                 "CONVERT(VARCHAR,sth_belge_tarih, 23) AS BELGETARIH, " +
                 "CONVERT(VARCHAR, sth_lastup_date, 8) AS BELGEZAMAN, " +
-                "'1111111111' AS VKNNO, " +
-                //"'ISNULL((SELECT TOP 1 fir_FVergiNo FROM FIRMALAR WHERE fir_sirano = 0),'')' AS VKNNO, " +
+                //"'4620553774' AS VKNNO, " +
+                "ISNULL((SELECT TOP 1 fir_FVergiNo FROM FIRMALAR WHERE fir_sirano = 0),'') AS VKNNO, " +
                 "ISNULL((SELECT  TOP 1  fir_unvan FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN, " +
                 "ISNULL((SELECT TOP 1  fir_unvan2 FROM FIRMALAR WHERE fir_sirano = 0),'') AS FIRMAUNVAN2, " +
                 "ISNULL((SELECT TOP 1  sube_Cadde FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBECADDE, " +
@@ -4447,6 +4448,7 @@ var QuerySql =
                 "ISNULL((SELECT TOP 1  sube_Il FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEIL, " +
                 "ISNULL((SELECT TOP 1  sube_Ulke FROM SUBELER WHERE Sube_bag_firma = 0 AND Sube_no = 0),'') AS SUBEULKE, " +
                 "ISNULL((SELECT TOP 1 Vgd_adi FROM MikroDB_V16..VERGI_DAIRELERI WHERE Vgd_orj_kod = (SELECT TOP 1 fir_FVergiDaire FROM FIRMALAR WHERE fir_sirano = 0)),'') AS VDADI, " +
+                "sth_cari_kodu AS CARIKODU, " +
                 "ISNULL((SELECT TOP 1 cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN1, " +
                 "ISNULL((SELECT TOP 1 cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIUNVAN2, " +
                 "ISNULL((SELECT TOP 1 cari_vdaire_adi FROM CARI_HESAPLAR WHERE cari_kod = sth_cari_kodu),'') AS CARIVDADI, " +
@@ -4460,6 +4462,7 @@ var QuerySql =
                 "ISNULL((SELECT TOP 1 adr_ilce FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIILCE, " +
                 "ISNULL((SELECT TOP 1 adr_il FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIIL, " +
                 "ISNULL((SELECT TOP 1 adr_ulke FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIULKE, " +
+                "ISNULL((SELECT TOP 1 adr_eirsaliye_alias FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod = sth_cari_kodu and adr_adres_no = 1),'') AS CARIALIAS, " +
                 "ISNULL((SELECT TOP 1 eir_sofor_adi FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS SOFORADI, " +
                 "ISNULL((SELECT TOP 1 eir_sofor_soyadi FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS SOFORSOYADI, " +
                 "ISNULL((SELECT TOP 1 eir_tasiyici_arac_plaka FROM E_IRSALIYE_DETAYLARI WHERE eir_evrakno_seri = sth_evrakno_seri AND eir_evrakno_sira = sth_evrakno_sira AND eir_evrak_tip = 1),'') AS ARACPLAKA, " +
@@ -4598,6 +4601,12 @@ var QuerySql =
         query : "UPDATE E_IRSALIYE_DETAYLARI SET eir_uuid = @eir_uuid WHERE eir_evrak_tip = 1 AND eir_tipi = 3 AND eir_evrakno_seri = @eir_evrakno_seri AND eir_evrakno_sira = @eir_evrakno_sira", 
         param: ['eir_uuid','eir_evrakno_seri','eir_evrakno_sira'],
         type:  ['string|50','string|25','int']
+    }, 
+    EIrsGetir : 
+    {
+        query : "SELECT * FROM E_IRSALIYE_DETAYLARI WHERE eir_evrak_tip = 1 AND eir_evrakno_seri = @eir_evrakno_seri AND eir_evrakno_sira = @eir_evrakno_sira", 
+        param: ['eir_evrakno_seri','eir_evrakno_sira'],
+        type:  ['string|25','int']
     }, 
     //#region "AKTARIM"
     AdresTbl : 
@@ -4836,6 +4845,12 @@ var QuerySql =
                  "INNER JOIN BARKOD_TANIMLARI AS BARKOD WITH (NOLOCK,INDEX=NDX_BARKOD_TANIMLARI_02) ON " +
                  "STOK.sto_kod = BARKOD.bar_stokkodu"
     },
+    FiyatListeTbl :
+    {
+        query : "SELECT sfl_sirano AS LISTENO, " + 
+        "sfl_aciklama AS LISTEADI " +
+        "FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI "  
+    },
     IsEmirleriTbl :
     {
         query : "SELECT is_Kod AS KODU, " +
@@ -4858,7 +4873,9 @@ var QuerySql =
     },
     KasaTbl :
     {
-        query : "kas_kod AS KASAKODU, " +
+        query : 
+                "SELECT " +
+                "kas_kod AS KASAKODU, " +
                 "kas_isim AS KASAISMI, " +
                 "kas_tip AS KASATIP, " +
                 "kas_doviz_cinsi AS KASADOVIZCINSI, " +
