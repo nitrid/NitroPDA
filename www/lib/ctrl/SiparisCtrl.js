@@ -822,11 +822,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             if(typeof(InsertResult.result.err) == 'undefined')
             {                                        
                 db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(SiparisData)
-<<<<<<< HEAD
-                {   
-=======
                 {
->>>>>>> 4498ae21a973b3bc22ad1cc8b4d32a69e8b1bfa1
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
                         BedenHarInsert(InsertResult.result.recordset[0].sip_Guid);

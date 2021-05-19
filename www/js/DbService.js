@@ -170,16 +170,7 @@ angular.module('app.db', []).service('db',function($rootScope)
         else
         {            
             TmpQuery = JSON.parse(JSON.stringify(window["QueryLocal"][pParam.tag]));
-            function uuidv4() 
-            {
-                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                  var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                  return v.toString(16);
-                });
-            }
-            TmpQuery.query = TmpQuery.query.replace('@guid',uuidv4().toUpperCase());
-            console.log(uuidv4().toUpperCase())
-            console.log(TmpQuery.query)
+            
             if (typeof (TmpQuery.param) != 'undefined')
             {
                 for(i = 0;i < TmpQuery.param.length;i++)

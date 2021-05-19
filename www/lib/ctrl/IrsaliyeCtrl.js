@@ -84,7 +84,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.ProjeGetirParam = UserParam[ParamName].ProjeGetir;
         $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.Risk = 0;
-        $scope.RiskLimit = 0; 
+        $scope.RiskLimit = 0;
         $scope.FisDizaynTip = "0";
         $scope.SonSatisMiktar = "0";
 
@@ -550,6 +550,56 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             rowClick: function(args)
             {
                 $scope.ProjeEvrakListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitStokHarGrid()
+    {
+        $("#TblStokHarListe").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.StokHarGonderListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: 
+            [
+            {
+                name: "sth_evrakno_seri",
+                title: "SERI",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "sth_evrakno_sira",
+                title: "SIRA",
+                type: "number",
+                align: "center",
+                width: 75
+            },
+            {
+                name: "sth_cari_kod",
+                title: "CARİ KODU",
+                type: "number",
+                align: "center",
+                width: 150
+            },
+            {
+                name: "sth_tutar",
+                title: "TUTAR",
+                type: "number",
+                align: "center",
+                width: 100
+            }
+           ],
+            rowClick: function(args)
+            {
                 $scope.$apply();
             }
         });
@@ -1218,10 +1268,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         InitPartiLotGrid();
         InitDizaynGrid();
         InitProjeEvrakGetirGrid();
+        InitStokHarGrid();
 
         $scope.FiyatListeNo = UserParam[ParamName].FiyatListe;
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
+        $scope.OfflineSira = UserParam[ParamName].OfflineSira;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.CmbEvrakTip = UserParam[ParamName].EvrakTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
@@ -1249,7 +1301,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 TOPTUTAR :0
             }
         ];
-        
         if($scope.CariKodu != "")
         {
             db.GetData($scope.Firma,'CariListeGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
@@ -1263,7 +1314,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.CariListeRowClick(0,Item,Obj);
             });
         }
-
         db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(data)
         {
             $scope.DepoListe = data; 
@@ -1293,7 +1343,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 if(item.KODU == $scope.Personel)
                   $scope.PersonelAdi = item.ADI;
             });
-        });    
+        });
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
         db.GetPromiseTag($scope.Firma,'FiyatListeGetir',[$scope.PersonelTip],function(data)
@@ -2082,7 +2132,24 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Cins = 2;
             }
         }
-        await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        if(localStorage.mode == 'false')
+        {
+            let TabloSira = await db.GetPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip]);
+            console.log(TabloSira)
+            if(typeof TabloSira == "undefined")
+            {
+                $scope.OfflineSira = parseInt($scope.OfflineSira) + 1;
+               $scope.Sira = $scope.OfflineSira
+            }
+            else
+            {
+                await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+            }
+        }
+        else
+        {
+            await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+        }
     }
     $scope.BirimChange = function()
     {
@@ -3136,5 +3203,197 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             "Tutar" : parseFloat($scope.GenelToplam.toFixed(2))
         }
         localStorage.IrsaliyeParam = JSON.stringify(Param);
+    }
+    $scope.BtnGonder = function()
+    {
+        db.GetData($scope.Firma,'StokHareketGonderGetir',[$scope.Tip,$scope.Cins],function(Data)
+        {
+            $scope.StokHareketGonderListe = Data;
+            console.log(Data)
+            if($scope.StokHareketGonderListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStokHarListe").jsGrid({data : $scope.StokHareketGonderListe});
+                $("#TblStokHarListe").jsGrid({pageIndex: true});
+                $("#MdlGonder").modal('show');
+            }
+            else
+            {
+                alertify.alert("Evrak Bulunamadı");
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStokHarListe").jsGrid({data : $scope.StokHareketGonderListe});
+                $("#TblStokHarListe").jsGrid({pageIndex: true});
+            }   
+        });
+    }
+    $scope.EvrakGonder = async function()
+    {
+        if(localStorage.mode == 'false')
+        {
+            let Status = await db.ConnectionPromise()
+            if(!Status)
+            {
+                alertify.okBtn("Tamam");
+                alertify.alert("Bağlantı Problemi !");
+                return;
+            }
+            
+            for (let i = 0; i < $scope.StokHareketGonderListe.length; i++) 
+            {
+                let TmpStatus = true
+                let TmpStokHarData = await db.GetPromiseTag($scope.Firma,'StokHarGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira,$scope.StokHareketGonderListe[i].sth_tip,0]);
+                let TmpBedenData = await db.GetPromiseTag($scope.Firma,'StokBedenHarGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira,$scope.StokHareketGonderListe[i].sth_tip,9]);
+                
+                localStorage.mode = 'true';
+                let TmpMaxSira = await db.GetPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_tip,$scope.StokHareketGonderListe[i].sth_cins])
+                for (let m = 0; m < TmpStokHarData.length; m++)
+                {
+                    let InsertData = 
+                    [
+                        TmpStokHarData[m].sth_create_user,
+                        TmpStokHarData[m].sth_lastup_user,
+                        TmpStokHarData[m].sth_firmano, //FIRMA NO
+                        TmpStokHarData[m].sth_subeno, //ŞUBE NO
+                        TmpStokHarData[m].sth_tarih,
+                        TmpStokHarData[m].sth_tip,
+                        TmpStokHarData[m].sth_cins, //CİNSİ
+                        TmpStokHarData[m].sth_normal_iade,
+                        TmpStokHarData[m].sth_evraktip,
+                        TmpStokHarData[m].sth_evrakno_seri,
+                        TmpMaxSira[0].MAXEVRSIRA,
+                        TmpStokHarData[m].sth_belge_no,
+                        TmpStokHarData[m].sth_belge_tarih,
+                        TmpStokHarData[m].sth_stok_kod,
+                        TmpStokHarData[m].sth_isk_mas1,
+                        TmpStokHarData[m].sth_isk_mas2,
+                        TmpStokHarData[m].sth_isk_mas3,
+                        TmpStokHarData[m].sth_isk_mas4,
+                        TmpStokHarData[m].sth_isk_mas5,
+                        TmpStokHarData[m].sth_isk_mas6,
+                        TmpStokHarData[m].sth_isk_mas7,
+                        TmpStokHarData[m].sth_isk_mas8,
+                        TmpStokHarData[m].sth_isk_mas9,
+                        TmpStokHarData[m].sth_isk_mas10,
+                        TmpStokHarData[m].sth_sat_iskmas1,
+                        TmpStokHarData[m].sth_sat_iskmas2,
+                        TmpStokHarData[m].sth_sat_iskmas3,
+                        TmpStokHarData[m].sth_sat_iskmas4,
+                        TmpStokHarData[m].sth_sat_iskmas5,
+                        TmpStokHarData[m].sth_sat_iskmas6,
+                        TmpStokHarData[m].sth_sat_iskmas7,
+                        TmpStokHarData[m].sth_sat_iskmas8,
+                        TmpStokHarData[m].sth_sat_iskmas9,
+                        TmpStokHarData[m].sth_sat_iskmas10,
+                        TmpStokHarData[m].sth_cari_cinsi,
+                        TmpStokHarData[m].sth_cari_kodu,
+                        TmpStokHarData[m].sth_isemri_gider_kodu,
+                        TmpStokHarData[m].sth_plasiyer_kodu,
+                        TmpStokHarData[m].sth_har_doviz_cinsi,
+                        TmpStokHarData[m].sth_har_doviz_kuru,
+                        TmpStokHarData[m].sth_alt_doviz_kuru,
+                        TmpStokHarData[m].sth_stok_doviz_cinsi,
+                        TmpStokHarData[m].sth_stok_doviz_kuru,
+                        TmpStokHarData[m].sth_miktar,
+                        TmpStokHarData[m].sth_miktar2,
+                        TmpStokHarData[m].sth_birim_pntr,
+                        TmpStokHarData[m].sth_tutar,
+                        TmpStokHarData[m].sth_iskonto1,
+                        TmpStokHarData[m].sth_iskonto2,
+                        TmpStokHarData[m].sth_iskonto3,
+                        TmpStokHarData[m].sth_iskonto4,
+                        TmpStokHarData[m].sth_iskonto5,
+                        TmpStokHarData[m].sth_iskonto6,
+                        TmpStokHarData[m].sth_masraf1,
+                        TmpStokHarData[m].sth_masraf2,
+                        TmpStokHarData[m].sth_masraf3,
+                        TmpStokHarData[m].sth_masraf4,
+                        TmpStokHarData[m].sth_vergi_pntr, 
+                        TmpStokHarData[m].sth_vergi, 
+                        TmpStokHarData[m].sth_masraf_vergi_pntr,
+                        TmpStokHarData[m].sth_masraf_vergi,
+                        TmpStokHarData[m].sth_odeme_op,
+                        TmpStokHarData[m].sth_aciklama,
+                        TmpStokHarData[m].sth_sip_uid,
+                        TmpStokHarData[m].sth_fat_uid,
+                        TmpStokHarData[m].sth_giris_depo_no,
+                        TmpStokHarData[m].sth_cikis_depo_no,
+                        TmpStokHarData[m].sth_malkbl_sevk_tarihi,
+                        TmpStokHarData[m].sth_cari_srm_merkezi,
+                        TmpStokHarData[m].sth_stok_srm_merkezi,
+                        TmpStokHarData[m].sth_vergisiz_fl,
+                        TmpStokHarData[m].sth_adres_no,
+                        TmpStokHarData[m].sth_parti_kodu,
+                        TmpStokHarData[m].sth_lot_no,
+                        TmpStokHarData[m].sth_proje_kodu,
+                        TmpStokHarData[m].sth_exim_kodu,
+                        TmpStokHarData[m].sth_disticaret_turu,
+                        TmpStokHarData[m].sth_otvvergisiz_fl,
+                        TmpStokHarData[m].sth_oivvergisiz_fl,
+                        TmpStokHarData[m].sth_fiyat_liste_no,
+                        TmpStokHarData[m].sth_nakliyedeposu,
+                        TmpStokHarData[m].sth_nakliyedurumu,
+                    ];
+                    console.log(InsertData)
+                    let TmpResult = await db.ExecutePromiseTag($scope.Firma,'StokHarInsert',InsertData)
+                    if(typeof(TmpResult.result.err) != 'undefined')
+                    {
+                        TmpStatus = false;
+                    }
+                    let TmpBeden = TmpBedenData.find(x => x.BdnHar_Har_uid == TmpStokHarData[m].sth_Guid)
+                    if(typeof TmpBeden != 'undefined')
+                    {
+                        let InsertDataBdn =
+                        [
+                            TmpBeden.BdnHar_create_user, // KULLANICI
+                            TmpBeden.BdnHar_lastup_user, // KULLANICI
+                            TmpBeden.BdnHar_Tipi, // BEDEN TİP
+                            TmpResult.result.recordset[0].sth_Guid, // GUID
+                            TmpBeden.BdnHar_BedenNo, // BEDEN NO
+                            TmpBeden.BdnHar_HarGor,  // MİKTAR
+                            0, // REZERVASYON MİKTAR
+                            0  // REZERVASYON TESLİM MİKTAR
+                        ]
+                        let TmpBdnResult = await db.ExecutePromiseTag($scope.Firma,'BedenHarInsert',InsertDataBdn)
+                        if(typeof(TmpBdnResult.result.err) != 'undefined')
+                        {
+                            TmpStatus = false;
+                        }
+                    }
+                }
+                
+                localStorage.mode = 'false';
+                if (TmpStatus)
+                {
+                    await db.GetData($scope.Firma,'StokHareketGonderGetir',[],function(Data)
+                    {console.log(Data)});
+                    let TmpUpdateQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query: "UPDATE STOKHAR SET status = 1 WHERE sth_evrakno_seri = '@sth_evrakno_seri' AND sth_evrakno_sira = @sth_evrakno_sira AND sth_tip = '@sth_tip' AND sth_cins = '@sth_cins'" ,
+                        param:  ['sth_evrakno_seri:string|20','sth_evrakno_sira:int','sth_tip:int','sth_cins:int'],
+                        value : [$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira,$scope.StokHareketGonderListe[i].sth_tip,$scope.StokHareketGonderListe[i].sth_cins]
+
+                    }
+                    await db.GetPromiseQuery(TmpUpdateQuery)
+                    
+                    await db.GetData($scope.Firma,'StokHareketGonderGetir',[],function(Data)
+                    {
+                        console.log(Data)
+                        if(Data.length == 0)
+                        {
+                            $("#MdlGonder").modal('hide');
+                            alertify.alert("Aktarım Tamamlandı!")
+                        }
+                    });
+                }
+            }
+        }
+        else
+        {
+            alertify.okBtn("Tamam");
+            alertify.alert("Bu menü sadece offline mod'da çalışır !");
+        }
     }
 }

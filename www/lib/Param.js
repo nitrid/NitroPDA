@@ -203,7 +203,8 @@ var Param = [
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
 			"IskontoMatris": "0",
-			"ProjeGetir": "0"
+			"ProjeGetir": "0",
+			"OfflineSira": "0"
 		},
 		"KonsinyeIrsaliye": {
 			"EvrakTip": "0",
