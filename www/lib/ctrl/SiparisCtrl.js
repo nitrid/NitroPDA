@@ -1790,7 +1790,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 TOPTUTAR :0
             }
         ];
-        
+
         if($scope.CariKodu != "")
         {
             db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
@@ -1838,11 +1838,29 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         });      
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = $scope.OdemePlan;});
-
-        await db.MaxSiraPromiseTag($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
+        
+        if(localStorage.mode == 'true')
         {
-            $scope.Sira = data
-        });
+            await db.MaxSiraPromiseTag($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
+            {
+                $scope.Sira = data
+            });
+        }
+        else
+        {
+            await db.GetPromiseTag($scope.Firma,'SiparisParamGetir',[],function(data)
+            {
+                console.log(data)
+                $scope.Sira = data[0].ALINAN_SIPARIS_SIRA + 1
+                db.MaxSiraPromiseTag($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(SiraData)
+                {
+                    if(SiraData >= $scope.Sira)
+                    {
+                        $scope.Sira = SiraData;
+                    }
+                });
+            });
+        }
 
         if(UserParam.AlinanSiparis.SiparisOnay == "0")
         {

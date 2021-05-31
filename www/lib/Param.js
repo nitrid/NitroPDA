@@ -196,13 +196,13 @@ var Param = [
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
-			"SatisSarti": "0",
+			"SatisSarti": "1",
 			"AlisSarti": "0",
-			"FiyatListe": "7",
+			"FiyatListe": "1",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
-			"IskontoMatris": "0",
+			"IskontoMatris": "1",
 			"ProjeGetir": "0",
 			"OfflineSira": "0"
 		},
@@ -278,7 +278,7 @@ var Param = [
 		},
 		"Menu": {
 			"Stok Detay": "0",
-			"Sayım Fişi": "0",
+			"Sayım Fişi": "1",
 			"Cari Listesi": "0",
 			"Fire": "0",
 			"Cari Ekle": "0",
@@ -323,7 +323,8 @@ var Param = [
 			"Konsinye İrsaliye": "0",
 			"Cari Analiz": "0",
 			"Is Emri Depo Sevk": "0",
-			"Sipariş Operasyonları": "0"
+			"Sipariş Operasyonları": "0",
+			"Proforma Alınan Siparis": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "0",
@@ -860,5 +861,5 @@ var Param = [
 			"EksiyeDusme": "0",
 			"IskontoMatris": "0"
 		}
-	},
+	}
 ]

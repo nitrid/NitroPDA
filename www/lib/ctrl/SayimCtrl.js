@@ -279,6 +279,42 @@ function SayimCtrl($scope,$window,$timeout,db)
             }
         });
     }
+    function InitStokHarGrid()
+    {
+        $("#TblStokHarListe").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.StokHarGonderListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: 
+            [
+            {
+                name: "sym_evrakno",
+                title: "EVRAKNO",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "sym_tarihi",
+                title: "TARİH",
+                type: "number",
+                align: "center",
+                width: 75
+            },
+           ],
+            rowClick: function(args)
+            {
+                $scope.$apply();
+            }
+        });
+    }
     function ToplamMiktarHesapla()
     {
        $scope.ToplamMiktar1 = 0;
@@ -337,6 +373,7 @@ function SayimCtrl($scope,$window,$timeout,db)
         {    
             if(typeof(InsertResult.result.err) == 'undefined')
             {     
+                console.log(localStorage.mode)
                 if(localStorage.mode == 'true')
                 {
                     $scope.SayimListe.push(InsertResult.result.recordset[0]);
@@ -352,8 +389,8 @@ function SayimCtrl($scope,$window,$timeout,db)
                     db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
                     {
                         $scope.SayimListe.push(SayimData[0]);
-                        InsertAfterRefresh($scope.SayimListe);     
-                        $scope.InsertLock = false  
+                        InsertAfterRefresh(SayimData);
+                        $scope.InsertLock = false
                         if(UserParam.Sistem.Titresim == 1)
                         {
                             Confirmation();
@@ -611,6 +648,7 @@ function SayimCtrl($scope,$window,$timeout,db)
         InitIslemGrid();
         InitStokGrid();
         InitPartiLotGrid();
+        InitStokHarGrid();
 
         $scope.EvrakLock = false;
         $scope.DepoNo = UserParam.Sayim.DepoNo;
@@ -637,7 +675,6 @@ function SayimCtrl($scope,$window,$timeout,db)
         
        await db.MaxSiraPromiseTag($scope.Firma,'MaxSayimSira',[$scope.DepoNo,$scope.Tarih],function(data)
         {  
-            console.log(data)
             $scope.EvrakNo = data;
         });
         BarkodFocus();
@@ -919,7 +956,6 @@ function SayimCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnDuzenleKaydet = function(pIndex)
     {
-
         $scope.Update(pIndex);
         angular.element('#MdlDuzenle').modal('hide');
     }
@@ -1284,59 +1320,107 @@ function SayimCtrl($scope,$window,$timeout,db)
                 $scope.DepoAdi = item.ADI;
         });
     }
+    $scope.BtnGonder = function()
+    {
+        db.GetData($scope.Firma,'SayimHareketGonderGetir',[],function(Data)
+        {
+            $scope.SayimHareketGonderListe = Data;
+            console.log(Data)
+            if($scope.SayimHareketGonderListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStokHarListe").jsGrid({data : $scope.SayimHareketGonderListe});
+                $("#TblStokHarListe").jsGrid({pageIndex: true});
+                $("#MdlGonder").modal('show');
+            }
+            else
+            {
+                alertify.alert("Evrak Bulunamadı");
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStokHarListe").jsGrid({data : $scope.SayimHareketGonderListe});
+                $("#TblStokHarListe").jsGrid({pageIndex: true});
+            }   
+        });
+    }
     $scope.EvrakGonder = async function()
     {
         if(localStorage.mode == 'false')
         {
-            await db.ConnectionPromise(function(Status)
-            {
-                if(!Status)
-                {
-                    alertify.okBtn("Tamam");
-                    alertify.alert("Bağlantı Problemi !");
-                    return;
-                }
-            });
-
-            AktarimSiraGetir($scope.SayimListe[0].sym_evrakno,$scope.SayimListe[0].sym_tarihi,$scope.SayimListe[0].sym_depono,async function(EvrakNo)
+            let Status = await db.ConnectionPromise()
+            if(!Status)
             {
                 alertify.okBtn("Tamam");
-                alertify.alert("Sayım fişi aktarımı başladı.");
+                alertify.alert("Bağlantı Problemi !");
+                return;
+            }
 
-                for(i = 0;i < $scope.SayimListe.length;i++)
+            for (let i = 0; i < $scope.SayimHareketGonderListe.length; i++) 
+            {
+                let TmpStatus = true
+                let TmpSayimData = await db.GetPromiseTag($scope.Firma,'SayimGetir',[$scope.SayimHareketGonderListe[i].sym_depono,$scope.SayimHareketGonderListe[i].sym_evrakno,$scope.SayimHareketGonderListe[i].sym_tarihi]);
+                localStorage.mode = 'true';
+                let TmpMaxSira = await db.GetPromiseTag($scope.Firma,'MaxSayimSira',[$scope.SayimHareketGonderListe[i].sym_depono,$scope.SayimHareketGonderListe[i].sym_tarihi]);
+                for(let m = 0;m < TmpSayimData.length;m++)
                 {
-                    localStorage.mode = 'true';
-
+                    console.log(TmpSayimData[m].sym_tarihi)
                     var InsertData = 
                     [
-                        $scope.SayimListe[i].sym_create_user,
-                        $scope.SayimListe[i].sym_lastup_user,
-                        $scope.SayimListe[i].sym_tarihi,
-                        $scope.SayimListe[i].sym_depono,
-                        EvrakNo,
-                        $scope.SayimListe[i].sym_Stokkodu,
-                        $scope.SayimListe[i].sym_miktar1,
-                        $scope.SayimListe[i].sym_birim_pntr,
-                        $scope.SayimListe[i].sym_barkod,
-                        $scope.SayimListe[i].sym_renkno,
-                        $scope.SayimListe[i].sym_bedenno,
-                        $scope.SayimListe[i].sym_parti_kodu,
-                        $scope.SayimListe[i].sym_lot_no,
-                        $scope.SayimListe[i].sym_serino
+                        TmpSayimData[m].sym_create_user,
+                        TmpSayimData[m].sym_lastup_user,
+                        TmpSayimData[m].sym_tarihi,
+                        TmpSayimData[m].sym_depono,
+                        TmpMaxSira[0].MAXEVRSIRA,
+                        TmpSayimData[m].sym_Stokkodu,
+                        TmpSayimData[m].sym_miktar1,
+                        0,
+                        TmpSayimData[m].sym_birim_pntr,
+                        TmpSayimData[m].sym_barkod,
+                        TmpSayimData[m].sym_renkno,
+                        TmpSayimData[m].sym_bedenno,
+                        TmpSayimData[m].sym_parti_kodu,
+                        TmpSayimData[m].sym_lot_no,
+                        TmpSayimData[m].sym_serino
                     ];
-                    
+                    console.log(InsertData)
+                   
                     await db.ExecutePromiseTag($scope.Firma,'SayimInsert',InsertData,function(InsertResult)
                     {    
                         if(typeof(InsertResult.result.err) != 'undefined')
                         {
                             console.log(InsertResult.result.err);
+                            TmpStatus = false;
                         }
-                        localStorage.mode = 'false';
-                    });    
+                    });  
                 }
 
-                alertify.alert("Sayım fişi aktarımı tamamlandı.");
-            });
+                localStorage.mode = 'false';
+                if (TmpStatus)
+                {
+                    console.log("GİRDİ")
+                    let TmpUpdateQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query: "UPDATE SAYIM SET status = 1 WHERE sym_evrakno = @sym_evrakno AND sym_create_date = '@sym_tarihi' " ,
+                        param:  ['sym_evrakno:int','sym_tarihi:date'],
+                        value : [$scope.SayimHareketGonderListe[i].sym_evrakno,$scope.SayimHareketGonderListe[i].sym_tarihi]
+                    }
+                    console.log($scope.SayimHareketGonderListe[i].sym_tarihi)
+                    console.log(TmpUpdateQuery)
+                    await db.GetPromiseQuery(TmpUpdateQuery)
+                    
+                    await db.GetData($scope.Firma,'SayimHareketGonderGetir',[],function(Data)
+                    {
+                        console.log(Data)
+                        if(Data.length == 0)
+                        {
+                            $("#MdlGonder").modal('hide');
+                            alertify.alert("Aktarım Tamamlandı!")
+                        }
+                    });
+                }
+            }
         }
         else
         {

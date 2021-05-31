@@ -770,10 +770,10 @@ angular.module('app.db', []).service('db',function($rootScope)
             FiyatParam[1] = pFiyatParam.CariFiyatListe;
         else
             FiyatParam[1] = pFiyatParam.FiyatListe;
-        
         // FİYAT GETİR
         await _GetPromiseTag(pFirma,'FiyatGetir',FiyatParam,function(FiyatData)
         {   
+            console.log(FiyatData)
             if(FiyatData.length > 0)
             {   
                 console.log(FiyatData)
@@ -784,8 +784,8 @@ angular.module('app.db', []).service('db',function($rootScope)
             else
             {
                 BarkodData[0].FIYAT = 0;
-            }            
-        });        
+            }
+        });
 
         // İSKONTO MATRİS
         if(pEvrParam.IskontoMatris == "1")

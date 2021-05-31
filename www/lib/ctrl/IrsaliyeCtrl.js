@@ -584,7 +584,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 width: 75
             },
             {
-                name: "sth_cari_kod",
+                name: "sth_cari_kodu",
                 title: "CARİ KODU",
                 type: "number",
                 align: "center",
@@ -758,12 +758,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.Miktar2,
             $scope.Stok[0].BIRIMPNTR,
             $scope.Stok[0].TUTAR,
-            0, // İSKONTO 1
-            0, // İSKONTO 2
-            0, // İSKONTO 3
-            0, // İSKONTO 4
-            0, // İSKONTO 5
-            0, // İSKONTO 6
+            $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+            $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+            $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+            $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+            $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+            $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
             0, // MASRAF 1
             0, // MASRAF 2
             0, // MASRAF 3
@@ -794,7 +794,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             0,  //NAKLİYEDEPO
             0   // NAKLİYEDURUMU
         ];
-        console.log($scope.Sorumluluk)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {  
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -926,6 +925,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Stok[0].FIYAT = 0;
                     $scope.Stok[0].TUTAR = 0;
                     $scope.Stok[0].INDIRIM = 0;
+                    $scope.Stok[0].ISK = {ORAN1: 0,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
+
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
                     //----------OFFLINE ICIN GEÇİCİ OLARAK KAPATILDI------------\\ 
@@ -1009,6 +1010,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     
                     await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()
                     {   
+                        console.log(FiyatParam)
                         $scope.MiktarFiyatValid(); 
                         $scope.BarkodLock = true;
                         $scope.$apply();
@@ -1681,9 +1683,45 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.MiktarFiyatValid = function()
     {
-        $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
-        $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
-        $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
+        if($scope.CmbEvrakTip != 5)
+        {
+            $scope.Stok[0].INDIRIM = 0;
+    
+            $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
+            $scope.Stok[0].ISK.TUTAR1 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100);
+            $scope.Stok[0].ISK.TIP1 = $scope.Stok[0].ISK.TUTAR1 === 0 ? 0 : 1; 
+            $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100));       
+            
+            $scope.Stok[0].ISK.TUTAR2 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN2 / 100);
+            $scope.Stok[0].ISK.TIP2 = $scope.Stok[0].ISK.TUTAR2 === 0 ? 0 : 1;
+            $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN2 / 100));
+            
+            $scope.Stok[0].ISK.TUTAR3 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN3 / 100);
+            $scope.Stok[0].ISK.TIP3 = $scope.Stok[0].ISK.TUTAR3 === 0 ? 0 : 1;
+            $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN3 / 100));
+            
+            $scope.Stok[0].ISK.TUTAR4 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN4 / 100);
+            $scope.Stok[0].ISK.TIP4 = $scope.Stok[0].ISK.TUTAR4 === 0 ? 0 : 1;
+            $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN4 / 100));
+            
+            $scope.Stok[0].ISK.TUTAR5 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN5 / 100);
+            $scope.Stok[0].ISK.TIP5 = $scope.Stok[0].ISK.TUTAR5 === 0 ? 0 : 1;
+            $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN5 / 100));
+            
+            $scope.Stok[0].ISK.TUTAR6 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100);
+            $scope.Stok[0].ISK.TIP6 = $scope.Stok[0].ISK.TUTAR6 === 0 ? 0 : 1;
+            $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100));
+    
+            $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
+            $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
+        }
+        else
+        {
+            $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
+            $scope.Stok[0].KDV = 0;
+            $scope.Stok[0].TOPTUTAR = $scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM;
+            $scope.Stok[0].TOPTANVERGIPNTR = 0;
+        }
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -2259,12 +2297,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                     0,
                                     TmpFiyat * TmpMiktar,
                                     $scope.Stok[0].TOPTANVERGIPNTR,
-                                    0, //ISKONTO TUTAR 1
-                                    0, //ISKONTO TUTAR 2
-                                    0, //ISKONTO TUTAR 3
-                                    0, //ISKONTO TUTAR 4
-                                    0, //ISKONTO TUTAR 5
-                                    0, //ISKONTO TUTAR 6
+                                    value.sth_iskonto1 + $scope.Stok[0].ISK.TUTAR1, //ISKONTO TUTAR 1
+                                    value.sth_iskonto2 + $scope.Stok[0].ISK.TUTAR2, //ISKONTO TUTAR 2
+                                    value.sth_iskonto3 + $scope.Stok[0].ISK.TUTAR3, //ISKONTO TUTAR 3
+                                    value.sth_iskonto4 + $scope.Stok[0].ISK.TUTAR4, //ISKONTO TUTAR 4
+                                    value.sth_iskonto5 + $scope.Stok[0].ISK.TUTAR5, //ISKONTO TUTAR 5
+                                    value.sth_iskonto6 + $scope.Stok[0].ISK.TUTAR6, //ISKONTO TUTAR 6
                                     0, //SATIR ISKONTO TİP 1
                                     0, //SATIR ISKONTO TİP 2
                                     0, //SATIR ISKONTO TİP 3
@@ -3366,8 +3404,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 localStorage.mode = 'false';
                 if (TmpStatus)
                 {
-                    await db.GetData($scope.Firma,'StokHareketGonderGetir',[],function(Data)
-                    {console.log(Data)});
                     let TmpUpdateQuery = 
                     {
                         db : '{M}.' + $scope.Firma,
@@ -3380,7 +3416,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     
                     await db.GetData($scope.Firma,'StokHareketGonderGetir',[],function(Data)
                     {
-                        console.log(Data)
                         if(Data.length == 0)
                         {
                             $("#MdlGonder").modal('hide');

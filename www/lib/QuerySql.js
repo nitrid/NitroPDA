@@ -5454,6 +5454,8 @@ var QuerySql =
         query : "SELECT " +
         "@menudata AS MENUDATA, " +
         "(SELECT ISNULL(MAX(sym_evrakno),0) AS MAXEVRSIRA FROM SAYIM_SONUCLARI WHERE sym_depono = @sym_depono AND sym_tarihi = @sym_tarihi) AS SAYIM_SIRA, " +
+        "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri='FTR' AND sth_evraktip = 4) AS SATIS_FATURA_SIRA " +
+        "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri='IRS' AND sth_evraktip = 1) SATIS_IRSALIYE_SIRA" +
         "(SELECT ISNULL(MAX(sip_evrakno_sira),0) AS MAXEVRSIRA FROM SIPARISLER WHERE sip_evrakno_seri=@sip_evrakno_seri AND sip_tip = 0 AND sip_cins = 0) AS ALINAN_SIPARIS_SIRA ",
         param : ['menudata:string|max','sym_depono:int','sym_tarihi:date','sip_evrakno_seri:string|10'] 
     }   

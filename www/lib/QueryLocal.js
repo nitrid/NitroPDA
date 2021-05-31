@@ -14,6 +14,10 @@ var QueryLocal =
     {
         query : "SELECT * FROM PARAM"
     },
+    SiparisParamGetir:
+    {
+        query : "SELECT ALINAN_SIPARIS_SIRA FROM PARAM"
+    },
     CmbAdresNo : 
     {
         query : "SELECT " +
@@ -872,7 +876,8 @@ var QueryLocal =
                "sym_bedenno, " +
                "sym_parti_kodu, " +
                "sym_lot_no, " +
-               "sym_serino " +
+               "sym_serino, " +
+               "status " +
                ")  VALUES ( " +
                "0," + 
                "0," + 
@@ -908,7 +913,8 @@ var QueryLocal =
                "@sym_bedenno," + 
                "'@sym_parti_kodu'," + 
                "@sym_lot_no," + 
-               "'@sym_serino') ",
+               "'@sym_serino', " +
+               "0)",
         param : ['sym_create_user','sym_lastup_user','sym_tarihi','sym_depono','sym_evrakno','sym_Stokkodu',
                 'sym_miktar1','sym_miktar2','sym_birim_pntr','sym_barkod','sym_renkno','sym_bedenno',
                 'sym_parti_kodu','sym_lot_no','sym_serino']
@@ -933,7 +939,7 @@ var QueryLocal =
     },
     MaxSayimSira :
     {
-        query : "SELECT IFNULL(MAX(sym_evrakno),?) + 1 AS MAXEVRSIRA FROM SAYIM " +
+        query : "SELECT IFNULL(MAX(sym_evrakno),0) + 1 AS MAXEVRSIRA FROM SAYIM " +
                 "WHERE sym_depono = ? AND sym_tarihi = ? " 
     },
     SayimSeriGetir :
@@ -1458,6 +1464,10 @@ var QueryLocal =
     CariHareketGonderGetir:
     {
         query:  "SELECT status AS STATUS,* FROM CARIHAR WHERE status = 0 GROUP BY cha_evrakno_seri,cha_evrakno_sira",
+    },
+    SayimHareketGonderGetir:
+    {
+        query:  "SELECT status AS STATUS,* FROM SAYIM WHERE status = 0 GROUP BY sym_evrakno",
     },
     //Stok Hareket
     StokHarGetir :
@@ -3109,8 +3119,9 @@ var QueryLocal =
                 "sym_bedenno int," +
                 "sym_parti_kodu nvarchar (25)," +
                 "sym_lot_no int," +
-                "sym_serino nvarchar (25))", 
-        insert : "INSERT INTO SAYIM VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                "sym_serino nvarchar (25)," +
+                "status bit)",
+        insert : "INSERT INTO SAYIM VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
     SenetCekTbl : 
     {
