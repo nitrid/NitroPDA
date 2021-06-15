@@ -2,6 +2,7 @@
 {
     $scope.Firma = $window.sessionStorage.getItem('Firma');
     $scope.User = $window.sessionStorage.getItem('User');
+    let UserParam;
     $rootScope.Lock = false;
     $rootScope.LoadingShow = function() 
     {
@@ -94,7 +95,8 @@
     }
     $scope.Init = function()
     {
-        
+        UserParam = Param[$window.sessionStorage.getItem('User')];
+        $scope.DepoNo = 1;
         if(typeof localStorage.FaturaParam != 'undefined')
         {
             localStorage.removeItem("FaturaParam");
@@ -119,4 +121,130 @@
             });
         }
     }
+    $scope.BtnMenuDbTransfer = async function()
+    {   
+        $scope.Firm = $window.sessionStorage.Firma;
+        if(localStorage.mode == 'false')
+        {
+            $('#vt-aktarim').modal("show");
+            let Status = await db.ConnectionPromise()
+            if(!Status)
+            {
+                alertify.okBtn("Tamam");
+                alertify.alert("Bağlantı Problemi !");
+                return;
+            }
+            db.Connection(function(data)
+            {
+                if(data == true)
+                {
+                    $scope.IsDbCreateWorking = false;
+                    $scope.TransferEventMaster = "";
+                    $scope.TransferEventAlt = "";
+                    $scope.TransferEventProgress = 0;
+                    db.Emit('QMikroDb',QuerySql.Firma,(data) =>
+                    {
+                        if(typeof data.result.err == 'undefined')
+                        {
+                            $scope.VtFirm = $scope.Firm;
+                            $scope.VtFirmList = data.result.recordset;
+                            db.Disconnect();
+
+                            setTimeout(function () 
+                            {
+                                $('select').selectpicker('refresh');
+                            },500)
+                            $scope.BtnDbCreate();
+                        }
+                    });
+                }
+            });
+        }
+        else
+        {
+            alertify.okBtn("Tamam");
+            alertify.alert("Online Mod'da iken çalıştıramazsın");
+        }
+    }
+    $scope.BtnDbCreate = function()
+    {    
+        db.Connection(function()
+        {
+            $scope.IsDbCreateWorking = true;
+            $scope.TransferEventMaster = "";
+            $scope.TransferEventAlt = "";
+            $scope.TransferEventProgress = 0;
+            
+            db.Emit('GetMenu','',function(pMenuData)
+            {
+                db.LocalDb.Filter.STOK = [$scope.DepoNo,'','','','','','','','','','']
+                db.LocalDb.Filter.PARAM = [pMenuData,UserParam.Sayim.DepoNo,new Date(),UserParam.AlinanSiparis.Seri,UserParam.SatisFatura.Seri,UserParam.SatisIrsaliye.Seri]
+                //QuerySql.StokTbl.value = [$scope.DepoNo];
+                db.LocalDb.Filter.PARTI  = [$scope.DepoNo];
+                QuerySql.NakliyeOnayTbl.value = [$scope.DepoNo];
+
+                db.LocalDb.OpenDatabase($scope.VtFirm,function(data)
+                {
+                    if(data == 2)
+                    {
+                        if(typeof localStorage.localDb == 'undefined')
+                        {
+                            localStorage.localDb = JSON.stringify(JSON.parse('[{"FIRM" : "' + $scope.VtFirm + '"}]'));                            
+                        }
+                        else
+                        {
+                            let TmpDbArr = JSON.parse(localStorage.localDb);
+                            let DuplicArr = TmpDbArr.filter(function(item)
+                            {
+                                if(item.FIRM == $scope.VtFirm)
+                                {
+                                    return item
+                                }
+                            });
+                            
+                            if(DuplicArr.length == 0)
+                            {
+                                TmpDbArr.push({"FIRM" : $scope.VtFirm });
+                                localStorage.localDb = JSON.stringify(TmpDbArr);
+                            }
+                        }
+                        
+                        db.SafeApply($scope,function()
+                        {
+                            $scope.Firma = JSON.parse(localStorage.localDb)[0].FIRM;
+                            $scope.User = "0";
+                            $scope.FirmaList = JSON.parse(localStorage.localDb);
+                            $scope.UserList = Param;                        
+                            $scope.IsDbCreateWorking = false;      
+                        });  
+                        
+                        db.Disconnect();
+                        angular.element('#vt-aktarim').modal('hide');
+                        alertify.alert("<a style='color:#3e8ef7''>" + $scope.DepoNo + " " + "'nolu Deponun Stok Aktarımı Tamamlandı.. !" + "</a>" );
+                        
+                    }
+                                    
+                });
+            });
+
+            
+        });
+        if(db.SocketConnected)
+        {
+            
+            //$scope.$apply();
+        }
+    }
+    db.LocalDb.On('TransferEvent',function(e)
+    {   
+        db.SafeApply($scope,function()
+        {
+            $scope.TransferEventMaster = e.MasterMsg;
+            $scope.TransferEventAlt = e.AltMsg;
+            if(typeof e.Status != 'undefined')
+            {
+                $scope.TransferEventProgress = (e.Status.index / e.Status.count) * 100;
+            }        
+        });     
+    });
 }

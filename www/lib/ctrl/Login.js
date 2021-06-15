@@ -287,7 +287,7 @@ function Login ($scope,$rootScope,$window,db)
             db.Emit('GetMenu','',function(pMenuData)
             {
                 db.LocalDb.Filter.STOK = [$scope.DepoNo,'','','','','','','','','','']
-                db.LocalDb.Filter.PARAM = [pMenuData,UserParam.Sayim.DepoNo,new Date(),UserParam.AlinanSiparis.Seri]
+                db.LocalDb.Filter.PARAM = [pMenuData,UserParam.Sayim.DepoNo,new Date(),UserParam.AlinanSiparis.Seri,UserParam.SatisFatura.Seri,UserParam.SatisIrsaliye.Seri]
                 //QuerySql.StokTbl.value = [$scope.DepoNo];
                 db.LocalDb.Filter.PARTI  = [$scope.DepoNo];
                 QuerySql.NakliyeOnayTbl.value = [$scope.DepoNo];

@@ -109,13 +109,19 @@
             <i ng-click="BtnMain()" class="fas fa-lg fa-home"></i>
             <span class="navbar-brand-text hidden-xs-down"></span>
         </div>
-        <button type="button" class="navbar-toggler" >
-          <i ng-click="BtnMain()" class="icon wb-refresh" aria-hidden="true"></i>
-        </button>
         <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-collapse"
         data-toggle="collapse">
         <i class="icon wb-more-horizontal" aria-hidden="true"></i>
-      </button>
+        </button>
+        <!-- ... -->
+        <div class="collapse" id="site-navbar-collapse">
+          <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
+            <span class="hamburger-bar"></span>
+          </button>
+          <div class="col-16 px-1">
+            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BtnMenuDbTransfer()">Veri Tabanını Güncelle</button>
+          </div>
+        </div>
         <div class="navbar-container container-fluid">
           <!-- Navbar Collapse -->
           <div class="collapse navbar-collapse navbar-collapse-toolbar" id="site-navbar-collapse">
@@ -199,7 +205,42 @@
         <div ng-view></div>
     </div>
     <!-- Sayfa Bitir -->
-
+    <div class="modal fade" id="vt-aktarim" role="dialog" tabindex="-1" data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-simple">
+        <div class="modal-content modal-center">
+          <div class="modal-header" >
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-disabled="IsDbCreateWorking">
+            <span aria-hidden="true">x</span>  
+            </button>
+            <h4 class="modal-title" id="" >Veri Tabanı Oluştur</h4> 
+          </div>
+          <div class="modal-body">
+              <div class="form-group form-material floating" data-plugin="form-material">
+                  <select required id="firma-secim" class="form-control ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" ng-model="VtFirm" ng-disabled="IsDbCreateWorking">
+                      <option ng-repeat="option in VtFirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
+                  </select> 
+              </div>
+                <!-- <div class="row">                    
+                  <a class="btn btn-primary btn-block col-lg-12 col-sm-12 col-xl-12" href="#" ng-click="BtnDbCreate()" ng-show="!IsDbCreateWorking">Oluştur</a>   
+                </div> -->
+              <div class="row">
+                <div class="form-group col-lg-12">
+                  <button type="submit"class="btn btn-primary btn-block col-lg-12 col-sm-12 col-sm-12" href="#" ng-click="BtnDbCreate()" ng-show="!IsDbCreateWorking">Oluştur</button>
+                </div>
+              </div>
+              <div class="row">
+                <h3 class="text-center">{{TransferEventMaster}}</h3>
+                <h4 class="text-center">{{TransferEventAlt}}</h4>
+                <div class="progress-bar progress-bar-striped acrive" aria-valuenow="900" aria-valuemin="0" aria-valuemax="100" ng-attr-style="width: {{TransferEventProgress}}%" role="progressbar">
+                    <span class="sr-onyl">{{TransferEventProgress}} % Tamamlandı</span>
+                </div>
+              </div>
+              <!-- <h2 class="text-center">{{TransferEventProgress | number:0}}</h2> -->
+    
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Script Basla -->
     <!-- Core  -->
     <script src="theme/global/vendor/babel-external-helpers/babel-external-helpers.js"></script>

@@ -1255,7 +1255,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     // {   
     //     await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.DepoNo,$scope.Tarih],function(data){$scope.EvrakNo = data});
     // }
-    $scope.YeniEvrak = function (pAlisSatis)
+    $scope.YeniEvrak = async function (pAlisSatis)
     {
         //ALIŞ = 0 SATIŞ = 1
         if(pAlisSatis == 0)
@@ -1275,7 +1275,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.FiyatListeNo = UserParam[ParamName].FiyatListe;
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
-        $scope.OfflineSira = UserParam[ParamName].OfflineSira;
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.CmbEvrakTip = UserParam[ParamName].EvrakTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
@@ -1355,6 +1354,30 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
             
         }); 
+        if(localStorage.mode == 'true')
+        {
+            await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
+            {
+                $scope.Sira = data
+            });
+        }
+        else
+        {
+            console.log(1)
+            await db.GetPromiseTag($scope.Firma,'IrsaliyeParamGetir',[],function(data)
+            {
+                console.log(data)
+                $scope.Sira = data[0].SATIS_IRSALIYE_SIRA
+                db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(SiraData)
+                {
+                    if(SiraData >= $scope.Sira)
+                    {
+                        $scope.Sira = SiraData;
+                        console.log($scope.Sira)
+                    }
+                });
+            });
+        }
         //db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});       
         
         $scope.EvrakTipChange();
@@ -2147,6 +2170,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.NormalIade = 0;
                 $scope.Tip = 1;
                 $scope.Cins = 0; 
+                console.log($scope.Tip)
             }
             else if($scope.CmbEvrakTip == 2) //Perakende Satis İade
             {
@@ -2170,23 +2194,29 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Cins = 2;
             }
         }
-        if(localStorage.mode == 'false')
-        {
-            let TabloSira = await db.GetPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip]);
-            console.log(TabloSira)
-            if(typeof TabloSira == "undefined")
+        if(localStorage.mode == 'true')
             {
-                $scope.OfflineSira = parseInt($scope.OfflineSira) + 1;
-               $scope.Sira = $scope.OfflineSira
-            }
-            else
-            {
-                await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
-            }
+                await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
+                {
+                    $scope.Sira = data
+                });
         }
         else
         {
-            await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
+            console.log(1)
+            await db.GetPromiseTag($scope.Firma,'IrsaliyeParamGetir',[],function(data)
+            {
+                console.log(data)
+                $scope.Sira = data[0].SATIS_IRSALIYE_SIRA
+                db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(SiraData)
+                {
+                    if(SiraData >= $scope.Sira)
+                    {
+                        $scope.Sira = SiraData;
+                        console.log($scope.Sira)
+                    }
+                });
+            });
         }
     }
     $scope.BirimChange = function()
@@ -2840,7 +2870,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
             for(let i=0; i < $scope.DizaynListe.length; i++)
             {
-                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI,30) + " " + SpaceLength($scope.DizaynListe[i].SAAT,5) + " " +SpaceLength($scope.DizaynListe[i].SERI + "-" + $scope.DizaynListe[i].SIRA,10) + " " + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),10) + "\n";
+                $scope.GunSonuData = $scope.GunSonuData + SpaceLength($scope.DizaynListe[i].CARIADI,30) + " " +SpaceLength($scope.DizaynListe[i].SERI + "-" + $scope.DizaynListe[i].SIRA,10) + " " + SpaceLength(parseFloat($scope.DizaynListe[i].TUTAR.toFixed(2)),10) + "\n";
             } 
 
             FisDeger = "RAGIP GOKYAR                        "+ $scope.Tarih;
@@ -2906,25 +2936,46 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
 
-        var TmpQuery = 
+        if(localStorage.mode == 'true')
         {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT " +
-                    "sth_evrakno_seri AS SERI, " +
-                    "sth_evrakno_sira AS SIRA, " +
-                    "LEFT(CONVERT(VARCHAR(8),MAX(sth_create_date),108),5) AS SAAT, " +
-                    "MAX(sth_cari_kodu) AS CARIKOD, " +
-                    "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) + ' ' +" +
-                    "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) " +
-                    "AS CARIADI, " +
-                    "ROUND(SUM(sth_tutar),2) TUTAR " +
-                    "FROM STOK_HAREKETLERI  " +
-                    "WHERE sth_tip = 1 AND sth_evraktip = 1 AND sth_cins = 0 AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
-                    "GROUP BY sth_evrakno_seri,sth_evrakno_sira " 
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT " +
+                        "sth_evrakno_seri AS SERI, " +
+                        "sth_evrakno_sira AS SIRA, " +
+                        "LEFT(CONVERT(VARCHAR(8),MAX(sth_create_date),108),5) AS SAAT, " +
+                        "MAX(sth_cari_kodu) AS CARIKOD, " +
+                        "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) + ' ' +" +
+                        "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(sth_cari_kodu)) " +
+                        "AS CARIADI, " +
+                        "ROUND(SUM(sth_tutar),2) TUTAR " +
+                        "FROM STOK_HAREKETLERI  " +
+                        "WHERE sth_tip = 1 AND sth_evraktip = 1 AND sth_cins = 0 AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
+                        "GROUP BY sth_evrakno_seri,sth_evrakno_sira " 
+            }
         }
-
+        else
+        {
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT " +
+                        "sth_evrakno_seri AS SERI, " +
+                        "sth_evrakno_sira AS SIRA, " +
+                        // "LEFT(CONVERT(VARCHAR(8),MAX(sth_create_date),108),5) AS SAAT, " +
+                        "MAX(sth_cari_kodu) AS CARIKOD,  " +
+                        "(SELECT UNVAN1 FROM CARI WHERE KODU = sth_cari_kodu) AS CARIADI,  " +
+                        "ROUND(SUM(sth_tutar),2) TUTAR " +
+                        "FROM STOKHAR  " +
+                        "WHERE sth_tip = 1 AND sth_evraktip = 1 AND sth_cins = 0 AND sth_tarih = date('now') " +
+                        "GROUP BY sth_evrakno_seri,sth_evrakno_sira " 
+            }
+            console.log(TmpQuery)
+        }
         await db.GetPromiseQuery(TmpQuery,async function(Data)
         {
+            console.log(Data)
             $scope.DGenelToplam = db.SumColumn(Data,"TUTAR");
             $scope.DizaynListe = Data;
             $("#TblDizayn").jsGrid({data : $scope.DizaynListe});

@@ -790,6 +790,7 @@ angular.module('app.db', []).service('db',function($rootScope)
         // İSKONTO MATRİS
         if(pEvrParam.IskontoMatris == "1")
         {
+            console.log([BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo])
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
             { 
                 if(Data.length > 0)
@@ -800,6 +801,15 @@ angular.module('app.db', []).service('db',function($rootScope)
                     BarkodData[0].ISK.ORAN4 =  Data[0].ORAN4;
                     BarkodData[0].ISK.ORAN5 =  Data[0].ORAN5;
                     BarkodData[0].ISK.ORAN6 =  Data[0].ORAN6;
+                }
+                else
+                {
+                    BarkodData[0].ISK.ORAN1 = 0
+                    BarkodData[0].ISK.ORAN2 = 0
+                    BarkodData[0].ISK.ORAN3 = 0
+                    BarkodData[0].ISK.ORAN4 = 0
+                    BarkodData[0].ISK.ORAN5 = 0
+                    BarkodData[0].ISK.ORAN6 = 0
                 }
             });
         }

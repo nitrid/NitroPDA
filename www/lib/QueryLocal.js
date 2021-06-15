@@ -18,6 +18,10 @@ var QueryLocal =
     {
         query : "SELECT ALINAN_SIPARIS_SIRA FROM PARAM"
     },
+    IrsaliyeParamGetir:
+    {
+        query : "SELECT SATIS_IRSALIYE_SIRA FROM PARAM"
+    },
     CmbAdresNo : 
     {
         query : "SELECT " +
@@ -3748,9 +3752,11 @@ var QueryLocal =
         query : "CREATE TABLE IF NOT EXISTS PARAM (" +
                 "MENUDATA text, " + 
                 "SAYIM_SIRA int, " +
-                "ALINAN_SIPARIS_SIRA int " +
+                "ALINAN_SIPARIS_SIRA int, " +
+                "SATIS_FATURA_SIRA int," +
+                "SATIS_IRSALIYE_SIRA int" +
                 ")" ,
-            insert : "INSERT INTO PARAM VALUES (?,?,?)"
+            insert : "INSERT INTO PARAM VALUES (?,?,?,?,?)"
     },
     NakliyeOnayTbl :
     {

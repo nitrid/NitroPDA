@@ -1496,7 +1496,7 @@ var QuerySql =
     {
         query : "UPDATE SIPARISLER SET sip_teslim_miktar = sip_teslim_miktar - @sip_teslim_miktar WHERE sip_Guid = @sip_Guid " +
                 "UPDATE BEDEN_HAREKETLERI SET BdnHar_TesMik = BdnHar_TesMik - @sip_teslim_miktar WHERE BdnHar_Har_uid = @sip_Guid AND BdnHar_BedenNo = ISNULL((SELECT BdnHar_BedenNo FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = @sth_Guid),0)",
-        param : ['sip_teslim_miktar:int','sip_Guid:string|50','sth_Guid:string|50']
+        param : ['sip_teslim_miktar:int','sip_Guid:string|50']
     },
     MaxSiparisSira : 
     {
@@ -5453,11 +5453,11 @@ var QuerySql =
     {
         query : "SELECT " +
         "@menudata AS MENUDATA, " +
-        "(SELECT ISNULL(MAX(sym_evrakno),0) AS MAXEVRSIRA FROM SAYIM_SONUCLARI WHERE sym_depono = @sym_depono AND sym_tarihi = @sym_tarihi) AS SAYIM_SIRA, " +
-        "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri='FTR' AND sth_evraktip = 4) AS SATIS_FATURA_SIRA " +
-        "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri='IRS' AND sth_evraktip = 1) SATIS_IRSALIYE_SIRA" +
-        "(SELECT ISNULL(MAX(sip_evrakno_sira),0) AS MAXEVRSIRA FROM SIPARISLER WHERE sip_evrakno_seri=@sip_evrakno_seri AND sip_tip = 0 AND sip_cins = 0) AS ALINAN_SIPARIS_SIRA ",
-        param : ['menudata:string|max','sym_depono:int','sym_tarihi:date','sip_evrakno_seri:string|10'] 
+        "(SELECT ISNULL(MAX(sym_evrakno),0) + 1 AS MAXEVRSIRA FROM SAYIM_SONUCLARI WHERE sym_depono = @sym_depono AND sym_tarihi = @sym_tarihi) AS SAYIM_SIRA, " +
+        "(SELECT ISNULL(MAX(sip_evrakno_sira),0) AS MAXEVRSIRA FROM SIPARISLER WHERE sip_evrakno_seri= @sip_evrakno_seri AND sip_tip = 0 AND sip_cins = 0) AS ALINAN_SIPARIS_SIRA, " +
+        "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri= @ftr_seri AND sth_evraktip = 4) AS SATIS_FATURA_SIRA, " +
+        "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri= @irs_seri AND sth_evraktip = 1) AS SATIS_IRSALIYE_SIRA ",
+        param : ['menudata:string|max','sym_depono:int','sym_tarihi:date','sip_evrakno_seri:string|10','ftr_seri:string|10','irs_seri:string|10'] 
     }   
     //#endregion "AKTARIM"
 };

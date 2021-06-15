@@ -181,7 +181,6 @@ var LocalDb =
                 //await CreateTable(QueryLocal.MarkaTbl);
                 await CreateTable(QueryLocal.OdemePlanTbl);
                 await CreateTable(QueryLocal.OdemeEmirleriTbl);
-                console.log(QueryLocal.OdemeEmirleriTbl)
                 await CreateTable(QueryLocal.PersonelTbl);
                 await CreateTable(QueryLocal.ProjelerTbl);
                 await CreateTable(QueryLocal.ReyonTbl);
