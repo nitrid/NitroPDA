@@ -571,7 +571,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                 Sum += pData[i][pColumn];
             }
         }
-        
         return Sum;
     }
     this.ListEqual = function(pData,pFiltre)
@@ -716,9 +715,31 @@ angular.module('app.db', []).service('db',function($rootScope)
                     }
                     _SqlExecute(m,function(data)
                     {
+                        $rootScope.StokData = data.result.recordset;
                         if(pCallback)
                         {
-                            pCallback(data.result.recordset);
+                            if(localStorage.mode == "false")
+                            {
+                                let m = 
+                                {
+                                    db : '{M}.' + pFirma,
+                                    tag : 'StokMiktarHesapla',
+                                    param : [pBarkod]
+                                }
+                                _SqlExecute(m,function(data)
+                                {
+                                    if(data.result.recordset.length > 0)
+                                    {
+                                        $rootScope.StokData[0].DEPOMIKTAR += data.result.recordset[0].DEPOMIKTAR;
+                                        console.log(data.result.recordset[0].DEPOMIKTAR)
+                                        pCallback($rootScope.StokData);
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                pCallback($rootScope.StokData);
+                            }
                         }
                     });
                 }
@@ -779,7 +800,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                 console.log(FiyatData)
                 BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
                 BarkodData[0].FIYAT = (FiyatData[0].FIYAT)
-                console.log(FiyatData[0].DOVIZKUR,pFiyatParam.CariDovizKuru)
+                console.log(FiyatData[0].FIYAT,FiyatData[0].DOVIZKUR,pFiyatParam.CariDovizKuru)
             }
             else
             {
@@ -882,7 +903,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                 });
             }
      }
-
         if(pCallback)
         {
             Fiyat = BarkodData[0].FIYAT;

@@ -102,7 +102,7 @@
                     </div>
                     <div class="row"  ng-show = "StokResim">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Stok Resmi:</label></div>
-                        <div class="col-4 px-0"><label class="form-control-label pl-10"><img width="100" src="http:///{{Stok[0].KODU}}-1.jpg"></label></div>
+                        <div class="col-4 px-0"><label class="form-control-label pl-10"><img width="100" ng-src="/image/{{Stok[0].KODU}}.jpg"></label></div>
                         <div class="col-4 offset-1 px-1">
                             <div class="checkbox-custom checkbox-info my-0">
                               <input type="checkbox" name="inputCheckboxes" ng-model="OtoEkle" checked="">

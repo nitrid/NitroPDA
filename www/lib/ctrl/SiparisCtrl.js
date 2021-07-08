@@ -169,7 +169,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.CariListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields:
@@ -230,7 +230,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             data : $scope.SiparisListe,
             paging : true,
             pageIndex : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
            
@@ -411,7 +411,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.PartiLotListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -516,7 +516,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             editing: true,
             data : $scope.ProjeEvrakGetirListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -570,7 +570,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.DizaynListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
@@ -628,7 +628,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.SiparisGonderListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
@@ -817,6 +817,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             0, //REZERVASYON MİKTARI
             0  //REZERVASYON TESLİM MİKTARI
         ];
+        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'SiparisInsert',InsertData,function(InsertResult)
         {          
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -1848,7 +1849,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         }
         else
         {
-            await db.GetPromiseTag($scope.Firma,'SiparisParamGetir',[],function(data)
+            await db.GetPromiseTag($scope.Firma,'ParamGetir',[],function(data)
             {
                 console.log(data)
                 $scope.Sira = data[0].ALINAN_SIPARIS_SIRA + 1

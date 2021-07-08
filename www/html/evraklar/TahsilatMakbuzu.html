@@ -23,6 +23,7 @@
                                 <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Tahsilat Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(0)">Tahsilat Sil</button>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRaporClick()">Gün Sonu Raporu</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGonder()">Gönder</button>
                             </div>
                         </div>
                     </div>
@@ -354,6 +355,27 @@
                     <div class="col-12 p-10">
                     <button class="btn btn-block btn-primary" ng-click="BtnCariDoviz()">{{KasaDovizAdi}}</button>
                     <button class="btn btn-block btn-primary" ng-click="BtnKasaDoviz()">{{CariDovizAdi}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Gonder Modal -->
+    <div class="modal fade" id="MdlGonder" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Gönder</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row py-1 px-1">
+                        <div id="TblCariHarListe"></div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <button class="btn btn-block btn-primary h-50" ng-click="EvrakGonder()">Gönder</button>
                     </div>
                 </div>
             </div>

@@ -267,6 +267,56 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             }
         });
     }
+    function InitCariHarGrid()
+    {
+        $("#TblCariHarListe").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.CariHarGonderListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: 
+            [
+            {
+                name: "cha_evrakno_seri",
+                title: "SERI",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "cha_evrakno_sira",
+                title: "SIRA",
+                type: "number",
+                align: "center",
+                width: 75
+            },
+            {
+                name: "cha_kod",
+                title: "CARİ KODU",
+                type: "number",
+                align: "center",
+                width: 150
+            },
+            {
+                name: "cha_meblag",
+                title: "TUTAR",
+                type: "number",
+                align: "center",
+                width: 100
+            }
+           ],
+            rowClick: function(args)
+            {
+                $scope.$apply();
+            }
+        });
+    }
     function CariHarInsert()
     {
         try 
@@ -428,7 +478,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         try 
         {
             $scope.FisDeger = "";
-            $scope.FisDeger = SpaceLength($scope.CariAdi,40) + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n"+ "                                    " + $scope.Seri + " - " + $scope.Sira + "\n"+ $scope.Adres1 + "\n" + $scope.Adres +"\n" + "\n";
+            $scope.FisDeger = SpaceLength($scope.CariAdi,40) + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n"+ "                                    " + $scope.Seri + " - " + $scope.Sira + "\n"+ "\n" + "\n";
             for(let i=0; i < pData.length; i++)
             {
                 $scope.FisData = $scope.FisData + "\n";                
@@ -526,7 +576,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.IslemListeSelectedItem = pItem;
         $scope.IslemListeSelectedIndex = pIndex;
     }
-    $scope.BtnCariListele = function()
+    $scope.BtnCariListele = async function()
     {   
         $scope.Loading = true;
         $scope.TblLoading = false;
@@ -545,23 +595,64 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             }
         }
         
-        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
+        await db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],async function(data)
         {
-            $scope.CariListe = data;
-            if($scope.CariListe.length > 0)
+            if(data.length > 0)
             {
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-                $("#TblCari").jsGrid({data : $scope.CariListe});  
-                $("#TblCari").jsGrid({pageIndex: true})
+                if(localStorage.mode = 'false')
+                {
+                    const datas = await data;
+                    for(x = 0;x < datas.length;x++)
+                    {
+                        $scope.CariListe = datas;  
+                        let item = x;
+                        await db.GetData($scope.Firma,'CariMiktarHesapla',[datas[x].KODU],async function(CariHarData)
+                        {
+                            if(CariHarData[0].BAKIYE != 0)
+                            {
+                                console.log(CariHarData)
+                                console.log(data)
+                                datas[item].BAKIYE += CariHarData[0].BAKIYE;
+                                $scope.CariListe = datas;  
+                                console.log(data)
+                                $("#TblCari").jsGrid({data : $scope.CariListe});
+                            }
+                        });
+                    }
+                    console.log(datas)
+                    $scope.CariListe = datas; 
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;    
+                    $("#TblCari").jsGrid({data : $scope.CariListe});
+                    $("#TblCari").jsGrid({pageIndex : true});
+                }
+                else
+                {
+                    alertify.alert("Cari Bulunamadı")
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblCari").jsGrid({data : $scope.CariListe});
+                    $("#TblCari").jsGrid({pageIndex : true});
+                }
             }
             else
             {
-                alertify.alert("Cari Bulunamadı")
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-                $("#TblCari").jsGrid({data : $scope.CariListe});
-                $("#TblCari").jsGrid({pageIndex: true})
+                $scope.CariListe = data;  
+                if($scope.CariListe.length > 0)
+                {
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;    
+                    $("#TblCari").jsGrid({data : $scope.CariListe});
+                    $("#TblCari").jsGrid({pageIndex : true});
+                }
+                else
+                {
+                    alertify.alert("Cari Bulunamadı")
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblCari").jsGrid({data : $scope.CariListe});
+                    $("#TblCari").jsGrid({pageIndex : true});
+                }
             }
         });
     }
@@ -572,6 +663,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         InitIslemGrid();
         InitIslemDetayGrid();
         InitDizaynGrid();
+        InitCariHarGrid();
 
         Tip = pTip;
 
@@ -604,8 +696,49 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         }
         if($scope.CariKodu != "")
         {       
-            db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
+            await db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],async function(data)
             {
+                if(localStorage.mode = 'false')
+                {
+
+                    const datas = await data;
+                    for(x = 0;x < datas.length;x++)
+                    {
+                        
+
+                        $scope.CariListe = datas;  
+                        let item = x;
+                        await db.GetData($scope.Firma,'CariMiktarHesapla',[datas[x].KODU],async function(CariHarData)
+                        {
+                            if(CariHarData[0].BAKIYE != 0)
+                            {
+                                console.log(datas)
+                                datas[item].BAKIYE += CariHarData[0].BAKIYE;
+                                $scope.CariListe = datas;  
+                                console.log(datas)
+                                $("#TblCari").jsGrid({data : $scope.CariListe});
+                                let Obj = $("#TblCari").data("JSGrid");
+                                let Item = Obj.rowByItem(datas[0]);
+                                
+                                $scope.CariListeRowClick(0,Item,Obj);
+                                $scope.MeblaGirisClick();
+                                $scope.Loading = false;
+                                $scope.TblLoading = true;
+                            }
+                        });
+                    }
+                    console.log(datas)
+                    $scope.CariListe = datas; 
+                    let Obj = $("#TblCari").data("JSGrid");
+                    let Item = Obj.rowByItem(datas[0]);
+                    
+                    $scope.CariListeRowClick(0,Item,Obj);
+                    $scope.MeblaGirisClick();
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                }
+                else
+                {
                 $scope.CariListe = data;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
 
@@ -617,6 +750,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 
                 $scope.Loading = false;
                 $scope.TblLoading = true;
+                }
             });
         }
         await db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
@@ -641,7 +775,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         await db.GetData($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
         {
             $scope.KasaListe = data;
-            console.log(data)
             $scope.KasaBankaListe = $scope.KasaListe;
             $scope.KasaBanka = UserParam[ParamName].NakitKasa;
             $scope.KasaListe.forEach(function(item)
@@ -693,6 +826,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 
             await db.GetPromiseTag($scope.Firma,'MaxCekRefNo',[$scope.SckTip],function(data)
             {
+                console.log(data[0].MAXREFNO,data[0].REFNO)
                 $scope.TrefNo = data[0].MAXREFNO
             });  
             await db.GetPromiseTag($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
@@ -746,6 +880,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
 
             await db.GetPromiseTag($scope.Firma,'MaxCekRefNo',[$scope.SckTip],function(data)
             {
+                console.log(data[0].MAXREFNO,data[0].REFNO)
                 $scope.TrefNo = data[0].MAXREFNO
             });  
         }
@@ -810,10 +945,10 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
        }
        $('#MdlDoviz').modal('hide');
     }
-    $scope.EvrakGetir = function(pData)
+    $scope.EvrakGetir = async function(pData)
     {
         $scope.TahKontrol = pData;
-        db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
+        db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],async function(data)
         {
             if(data.length > 0)
             {
@@ -850,18 +985,45 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 
                 if($scope.CariKodu != "")
                 {
-                    db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
+                    await db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],async function(data)
                     {
-                        $scope.CariListe = data;
-                        $("#TblCari").jsGrid({data : $scope.CariListe});
+                        if(localStorage.mode = 'false')
+                        {
+                            const datas = await data;
+                            for(x = 0;x < datas.length;x++)
+                            {
+                                $scope.CariListe = datas;  
+                                let item = x;
+                                await db.GetData($scope.Firma,'CariMiktarHesapla',[datas[x].KODU],async function(CariHarData)
+                                {
+                                    if(CariHarData[0].BAKIYE != 0)
+                                    {
+                                        datas[item].BAKIYE += CariHarData[0].BAKIYE;
+                                        $scope.CariListe = datas;  
+                                        $("#TblCari").jsGrid({data : $scope.CariListe});
+                                        console.log(datas)
+                                        let Obj = $("#TblCari").data("JSGrid");
+                                        let Item = Obj.rowByItem(datas[0]);
+                                        $scope.CariListeRowClick(0,Item,Obj);
+                                        FisData(data);
+                                    }
+                                });
+                            }
+                        }
+                        else
+                        {
+                            $scope.CariListe = data;
+                            $("#TblCari").jsGrid({data : $scope.CariListe});
+                            
+                            let Obj = $("#TblCari").data("JSGrid");
+                            let Item = Obj.rowByItem(data[0]);
+                            
+                            $scope.CariListeRowClick(0,Item,Obj);
+                            FisData(data);
+                            $scope.Loading = false;
+                            $scope.TblLoading = true;
+                        }
 
-                        let Obj = $("#TblCari").data("JSGrid");
-                        let Item = Obj.rowByItem(data[0]);
-                        
-                        $scope.CariListeRowClick(0,Item,Obj);
-                        FisData(data);
-                        $scope.Loading = false;
-                        $scope.TblLoading = true;
                     });
                 }
 
@@ -938,7 +1100,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             { 
                 if($scope.IslemListeSelectedIndex > -1)
                 {
-                    db.ExecuteTag($scope.Firma,'CekHarDelete',[$scope.IslemListeSelectedItem.cha_trefno],function(data)
+                    db.ExecuteTag($scope.Firma,'CekHarDelete',['','',$scope.IslemListeSelectedItem.cha_trefno],function(data)
                     {
                         if(typeof(data.result.err) == 'undefined')
                         {
@@ -1157,16 +1319,16 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 db : '{M}.' + $scope.Firma,
                 query:  "SELECT " +
                         "cha_cinsi AS EVRAKTIP, " +
-                        "CONVERT(VARCHAR(10),MAX(cha_vade),112) AS VADE, " +
+                        "CAST(cha_vade AS VARCHAR) AS VADE," +
                         "CASE WHEN cha_cinsi = 0 THEN 'NAKIT' WHEN cha_cinsi = 19 THEN 'K.KARTI'  " +
                         "WHEN cha_cinsi = 1 THEN 'M. ÇEKİ' WHEN cha_cinsi = 2 THEN 'M. SENEDİ' END AS TIP, " +
                         "cha_evrakno_seri AS SERI,  " +
                         "cha_evrakno_sira AS SIRA,  " +
-                        "MAX(cha_kod) AS CARIKOD, " +
-                        "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) + ' ' +  " +
-                        "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) AS CARIADI, " +
+                        "cha_kod AS CARIKOD, " +
+                        "(SELECT UNVAN1 FROM CARI WHERE KODU = cha_kod) + ' ' +  " +
+                        "(SELECT UNVAN2 FROM CARI WHERE KODU = cha_kod) AS CARIADI, " +
                         "ROUND(SUM(cha_meblag),2) AS TUTAR " +
-                        "FROM CARI_HESAP_HAREKETLERI WHERE cha_evrak_tip = @cha_evrak_tip AND cha_evrakno_seri = @cha_evrakno_seri AND cha_evrakno_sira = @cha_evrakno_sira " +
+                        "FROM CARIHAR WHERE cha_evrak_tip = @cha_evrak_tip AND cha_evrakno_seri = '@cha_evrakno_seri' AND cha_evrakno_sira = @cha_evrakno_sira " +
                         "GROUP BY cha_evrakno_seri,cha_evrakno_sira,cha_cinsi ",
                 param : ['cha_evrak_tip:int','cha_evrakno_seri:string|20','cha_evrakno_sira:int'],
                 value : [$scope.ChaEvrakTip,$scope.Seri,$scope.Sira] 
@@ -1180,6 +1342,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.DCekToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 1");
                 $scope.DizaynListe2 = Data;
             });
+            console.log($scope.TahKontrol)
             if($scope.TahKontrol == 1)
             {
                 OncekiBakiye = $scope.CariBakiye + $scope.Toplam
@@ -1188,11 +1351,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             }
             else
             {
-                OncekiBakiye = $scope.CariBakiye
-                NakitAlinan = $scope.Toplam
-                KalanBakiye = $scope.CariBakiye - $scope.Toplam
+                console.log($scope.CariBakiye,$scope.Toplam)
+                OncekiBakiye = $scope.CariBakiye + $scope.Toplam
+                NakitAlinan = OncekiBakiye - $scope.Toplam
+                KalanBakiye = OncekiBakiye - $scope.Toplam
             }
-            let i = 36 - $scope.DizaynListe2.length;
+             let i = 36 //- $scope.DizaynListe2.length;
             let Satır = "";
             console.log(1)
             for(let x = 0; x <= i; x++)
@@ -1207,7 +1371,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             "Şube1:Ortaköy Mh. TÜVTÜRK Yani No: 379 MUĞLA" + "\n" +
             "Tel:0252 214 78 58 muglasutas@hotmail.com    " + "\n" +
             "              TAHSILAT FISI" + "\n" + "                                            -" + "\n" +
-            $scope.FisDeger + "\n" +
+            $scope.FisDeger + "\n" + "ekrem"
             "Nakit = " + $scope.DNakitToplam + "\n" + "K.Kartı = " + $scope.DKrediToplam + "\n" + "Toplam = " +$scope.Toplam.toFixed(2) + "\n" + Satır 
             FisDizayn = FisDizayn +"\n" + "Önceki Bakiye : " + parseFloat(OncekiBakiye).toFixed(2) + "\n" + "Kalan Bakiye  : " + parseFloat(KalanBakiye).toFixed(2) + "\n" + "                                            -" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" + "-\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
@@ -1387,5 +1551,198 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
             $("#TbDizayn").addClass('active');
         });
+    }
+    //OFFLINE-AKTARIM
+    $scope.BtnGonder = function()
+    {
+        db.GetData($scope.Firma,'CariHareketGonderGetir',[$scope.ChaEvrakTip],function(Data)
+        {
+            $scope.CariHareketGonderListe = Data
+            console.log(Data)
+            if($scope.CariHareketGonderListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCariHarListe").jsGrid({data : $scope.CariHareketGonderListe});
+                $("#TblCariHarListe").jsGrid({pageIndex: true});
+                $("#MdlGonder").modal('show');
+            }
+            else
+            {
+                alertify.alert("Evrak Bulunamadı");
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblCariHarListe").jsGrid({data : $scope.CariHareketGonderListe});
+                $("#TblCariHarListe").jsGrid({pageIndex: true});
+            }   
+        });
+    }
+    $scope.EvrakGonder = async function()
+    {
+        if(localStorage.mode == 'false')
+        {
+            let Status = await db.ConnectionPromise()
+            if(!Status)
+            {
+                alertify.okBtn("Tamam");
+                alertify.alert("Bağlantı Problemi !");
+                return;
+            }
+            for (let i = 0; i < $scope.CariHareketGonderListe.length; i++) 
+            {
+                let TmpStatus = true;
+                let TmpCariHarData = await db.GetPromiseTag($scope.Firma,'CariHarGetir',[$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrakno_sira,$scope.CariHareketGonderListe[i].cha_evrak_tip]);
+                let TmpOdemeData = await db.GetPromiseTag($scope.Firma,'OdemeEmriGetir',[$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrakno_sira]);
+                console.log($scope.CariHareketGonderListe[i])
+                localStorage.mode = 'true'; //ONLINE'A GEÇTİ
+                //AŞAĞIDAKİ VERİLERİ ONLINE TABLODAN (QUERYSQL) ÇEKİYOR.
+                let TmpMaxSira = await db.GetPromiseTag($scope.Firma,'MaxCariHarSira',[$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrak_tip])
+                for (let m = 0; m < TmpCariHarData.length; m++)
+                {
+                    let InsertCariData =
+                    [
+                        TmpCariHarData[m].cha_create_user,
+                        TmpCariHarData[m].cha_lastup_user,
+                        TmpCariHarData[m].cha_firmano,    
+                        TmpCariHarData[m].cha_subeno,     
+                        TmpCariHarData[m].cha_evrak_tip,
+                        TmpCariHarData[m].cha_evrakno_seri,
+                        TmpMaxSira[0].MAXEVRSIRA,
+                        TmpCariHarData[m].cha_tarihi,     
+                        TmpCariHarData[m].cha_tip,        
+                        TmpCariHarData[m].cha_cinsi,      
+                        TmpCariHarData[m].cha_normal_Iade,
+                        TmpCariHarData[m].cha_tpoz,       
+                        TmpCariHarData[m].cha_ticaret_turu,
+                        TmpCariHarData[m].cha_belge_no,   
+                        TmpCariHarData[m].cha_belge_tarih,
+                        TmpCariHarData[m].cha_aciklama,   
+                        TmpCariHarData[m].cha_satici_kodu,
+                        TmpCariHarData[m].cha_EXIMkodu,   
+                        TmpCariHarData[m].cha_projekodu,  
+                        TmpCariHarData[m].cha_cari_cins,                          
+                        TmpCariHarData[m].cha_kod,                              
+                        TmpCariHarData[m].cha_ciro_cari_kodu,                   
+                        TmpCariHarData[m].cha_d_cins,                             
+                        TmpCariHarData[m].cha_d_kur,                              
+                        TmpCariHarData[m].cha_altd_kur,                           
+                        TmpCariHarData[m].cha_grupno,                             
+                        TmpCariHarData[m].cha_srmrkkodu,                        
+                        TmpCariHarData[m].cha_kasa_hizmet,                        
+                        TmpCariHarData[m].cha_kasa_hizkod,                      
+                        0,		                 
+                        1,   	               
+                        TmpCariHarData[m].cha_karsidgrupno ,	                 
+                        TmpCariHarData[m].cha_karsisrmrkkodu,	                 
+                        TmpCariHarData[m].cha_meblag,                             
+                        TmpCariHarData[m].cha_aratoplam,                          
+                        TmpCariHarData[m].cha_vade,                               
+                        TmpCariHarData[m].cha_ft_iskonto1,                        
+                        TmpCariHarData[m].cha_ft_iskonto2,                        
+                        TmpCariHarData[m].cha_ft_iskonto3,                        
+                        TmpCariHarData[m].cha_ft_iskonto4,                        
+                        TmpCariHarData[m].cha_ft_iskonto5,                        
+                        TmpCariHarData[m].cha_ft_iskonto6,                        
+                        TmpCariHarData[m].cha_ft_masraf1,                         
+                        TmpCariHarData[m].cha_ft_masraf2,                         
+                        TmpCariHarData[m].cha_ft_masraf3,                         
+                        TmpCariHarData[m].cha_ft_masraf4,                         
+                        TmpCariHarData[m].cha_vergipntr,                          
+                        TmpCariHarData[m].cha_vergi1,                             
+                        TmpCariHarData[m].cha_vergi2,                             
+                        TmpCariHarData[m].cha_vergi3,                             
+                        TmpCariHarData[m].cha_vergi4,                             
+                        TmpCariHarData[m].cha_vergi5,                             
+                        TmpCariHarData[m].cha_vergi6,                             
+                        TmpCariHarData[m].cha_vergi7,                             
+                        TmpCariHarData[m].cha_vergi8,                             
+                        TmpCariHarData[m].cha_vergi9,                             
+                        TmpCariHarData[m].cha_vergi10,                            
+                        TmpCariHarData[m].cha_vergisiz_fl,                        
+                        TmpCariHarData[m].cha_otvtutari,                          
+                        TmpCariHarData[m].cha_otvvergisiz_fl,                     
+                        TmpCariHarData[m].cha_oivergisiz_fl,                      
+                        TmpCariHarData[m].cha_trefno,                             
+                        TmpCariHarData[m].cha_sntck_poz,                          
+                        TmpCariHarData[m].cha_e_islem_turu,                       
+                    ];
+                    let TmpResultCari = await db.ExecutePromiseTag($scope.Firma,'CariHarInsert',InsertCariData);
+                    console.log(TmpCariHarData[m]);
+                    if(typeof(TmpResultCari.result.err) != 'undefined')
+                    {
+                        TmpStatus = false;
+                    }
+                    console.log(TmpOdemeData)
+                    let TmpOdeme = TmpOdemeData.find(x => x.sck_refno == TmpCariHarData[m].cha_trefno)
+                    console.log(TmpOdeme)
+                    if(typeof TmpOdeme != 'undefined')
+                    {
+                        let InsertDataOdm =
+                        [
+                            TmpOdeme.sck_create_user, // KULLANICI
+                            TmpOdeme.sck_lastup_user, // KULLANICI
+                            TmpOdeme.sck_firmano, // BEDEN TİP
+                            TmpOdeme.sck_subeno, // BEDEN TİP
+                            TmpOdeme.sck_tip, // BEDEN TİP
+                            TmpOdeme.sck_refno, // BEDEN TİP
+                            TmpOdeme.sck_borclu, // BEDEN TİP
+                            TmpOdeme.sck_vade, // BEDEN TİP
+                            TmpOdeme.sck_tutar, // BEDEN TİP
+                            TmpOdeme.sck_doviz, // BEDEN TİP
+                            TmpOdeme.sck_odenen, // BEDEN TİP
+                            TmpOdeme.sck_sahip_cari_cins, // BEDEN TİP
+                            TmpOdeme.sck_sahip_cari_kodu, // BEDEN TİP
+                            TmpOdeme.sck_sahip_cari_grupno, // BEDEN TİP
+                            TmpOdeme.sck_nerede_cari_cins, // BEDEN TİP
+                            TmpOdeme.sck_nerede_cari_kodu, // BEDEN TİP
+                            TmpOdeme.sck_nerede_cari_grupno, // BEDEN NO
+                            TmpOdeme.sck_ilk_hareket_tarihi,  // MİKTAR
+                            TmpOdeme.sck_ilk_evrak_seri,
+                            TmpOdeme.sck_ilk_evrak_sira_no,
+                            TmpOdeme.sck_ilk_evrak_satir_no,
+                            TmpOdeme.sck_son_hareket_tarihi,
+                            1,
+                            TmpOdeme.sck_sonpoz,
+                            TmpOdeme.sck_srmmrk,
+                            TmpOdeme.sck_projekodu
+                        ]
+                        console.log(InsertDataOdm)
+                        let TmpOdmResult = await db.ExecutePromiseTag($scope.Firma,'CekHarInsert',InsertDataOdm)
+                        console.log(TmpOdmResult)
+                        if(typeof(TmpOdmResult.result.err) != 'undefined')
+                        {
+                            TmpStatus = false;
+                        }
+                        console.log(TmpOdemeData)
+                    }
+                    console.log(TmpOdemeData)
+                }
+                localStorage.mode = 'false';
+                if (TmpStatus)
+                {
+                    let TmpUpdateQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query: "UPDATE CARIHAR SET status = 1 WHERE cha_evrakno_seri = '@cha_evrakno_seri' AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip" ,
+                        param:  ['cha_evrakno_seri:string|20','cha_evrakno_sira:int','cha_evrak_tip:int'],
+                        value : [$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrakno_sira,$scope.CariHareketGonderListe[i].cha_evrak_tip]
+                    }
+                    await db.GetPromiseQuery(TmpUpdateQuery)
+                    await db.GetData($scope.Firma,'CariHareketGonderGetir',[],function(Data)
+                    {
+                        if(Data.length == 0)
+                        {
+                            $("#MdlGonder").modal('hide');
+                            alertify.alert("Aktarım Tamamlandı!")
+                        }
+                    });
+                }
+            }
+        }
+        else
+        {
+            alertify.okBtn("Tamam");
+            alertify.alert("Bu menü sadece offline mod'da çalışır !");
+        }
     }
 }

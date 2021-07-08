@@ -169,7 +169,7 @@ var QuerySql =
                 "cari_efatura_fl AS EFATURA  " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE((UPPER(cari_kod) LIKE  UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(cari_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
+                "WHERE ((UPPER(cari_kod) LIKE  UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(cari_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
                 "AND (((UPPER(cari_unvan1) LIKE UPPER(@ADI) + '%' or UPPER(cari_unvan2) LIKE UPPER(@ADI) + '%') OR (@ADI = '')) OR ((LOWER(cari_unvan1) LIKE LOWER(@ADI) + '%' or LOWER(cari_unvan2) LIKE LOWER(@ADI) + '%') OR (@ADI = ''))) " +
                 "AND ((CARI.cari_temsilci_kodu IN(SELECT value FROM STRING_SPLIT(@PLASIYERKODU,','))) OR (@PLASIYERKODU = ''))) AS TBL ORDER BY KODU " ,
             param : ['KODU','ADI','PLASIYERKODU'],
@@ -569,6 +569,19 @@ var QuerySql =
                 "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) OR LOWER(sto_kod) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER(sto_isim) LIKE UPPER(@KODU) OR LOWER(sto_isim) LIKE LOWER(@KODU)) OR (@KODU = '')) " ,
         param : ['KODU',"ADI",'DEPONO'],
         type :  ['string|25','string|50','int']
+    },
+    StokDurumGetir :
+    {
+        query: "SELECT TOP 10  " +
+                "sth_cari_kodu AS CARIKODU, " +
+                "(select cari_unvan1 from CARI_HESAPLAR WHERE cari_kod=sth_cari_kodu) AS CARIADI, " +
+                "sth_evraktip AS EVRAKTIP, " +
+                "CONVERT(VARCHAR(10),sth_tarih,104) as TARIH, " +
+                "sth_miktar AS MIKTAR, " +
+                "ROUND(sth_tutar / sth_miktar,2) AS BFIYAT " +
+                "FROM STOK_HAREKETLERI WHERE sth_stok_kod = @STOKKOD and sth_cari_kodu = @CARIKOD ORDER BY sth_tarih desc ",
+        param : ['STOKKOD','CARIKOD'],
+        type : ['string|25','string|127']
     },
     CariAdiGetir : 
     {
@@ -4948,6 +4961,7 @@ var QuerySql =
                 "sat_bitis_tarih AS BITIS, " +
                 "sat_basla_tarih AS BASLANGIC, " +
                 "sat_brut_fiyat -(sat_det_isk_miktar1 + sat_det_isk_miktar2 + sat_det_isk_miktar3 + sat_det_isk_miktar4 + sat_det_isk_miktar5 + sat_det_isk_miktar6) AS FIYAT, " +
+                "sat_det_isk_miktar1 + sat_det_isk_miktar2 + sat_det_isk_miktar3 + sat_det_isk_miktar4 + sat_det_isk_miktar5 + sat_det_isk_miktar6 AS INDIRIM, " +
                 "sat_brut_fiyat AS BRUTFIYAT, " +
                 "sat_det_isk_miktar1 AS ISKONTOM1, " +
                 "sat_det_isk_miktar2 AS ISKONTOM2, " +

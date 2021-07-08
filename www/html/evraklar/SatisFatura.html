@@ -27,6 +27,7 @@
                                 <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Evrak Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(1)">Evrak Sil</button>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRaporClick()">Gün Sonu Raporu</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGonder()">Gönder</button>
                             </div>
                         </div>
                     </div>
@@ -247,8 +248,11 @@
                             <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="IslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
                         </div>
                         <div class="col-4 px-1">
-                            
-                            <button type="button" class="btn btn-primary btn-block px-0 h-40" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Detay</button>
+                            <button type="button" class="btn btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
+                                <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Detay</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="StokDurumRaporClick()">Cari Detaylı Stok Durumu</button>
+                            </div>
                         </div>
                     </div>
                     <div class="row py-1">
@@ -278,8 +282,8 @@
                         </div>                        
                     </div>
                     <div class="row pt-5">
-                        <div class="col-lg-12" style="display: inline; text-align: left; overflow: hidden;">  
-                            <label class="mb-0 h6 text-danger">D.MIKTAR : {{Stok[0].DEPOMIKTAR}} - R/B :  {{Stok[0].KIRILIMMIKTAR}}</label> 
+                        <div class="col-lg-12"  style="display: inline; text-align: left; overflow: hidden;">  
+                            <label  class="mb-0 h6 text-danger">D.MIKTAR : {{Stok[0].DEPOMIKTAR}} - R/B :  {{Stok[0].KIRILIMMIKTAR}}</label> 
                         </div>                        
                     </div>
                     <div class="row my-0">
@@ -395,13 +399,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-2 px-1">
+                        <!-- <div class="col-2 px-1">
                             <div class="row">
                                 <div class="col-12">
                                 <button class="btn btn-block btn-primary h-60" data-target="#MdlRota" data-toggle="modal" ng-hide="RotaKontrol"><b>D</b></button>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-2 px-1">
                             <div class="row">
                                 <div class="col-12">
@@ -410,18 +414,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-8">
                             <div class="row">
                                 <div class="col-12">
                                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Ara Toplam :</span> {{AraToplam | number:2}}</h5>
                                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam İndirim :</span> {{ToplamIndirim | number:2}}</h5>
                                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Net Toplam :</span> {{NetToplam | number:2}}</h5>
                                     <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Kdv :</span> {{ToplamKdv | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{GenelToplam | number:2}}</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{GenelToplam | number:2}}</h5>
                 </div>
                 <div id="TbStok" class="tab-pane">
                     <div class="row py-1">
@@ -472,6 +476,16 @@
                         <div class="col-12">
                             <button class="btn btn-block btn-primary " ng-click="BtnGunSonuYazdir()">Yazdır</button>
                         </div>
+                    </div>
+                </div>
+                <div id="TbStokDurum" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <div id="TblStokDurum"></div>
                     </div>
                 </div>
             </div>            
@@ -820,6 +834,27 @@
                     </div>
                     <div class="row my-5">
                         <button type="submit" class="btn btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnRota()">Bitir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Gonder Modal -->
+    <div class="modal fade" id="MdlGonder" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Gönder</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row py-1 px-1">
+                        <div id="TblStokHarListe"></div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <button class="btn btn-block btn-primary h-50" ng-click="EvrakGonder()">Gönder</button>
                     </div>
                 </div>
             </div>

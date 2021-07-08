@@ -277,7 +277,7 @@ var Param = [
 			]
 		},
 		"Menu": {
-			"Stok Detay": "0",
+			"Stok Detay": "1",
 			"Sayım Fişi": "1",
 			"Cari Listesi": "0",
 			"Fire": "0",
@@ -327,7 +327,7 @@ var Param = [
 			"Proforma Alınan Siparis": "1"
 		},
 		"AlisFatura": {
-			"EvrakTip": "0",
+			"EvrakTip": "1",
 			"Seri": "FTR",
 			"BelgeNo": "",
 			"Cari": "",
@@ -347,7 +347,7 @@ var Param = [
 			"IskontoMatris": "0"
 		},
 		"SatisFatura": {
-			"EvrakTip": "0",
+			"EvrakTip": "1",
 			"Seri": "FTR",
 			"BelgeNo": "",
 			"Cari": "",
