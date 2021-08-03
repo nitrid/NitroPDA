@@ -116,7 +116,7 @@ var QuerySql =
                 //"RISK, " +
                 //"RISKLIMIT, " +
                 "ODEMEPLANI, " +
-                "CONVERT(NVARCHAR,CAST(BAKIYE AS MONEY),1) AS BAKIYE, " +
+                "BAKIYE," +// "CONVERT(NVARCHAR,CAST(BAKIYE AS MONEY),1) AS  " +
                 "BELGETARIH, " +
                 "ADRES, " +
                 "IL, " +
@@ -2065,6 +2065,12 @@ var QuerySql =
         type : ['int','date']
     },
     //Stok Hareket
+    StokHarOfflineGetir :
+    {
+        query: "SELECT sth_evrakno_seri,sth_evrakno_sira FROM STOK_HAREKETLERI where sth_evraktip = @sth_evraktip GROUP BY sth_evrakno_seri,sth_evrakno_sira",
+        param:   ['sth_evraktip'],
+        type:    ['int']
+    },
     StokHarGetir : 
     {
         query:  "SELECT CONVERT(VARCHAR(10),GETDATE(),112) AS sth_kur_tarihi , " +
@@ -3165,7 +3171,7 @@ var QuerySql =
     {
         query: "SELECT TIP + '-000-000-' + CONVERT(NVARCHAR(20),YEAR(GETDATE())) + '-' +  REPLACE(STR(CONVERT(NVARCHAR(10),ISNULL(REFNO,0)), 8), SPACE(1), '0') AS MAXREFNO " +
                 "FROM (SELECT " +
-                "CASE @sck_tip WHEN 0 THEN 'MC' WHEN 1 THEN 'MS' WHEN 6 THEN 'MK' END AS TIP, " +
+                "CASE @sck_tip WHEN 0 THEN 'MC' WHEN 1 THEN 'MS' WHEN 6 THEN 'MK' WHEN 5 THEN 'MO' END AS TIP, " +
                 "MAX(CONVERT(INT,SUBSTRING(sck_refno,17,25))) + 1 AS REFNO " +
                 "FROM ODEME_EMIRLERI WHERE sck_tip = @sck_tip ) AS TBL" ,
         param : ['sck_tip'],
@@ -4626,8 +4632,9 @@ var QuerySql =
     {
         query : "SELECT adr_cari_kod AS CARIKODU," +
                 "adr_adres_no AS ADRESNO," +
-                "adr_cadde AS CADDE," +
-                "adr_sokak AS SOKAK," +
+                "adr_cadde AS ADRES1," +
+                "adr_sokak AS ADRES2," +
+                "adr_ilce + '-' + adr_il AS ADRES," +
                 "adr_ilce AS ILCE," +
                 "adr_il AS IL," +
                 "cari_sektor_kodu AS SEKTOR," +
@@ -5267,10 +5274,10 @@ var QuerySql =
                 "sto_siparis_dursun AS SIPARISDURSUN, "   + 
                 "sto_malkabul_dursun as MALKABULDURSUN, " +
                 "sto_sat_cari_kod AS STOKCARI, " + 
-                "sto_birim1_katsayi AS KAYSAYI1, " +
-                "sto_birim2_katsayi AS KAYSAYI2, " +
-                "sto_birim3_katsayi AS KAYSAYI3, " +
-                "sto_birim4_katsayi AS KAYSAYI4, " +
+                "sto_birim1_katsayi AS KATSAYI1, " +
+                "sto_birim2_katsayi AS KATSAYI2, " +
+                "sto_birim3_katsayi AS KATSAYI3, " +
+                "sto_birim4_katsayi AS KATSAYI4, " +
                 "sto_otvtutar AS OTVTUTAR " + 
                 "FROM STOKLAR AS STOK "+
                 "WHERE ((sto_anagrup_kod >= @ANAGRUP1) OR (@ANAGRUP1 = '')) AND ((sto_anagrup_kod <= @ANAGRUP2) OR (@ANAGRUP2 = '')) AND ((sto_altgrup_kod >= @ALTGRUP1) OR (@ALTGRUP1 = '')) " +

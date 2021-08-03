@@ -29,7 +29,8 @@ var ParamTemp =
 			"FirmaListe" : {"Title" : "Firma Liste","DefaultValue" : ""},
 			"RiskParam": {"Title" : "Risk Param","DefaultValue" : ""},
 			"RiskLimitOran": {"Title" : "Risk Limit Oran","DefaultValue" : ""},
-			"FisDizayn": {"Title" : "Fiş Dizayn","DefaultValue" : "0"}
+			"FisDizayn": {"Title" : "Fiş Dizayn","DefaultValue" : "0"},
+			"OfflineDepo": {"Title" : "Offline Depo","DefaultValue" : "0"}
 		},
 		"Sayim" :
 		{

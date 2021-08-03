@@ -92,11 +92,11 @@ angular.module('app.db', []).service('db',function($rootScope)
         {
             _Connection(function(data)
             {
+                console.log(data)
                 if(typeof pCallback != 'undefined')
                 {
                     pCallback(data)   
                 }
-
                 resolve(data);
             });
         });
@@ -360,7 +360,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                 resolve(data.result.recordset);
             });            
         });
-    }    
+    }
     function _GetPromiseQuery(pQuery,pCallback)
     {
         return new Promise(resolve => 
@@ -408,7 +408,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                 resolve(data);
             });            
         });
-    }   
+    }
     //#region "PUBLIC"
     this.LocalDb = _LocalDb;
     this.Socket = _Socket;
@@ -726,12 +726,17 @@ angular.module('app.db', []).service('db',function($rootScope)
                                     tag : 'StokMiktarHesapla',
                                     param : [pBarkod]
                                 }
-                                _SqlExecute(m,function(data)
+                                _SqlExecute(m,function(Mikdata)
                                 {
-                                    if(data.result.recordset.length > 0)
+                                    console.log(Mikdata)
+                                    console.log(Mikdata.result.recordset[0].DEPOMIKTAR)
+                                    if(Mikdata.result.recordset[0].DEPOMIKTAR != null)
                                     {
-                                        $rootScope.StokData[0].DEPOMIKTAR += data.result.recordset[0].DEPOMIKTAR;
-                                        console.log(data.result.recordset[0].DEPOMIKTAR)
+                                        $rootScope.StokData[0].DEPOMIKTAR += Mikdata.result.recordset[0].DEPOMIKTAR;
+                                        pCallback($rootScope.StokData);
+                                    }
+                                    else
+                                    {
                                         pCallback($rootScope.StokData);
                                     }
                                 });

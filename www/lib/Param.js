@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "",
+			"Firma": "TEST",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
@@ -19,16 +19,17 @@ var Param = [
 			"KiloUzunluk": "5",
 			"KiloCarpan": "1",
 			"Titresim": "1",
-			"PlasiyerKodu": "",
+			"PlasiyerKodu": "100",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "1917MZ01",
+			"BTYaziciAdi": "SW_C58B",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "70",
-			"FisDizayn": "0"
+			"FisDizayn": "0",
+			"OfflineDepo": "2"
 		},
 		"StokRaporu": {
 			"DepoNo": "4"
@@ -125,11 +126,11 @@ var Param = [
 			"BelgeNo": "",
 			"CDepo": "1",
 			"CDepoListe": "",
-			"GDepo": "1",
+			"GDepo": "2",
 			"GDepoListe": "",
 			"Sorumluluk": "",
 			"EvrakSil": "0",
-			"EksiyeDusme": "1"
+			"EksiyeDusme": "0"
 		},
 		"DepoNakliye": {
 			"Seri": "DNP",
@@ -186,12 +187,12 @@ var Param = [
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
-			"Seri": "IRS2021",
+			"Seri": "IRS",
 			"BelgeNo": "",
 			"Cari": "",
-			"DepoNo": "1",
+			"DepoNo": "2",
 			"DepoListe": "",
-			"Sorumluluk": "",
+			"Sorumluluk": "01",
 			"Personel": "01",
 			"Proje": "",
 			"SonSatisFiyati": "0",
@@ -286,7 +287,7 @@ var Param = [
 			"Depo Sipariş": "0",
 			"Depo Mal Kabul": "0",
 			"Depo Nakliye": "0",
-			"Depo Durum Raporu": "0",
+			"Depo Durum Raporu": "1",
 			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
@@ -351,7 +352,7 @@ var Param = [
 			"Seri": "FTR",
 			"BelgeNo": "",
 			"Cari": "",
-			"DepoNo": "1",
+			"DepoNo": "2",
 			"DepoListe": "",
 			"Sorumluluk": "",
 			"Personel": "",
@@ -365,7 +366,8 @@ var Param = [
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
 			"Kasa": "K01",
-			"IskontoMatris": "1"
+			"IskontoMatris": "1",
+			"KDV": "false"
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
@@ -458,7 +460,7 @@ var Param = [
 			"CariHarfEkle": "E"
 		},
 		"DepoDurumRaporu": {
-			"Depo": "4"
+			"Depo": "2"
 		},
 		"StokVirman": {
 			"EvrakTip": "0",
@@ -513,7 +515,8 @@ var Param = [
 			"FirmaListe": "",
 			"RiskParam": "",
 			"RiskLimitOran": "",
-			"FisDizayn": "0"
+			"FisDizayn": "0",
+			"OfflineDepo": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",

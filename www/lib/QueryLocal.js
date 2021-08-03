@@ -34,7 +34,7 @@ var QueryLocal =
     },
     CariHareketGonderGetir:
     {
-        query:  "SELECT status AS STATUS,* FROM CARIHAR WHERE status = 0 AND cha_evrak_tip = '@cha_evrak_tip' GROUP BY cha_evrakno_seri,cha_evrakno_sira ",
+        query:  "SELECT status AS STATUS,* FROM CARIHAR WHERE status = 0 and cha_evrak_tip = '@cha_evrak_tip' GROUP BY cha_evrakno_seri,cha_evrakno_sira ",
         param:  ['cha_evrak_tip'],
         type:   ['int']
     },
@@ -56,17 +56,23 @@ var QueryLocal =
         param:  ['cha_kod'],
         type:   ['string|25']
     },
+    DepoAra : 
+    {
+        query : "SELECT DEPONO AS KODU,DEPOADI AS ADI FROM DEPO WHERE ((DEPONO = '@DEPONO') OR ('@DEPONO' = '')) AND ((DEPOADI = '@DEPOADI') OR ('@DEPOADI' = ''))",
+        param : ['DEPONO','DEPOADI'],
+        type : ['string|25','string|25'] 
+    },
     CmbAdresNo : 
     {
         query : "SELECT " +
                 "ADRESNO AS KODU, " +
-                "CADDE AS ADI,  " +
+                "ADRES1 AS ADI,  " +
                 "ADRESNO - 1 AS SIRANO," +
-                "SOKAK AS ADRES2," +
+                "ADRES2 AS ADRES2," +
                 "IL," +
                 "ILCE " +
                 "FROM ADRES " +
-                "WHERE CARIKODU = @adr_cari_kod  ORDER BY CADDE ASC" ,
+                "WHERE CARIKODU = @adr_cari_kod  ORDER BY ADRES1 ASC" ,
         param : ['adr_cari_kod'],
         type : ['string|25']
     },
@@ -127,7 +133,7 @@ var QueryLocal =
     MaxCekRefNo : 
     {
         query: "SELECT TIP || '-000-000-' || CAST(strftime('%Y') AS NVARCHAR(20)) || '-' || SUBSTR('00000000'|| CAST(IFNULL(REFNO,0) AS NVARCHAR(10)),-8,8) AS MAXREFNO,REFNO " +
-        "FROM (SELECT CASE @sck_tip WHEN 0 THEN 'MC' WHEN 1 THEN 'MS' WHEN 6 THEN 'MK' END AS TIP, IFNULL(MAX(CAST(SUBSTR(sck_refno,17,25) AS INT)),0) + 1 AS REFNO " +
+        "FROM (SELECT CASE @sck_tip WHEN 0 THEN 'MC' WHEN 1 THEN 'MS' WHEN 6 THEN 'MK' WHEN 5 THEN 'MO' END AS TIP, IFNULL(MAX(CAST(SUBSTR(sck_refno,17,25) AS INT)),0) + 1 AS REFNO " +
         "FROM ODEMEEMIRLERI WHERE sck_tip = @sck_tip ) AS TBL ",
         param : ['sck_tip'],
         type : ['int']
@@ -315,6 +321,11 @@ var QueryLocal =
                 "DOVIZKUR1," +
                 "DOVIZKUR2," +
                 "ALTDOVIZKUR," +
+                "IFNULL((SELECT ADRES FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES, " +
+                "IFNULL((SELECT ADRES1 FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES1, " +
+                "IFNULL((SELECT ADRES2 FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES2, " +
+                "IFNULL((SELECT IL FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS IL, " +
+                "IFNULL((SELECT ILCE FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ILCE, " +
                 "RISK," +
                 "ODEMEPLANI," +
                 "BAKIYE," +
@@ -325,9 +336,10 @@ var QueryLocal =
                 "FROM CARI " +
                 "WHERE((UPPER(CARI.KODU) LIKE  UPPER('@KODU') OR ('@KODU' = '')) OR (LOWER(CARI.KODU) LIKE LOWER('@KODU') OR ('@KODU' = ''))) " +
                 "AND ((UPPER(CARI.UNVAN1) LIKE  UPPER('@ADI') OR ('@ADI' = '')) OR (LOWER(CARI.UNVAN1) LIKE LOWER('@ADI') OR ('@ADI' = ''))) " +
+                "AND TEMSILCI = '@TEMSILCI' " +
                 "ORDER BY KODU ASC",
-            param : ['KODU','ADI'],
-            type : ['string','string']
+            param : ['KODU','ADI','TEMSILCI'],
+            type : ['string','string','string']
     },
     CariListeGetir : 
     {
@@ -353,6 +365,11 @@ var QueryLocal =
                 "DOVIZKUR1," +
                 "DOVIZKUR2," +
                 "ALTDOVIZKUR," +
+                "IFNULL((SELECT ADRES FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES, " +
+                "IFNULL((SELECT ADRES1 FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES1, " +
+                "IFNULL((SELECT ADRES2 FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES2, " +
+                "IFNULL((SELECT IL FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS IL, " +
+                "IFNULL((SELECT ILCE FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ILCE, " +
                 "RISK," +
                 "ODEMEPLANI," +
                 "BAKIYE," +
@@ -362,9 +379,9 @@ var QueryLocal =
                 "EFATURA " +
                 "FROM CARI " +
                 "WHERE ((UPPER(KODU) LIKE  UPPER('@KODU') || '%' OR ('@KODU' = '')) OR (LOWER(KODU) LIKE LOWER('@KODU') || '%' OR ('@KODU' = '')))" +
-                "AND (((UPPER(UNVAN1) LIKE UPPER('@ADI') || '%' or UPPER(UNVAN2) LIKE UPPER('@ADI') || '%') OR ('@ADI' = '')) OR ((LOWER(UNVAN1) LIKE LOWER('@ADI') || '%' or LOWER(UNVAN2) LIKE LOWER('@ADI') || '%') OR ('@ADI' = ''))) ORDER BY KODU ASC",
-            param : ['KODU','ADI'],
-            type : ['string','string']
+                "AND (((UPPER(UNVAN1) LIKE UPPER('@ADI') || '%' or UPPER(UNVAN2) LIKE UPPER('@ADI') || '%') OR ('@ADI' = '')) OR ((LOWER(UNVAN1) LIKE LOWER('@ADI') || '%' or LOWER(UNVAN2) LIKE LOWER('@ADI') || '%') OR ('@ADI' = ''))) AND TEMSILCI = '@TEMSILCI' ORDER BY KODU ASC",
+                param : ['KODU','ADI','TEMSILCI'],
+                type : ['string','string','string']
     },
     BarkodGetir:
     {
@@ -1513,12 +1530,12 @@ var QueryLocal =
     {
         query : "SELECT sth_DBCno , " +
                 "(SELECT ADI from STOK WHERE KODU=sth_stok_kod) AS ADI , " +
-                "(sth_tutar / sth_miktar) AS FIYAT, " +
+                "ROUND((sth_tutar / sth_miktar),2) AS FIYAT, " +
                 "(select UNVAN1 from CARI WHERE KODU=sth_cari_kodu) AS CARIADI, " +
                 "(select SORUMLULUKISMI from SORUMLULUKMRKZ where SORUMLULUKKODU=sth_stok_srm_merkezi) AS SORUMLUMERADI, " +
                 "(select PERSONELADI from PERSONEL where PERSONELKODU=sth_plasiyer_kodu) AS PERSONELADI," +
                 "sth_miktar AS MIKTAR , " +
-                "sth_tutar AS TUTAR , " +
+                "ROUND(sth_tutar,2) AS TUTAR , " +
                 "(sth_satirno + 1) AS NO, " +
                 "sth_miktar2 AS MIKTAR2 , " +
                 "(SELECT TOPTANVERGI FROM STOK WHERE KODU = sth_stok_kod) AS TOPTANVERGI, " +
@@ -1526,6 +1543,8 @@ var QueryLocal =
                 "IFNULL((SELECT BEDENPNTR FROM BARKOD WHERE KODU = sth_stok_kod),0) AS BEDENPNTR , " +
                 "IFNULL((SELECT SERI from SIPARISSTOK WHERE RECNO = sth_sip_uid),'') AS SIPSERI ," +
                 "IFNULL((SELECT SIRA from SIPARISSTOK WHERE RECNO = sth_sip_uid),0) AS SIPSIRA ," +
+                "(SELECT BIRIM FROM BIRIM WHERE KODU = sth_stok_kod) AS BIRIMADI, " +
+                "(SELECT BIRIMPNTR FROM BIRIM WHERE KODU = sth_stok_kod) AS BIRIM, " +
                 "* FROM STOKHAR " +
                 "WHERE sth_evrakno_seri = '@sth_evrakno_seri' AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip ORDER BY sth_satirno ",
                 param:  ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
@@ -1855,7 +1874,7 @@ var QueryLocal =
                 " WHERE  sth_Guid = '@sth_Guid'",
         param : ['sth_miktar:float','sth_miktar2:float','sth_tutar:float','sth_vergi_pntr:int','sth_iskonto1:float','sth_iskonto2:float','sth_iskonto3:float',
         'sth_iskonto4:float','sth_iskonto5:float','sth_iskonto6:float','sth_sat_iskmas1:bit','sth_sat_iskmas2:bit','sth_sat_iskmas3:bit','sth_sat_iskmas4:bit',
-        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:int']
+        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:string']
     },
     MaxStokHarSira : 
     {
@@ -2318,15 +2337,16 @@ var QueryLocal =
         query : "CREATE TABLE IF NOT EXISTS ADRES (" +
                 "CARIKODU NVARCHAR (25)," + 
                 "ADRESNO INTEGER," + 
-                "CADDE NVARCHAR(50), " + 
-                "SOKAK NVARCHAR(50), " +
+                "ADRES1 NVARCHAR(50), " + 
+                "ADRES NVARCHAR(50), " +
+                "ADRES2 NVARCHAR(50), " +
                 "ILCE NVARCHAR(15)," +
                 "IL NVARCHAR(15), " +
                 "SEKTOR NVARCHAR(25), " +
                 "GRUBU NVARCHAR(25), " + 
                 "BOLGE NVARCHAR (25), " +
                 "TEMSILCI NVARCHAR (25))",
-        insert : "INSERT INTO ADRES VALUES (?,?,?,?,?,?,?,?,?,?)"                
+        insert : "INSERT INTO ADRES VALUES (?,?,?,?,?,?,?,?,?,?,?)"                
     },
     AlisSartiTbl : 
     {

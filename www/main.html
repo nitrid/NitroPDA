@@ -93,6 +93,10 @@
     </head>
     <body class="animsition site-navbar-small site-menubar-open" ng-controller="Main" ng-init = "Init()">
       <div id="loading" style="display:none;z-index: 1800;">    
+        <div class="navbar-brand navbar-brand-center">
+          <i ng-click="BtnMain()" class="fas fa-lg fa-home"></i>
+          <span class="navbar-brand-text hidden-xs-down"></span>
+      </div>
       </div>
     <audio id="Beep">
         <source src="sound/beep.mp3" type="audio/mpeg">
@@ -105,6 +109,11 @@
           <!-- <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
             <span class="hamburger-bar"></span>
           </button> -->
+          <div class="navbar-brand">
+            <i style="color:white">{{OnOffMod}}</i>
+            <span class="navbar-brand-text hidden-xs-down"  ></span>
+          </div>
+
         <div class="navbar-brand navbar-brand-center">
             <i ng-click="BtnMain()" class="fas fa-lg fa-home"></i>
             <span class="navbar-brand-text hidden-xs-down"></span>
@@ -115,11 +124,14 @@
         </button>
         <!-- ... -->
         <div class="collapse" id="site-navbar-collapse">
-          <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
+          <!-- <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
             <span class="hamburger-bar"></span>
-          </button>
+          </button> -->
           <div class="col-16 px-1">
             <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BtnMenuDbTransfer()">Veri Tabanını Güncelle</button>
+          </div>
+          <div class="col-12 px-1">
+            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="Modline()">Mod: {{OnOffMod}}</button>
           </div>
         </div>
         <div class="navbar-container container-fluid">
@@ -197,7 +209,6 @@
           </a>
         </div>
       </div>
-
     <!-- Navigasyon Bitir -->
     <!-- Sayfa Basla -->
     <div class="page">

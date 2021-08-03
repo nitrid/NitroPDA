@@ -24,7 +24,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
         }
     });
-
     function Init() 
     {
         gtag('config', 'UA-12198315-14', 
@@ -671,6 +670,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     function BarkodFocus()
     {
         $timeout( function(){$window.document.getElementById("Barkod").focus();},100);  
+    }
+    function CariFocus()
+    {
+        $timeout( function(){$window.document.getElementById("CariFocus").focus();},100);  
+    }
+    function StokFocus()
+    {
+        $timeout( function(){$window.document.getElementById("StokFocus").focus();},100);  
     }
     function BedenHarInsert(pGuid)
     {
@@ -1366,7 +1373,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $scope.FisData = "";
     
                 $scope.FisDeger = SpaceLength($scope.CariKodu,35) + $scope.Seri + "-" + $scope.Sira + "\n" + SpaceLength($scope.CariAdi,35) + $scope.Tarih +"\n" + "Adres: " +SpaceLength($scope.Adres1,28) + $scope.Saat + "\n"  + "Adres2: " + SpaceLength($scope.Adres2,40) + "\n" + SpaceLength($scope.Adres,40) + "\n" +"Vergi Dairesi: "+SpaceLength($scope.CariVDADI,45) + "\n" + "Vergi No: "+ $scope.CariVDNO
-    
+                console.log(pData)
                 for(let i=0; i < pData.length; i++)
                 {
                     $scope.FisData = $scope.FisData +  SpaceLength(pData[i].ADI,25) + " " + SpaceLength(pData[i].BIRIM,4) + SpaceLength(pData[i].BIRIMADI,6) + SpaceLength(parseFloat(pData[i].FIYAT,2),6) + SpaceLength(parseFloat(pData[i].sip_tutar,2),5) + "\n";
@@ -1436,6 +1443,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});  
                 $("#TblCari").jsGrid({pageIndex: true})
+                CariFocus();
             }
             else
             {
@@ -1606,6 +1614,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 }   
             });
         }
+        StokFocus();
     }
     $scope.BtnStokGridSec = function()
     {
@@ -1969,7 +1978,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         console.log($scope.OdemePlan)
         $scope.DovizChangeKodu = "0";
         $scope.DovizChange()
-        $scope.MainClick();
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -2365,112 +2373,105 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {
         db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(data)
         {
-            if(data[0].status == 1)
+
+            if(data.length > 0)
             {
-                $("#MdlEvrakGetir").modal('hide');
-                alertify.alert("Aktarılmış Evrakı Çağıramazsın.")
+                Init();
+                InitCariGrid();
+                InitIslemGrid();                
+                
+                $scope.Seri = data[0].sip_evrakno_seri;
+                $scope.Sira = data[0].sip_evrakno_sira;
+                $scope.EvrakTip = data[0].sip_tip.toString();
+                $scope.CariKodu = data[0].sip_musteri_kod;
+                $scope.BelgeNo = data[0].sip_belgeno;
+                $scope.Tarih = new Date(data[0].sip_tarih).toLocaleDateString();                
+                $scope.TeslimTarihi = new Date(data[0].sip_teslim_tarih).toLocaleDateString();
+                $scope.Barkod = "";
+                $scope.Stok = 
+                [
+                    {
+                        BIRIM : '',
+                        BIRIMPNTR : 0, 
+                        FIYAT : 0,
+                        TUTAR : 0,
+                        INDIRIM : 0,
+                        KDV : 0,
+                        TOPTUTAR :0
+                    }
+                ];
+                $scope.Miktar = 1;
+
+                $scope.AraToplam = 0;
+                $scope.ToplamIndirim = 0;
+                $scope.NetToplam = 0;
+                $scope.ToplamKdv = 0;
+                $scope.GenelToplam = 0;
+
+                $scope.CmbCariAra = "0";
+                $scope.TxtCariAra = "";
+                
+                db.GetData($scope.Firma,'SipBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,9],function(BedenData)
+                {
+                    $scope.BedenHarListe = BedenData;
+                });
+                
+                db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(CariData)
+                {   
+                    $scope.CariListe = CariData;
+                    $scope.CariAdi = $scope.CariListe[0].UNVAN1
+                    $scope.Adres = $scope.CariListe[0].ADRES;
+                    $scope.Adres1 = $scope.CariListe[0].ADRES1;
+                    $scope.Adres2 = $scope.CariListe[0].ADRES2;
+                    $scope.CariBakiye = $scope.CariListe[0].BAKIYE;
+                    $scope.CariVDADI = $scope.CariListe[0].VDADI;
+                    $scope.CariVDNO = $scope.CariListe[0].VDNO;                    
+                    $scope.Risk = $scope.CariListe[0].RISK
+                    $scope.RiskLimit = $scope.CariListe[0].RISKLIMIT;
+
+                    $("#TblCari").jsGrid({data : $scope.CariListe});
+
+                    let Obj = $("#TblCari").data("JSGrid");
+                    let Item = Obj.rowByItem(CariData[0]);
+                    
+                    $scope.CariListeRowClick(0,Item,Obj);
+
+                    FisData(data)
+                });
+                db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(e)
+                {    
+                    $scope.DepoListe = e; 
+                    $scope.DepoNo = data[0].sip_depono.toString();
+                    $scope.DepoListe.forEach(function(item) 
+                    {
+                        if(item.KODU == $scope.DepoNo)
+                            $scope.DepoAdi = item.ADI;
+                    });     
+                });
+                
+                db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sip_stok_sormerk; $scope.SorumlulukAdi = data[0].SORUMLUMERADI});
+                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = data[0].sip_satici_kod; $scope.PersonelAdi = data[0].PERSONELADI});    
+                db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sip_projekodu});
+                db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(e){$scope.OdemePlanListe = e; $scope.OdemeNo = data[0].sip_opno.toString()});
+                
+                $scope.SiparisListe = data;
+                $("#TblIslem").jsGrid({data : $scope.SiparisListe});  
+
+                ToplamMiktarHesapla();
+                DipToplamHesapla();
+                $scope.EvrakLock = true;
+                $scope.BarkodLock = false;
+
+                angular.element('#MdlEvrakGetir').modal('hide');
+
+                BarkodFocus();
+
+                alertify.alert("<a style='color:#3e8ef7''>" + $scope.ToplamSatir + " " + "Satır Kayıt Başarıyla Getirildi.. !" + "</a>" );
             }
             else
             {
-                if(data.length > 0)
-                {
-                    Init();
-                    InitCariGrid();
-                    InitIslemGrid();                
-                    
-                    $scope.Seri = data[0].sip_evrakno_seri;
-                    $scope.Sira = data[0].sip_evrakno_sira;
-                    $scope.EvrakTip = data[0].sip_tip.toString();
-                    $scope.CariKodu = data[0].sip_musteri_kod;
-                    $scope.BelgeNo = data[0].sip_belgeno;
-                    $scope.Tarih = new Date(data[0].sip_tarih).toLocaleDateString();                
-                    $scope.TeslimTarihi = new Date(data[0].sip_teslim_tarih).toLocaleDateString();
-                    $scope.Barkod = "";
-                    $scope.Stok = 
-                    [
-                        {
-                            BIRIM : '',
-                            BIRIMPNTR : 0, 
-                            FIYAT : 0,
-                            TUTAR : 0,
-                            INDIRIM : 0,
-                            KDV : 0,
-                            TOPTUTAR :0
-                        }
-                    ];
-                    $scope.Miktar = 1;
-    
-                    $scope.AraToplam = 0;
-                    $scope.ToplamIndirim = 0;
-                    $scope.NetToplam = 0;
-                    $scope.ToplamKdv = 0;
-                    $scope.GenelToplam = 0;
-    
-                    $scope.CmbCariAra = "0";
-                    $scope.TxtCariAra = "";
-                    
-                    db.GetData($scope.Firma,'SipBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,9],function(BedenData)
-                    {
-                        $scope.BedenHarListe = BedenData;
-                    });
-                    
-                    db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(CariData)
-                    {   
-                        $scope.CariListe = CariData;
-                        $scope.CariAdi = $scope.CariListe[0].UNVAN1
-                        $scope.Adres = $scope.CariListe[0].ADRES;
-                        $scope.Adres1 = $scope.CariListe[0].ADRES1;
-                        $scope.Adres2 = $scope.CariListe[0].ADRES2;
-                        $scope.CariBakiye = $scope.CariListe[0].BAKIYE;
-                        $scope.CariVDADI = $scope.CariListe[0].VDADI;
-                        $scope.CariVDNO = $scope.CariListe[0].VDNO;                    
-                        $scope.Risk = $scope.CariListe[0].RISK
-                        $scope.RiskLimit = $scope.CariListe[0].RISKLIMIT;
-    
-                        $("#TblCari").jsGrid({data : $scope.CariListe});
-    
-                        let Obj = $("#TblCari").data("JSGrid");
-                        let Item = Obj.rowByItem(CariData[0]);
-                       
-                        $scope.CariListeRowClick(0,Item,Obj);
-    
-                        FisData(data)
-                    });
-                    db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(e)
-                    {    
-                        $scope.DepoListe = e; 
-                        $scope.DepoNo = data[0].sip_depono.toString();
-                        $scope.DepoListe.forEach(function(item) 
-                        {
-                            if(item.KODU == $scope.DepoNo)
-                                $scope.DepoAdi = item.ADI;
-                        });     
-                    });
-                    
-                    db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sip_stok_sormerk; $scope.SorumlulukAdi = data[0].SORUMLUMERADI});
-                    db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = data[0].sip_satici_kod; $scope.PersonelAdi = data[0].PERSONELADI});    
-                    db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sip_projekodu});
-                    db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(e){$scope.OdemePlanListe = e; $scope.OdemeNo = data[0].sip_opno.toString()});
-                    
-                    $scope.SiparisListe = data;
-                    $("#TblIslem").jsGrid({data : $scope.SiparisListe});  
-    
-                    ToplamMiktarHesapla();
-                    DipToplamHesapla();
-                    $scope.EvrakLock = true;
-                    $scope.BarkodLock = false;
-    
-                    angular.element('#MdlEvrakGetir').modal('hide');
-    
-                    BarkodFocus();
-    
-                    alertify.alert("<a style='color:#3e8ef7''>" + $scope.ToplamSatir + " " + "Satır Kayıt Başarıyla Getirildi.. !" + "</a>" );
-                }
-                else
-                {
-                    angular.element('#MdlEvrakGetir').modal('hide');
-                    alertify.alert("<a style='color:#3e8ef7''>" + "Belge Bulunamadı !" + "</a>" );
-                }
+                angular.element('#MdlEvrakGetir').modal('hide');
+                alertify.alert("<a style='color:#3e8ef7''>" + "Belge Bulunamadı !" + "</a>" );
             }
         });
     }
@@ -2668,6 +2669,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbIslemSatirlari").removeClass('active');
         $("#TblAciklama").removeClass('active');
         $("#TbDizayn").removeClass('active');
+        StokFocus();
     }
     $scope.CariSecClick = function() 
     {
@@ -2686,6 +2688,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TblAciklama").removeClass('active');
                 $("#TbStok").removeClass('active');
                 $("#TbDizayn").removeClass('active');
+                CariFocus();
             }        
             else
             {
@@ -2759,7 +2762,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnFisYazdir = async function()
     {
-        var FisBilgi = document.getElementById('FisBilgi').textContent;
+        // var FisBilgi = document.getElementById('FisBilgi').textContent;
         if($scope.FisDizaynTip == 0)
         {
             let FisDizayn = ""; 
@@ -2822,7 +2825,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
             //FİŞ DİZAYNI
             FisDizayn = "                                             -" + "\n" + 
-            FisBilgi + "\n" +
+            // FisBilgi + "\n" +
+            "                 Bilgi Fişi" + "\n" +
             $scope.FisDeger + "\n" +
             SpaceLength("ÜRÜN ADI",19) +    SpaceLength("MIK" + " " + "BRM",7) + "   " + SpaceLength("FIYAT",9) + SpaceLength("NET TUTAR",5) + "\n" + 
             $scope.FisData + "\n" + //İÇERİK
