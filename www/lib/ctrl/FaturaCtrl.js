@@ -158,6 +158,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.BarkodLock = false;
         $scope.FiyatLock = false;
         $scope.TblLoading = true;
+        $scope.ManuelArama = false;
         $scope.Aciklama = "";
     }
     function InitCariGrid()
@@ -668,9 +669,16 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             }
         });
     }
-    function BarkodFocus()
+    function BarkodFocus(pData)
     {
-        $timeout( function(){$window.document.getElementById("Barkod").focus();},300);  
+        if(pData == 1)
+        {
+            $timeout( function(){$window.document.getElementById("Barkod").focus();},300);  
+        }
+        if(pData == 0)
+        {
+            $timeout( function(){$window.document.getElementById("Miktar").focus();},300);  
+        }
     }
     function CariFocus()
     {
@@ -1779,7 +1787,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.BarkodLock = false;
 
         $scope.BirimListe = [];
-        BarkodFocus();      
+        BarkodFocus(1);      
     }
     $scope.BtnDuzenle = function()
     {   
@@ -2128,7 +2136,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                     localStorage.removeItem("FaturaParam");
                 }
                 
-                BarkodFocus();
+                BarkodFocus(1);
                 $timeout(function(){FisData(data);},200);  
 
             }
@@ -2562,7 +2570,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 console.log("Barkod Okutunuz!");
                 $scope.InsertLock = false;
             }     
-            BarkodFocus();
+            console.log($scope.ManuelArama)
+            if($scope.ManuelArama == true)
+            {
+                $scope.ManuelAramaClick();
+            }
+            BarkodFocus(1);
         }
     }
     $scope.IskontoValid = function(pTip,pIndex)
@@ -2710,7 +2723,14 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.CmbEvrakTip = UserParam[ParamName].EvrakTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
         $scope.AdresNo = UserParam[ParamName].AdresNo;
-        $scope.VergiChk = JSON.parse(UserParam[ParamName].KDV);
+        if(UserParam[ParamName].KDVYok == "1")
+        {
+            $scope.VergiChk = true;
+        }
+        else
+        {
+            $scope.VergiChk = false;
+        }
         if(typeof db.Rota.Kodu != 'undefined')
         {
             //YAPILACAK
@@ -2791,7 +2811,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.EvrakGetir();
         }        
         $scope.EvrakTipChange(true);//EVRAK GETİR İÇİN TRUE FALSE DEĞERİ GÖNDERİLİYOR.
-        BarkodFocus();
+        BarkodFocus(1);
     }
     $scope.SorumlulukChange = function()
     {
@@ -2984,12 +3004,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100));
             $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM.toFixed(2)
             $scope.Stok[0].TOPTANVERGI1 = 0;
-            if($scope.VergiChk == true)
+            if($scope.VergiChk == false)
             {
                 $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
                 $scope.Stok[0].TOPTANVERGI1 = $scope.Stok[0].TOPTANVERGI
             }
-            else
+            else if($scope.VergiChk == true)
             {
                 $scope.Stok[0].KDV = 0;
                 $scope.Stok[0].TOPTANVERGI1 = 0;
@@ -3054,7 +3074,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
-        $scope.BarkodGirisClick();
+        $scope.BarkodGirisClick(0);
+        BarkodFocus(0);
         StokBarkodGetir($scope.Barkod);
     }
     $scope.IslemListeRowClick = function(pIndex,pItem,pObj)
@@ -3078,7 +3099,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $("#TbBelgeBilgisi").addClass('active');
         $("#TbMain").removeClass('active');
     }
-    $scope.BarkodGirisClick = function() 
+    $scope.BarkodGirisClick = function(pData) 
     {   
         if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
         {            
@@ -3086,6 +3107,14 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         }
         else
         {
+            if(pData == 1)
+            {
+                console.log($scope.ManuelArama)
+                if($scope.ManuelArama == true)
+                {
+                    $scope.ManuelArama = false;
+                }
+            }
             if($scope.EvrakTip == 4 && $scope.KasaKodu != "")
             {
                 $("#TbBarkodGiris").addClass('active');
@@ -3095,7 +3124,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbStok").removeClass('active');
                 $("#TbStokDurum").removeClass('active');
-                BarkodFocus();
+                BarkodFocus(1);
             }
             else if($scope.CariKodu != "")
             {
@@ -3106,7 +3135,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbStok").removeClass('active');
                 $("#TbStokDurum").removeClass('active');
-                BarkodFocus();
+                BarkodFocus(1);
             }              
             else
             {
@@ -3151,6 +3180,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         StokFocus()
+        $scope.ManuelArama = true;
+        console.log($scope.ManuelArama)
     }
     $scope.CariSecClick = function()
     {
@@ -3678,17 +3709,14 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         if(localStorage.mode == 'false')
         {
             let Status = await db.ConnectionPromise()
-            console.log(Status)
             if(!Status)
             {
                 alertify.okBtn("Tamam");
                 alertify.alert("Bağlantı Problemi !");
                 return;
             }
-            console.log(1)
             for (let i = 0; i < $scope.CariHareketGonderListe.length; i++) 
             {
-                console.log(1)
                 let TmpStatus = 1
                 let TmpCariHarData = await db.GetPromiseTag($scope.Firma,'CariHarGetir',[$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrakno_sira,$scope.CariHareketGonderListe[i].cha_evrak_tip]);
                 let TmpStokHarData = await db.GetPromiseTag($scope.Firma,'StokHarGetir',[$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrakno_sira,$scope.StokHareketGonderListe[i].sth_evraktip]);
@@ -3897,8 +3925,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                     }
                 }
                 localStorage.mode = 'false';
-                console.log(1)
-                console.log(TmpStatus)
                 if (TmpStatus == 1)
                 {
                     let TmpUpdateQuery = 

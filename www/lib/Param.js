@@ -367,7 +367,7 @@ var Param = [
 			"EksiyeDusme": "0",
 			"Kasa": "K01",
 			"IskontoMatris": "1",
-			"KDV": "false"
+			"KDVYok": "1"
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
@@ -685,8 +685,8 @@ var Param = [
 			"IskontoMatris": "0"
 		},
 		"SatisFatura": {
-			"EvrakTip": "0",
-			"Seri": "FTR",
+			"EvrakTip": "1",
+			"Seri": "F",
 			"BelgeNo": "",
 			"Cari": "",
 			"DepoNo": "1",

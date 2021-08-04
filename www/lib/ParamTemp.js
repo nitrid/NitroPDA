@@ -276,7 +276,8 @@ var ParamTemp =
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
 			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""},
-			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
+			"KDVYok" : {"Title" : "KDV Yok","DefaultValue" : "0"}
 		},
 		"Fire" :
 		{

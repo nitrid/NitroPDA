@@ -1421,7 +1421,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             for(let x = 0; x <= i; x++)
             {    
                 Satır = Satır + "                                             -"+ "\n"; 
-            } 
+            }
             FisDizayn = 
             "                   ESER GIDA                  " + "\n" +
             "        SÜT VE SÜT ÜRÜNLERİ PAZARLAMA         " + "\n" +
