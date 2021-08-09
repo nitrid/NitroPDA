@@ -186,13 +186,11 @@
                   <input required id="kullanıcı-secim" class="form-control" placeholder="Kullanıcı" ng-model="Kullanici">
                  <!--<label class="floating-label">Kullanıcı</label> -->
               </div>
-              <sifreleave>
               <div class="form-group form-material floating" data-plugin="formMaterial">
                 <input required type="password" class="form-control" name="password" placeholder="Şifre" ng-model="Password" />
                <!-- <label class="floating-label">Şifre</label> -->
               </div>
-              </sifreleave>
-               <div class="form-group form-material">
+               <div class="form-group form-material" ng-click="FirmaClick()">
                  <select class="form-control" data-plugin="selectpicker" data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
                     <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
                 </select>

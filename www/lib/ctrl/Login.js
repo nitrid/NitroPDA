@@ -96,6 +96,7 @@ function Login ($scope,$rootScope,$window,db)
     }    
     $scope.FirmaClick = function()
     {
+        console.log(1)
         if(UserControl())
         {
             console.log("Kullanıcı adı ve şifre doğru");
@@ -389,14 +390,5 @@ function Login ($scope,$rootScope,$window,db)
                 $scope.TransferEventProgress = (e.Status.index / e.Status.count) * 100;
             }        
         });     
-    });
-     $(document).ready(function(){
-     $("sifreleave").mouseleave(function()
-      {
-       if(typeof($scope.Password) != 'undefined')
-       {
-            $scope.FirmaClick()
-       }
-      });
     });
 }
