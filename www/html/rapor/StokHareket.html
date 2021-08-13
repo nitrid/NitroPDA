@@ -12,13 +12,13 @@
                             <div class="col-11 px-1 py-5">
                                 <div class="input-group px-5">
                                     <input type="text" class="form-control focus" placeholder="Stok Seçmek İçin Tıklayınız" ng-click="StokListeClick()" ng-model="StokAdi">
-                                    <button type="submit" class="btn btn-primary" ng-click="BtnStokTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                    <button type="submit" class="btn btn-round btn-primary" ng-click="BtnStokTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
                                 </div>
                             </div>
                             <div class="col-11 px-1 py-5">
                                 <div class="input-group px-5">
                                     <input type="text" class="form-control focus" placeholder="Depo Seçmek İçin Tıklayınız" ng-click="DepoListeleClick()" ng-model="DepoKodu">
-                                    <button type="submit" class="btn btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                    <button type="submit" class="btn btn-round btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                         </div>
                         <div class="row py-5">
                             <div class="col-12 col-sm-11 p-5 m-5" >
-                                <button type="submit" class="btn btn-primary btn-block btn-sm" ng-click="BtnStokFoyGetir()">Getir</button>
+                                <button type="submit" class="btn btn-round btn-primary btn-block btn-sm" ng-click="BtnStokFoyGetir()">Getir</button>
                             </div>
                         </div>
                         <div class="row ">
@@ -67,7 +67,7 @@
             <div id="TbDepo" class="tab-pane">
                 <div class="row py-1">
                     <div class="col-4 px-1">
-                        <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                     </div>
                 </div>
                 <div class="row pt-5">
@@ -82,7 +82,7 @@
                 <div id="TbStok" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="form-group row my-1">
@@ -96,7 +96,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText" ng-disabled="EvrakLock">
                                 <span class="input-group-append">
-                                    <button type="submit" class="btn btn-primary" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                                    <button type="submit" class="btn btn-round btn-primary" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
                                 </span>
                             </div>
                         </div>

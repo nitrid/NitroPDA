@@ -29,7 +29,8 @@ var ParamTemp =
 			"FirmaListe" : {"Title" : "Firma Liste","DefaultValue" : ""},
 			"RiskParam": {"Title" : "Risk Param","DefaultValue" : ""},
 			"RiskLimitOran": {"Title" : "Risk Limit Oran","DefaultValue" : ""},
-			"FisDizayn": {"Title" : "Fiş Dizayn","DefaultValue" : "0"}
+			"FisDizayn": {"Title" : "Fiş Dizayn","DefaultValue" : "0"},
+			"OfflineDepo": {"Title" : "Offline Depo","DefaultValue" : "0"}
 		},
 		"Sayim" :
 		{
@@ -275,7 +276,8 @@ var ParamTemp =
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
 			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""},
-			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
+			"KDVYok" : {"Title" : "KDV Yok","DefaultValue" : "0"}
 		},
 		"Fire" :
 		{

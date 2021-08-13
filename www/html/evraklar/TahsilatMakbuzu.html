@@ -17,12 +17,13 @@
                             </select>
                         </div>
                         <div class="col-4 px-1">
-                            <button type="button" class="btn btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak(0)">Yeni Tahsilat</button>
                                 <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Tahsilat Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(0)">Tahsilat Sil</button>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRaporClick()">Gün Sonu Raporu</button>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGonder()">Gönder</button>
                             </div>
                         </div>
                     </div>
@@ -44,25 +45,25 @@
                     </div>
                     <div class="row pt-50">
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
+                            <button class="btn btn-round btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="CariSecClick()">Cari Seç</button>
+                            <button class="btn btn-round btn-block btn-primary h-50" ng-click="CariSecClick()">Cari Seç</button>
                         </div>
                     </div>
                     <div class="row py-10">
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="MeblaGirisClick()">Mebla Giriş</button>
+                            <button class="btn btn-round btn-block btn-primary h-50" ng-click="MeblaGirisClick()">Mebla Giriş</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="IslemSatirlariClick()">İşlem Satırları</button>
+                            <button class="btn btn-round btn-block btn-primary h-50" ng-click="IslemSatirlariClick()">İşlem Satırları</button>
                         </div>
                     </div>
                 </div>
                 <div id="TbBelgeBilgisi" class="tab-pane">
                     <div class="row pt-0 pb-1 pb-5">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="row py-1">
@@ -110,7 +111,7 @@
                 <div id="TbCariSec" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="row pt-5">
@@ -126,15 +127,15 @@
                             </select>
                         </div>
                         <div class="col-8 px-1">
-                            <input type="text" class="form-control" ng-model="TxtCariAra" ng-disabled="EvrakLock">
+                            <input type="text" id="CariFocus" class="form-control" ng-model="TxtCariAra" ng-disabled="EvrakLock">
                         </div>
                     </div>
                     <div class="form-group row my-1">
                         <div class="col-6">
-                            <button class="form-group btn btn-block btn-primary my-1 h-40" ng-click="MainClick()">Seç</button>
+                            <button class="form-group btn btn-round btn-block btn-primary my-1 h-40" ng-click="MeblaGirisClick()">Seç</button>
                         </div>
                         <div class="col-6">
-                            <button class="form-group btn btn-block btn-primary my-1 h-40" ng-click="BtnCariListele()">Listele</button>
+                            <button class="form-group btn btn-round btn-block btn-primary my-1 h-40" ng-click="BtnCariListele()">Listele</button>
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading">
@@ -147,13 +148,10 @@
                 <div id="TbMeblagGiris" class="tab-pane">
                     <div class="row pt-0 pb-1 pb-5">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="IslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
-                        </div>
-                        <div class="col-4 px-1">
-                            <a href="#!SatisFatura"><button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BtnFatClick()"><b>F</b></button></a>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="IslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
                         </div>
                     </div>
                     <div class="row my-0 py-0">
@@ -164,6 +162,7 @@
                                 <option value="1">MÜŞTERİ ÇEKİ</option>
                                 <option value="2">MÜŞTERİ SENEDİ</option>
                                 <option value="3">KREDİ KARTI</option>
+                                <option value="4">ÖDEME SÖZÜ</option>
                             </select>
                         </div>
                     </div>
@@ -204,7 +203,7 @@
                     </div>
                     <div class="row my-0 pt-10">
                         <div class="col-12 pt-5 px-1">
-                            <button type="submit" class="btn btn-primary btn-block h-40" ng-disabled="InsertLock" ng-click="Insert()">Ekle</button>
+                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-disabled="InsertLock" ng-click="Insert()">Ekle</button>
                         </div>
                     </div>
                     <div class="row py-1 px-1">
@@ -214,10 +213,10 @@
                 <div id="TbIslemSatirlari" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-4 offset-4 px-1">
-                            <button type="button" class="btn btn-primary btn-block dropdown-toggle mb-1 h-40" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle mb-1 h-40" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button>
                                 <button class="dropdown-item" role="menu-item" ng-click="SatirSil()">Satır Sil</button>
@@ -232,16 +231,19 @@
                         <div class="col-2 px-1">
                             <div class="row">
                                 <div class="col-12">
-                                    <button class="btn btn-block btn-primary h-60">
+                                    <button class="btn btn-round btn-block btn-primary h-60">
                                         <span class="glyphicon glyphicon-print"  aria-hidden="true" ng-click="BtnFisYazdir()"></span>
                                     </button>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-2 px-1">
+                            <a href="#!SatisFatura"><button class="form-group btn btn-round btn-block btn-primary mb-1 h-60" ng-click="BtnFatClick()"><b>F</b></button></a>
+                        </div>
                         <!-- <div class="col-2 px-1">
                             <div class="row">
                                 <div class="col-12">
-                                    <a href="#!SatisFatura"><button class="btn btn-block btn-primary h-60" ng-click="BtnFatClick()">
+                                    <a href="#!SatisFatura"><button class="btn btn-round btn-block btn-primary h-60" ng-click="BtnFatClick()">
                                         <b>F</b>
                                     </button></a>
                                 </div>
@@ -259,7 +261,7 @@
                 <div id="TbDizayn" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="row py-1 px-1">
@@ -282,7 +284,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <button class="btn btn-block btn-primary " ng-click="BtnGunSonuYazdir()">Yazdır</button>
+                            <button class="btn btn-round btn-block btn-primary " ng-click="BtnGunSonuYazdir()">Yazdır</button>
                         </div>
                     </div>
                 </div>
@@ -310,7 +312,7 @@
                             <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="Sira">
                         </div>
                     <div class="row my-5">
-                        <button type="submit" class="btn btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="EvrakGetir(1)">Getir</button>
+                        <button type="submit" class="btn btn-round btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="EvrakGetir(1)">Getir</button>
                     </div>
                 </div>
             </div>
@@ -334,7 +336,7 @@
                         </div>
                     </div>
                     <div class="row px-10 py-10">
-                        <button type="submit" class="btn btn-primary btn-block col-12" ng-click="BtnDuzenleKaydet()">Kaydet</button>
+                        <button type="submit" class="btn btn-round btn-primary btn-block col-12" ng-click="BtnDuzenleKaydet()">Kaydet</button>
                     </div>
                 </div>
             </div>
@@ -352,8 +354,29 @@
                 </div>
                 <div class="modal-body">
                     <div class="col-12 p-10">
-                    <button class="btn btn-block btn-primary" ng-click="BtnCariDoviz()">{{KasaDovizAdi}}</button>
-                    <button class="btn btn-block btn-primary" ng-click="BtnKasaDoviz()">{{CariDovizAdi}}</button>
+                    <button class="btn btn-round btn-block btn-primary" ng-click="BtnCariDoviz()">{{KasaDovizAdi}}</button>
+                    <button class="btn btn-round btn-block btn-primary" ng-click="BtnKasaDoviz()">{{CariDovizAdi}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Gonder Modal -->
+    <div class="modal fade" id="MdlGonder" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Gönder</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row py-1 px-1">
+                        <div id="TblCariHarListe"></div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <button class="btn btn-round btn-block btn-primary h-50" ng-click="EvrakGonder()">Gönder</button>
                     </div>
                 </div>
             </div>

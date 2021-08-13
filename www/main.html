@@ -93,6 +93,10 @@
     </head>
     <body class="animsition site-navbar-small site-menubar-open" ng-controller="Main" ng-init = "Init()">
       <div id="loading" style="display:none;z-index: 1800;">    
+        <div class="navbar-brand navbar-brand-center">
+          <i ng-click="BtnMain()" class="fas fa-lg fa-home"></i>
+          <span class="navbar-brand-text hidden-xs-down"></span>
+      </div>
       </div>
     <audio id="Beep">
         <source src="sound/beep.mp3" type="audio/mpeg">
@@ -105,6 +109,11 @@
           <!-- <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
             <span class="hamburger-bar"></span>
           </button> -->
+          <div class="navbar-brand">
+            <i style="color:white">{{OnOffMod}}</i>
+            <span class="navbar-brand-text hidden-xs-down"  ></span>
+          </div>
+
         <div class="navbar-brand navbar-brand-center">
             <i ng-click="BtnMain()" class="fas fa-lg fa-home"></i>
             <span class="navbar-brand-text hidden-xs-down"></span>
@@ -115,11 +124,14 @@
         </button>
         <!-- ... -->
         <div class="collapse" id="site-navbar-collapse">
-          <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
+          <!-- <button type="button" class="navbar-toggler hamburger hamburger-closes navbar-toggler-left hided" data-toggle="menubar">
             <span class="hamburger-bar"></span>
-          </button>
+          </button> -->
           <div class="col-16 px-1">
             <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="BtnMenuDbTransfer()">Veri Tabanını Güncelle</button>
+          </div>
+          <div class="col-12 px-1">
+            <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="Modline()">Mod: {{OnOffMod}}</button>
           </div>
         </div>
         <div class="navbar-container container-fluid">
@@ -197,7 +209,6 @@
           </a>
         </div>
       </div>
-
     <!-- Navigasyon Bitir -->
     <!-- Sayfa Basla -->
     <div class="page">
@@ -223,11 +234,11 @@
                 <!-- <div class="row">                    
                   <a class="btn btn-primary btn-block col-lg-12 col-sm-12 col-xl-12" href="#" ng-click="BtnDbCreate()" ng-show="!IsDbCreateWorking">Oluştur</a>   
                 </div> -->
-              <div class="row">
+              <!-- <div class="row">
                 <div class="form-group col-lg-12">
                   <button type="submit"class="btn btn-primary btn-block col-lg-12 col-sm-12 col-sm-12" href="#" ng-click="BtnDbCreate()" ng-show="!IsDbCreateWorking">Oluştur</button>
                 </div>
-              </div>
+              </div> -->
               <div class="row">
                 <h3 class="text-center">{{TransferEventMaster}}</h3>
                 <h4 class="text-center">{{TransferEventAlt}}</h4>

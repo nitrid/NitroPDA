@@ -175,7 +175,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.CariListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
@@ -235,7 +235,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.IrsaliyeListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             
@@ -315,7 +315,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.StokListe,
             paging : true,
-            pageSize: 7,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -387,7 +387,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.PartiLotListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -451,7 +451,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.DizaynListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
@@ -510,7 +510,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             editing: true,
             data : $scope.ProjeEvrakGetirListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -564,7 +564,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             selecting: true,
             data : $scope.StokHarGonderListe,
             paging : true,
-            pageSize: 10,
+            pageSize: 30,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: 
@@ -607,6 +607,14 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     function BarkodFocus()
     {
         $timeout( function(){$window.document.getElementById("Barkod").focus();},100);  
+    }
+    function CariFocus()
+    {
+        $timeout( function(){$window.document.getElementById("CariFocus").focus();},100);  
+    }
+    function StokFocus()
+    {
+        $timeout( function(){$window.document.getElementById("StokFocus").focus();},100);  
     }
     function BedenHarInsert(pGuid)
     {
@@ -1002,6 +1010,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         CariKodu : $scope.CariKodu,
                         CariFiyatListe : $scope.CariFiyatListe,
                         CariDovizKuru : $scope.CariDovizKuru,
+                        CariIskontoKodu : $scope.CariIskontoKodu,
                         DepoNo : $scope.DepoNo,
                         FiyatListe : $scope.FiyatListeNo,
                         AlisSatis : ($scope.EvrakTip === 13 ? 0 : 1),
@@ -1114,7 +1123,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function FisData(pData)
     { 
-        $scope.KirilimGetir();
+        // $scope.KirilimGetir();
         //Offline'da ISNULL Hatasını KirilimGetir fonksiyonu çalışıyor diye yapıyor.
         $scope.FisLength = pData;
         if($scope.FisDizaynTip == "0")
@@ -1125,7 +1134,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
            {
                 $scope.FisDeger = "";
                 $scope.FisDeger = "                                    " + $scope.Tarih + "\n" + "                                    " +$scope.Seri + " - " + $scope.Sira + "\n" +"                                    "+ $scope.Tarih + "\n" + "                                    "+  $scope.Saat + "\n" + SpaceLength($scope.CariAdi,40) + "\n" + SpaceLength($scope.Adres1,50) + "\n" + SpaceLength($scope.Adres,10) + "\n" +  "  " + SpaceLength($scope.CariVDADI,25) + " " + $scope.CariVDNO + "\n";
-    
                 for(let i=0; i < pData.length; i++)
                 {
                     $scope.FisData = $scope.FisData + SpaceLength(pData[i].ADI.substring(0,20),20) + "          " +   SpaceLength(parseFloat(pData[i].MIKTAR.toFixed(2)),4) + " " + SpaceLength(pData[i].BIRIMADI,4) + "\n";
@@ -1383,7 +1391,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.EvrakTipChange();
         BarkodFocus();
     }
-    $scope.BtnCariListele = function()
+    $scope.BtnCariListele = async function()
     {   
         $scope.Loading = true;
         $scope.TblLoading = false;
@@ -1401,26 +1409,63 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 Kodu = $scope.TxtCariAra.replace("*","%").replace("*","%");
             }
         }
-        
-        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
+        await db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],async function(data)
         {
-            $scope.CariListe = data;
-            if($scope.CariListe.length > 0)
+            console.log([Kodu,Adi,UserParam.Sistem.PlasiyerKodu])
+            if(data.length > 0)
             {
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-                $("#TblCari").jsGrid({data : $scope.CariListe});
-                $("#TblCari").jsGrid({pageIndex: true})
-            } 
+                if(localStorage.mode == 'false')
+                {
+                    const datas = await data;
+                    for(x = 0;x < datas.length;x++)
+                    {
+                        $scope.CariListe = datas;  
+                        let item = x;
+                        await db.GetData($scope.Firma,'CariMiktarHesapla',[datas[x].KODU],async function(CariHarData)
+                        {
+                            if(CariHarData[0].BAKIYE != 0)
+                            {
+                                datas[item].BAKIYE += CariHarData[0].BAKIYE;
+                                $scope.CariListe = datas;  
+                                $("#TblCari").jsGrid({data : $scope.CariListe});
+                            }
+                        });
+                    }
+                    $scope.CariListe = datas;
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblCari").jsGrid({data : $scope.CariListe});
+                    $("#TblCari").jsGrid({pageIndex : true});
+                }
+                else
+                {
+                    $scope.CariListe = data;  
+                    if($scope.CariListe.length > 0)
+                    {
+                        $scope.Loading = false;
+                        $scope.TblLoading = true;
+                        $("#TblCari").jsGrid({data : $scope.CariListe});
+                        $("#TblCari").jsGrid({pageIndex : true});
+                        CariFocus();
+                    }
+                    else
+                    {
+                        alertify.alert("Cari Bulunamadı")
+                        $scope.Loading = false;
+                        $scope.TblLoading = true;
+                        $("#TblCari").jsGrid({data : $scope.CariListe});
+                        $("#TblCari").jsGrid({pageIndex : true});
+                    }
+                }
+            }
             else
             {
                 alertify.alert("Cari Bulunamadı")
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
-                $("#TblCari").jsGrid({pageIndex: true})
-            }     
-            
+                $("#TblCari").jsGrid({pageIndex : true});
+            }
         });
     }
     $scope.BtnPartiLotGetir = function()
@@ -1571,7 +1616,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         PartiLotEkran();
     }
-    $scope.BtnStokGridGetir = function()
+    $scope.BtnStokGridGetir = async function()
     {
         $scope.Loading = true;
         $scope.TblLoading = false;
@@ -1587,16 +1632,42 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
         }
             
-        db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
+        await db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],async function(StokData)
         {
-            $scope.StokListe = StokData;
-            if ($scope.StokListe.length > 0)
+            console.log(StokData)
+            if(StokData.length > 0)
             {
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-                $("#TblStok").jsGrid({data : $scope.StokListe});
-                $("#TblStok").jsGrid({data : $scope.StokListe});
-                $("#TblStok").jsGrid({pageIndex: true});
+                if(localStorage.mode = 'false')
+                {
+                    const StokData1 = await StokData;
+                    for(x = 0;x < StokData1.length;x++)
+                    {
+                        let item = x;
+                        await db.GetData($scope.Firma,'StokMiktarHesapla',[StokData1[x].KODU],async function(StokHarData)
+                        {
+                            if(StokHarData[0].DEPOMIKTAR != null)
+                            {
+                                StokData1[item].DEPOMIKTAR += StokHarData[0].DEPOMIKTAR;
+                                $scope.StokListe = StokData1;
+                                $("#TblStok").jsGrid({data : $scope.StokListe});
+                            }
+                        });
+                    }
+                    $scope.StokListe = StokData1;
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblStok").jsGrid({data : $scope.StokListe});
+                    $("#TblStok").jsGrid({pageIndex: true});
+                }
+                else
+                {
+                    $scope.StokListe = StokData;
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblStok").jsGrid({data : $scope.StokListe});
+                    $("#TblStok").jsGrid({data : $scope.StokListe});
+                    $("#TblStok").jsGrid({pageIndex: true});
+                }
             }
             else
             {
@@ -1608,7 +1679,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $("#TblStok").jsGrid({pageIndex: true});
             }
         });
-
+        StokFocus();
     }
     $scope.BtnStokGridSec = function()
     {
@@ -1765,6 +1836,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.CariDovizKuru = $scope.CariListe[pIndex].DOVIZKUR;
             $scope.CariDovizKuru1 = $scope.CariListe[pIndex].DOVIZKUR1;
             $scope.CariDovizKuru2 = $scope.CariListe[pIndex].DOVIZKUR2;
+            $scope.CariIskontoKodu = $scope.CariListe[pIndex].ISKONTOKOD;
             $scope.CariAltDovizKuru = $scope.CariListe[pIndex].ALTDOVIZKUR;
             $scope.CariBakiye = $scope.CariListe[pIndex].BAKIYE;
             $scope.CariVDADI = $scope.CariListe[pIndex].VDADI;
@@ -1779,7 +1851,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.RiskLimit = $scope.CariListe[pIndex].RISKLIMIT;
             $scope.DovizChangeKodu = "0"
             $scope.DovizChange()
-            $scope.MainClick();
             AdresNoGetir();
         }
     }
@@ -2643,6 +2714,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 $scope.IrsaliyeListe = data;
                                 $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});    
                                 $scope.BtnTemizle();
+                                DipToplamHesapla();
+                                ToplamMiktarHesapla();
                             });
                         }
                     });
@@ -2715,6 +2788,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TbDizayn").removeClass('active');
+        StokFocus();
     }
     $scope.MainClick = function() 
     {
@@ -2789,6 +2863,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbCariSec").addClass('active');
         $("#TbMain").removeClass('active');
         $("#TbDizayn").removeClass('active');
+        CariFocus();
         }
     }
     $scope.ScanBarkod = function()
@@ -3295,7 +3370,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnGonder = function()
     {
-        db.GetData($scope.Firma,'StokHareketGonderGetir',[$scope.Tip,$scope.Cins],function(Data)
+        db.GetData($scope.Firma,'StokHareketGonderGetir',[$scope.EvrakTip],function(Data)
         {
             $scope.StokHareketGonderListe = Data;
             console.log(Data)
@@ -3336,7 +3411,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 let TmpBedenData = await db.GetPromiseTag($scope.Firma,'StokBedenHarGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira,$scope.StokHareketGonderListe[i].sth_tip,9]);
                 
                 localStorage.mode = 'true';
-                let TmpMaxSira = await db.GetPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_tip,$scope.StokHareketGonderListe[i].sth_cins])
+                let TmpMaxSira = await db.GetPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evraktip])
                 for (let m = 0; m < TmpStokHarData.length; m++)
                 {
                     let InsertData = 

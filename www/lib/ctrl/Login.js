@@ -96,6 +96,7 @@ function Login ($scope,$rootScope,$window,db)
     }    
     $scope.FirmaClick = function()
     {
+        console.log(1)
         if(UserControl())
         {
             console.log("Kullanıcı adı ve şifre doğru");
@@ -223,9 +224,9 @@ function Login ($scope,$rootScope,$window,db)
         }
         else
         {
-            $('#vt-aktarim').modal("show");
             if(localStorage.mode == 'false')
             {
+                $('#vt-aktarim').modal("show");
                 db.Connection(function(data)
                 {
                     if(data == true)
@@ -270,6 +271,8 @@ function Login ($scope,$rootScope,$window,db)
                         {
                             $('select').selectpicker('refresh');
                         },500)
+                        alertify.alert("Online Mod'da Çalıştırılamaz")
+                        return;
                     }
                 });
             }
@@ -286,11 +289,11 @@ function Login ($scope,$rootScope,$window,db)
             
             db.Emit('GetMenu','',function(pMenuData)
             {
-                db.LocalDb.Filter.STOK = [$scope.DepoNo,'','','','','','','','','','']
-                db.LocalDb.Filter.PARAM = [pMenuData,UserParam.Sayim.DepoNo,new Date(),UserParam.AlinanSiparis.Seri,UserParam.SatisFatura.Seri,UserParam.SatisIrsaliye.Seri]
+                db.LocalDb.Filter.STOK = [UserParam.Sistem.OfflineDepo,'','','','','','','','','','']
+                db.LocalDb.Filter.PARAM = [pMenuData,UserParam.Sistem.OfflineDepo,new Date(),UserParam.AlinanSiparis.Seri,UserParam.SatisFatura.Seri,UserParam.SatisIrsaliye.Seri]
                 //QuerySql.StokTbl.value = [$scope.DepoNo];
-                db.LocalDb.Filter.PARTI  = [$scope.DepoNo];
-                QuerySql.NakliyeOnayTbl.value = [$scope.DepoNo];
+                db.LocalDb.Filter.PARTI  = [UserParam.Sistem.OfflineDepo];
+                QuerySql.NakliyeOnayTbl.value = [UserParam.Sistem.OfflineDepo];
 
                 db.LocalDb.OpenDatabase($scope.VtFirm,function(data)
                 {
@@ -298,7 +301,7 @@ function Login ($scope,$rootScope,$window,db)
                     {
                         if(typeof localStorage.localDb == 'undefined')
                         {
-                            localStorage.localDb = JSON.stringify(JSON.parse('[{"FIRM" : "' + $scope.VtFirm + '"}]'));                            
+                            localStorage.localDb = JSON.stringify(JSON.parse('[{"FIRM" : "' + $scope.VtFirm + '"}]'));
                         }
                         else
                         {
@@ -335,8 +338,6 @@ function Login ($scope,$rootScope,$window,db)
                                     
                 });
             });
-
-            
         });
         if(db.SocketConnected)
         {
@@ -389,14 +390,5 @@ function Login ($scope,$rootScope,$window,db)
                 $scope.TransferEventProgress = (e.Status.index / e.Status.count) * 100;
             }        
         });     
-    });
-     $(document).ready(function(){
-     $("sifreleave").mouseleave(function()
-      {
-       if(typeof($scope.Password) != 'undefined')
-       {
-            $scope.FirmaClick()
-       }
-      });
     });
 }
