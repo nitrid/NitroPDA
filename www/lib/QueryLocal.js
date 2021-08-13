@@ -471,7 +471,7 @@ var QueryLocal =
                 "STOK.MALKABULDURSUN as MALKABULDURSUN, " +
                 "STOK.OTVTUTAR AS OTVTUTAR " +
                 "FROM STOK AS STOK " +
-                "WHERE ((UPPER(KODU) LIKE UPPER('@KODU') || '%' OR ('@KODU' = '')) OR (LOWER(KODU) LIKE LOWER('@KODU') || '%' OR ('@KODU' = ''))) " +
+                "WHERE STOK.DEPOMIKTAR > 0 AND ((UPPER(KODU) LIKE UPPER('@KODU') || '%' OR ('@KODU' = '')) OR (LOWER(KODU) LIKE LOWER('@KODU') || '%' OR ('@KODU' = ''))) " +
 				"AND ((UPPER(ADI) LIKE UPPER('@ADI') || '%' OR ('@ADI' = '')) OR (LOWER(ADI) LIKE LOWER('@ADI') || '%' OR ('@ADI' = '')))" +
                 "AND ((STOK.MARKA LIKE '@MKODU') OR ('@MKODU' = '')) AND '@DEPO' <> ''" ,
         param : ['KODU','ADI','DEPO','MKODU']
