@@ -44,7 +44,7 @@ var QueryLocal =
     },
     StokMiktarHesapla:
     {
-        query:  "SELECT SUM(HESAP) AS DEPOMIKTAR FROM (SELECT CASE WHEN sth_tip = 0 THEN sth_miktar WHEN sth_tip = 1 THEN sth_miktar * -1 end as HESAP FROM STOKHAR WHERE sth_stok_kod = '@sth_stok_kod' " +
+        query:  "SELECT SUM(HESAP) AS DEPOMIKTAR FROM (SELECT CASE WHEN sth_tip = 0 THEN sth_miktar WHEN sth_tip = 1 THEN sth_miktar * -1 end as HESAP FROM STOKHAR WHERE sth_stok_kod = '@sth_stok_kod' OR sth_stok_kod = (SELECT KODU FROM BARKOD WHERE BARKOD = '@sth_stok_kod') " +
                 ") AS TBL",
         param:  ['sth_stok_kod'],
         type:   ['string|25']
