@@ -1505,6 +1505,11 @@ var QuerySql =
         query : "UPDATE DEPOLAR_ARASI_SIPARISLER SET ssip_teslim_miktar = ssip_teslim_miktar + @sip_teslim_miktar WHERE ssip_Guid = @sip_Guid " ,
         param : ['sip_teslim_miktar:int','sip_Guid:string|50']
     },
+    StokHarDepoSiparisDeleteUpdate :
+    {
+        query : "UPDATE DEPOLAR_ARASI_SIPARISLER SET ssip_teslim_miktar = ssip_teslim_miktar - @sip_teslim_miktar WHERE ssip_Guid = @sip_Guid " ,
+        param : ['sip_teslim_miktar:int','sip_Guid:string|50']
+    },
     SiparisDeleteUpdate :
     {
         query : "UPDATE SIPARISLER SET sip_teslim_miktar = sip_teslim_miktar - @sip_teslim_miktar WHERE sip_Guid = @sip_Guid " +

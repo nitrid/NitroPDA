@@ -78,7 +78,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.AciklamaHarTip = 0;
         $scope.EvrakDovizTip = "";
         $scope.Risk = 0;
-        $scope.RiskLimit = 0; 
+        $scope.RiskLimit = 0;
 
         $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;

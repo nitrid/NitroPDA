@@ -12,14 +12,14 @@ var Param = [
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
 			"SiparisOlmayanBarkodKabul": "1",
-			"PartiLotKontrol": "0",
-			"PartiLotMiktarKontrol": "0",
+			"PartiLotKontrol": "1",
+			"PartiLotMiktarKontrol": "1",
 			"KiloFlag": "26,27,28",
 			"KiloBaslangic": "7",
 			"KiloUzunluk": "5",
-			"KiloCarpan": "1",
+			"KiloCarpan": "100",
 			"Titresim": "1",
-			"PlasiyerKodu": "100",
+			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
@@ -367,7 +367,8 @@ var Param = [
 			"EksiyeDusme": "0",
 			"Kasa": "K01",
 			"IskontoMatris": "1",
-			"KDVYok": "1"
+			"KDVYok": "1",
+			"FiyatAzalt": "1"
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",

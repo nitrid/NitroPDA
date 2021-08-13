@@ -699,11 +699,39 @@ angular.module('app.db', []).service('db',function($rootScope)
         }
         _SqlExecute(m,function(data)
         {
+            console.log(1)
             if(pCallback)
             {
+                $rootScope.StokData = data.result.recordset;
                 if(data.result.recordset.length > 0)
                 {
-                    pCallback(data.result.recordset);
+                    if(localStorage.mode == "false")
+                    {
+                        let m = 
+                        {
+                            db : '{M}.' + pFirma,
+                            tag : 'StokMiktarHesapla',
+                            param : [pBarkod]
+                        }
+                        _SqlExecute(m,function(Mikdata)
+                        {
+                            console.log(Mikdata)
+                            console.log(Mikdata.result.recordset[0].DEPOMIKTAR)
+                            if(Mikdata.result.recordset[0].DEPOMIKTAR != null)
+                            {
+                                $rootScope.StokData[0].DEPOMIKTAR += Mikdata.result.recordset[0].DEPOMIKTAR;
+                                pCallback($rootScope.StokData);
+                            }
+                            else
+                            {
+                                pCallback($rootScope.StokData);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        pCallback(data.result.recordset);
+                    }
                 }
                 else
                 {
@@ -715,6 +743,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                     }
                     _SqlExecute(m,function(data)
                     {
+                        console.log(1)
                         $rootScope.StokData = data.result.recordset;
                         if(pCallback)
                         {
@@ -728,8 +757,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                                 }
                                 _SqlExecute(m,function(Mikdata)
                                 {
-                                    console.log(Mikdata)
-                                    console.log(Mikdata.result.recordset[0].DEPOMIKTAR)
                                     if(Mikdata.result.recordset[0].DEPOMIKTAR != null)
                                     {
                                         $rootScope.StokData[0].DEPOMIKTAR += Mikdata.result.recordset[0].DEPOMIKTAR;

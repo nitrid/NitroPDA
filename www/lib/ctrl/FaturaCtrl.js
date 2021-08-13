@@ -997,6 +997,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                     };
                     await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()//FİYAT GETİR
                     {   
+                        $scope.Fiyat = $scope.Stok[0].FIYAT;
                         $scope.MiktarFiyatValid();
                         $scope.BarkodLock = true;
                         $scope.$apply();
@@ -1783,6 +1784,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 TOPTUTAR :0
             }
         ];
+        $scope.Fiyat = 0;
         $scope.Miktar = 1;
         $scope.BarkodLock = false;
 
@@ -2974,6 +2976,15 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     }
     $scope.MiktarFiyatValid = function()
     {
+        if(UserParam[ParamName].FiyatAzalt == 1)
+        {
+            console.log($scope.Stok[0].FIYAT + "   " + $scope.Fiyat)
+            if($scope.Stok[0].FIYAT < $scope.Fiyat)
+            {
+                alertify.alert("Fiyatı düşüremezsin")
+                $scope.Stok[0].FIYAT = $scope.Fiyat
+            }
+        }
         if($scope.CmbEvrakTip != 5)
         {
             $scope.Stok[0].INDIRIM = 0;
@@ -3283,7 +3294,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 KalanBakiye = OncekiBakiye + $scope.GenelToplam
             }
 
-
             console.log("Cari Bakiye 1 " + $scope.CariBakiye1)
             console.log("Cari Bakiye " + $scope.CariBakiye)
             console.log("Önceki Bakiye " + OncekiBakiye)
@@ -3300,7 +3310,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             {    
                 Satır = Satır + "                                             -"+ "\n"; 
             }
-            FisDizayn = "                                             -" + "\n" + 
+            FisDizayn = "                                             -" + "\n" +
                         "           SATIŞ FATURA BİLGİ FİŞİ            " + "\n" +
                         "              AZİZOĞLU SUCUKLARI              " + "\n" +
                         "V.DAIRESI: Burdur           V.NO: 127 004 7667" + "\n" +
@@ -3308,12 +3318,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                         "Burdur Organize Sanayi Bölgesi 40. Sk. No: 38 " + "\n" +
                         "Tel:0248 252 98 17                            " + "\n" +
             $scope.FisDeger + "\n" + "\n" +
-            SpaceLength("ÜRÜN ADI",17) +    SpaceLength(" MIK",10) + " " + SpaceLength("FIYAT",5) + " " + SpaceLength("ISK",4) + SpaceLength("NET TUTAR",5) + "\n" + 
+            SpaceLength("ÜRÜN ADI",17) +    SpaceLength(" MIK",10) + " " + SpaceLength("FIYAT",5) + " " + SpaceLength("ISK",4) + SpaceLength("NET TUTAR",5) + "\n" +
             $scope.FisData + "\n" + //İÇERİK
-            Satır
+            Satır 
             FisDizayn = FisDizayn + "Toplam Adet: " + $scope.ToplamAdet + "\n"
-            FisDizayn = FisDizayn + SpaceLength("Önceki B. : ",12) + SpaceLength(parseFloat(OncekiBakiye).toFixed(2),9)  + " " + SpaceLength("Brüt Top. : ",12) + parseFloat($scope.AraToplam).toFixed(2) + "\n" 
-            FisDizayn = FisDizayn + SpaceLength("Bu Fatura. : ",12) + SpaceLength(parseFloat($scope.GenelToplam).toFixed(2),9)  + " " +SpaceLength("Top. KDV : ",11) + parseFloat($scope.ToplamKdv).toFixed(2) + "\n" 
+            FisDizayn = FisDizayn + SpaceLength("Önceki B. : ",12) + SpaceLength(parseFloat(OncekiBakiye).toFixed(2),9)  + " " + SpaceLength("Brüt Top. : ",12) + parseFloat($scope.AraToplam).toFixed(2) + "\n"
+            FisDizayn = FisDizayn + SpaceLength("Bu Fatura. : ",12) + SpaceLength(parseFloat($scope.GenelToplam).toFixed(2),9)  + " " +SpaceLength("Top. KDV : ",11) + parseFloat($scope.ToplamKdv).toFixed(2) + "\n"
             FisDizayn = FisDizayn + SpaceLength("Cari Bak. : ",12) + SpaceLength(parseFloat(KalanBakiye).toFixed(2),9)  + " " + "Genel Top. : " + parseFloat($scope.GenelToplam).toFixed(2) + "\n" +
             "-\n" + "-\n" + KalanBakiye + "-\n" + OncekiBakiye + "-\n" + "-\n" + "-\n" + "-\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
@@ -3323,7 +3333,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             // doc.text(FisDizayn, 10, 10)
             // doc.save('deneme.pdf')
 
-            db.BTYazdir(FisDizayn,UserParam.Sistem.FisDizayn,function(pStatus)
+            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
             {
                 console.log(pStatus)
                 if(pStatus)

@@ -1205,7 +1205,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $scope.Seri,
             $scope.Sira,
             $scope.ChaEvrakTip,
-            0
+            $scope.IslemListeSelectedItem.cha_satir_no
         ]
         db.ExecuteTag($scope.Firma,'CariHarUpdate',Param,function(InsertResult)
         {   
@@ -1580,41 +1580,77 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
 
-        var TmpQuery = 
+        if(localStorage.mode = "false")
         {
-            db : '{M}.' + $scope.Firma,
-            query:  "SELECT " +
-                    "cha_cinsi AS EVRAKTIP, " +
-                    "CONVERT(VARCHAR(10),MAX(cha_vade),112) AS VADE, " +
-                    "CASE WHEN cha_cinsi = 0 THEN 'NAKIT' WHEN cha_cinsi = 19 THEN 'K.KARTI'  " +
-                    "WHEN cha_cinsi = 1 THEN 'M. ÇEKİ' WHEN cha_cinsi = 2 THEN 'M. SENEDİ' END AS TIP, " +
-                    "cha_evrakno_seri AS SERI,  " +
-                    "cha_evrakno_sira AS SIRA,  " +
-                    "MAX(cha_kod) AS CARIKOD, " +
-                    "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) + ' ' +  " +
-                    "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) AS CARIADI, " +
-                    "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = MAX(cha_satici_kodu)),'') AS PERSONEL, " +
-                    "ROUND(SUM(cha_meblag),2) AS TUTAR " +
-                    "FROM CARI_HESAP_HAREKETLERI WHERE cha_tip = 1 AND cha_evrak_tip = 1 AND cha_tarihi = CONVERT(VARCHAR(10),GETDATE(),112) " +
-                    "AND cha_satici_kodu = '" + $scope.Personel + "'" + 
-                    "GROUP BY cha_evrakno_seri,cha_evrakno_sira,cha_cinsi " 
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT " +
+                        "cha_cinsi AS EVRAKTIP, " +
+                        "strftime('%d.%m.%Y', cha_vade) AS VADE, " +
+                        "CASE WHEN cha_cinsi = 0 THEN 'NAKIT' WHEN cha_cinsi = 19 THEN 'K.KARTI'  " +
+                        "WHEN cha_cinsi = 1 THEN 'M. ÇEKİ' WHEN cha_cinsi = 2 THEN 'M. SENEDİ' END AS TIP, " +
+                        "cha_evrakno_seri AS SERI,  " +
+                        "cha_evrakno_sira AS SIRA,  " +
+                        "MAX(cha_kod) AS CARIKOD, " +
+                        "(SELECT UNVAN1 FROM CARI WHERE KODU = cha_kod) || ' ' ||  " +
+                        "(SELECT UNVAN2 FROM CARI WHERE KODU = cha_kod) AS CARIADI, " +
+                        "IFNULL((SELECT PERSONELADI FROM PERSONEL WHERE PERSONELKODU = cha_satici_kodu),'') AS PERSONEL, " +
+                        "ROUND(SUM(cha_meblag),2) AS TUTAR " +
+                        "FROM CARIHAR WHERE cha_tip = 1 AND cha_evrak_tip = 1 AND cha_tarihi = date('now') " +
+                        "AND cha_satici_kodu = '" + $scope.Personel + "'" + 
+                        "GROUP BY cha_evrakno_seri,cha_evrakno_sira,cha_cinsi " 
+            }
+            await db.GetPromiseQuery(TmpQuery,async function(Data)
+            {
+                $scope.DNakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
+                $scope.DKrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
+                $scope.DSenetToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 2");
+                $scope.DCekToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 1");
+                $scope.DGenelToplam = $scope.DNakitToplam + $scope.DKrediToplam + $scope.DSenetToplam + $scope.DCekToplam;
+                $scope.DizaynListe = Data;
+                $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
+                $("#TbDizayn").addClass('active');
+            });
         }
-        await db.GetPromiseQuery(TmpQuery,async function(Data)
+        else
         {
-            $scope.DNakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
-            $scope.DKrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
-            $scope.DSenetToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 2");
-            $scope.DCekToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 1");
-            $scope.DGenelToplam = $scope.DNakitToplam + $scope.DKrediToplam + $scope.DSenetToplam + $scope.DCekToplam;
-            $scope.DizaynListe = Data;
-            $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
-            $("#TbDizayn").addClass('active');
-        });
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT " +
+                        "cha_cinsi AS EVRAKTIP, " +
+                        "CONVERT(VARCHAR(10),MAX(cha_vade),112) AS VADE, " +
+                        "CASE WHEN cha_cinsi = 0 THEN 'NAKIT' WHEN cha_cinsi = 19 THEN 'K.KARTI'  " +
+                        "WHEN cha_cinsi = 1 THEN 'M. ÇEKİ' WHEN cha_cinsi = 2 THEN 'M. SENEDİ' END AS TIP, " +
+                        "cha_evrakno_seri AS SERI,  " +
+                        "cha_evrakno_sira AS SIRA,  " +
+                        "MAX(cha_kod) AS CARIKOD, " +
+                        "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) + ' ' +  " +
+                        "(SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = MAX(cha_kod)) AS CARIADI, " +
+                        "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = MAX(cha_satici_kodu)),'') AS PERSONEL, " +
+                        "ROUND(SUM(cha_meblag),2) AS TUTAR " +
+                        "FROM CARI_HESAP_HAREKETLERI WHERE cha_tip = 1 AND cha_evrak_tip = 1 AND cha_tarihi = CONVERT(VARCHAR(10),GETDATE(),112) " +
+                        "AND cha_satici_kodu = '" + $scope.Personel + "'" + 
+                        "GROUP BY cha_evrakno_seri,cha_evrakno_sira,cha_cinsi " 
+            }
+            await db.GetPromiseQuery(TmpQuery,async function(Data)
+            {
+                $scope.DNakitToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 0");
+                $scope.DKrediToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 19");
+                $scope.DSenetToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 2");
+                $scope.DCekToplam = db.SumColumn(Data,"TUTAR","EVRAKTIP = 1");
+                $scope.DGenelToplam = $scope.DNakitToplam + $scope.DKrediToplam + $scope.DSenetToplam + $scope.DCekToplam;
+                $scope.DizaynListe = Data;
+                $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
+                $("#TbDizayn").addClass('active');
+            });
+        }
     }
     //OFFLINE-AKTARIM
-    $scope.BtnGonder = function()
+    $scope.BtnGonder = async function()
     {
-        db.GetData($scope.Firma,'CariHareketGonderGetir',[$scope.ChaEvrakTip],function(Data)
+        await db.GetData($scope.Firma,'CariHareketGonderGetir',[$scope.ChaEvrakTip],async function(Data)
         {
             $scope.CariHareketGonderListe = Data
             console.log(Data)
@@ -1652,12 +1688,21 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 let TmpStatus = true;
                 let TmpCariHarData = await db.GetPromiseTag($scope.Firma,'CariHarGetir',[$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrakno_sira,$scope.CariHareketGonderListe[i].cha_evrak_tip]);
                 let TmpOdemeData = await db.GetPromiseTag($scope.Firma,'OdemeEmriGetir',[$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrakno_sira]);
-                console.log($scope.CariHareketGonderListe[i])
                 localStorage.mode = 'true'; //ONLINE'A GEÇTİ
                 //AŞAĞIDAKİ VERİLERİ ONLINE TABLODAN (QUERYSQL) ÇEKİYOR.
+                console.log(TmpCariHarData)
                 let TmpMaxSira = await db.GetPromiseTag($scope.Firma,'MaxCariHarSira',[$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrak_tip])
+
                 for (let m = 0; m < TmpCariHarData.length; m++)
                 {
+                    let TmpMaxRef= "";
+                    let TmpMaxRefSira = "";
+                    let TmpOdemeRef = TmpOdemeData.find(x => x.sck_refno == TmpCariHarData[m].cha_trefno)
+                    if(typeof TmpOdemeRef != "undefined")
+                    {
+                        TmpMaxRef = await db.GetPromiseTag($scope.Firma,'MaxCekRefNo',[TmpOdemeRef.sck_tip])
+                        TmpMaxRefSira = TmpMaxRef[0].MAXREFNO
+                    }
                     let InsertCariData =
                     [
                         TmpCariHarData[m].cha_create_user,
@@ -1669,7 +1714,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                         TmpMaxSira[0].MAXEVRSIRA,
                         TmpCariHarData[m].cha_tarihi,     
                         TmpCariHarData[m].cha_tip,        
-                        TmpCariHarData[m].cha_cinsi,      
+                        TmpCariHarData[m].cha_cinsi,
                         TmpCariHarData[m].cha_normal_Iade,
                         TmpCariHarData[m].cha_tpoz,       
                         TmpCariHarData[m].cha_ticaret_turu,
@@ -1721,19 +1766,16 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                         TmpCariHarData[m].cha_otvtutari,                          
                         TmpCariHarData[m].cha_otvvergisiz_fl,                     
                         TmpCariHarData[m].cha_oivergisiz_fl,                      
-                        TmpCariHarData[m].cha_trefno,                             
+                        TmpMaxRefSira,                             
                         TmpCariHarData[m].cha_sntck_poz,                          
                         TmpCariHarData[m].cha_e_islem_turu,                       
                     ];
                     let TmpResultCari = await db.ExecutePromiseTag($scope.Firma,'CariHarInsert',InsertCariData);
-                    console.log(TmpCariHarData[m]);
                     if(typeof(TmpResultCari.result.err) != 'undefined')
                     {
                         TmpStatus = false;
                     }
-                    console.log(TmpOdemeData)
                     let TmpOdeme = TmpOdemeData.find(x => x.sck_refno == TmpCariHarData[m].cha_trefno)
-                    console.log(TmpOdeme)
                     if(typeof TmpOdeme != 'undefined')
                     {
                         let InsertDataOdm =
@@ -1743,7 +1785,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                             TmpOdeme.sck_firmano, // FİRMA 
                             TmpOdeme.sck_subeno, // ŞUBE
                             TmpOdeme.sck_tip, // TİP
-                            TmpOdeme.sck_refno, // REFNO
+                            TmpMaxRefSira, // REFNO
                             TmpOdeme.sck_borclu, // CARİ
                             TmpOdeme.sck_vade, // VADE
                             TmpOdeme.sck_tutar, // TUTAR
@@ -1757,7 +1799,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                             TmpOdeme.sck_nerede_cari_grupno, // CARİ GRUPNO
                             TmpOdeme.sck_ilk_hareket_tarihi,  // TARIH
                             TmpOdeme.sck_ilk_evrak_seri, //SERI
-                            TmpOdeme.sck_ilk_evrak_sira_no, // SIRA
+                            TmpMaxSira[0].MAXEVRSIRA, // SIRA
                             TmpOdeme.sck_ilk_evrak_satir_no, //SATIR
                             TmpOdeme.sck_son_hareket_tarihi, //TARİH
                             1, //DOVIZKUR (Local tabloya "0_kur" olarak geliyor ve hata veriyor. Onun için 1 yapıldı --EKREM DEMİRCİ)
@@ -1765,16 +1807,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                             TmpOdeme.sck_srmmrk,
                             TmpOdeme.sck_projekodu
                         ]
-                        console.log(InsertDataOdm)
                         let TmpOdmResult = await db.ExecutePromiseTag($scope.Firma,'CekHarInsert',InsertDataOdm)
-                        console.log(TmpOdmResult)
                         if(typeof(TmpOdmResult.result.err) != 'undefined')
                         {
                             TmpStatus = false;
                         }
-                        console.log(TmpOdemeData)
                     }
-                    console.log(TmpOdemeData)
                 }
                 localStorage.mode = 'false';
                 if (TmpStatus)
@@ -1787,7 +1825,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                         value : [$scope.CariHareketGonderListe[i].cha_evrakno_seri,$scope.CariHareketGonderListe[i].cha_evrakno_sira,$scope.CariHareketGonderListe[i].cha_evrak_tip]
                     }
                     await db.GetPromiseQuery(TmpUpdateQuery)
-                    await db.GetData($scope.Firma,'CariHareketGonderGetir',[],function(Data)
+                    await db.GetData($scope.Firma,'CariHareketGonderGetir',[$scope.ChaEvrakTip],function(Data)
                     {
                         if(Data.length == 0)
                         {

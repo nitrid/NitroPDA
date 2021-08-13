@@ -28,13 +28,13 @@ var QueryLocal =
     },
     StokHareketGonderGetir:
     {
-        query:  "SELECT status AS STATUS,* FROM STOKHAR WHERE status = 0 and sth_evraktip = '@sth_evraktip' GROUP BY sth_evrakno_seri,sth_evrakno_sira",
+        query:  "SELECT (SELECT UNVAN1 FROM CARI WHERE KODU = sth_cari_kodu) AS CARIADI, SUM(sth_tutar) AS TUTAR, strftime('%d.%m.%Y', sth_tarih) AS TARIH,status AS STATUS,* FROM STOKHAR WHERE status = 0 and sth_evraktip = '@sth_evraktip' GROUP BY sth_evrakno_seri,sth_evrakno_sira",
         param:  ['sth_evraktip'],
         type:   ['int']
     },
     CariHareketGonderGetir:
     {
-        query:  "SELECT status AS STATUS,* FROM CARIHAR WHERE status = 0 and cha_evrak_tip = '@cha_evrak_tip' GROUP BY cha_evrakno_seri,cha_evrakno_sira ",
+        query:  "SELECT (SELECT UNVAN1 FROM CARI WHERE KODU = cha_kod) AS CARIADI, SUM(cha_meblag) AS TUTAR, strftime('%d.%m.%Y', cha_tarihi) AS TARIH, status AS STATUS,* FROM CARIHAR WHERE status = 0 and cha_evrak_tip = '@cha_evrak_tip' GROUP BY cha_evrakno_seri,cha_evrakno_sira ",
         param:  ['cha_evrak_tip'],
         type:   ['int']
     },
@@ -67,12 +67,12 @@ var QueryLocal =
         query : "SELECT " +
                 "ADRESNO AS KODU, " +
                 "ADRES1 AS ADI,  " +
-                "ADRESNO - 1 AS SIRANO," +
-                "ADRES2 AS ADRES2," +
-                "IL," +
+                "ADRESNO - 1 AS SIRANO, " +
+                "ADRES2 AS ADRES2, " +
+                "IL, " +
                 "ILCE " +
                 "FROM ADRES " +
-                "WHERE CARIKODU = @adr_cari_kod  ORDER BY ADRES1 ASC" ,
+                "WHERE CARIKODU = '@adr_cari_kod'  ORDER BY ADRES1 ASC",
         param : ['adr_cari_kod'],
         type : ['string|25']
     },
@@ -293,7 +293,7 @@ var QueryLocal =
     },
     CekHarDelete:
     {
-        query:  "DELETE FROM ODEMEEMIRLERI WHERE (sck_ilk_evrak_seri = '@sck_ilk_evrak_seri' AND sck_ilk_evrak_sira_no = @sck_ilk_evrak_sira_no) OR sck_refno = @sck_refno" ,
+        query:  "DELETE FROM ODEMEEMIRLERI WHERE (sck_ilk_evrak_seri = '@sck_ilk_evrak_seri' AND sck_ilk_evrak_sira_no = '@sck_ilk_evrak_sira_no' ) OR sck_refno = '@sck_refno'" ,
         param : ['sck_ilk_evrak_seri','sck_ilk_evrak_sira_no','sck_refno'],
         type : ['string|20','int','string|20']
     },
@@ -1543,7 +1543,7 @@ var QueryLocal =
                 "IFNULL((SELECT BEDENPNTR FROM BARKOD WHERE KODU = sth_stok_kod),0) AS BEDENPNTR , " +
                 "IFNULL((SELECT SERI from SIPARISSTOK WHERE RECNO = sth_sip_uid),'') AS SIPSERI ," +
                 "IFNULL((SELECT SIRA from SIPARISSTOK WHERE RECNO = sth_sip_uid),0) AS SIPSIRA ," +
-                "(SELECT BIRIM FROM BIRIM WHERE KODU = sth_stok_kod) AS BIRIMADI, " +
+                "(SELECT CASE BIRIM WHEN 'KİLOGRAM' THEN 'KG' WHEN 'ADET' THEN 'ADET' END AS BIRIM FROM BIRIM WHERE KODU = sth_stok_kod) AS BIRIMADI, " +
                 "(SELECT BIRIMPNTR FROM BIRIM WHERE KODU = sth_stok_kod) AS BIRIM, " +
                 "* FROM STOKHAR " +
                 "WHERE sth_evrakno_seri = '@sth_evrakno_seri' AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip ORDER BY sth_satirno ",
@@ -2325,6 +2325,13 @@ var QueryLocal =
         'cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float',
         'cha_ft_iskonto4:float','cha_ft_iskonto5:float','cha_ft_iskonto6:float','cha_otvtutari:float','cha_evrakno_seri:string','cha_evrakno_sira:int',
         'cha_evrak_tip:int','cha_satir_no:int']
+    },
+    CekHarUpdate:
+    {
+        query:  "UPDATE ODEMEEMIRLERI " +
+                "SET sck_tutar = '@sck_tutar' " +
+                "WHERE sck_refno = '@sck_refno' " ,
+        param : ['sck_tutar:float','sck_refno:string|50']
     },
     MaxCariHarSira : 
     {
