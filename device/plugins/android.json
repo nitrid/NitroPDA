@@ -34,6 +34,10 @@
     },
     "phonegap-plugin-contentsync": {
       "PACKAGE_NAME": "com.tone.nitro"
+    },
+    "cordova-plugin-file-opener2": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "com.tone.nitro"
     }
   },
   "dependent_plugins": {}
