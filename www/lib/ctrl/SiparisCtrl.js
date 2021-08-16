@@ -3002,31 +3002,78 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             },
             
         ];
-        var options = {
+        var options = 
+        {
             fileName:"VerilenSiparisRapor",
             extension:".xlsx",
             sheetName:"Sayfa",
-            fileFullName:"report.xlsx",
+            fileFullName:"VerilenSiparisRapor.xlsx",
             header:true,
             maxCellWidth: 20
         };
 
-        Jhxlsx.export(RaporListeData, options);
-
-        var url ='data.json';
-        $.get(url, {},function (data) 
+        if (window.cordova && cordova.platformId !== "browser") 
         {
-            Jhxlsx.export(data.RaporListeData, data.options);
-            db.Connection(function(data)
+            document.addEventListener("deviceready", function () 
             {
-            });
-        })
+                var storageLocation = cordova.file.externalRootDirectory  + "download/";
+                var blob = Jhxlsx.getBlob(RaporListeData,options);
 
-        });
+                switch (cordova.platform) 
+                {
+                    case "Android":
+                      storageLocation = cordova.file.externalRootDirectory  + "download/";
+                      break;
+            
+                    case "iOS":
+                      storageLocation = cordova.file.documentsDirectory;
+                      break;
+                }
 
+                window.resolveLocalFileSystemURL(storageLocation,function (dir) 
+                {
+                    dir.getFile(options.fileFullName ,{create: true},function (file) 
+                    {
+                        file.createWriter(function (fileWriter) 
+                        {
+                            fileWriter.write(blob);
 
-
+                            fileWriter.onwriteend = function () 
+                            {
+                                
+                            };
         
+                            fileWriter.onerror = function (err) 
+                            {
+                                console.error(err);
+                            };
+                        },
+                        function (err) 
+                        {
+                            console.error(err);
+                        }
+                        );
+                    },
+                    function (err) 
+                    {
+                        console.error(err);
+                    }
+                    );
+                },
+                function (err) 
+                {
+                    console.error(err);
+                });
+            });
+        }
+        else
+        {
+            Jhxlsx.export(RaporListeData, options);
+        }
+        
+
+        console.log(Jhxlsx.getBlob(Jhxlsx,options))
+    });
     }
     $scope.BtnGunSonuYazdir = async function()
     {  
