@@ -164,9 +164,6 @@ task cdvPrintProps {
 }
 
 android {
-    dexOptions {
-    javaMaxHeapSize "4g"
-    }
     defaultConfig {
         versionCode cdvVersionCode ?: new BigInteger("" + privateHelpers.extractIntFromManifest("versionCode"))
         applicationId privateHelpers.extractStringFromManifest("package")

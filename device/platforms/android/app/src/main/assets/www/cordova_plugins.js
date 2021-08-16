@@ -255,14 +255,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "BTPrinter"
       ]
-    },
-    {
-      "id": "cordova-plugin-file-opener2.FileOpener2",
-      "file": "plugins/cordova-plugin-file-opener2/www/plugins.FileOpener2.js",
-      "pluginId": "cordova-plugin-file-opener2",
-      "clobbers": [
-        "cordova.plugins.fileOpener2"
-      ]
     }
   ];
   module.exports.metadata = {
@@ -275,7 +267,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-zip": "3.1.0",
     "cordova-plugin-file-downloader": "0.4.0",
     "phonegap-plugin-barcodescanner": "8.1.0",
-    "cordova-plugin-btprinter": "0.0.1-dev",
-    "cordova-plugin-file-opener2": "3.0.5"
+    "cordova-plugin-btprinter": "0.0.1-dev"
   };
 });

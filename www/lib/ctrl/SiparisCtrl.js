@@ -2962,19 +2962,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             alertify.alert("Etiket Yazdıralamadı.");
         }
     }
-    function moveFile(fileUri) {
-        window.resolveLocalFileSystemURL(
-              fileUri,
-              function(fileEntry){
-    
-                    var parentEntry = storageLocation + "Download";
-                   
-                    // move the file to a new directory and rename it
-                   fileEntry.moveTo(parentEntry, "newFile.pdf", success, fail);
-                           
-              },
-              errorCallback);
-    }
     $scope.ExcelExport = function()
     {
         db.GetData($scope.Firma,'SiparisGetirExcel',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(ExcelData)
@@ -3015,78 +3002,31 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             },
             
         ];
-        var options = 
-        {
+        var options = {
             fileName:"VerilenSiparisRapor",
             extension:".xlsx",
             sheetName:"Sayfa",
-            fileFullName:"VerilenSiparisRapor.xlsx",
+            fileFullName:"report.xlsx",
             header:true,
             maxCellWidth: 20
         };
 
-        if (window.cordova && cordova.platformId !== "browser") 
+        Jhxlsx.export(RaporListeData, options);
+
+        var url ='data.json';
+        $.get(url, {},function (data) 
         {
-            document.addEventListener("deviceready", function () 
+            Jhxlsx.export(data.RaporListeData, data.options);
+            db.Connection(function(data)
             {
-                var storageLocation = cordova.file.externalRootDirectory  + "download/";
-                var blob = Jhxlsx.getBlob(RaporListeData,options);
-
-                switch (cordova.platform) 
-                {
-                    case "Android":
-                      storageLocation = cordova.file.externalRootDirectory  + "download/";
-                      break;
-            
-                    case "iOS":
-                      storageLocation = cordova.file.documentsDirectory;
-                      break;
-                }
-
-                window.resolveLocalFileSystemURL(storageLocation,function (dir) 
-                {
-                    dir.getFile(options.fileFullName ,{create: true},function (file) 
-                    {
-                        file.createWriter(function (fileWriter) 
-                        {
-                            fileWriter.write(blob);
-
-                            fileWriter.onwriteend = function () 
-                            {
-                                
-                            };
-        
-                            fileWriter.onerror = function (err) 
-                            {
-                                console.error(err);
-                            };
-                        },
-                        function (err) 
-                        {
-                            console.error(err);
-                        }
-                        );
-                    },
-                    function (err) 
-                    {
-                        console.error(err);
-                    }
-                    );
-                },
-                function (err) 
-                {
-                    console.error(err);
-                });
             });
-        }
-        else
-        {
-            Jhxlsx.export(RaporListeData, options);
-        }
-        
+        })
 
-        console.log(Jhxlsx.getBlob(Jhxlsx,options))
-    });
+        });
+
+
+
+        
     }
     $scope.BtnGunSonuYazdir = async function()
     {  

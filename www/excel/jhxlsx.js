@@ -170,8 +170,7 @@ var Jhxlsx = {
         var blobData = new Blob([this.s2ab(wbout)], {type: "application/octet-stream"});
         return blobData;
     },
-    export: function (workbookObj, options) 
-    {
+    export: function (workbookObj, options) {
         saveAs(this.getBlob(workbookObj, options), this.config.fileFullName);
     },
 }
