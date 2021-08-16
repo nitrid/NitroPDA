@@ -25,17 +25,17 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
             if(i % 2 == 0)
             
             {
-                HtmlText = HtmlText + "<div class='row mx-5 pt-10'>";
+                HtmlText = HtmlText + "<div class='row mx-5 pt-5'>";
                 HtmlText = HtmlText + "<div class='col-6 px-5'>"
                 HtmlText = HtmlText + "<a href='" + MenuList[i].Link + "'>";
-                HtmlText = HtmlText + "<button class=' btn btn-block btn-round btn-primary h-80'><label class='h5 text-white'>"+ MenuList[i].Name +"</label></button>";
+                HtmlText = HtmlText + "<button class='form-group btn btn-block btn-primary h-100'><label class='h5 text-white'>"+ MenuList[i].Name +"</label></button>";
                 HtmlText = HtmlText + "</a></div>";
             }
             else
             {
                 HtmlText = HtmlText + "<div class='col-6 px-5'>"
                 HtmlText = HtmlText + "<a href='" + MenuList[i].Link + "'>";
-                HtmlText = HtmlText + "<button class=' btn btn-block btn-round btn-info h-80'><label class='h5 text-white'>"+ MenuList[i].Name +"</label></button>";
+                HtmlText = HtmlText + "<button class='form-group btn btn-block btn-info h-100'><label class='h5 text-white'>"+ MenuList[i].Name +"</label></button>";
                 HtmlText = HtmlText + "</a></div>";
                 HtmlText = HtmlText + "</div>";
             }
