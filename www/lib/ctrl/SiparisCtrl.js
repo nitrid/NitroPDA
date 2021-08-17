@@ -3002,18 +3002,22 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             },
             
         ];
+
+        let saat = moment(new Date()).format("LTS");
+        saat = saat.split(":").join("");
+
         var options = 
         {
-            fileName:"VerilenSiparisRapor",
+            fileName:"VerilenSiparisRapor.xlsx",
             extension:".xlsx",
             sheetName:"Sayfa",
-            fileFullName:"VerilenSiparisRapor.xlsx",
+            fileFullName:"VerilenSiparisRapor" + saat + ".xlsx",
             header:true,
             maxCellWidth: 20
         };
-
+        
         if (window.cordova && cordova.platformId !== "browser") 
-        {
+        {     
             document.addEventListener("deviceready", function () 
             {
                 var storageLocation = cordova.file.externalRootDirectory  + "download/";
@@ -3070,9 +3074,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             Jhxlsx.export(RaporListeData, options);
         }
-        
 
-        console.log(Jhxlsx.getBlob(Jhxlsx,options))
+        alertify.alert("<a style='color:#3e8ef7''>" + "İndirme işlemi gerçekleşti indirilenler klasörünüzü kontrol edin. </a>" ); 
     });
     }
     $scope.BtnGunSonuYazdir = async function()
