@@ -775,6 +775,8 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 $scope.PersonelAdi == item.ADI;
             });
         });
+        console.log($scope.KasaDoviz)
+
         await db.GetData($scope.Firma,'CmbKasaGetir',[$scope.KasTip],function(data)
         {
             $scope.KasaListe = data;
@@ -791,9 +793,12 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 }
             });
         });  
+        console.log($scope.KasaDoviz)
+
         await db.FillCmbDocInfo($scope.Firma,'CmbBankaGetir',function(data)
         {
             $scope.BankaListe = data;
+            console.log($scope.KasaDoviz)
         });  
         await db.MaxSiraPromiseTag($scope.Firma,'MaxCariHarSira',[$scope.Seri,$scope.ChaEvrakTip],function(data){$scope.Sira = data; console.log(data)});
     }
@@ -872,6 +877,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         }
         else if($scope.TahsilatCinsi == "3") //Kredi Kartı
         {
+            console.log($scope.KasaDoviz)
             $scope.KasaBankaListe = $scope.BankaListe;
             $scope.KasaBanka = UserParam[ParamName].KrediKasa;
             $scope.SntckPoz = 2;
@@ -886,6 +892,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 console.log(data[0].MAXREFNO,data[0].REFNO)
                 $scope.TrefNo = data[0].MAXREFNO
             });  
+            console.log($scope.KasaDoviz)
         }
         else if($scope.TahsilatCinsi == "4")  //Ödeme Sözü
         {

@@ -63,7 +63,8 @@ var ParamTemp =
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
-			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"}			
+			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"},
+			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"}
 		},
 		"VerilenSiparis" :
 		{
@@ -86,7 +87,8 @@ var ParamTemp =
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},		
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
 			"TedarikcidenSiparis" : {"Title" : "Tedarikçiden Sipariş","DefaultValue" : "0"},
-			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"}	
+			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"},
+			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"}
 		},
 		"ProformaAlinanSiparis" :
 		{
@@ -192,7 +194,8 @@ var ParamTemp =
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
-			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"}	
+			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"},
+			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"}	
 		},
 		"SatisIrsaliye" :
 		{
@@ -214,7 +217,8 @@ var ParamTemp =
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
-			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"}	
+			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"},
+			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"}	
 		},
 		"KonsinyeIrsaliye" :
 		{
@@ -254,7 +258,8 @@ var ParamTemp =
 			"FiyatLock" : {"Title" : "Fiyat Lock","DefaultValue" : "0"},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""},
-			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"}
+			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
+			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"}
 		},
 		"SatisFatura" :
 		{
@@ -277,7 +282,8 @@ var ParamTemp =
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
 			"Kasa" : {"Title" : "Kasa Kodu","DefaultValue" : ""},
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
-			"KDVYok" : {"Title" : "KDV Yok","DefaultValue" : "0"}
+			"KDVYok" : {"Title" : "KDV Yok","DefaultValue" : "0"},
+			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"}
 		},
 		"Fire" :
 		{

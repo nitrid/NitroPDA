@@ -83,6 +83,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.VergisizFl = 0;
         $scope.BirimAdi = "";
         $scope.RiskParam = UserParam.Sistem.RiskParam;
+        $scope.Risk = 0;
+        $scope.RiskLimit = 0;
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
         $scope.RotaKontrol = false;
         $scope.RotaAciklama = "";
@@ -2055,6 +2057,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                                         $scope.CariVDADI = $scope.CariListe[0].VDADI;
                                         $scope.CariVDNO = $scope.CariListe[0].VDNO;
                                         $scope.Risk = $scope.CariListe[0].RISK;
+                                        $scope.RiskLimit = $scope.CariListe[0].RISKLIMIT;
                                         $("#TblCari").jsGrid({data : $scope.CariListe});
                                         console.log(datas)
                                         let Obj = $("#TblCari").data("JSGrid");
@@ -2454,20 +2457,34 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     }
     $scope.Insert = function()
     {
+        if(UserParam[ParamName].FiyatAzalt == 1)
+        {
+            console.log($scope.Stok[0].FIYAT + "   " + $scope.Fiyat)
+            if($scope.Stok[0].FIYAT < $scope.Fiyat)
+            {
+                alertify.alert("Fiyatı düşüremezsin")
+                $scope.Stok[0].FIYAT = $scope.Fiyat
+                $scope.MiktarFiyatValid();
+                return;
+            }
+        }
         if(String($scope.Miktar).length > 7)
         {
             alertify.alert("Miktar 7 haneden fazla olamaz")
         }
         else
         {
+            console.log(1)
             if(typeof($scope.Stok[0].KODU) != 'undefined')
             {   
+                console.log(1)
                 if(ParamName == "SatisFatura")
                 {
                     if($scope.RiskParam != 0)
                     {
-                        let TmpRiskOran = ($scope.CariBakiye / $scope.Risk) * 100;
-        
+                        console.log(1)
+                        let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
+                        console.log(TmpRiskOran)
                         if(TmpRiskOran >= 100)
                         {
                             alertify.alert("Risk limitini aştınız");
@@ -2976,15 +2993,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     }
     $scope.MiktarFiyatValid = function()
     {
-        if(UserParam[ParamName].FiyatAzalt == 1)
-        {
-            console.log($scope.Stok[0].FIYAT + "   " + $scope.Fiyat)
-            if($scope.Stok[0].FIYAT < $scope.Fiyat)
-            {
-                alertify.alert("Fiyatı düşüremezsin")
-                $scope.Stok[0].FIYAT = $scope.Fiyat
-            }
-        }
         if($scope.CmbEvrakTip != 5)
         {
             $scope.Stok[0].INDIRIM = 0;
@@ -3063,10 +3071,11 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.Adres = $scope.CariListe[pIndex].ADRES;
             $scope.Adres1 = $scope.CariListe[pIndex].ADRES1;
             $scope.Adres2 = $scope.CariListe[pIndex].ADRES2;
-            $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
-            $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
-            $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
-            $scope.Risk = $scope.CariListe[pIndex].RISK
+            $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL;
+            $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1;
+            $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2;
+            $scope.Risk = $scope.CariListe[pIndex].RISK;
+            $scope.RiskLimit = $scope.CariListe[pIndex].RISKLIMIT;
             $scope.DovizChangeKodu = "0"
             $scope.DovizChange()
             //$scope.MainClick()

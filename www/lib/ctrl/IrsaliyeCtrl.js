@@ -2326,6 +2326,17 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.Insert = function()
     { 
+        if(UserParam[ParamName].FiyatAzalt == 1)
+        {
+            console.log($scope.Stok[0].FIYAT + "   " + $scope.Fiyat)
+            if($scope.Stok[0].FIYAT < $scope.Fiyat)
+            {
+                alertify.alert("Fiyatı düşüremezsin")
+                $scope.Stok[0].FIYAT = $scope.Fiyat
+                $scope.MiktarFiyatValid();
+                return;
+            }
+        }
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {
             if(ParamName == "SatisIrsaliye")

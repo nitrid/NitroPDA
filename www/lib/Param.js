@@ -26,8 +26,8 @@ var Param = [
 			"BTYaziciTip": "CORDOVABT",
 			"BTYaziciAdi": "SW_C58B",
 			"FirmaListe": "",
-			"RiskParam": "0",
-			"RiskLimitOran": "70",
+			"RiskParam": "1",
+			"RiskLimitOran": "100",
 			"FisDizayn": "0",
 			"OfflineDepo": "2"
 		},
@@ -74,7 +74,8 @@ var Param = [
 			"SiparisOnay": "",
 			"IskontoMatris": "1",
 			"EksiyeDusme": "0",
-			"ProjeGetir": "0"
+			"ProjeGetir": "0",
+			"FiyatAzalt": "1"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -96,7 +97,8 @@ var Param = [
 			"FiyatLock": "0",
 			"IskontoMatris": "0",
 			"ProjeGetir": "0",
-			"TedarikcidenSiparis": "0"
+			"TedarikcidenSiparis": "0",
+			"FiyatAzalt": "1"
 		},
 		"ProformaAlinanSiparis": {
 			"Seri": "PRSP",
@@ -183,7 +185,8 @@ var Param = [
 			"FiyatLock": "0",
 			"EvrakSil": "0",
 			"IskontoMatris": "0",
-			"ProjeGetir": "1"
+			"ProjeGetir": "1",
+			"FiyatAzalt": "1"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -205,7 +208,8 @@ var Param = [
 			"EksiyeDusme": "0",
 			"IskontoMatris": "1",
 			"ProjeGetir": "0",
-			"OfflineSira": "0"
+			"OfflineSira": "0",
+			"FiyatAzalt": "1"
 		},
 		"KonsinyeIrsaliye": {
 			"EvrakTip": "0",
@@ -280,7 +284,7 @@ var Param = [
 		"Menu": {
 			"Stok Detay": "1",
 			"Sayım Fişi": "1",
-			"Cari Listesi": "0",
+			"Cari Listesi": "1",
 			"Fire": "0",
 			"Cari Ekle": "0",
 			"Deposevk": "1",
@@ -295,13 +299,13 @@ var Param = [
 			"Alış Faturası": "1",
 			"Tahsilat Makbuzu": "1",
 			"Sipariş Eşleştirme": "1",
-			"Verilen Sipariş": "1",
+			"Verilen Sipariş": "0",
 			"Alış İrsaliyesi": "1",
-			"Tediye Makbuzu": "1",
-			"Mal Kabul Eşleştirme": "0",
+			"Tediye Makbuzu": "0",
+			"Mal Kabul Eşleştirme": "1",
 			"Kredi Sözlesme Izleme": "0",
-			"Cari Hesap Hareket": "0",
-			"Yapilacak Tahsilatlar/Ödemeler": "0",
+			"Cari Hesap Hareket": "1",
+			"Yapilacak Tahsilatlar/Ödemeler": "1",
 			"Stok Rapor": "0",
 			"Cari Secimli Siparis Raporu": "0",
 			"Cari Secimli Siparis Durum Raporu": "0",
@@ -325,7 +329,7 @@ var Param = [
 			"Cari Analiz": "0",
 			"Is Emri Depo Sevk": "0",
 			"Sipariş Operasyonları": "0",
-			"Proforma Alınan Siparis": "1"
+			"Proforma Alınan Siparis": "0"
 		},
 		"AlisFatura": {
 			"EvrakTip": "1",
@@ -345,7 +349,8 @@ var Param = [
 			"FiyatLock": "0",
 			"EvrakSil": "0",
 			"Kasa": "",
-			"IskontoMatris": "0"
+			"IskontoMatris": "0",
+			"FiyatAzalt": "1"
 		},
 		"SatisFatura": {
 			"EvrakTip": "1",
