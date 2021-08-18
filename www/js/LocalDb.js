@@ -191,11 +191,11 @@ var LocalDb =
                 //await CreateTable(QueryLocal.SeriNoTbl);
                 //await CreateTable(QueryLocal.SeriNoHarTbl);
                 await CreateTable(QueryLocal.SiparisTbl);
-                await CreateTable(QueryLocal.SiparisStokTbl);
                 await CreateTable(QueryLocal.SonAlisFiyatiTbl);
                 await CreateTable(QueryLocal.SonSatisFiyatiTbl);
                 await CreateTable(QueryLocal.SorumlulukMrkzTbl);
                 await CreateTable(QueryLocal.StokTbl);
+                await CreateTable(QueryLocal.StokTbl2);
                 await CreateTable(QueryLocal.StokHarTbl);
                 await CreateTable(QueryLocal.UreticiTbl);
                 //await CreateTable(QueryLocal.UretimStokTbl);
@@ -238,12 +238,12 @@ var LocalDb =
                 await DataTransfer(QueryLocal.ProjelerTbl, QuerySql.ProjelerTbl,true, DataTransferCallback); 
                 await DataTransfer(QueryLocal.ReyonTbl, QuerySql.ReyonTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SatisSartiTbl, QuerySql.SatisSartiTbl,true, DataTransferCallback);
-                await DataTransfer(QueryLocal.SiparisStokTbl, QuerySql.SiparisStokTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SiparisTbl, QuerySql.SiparisTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SonAlisFiyatiTbl, QuerySql.SonAlisFiyatiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SonSatisFiyatiTbl, QuerySql.SonSatisFiyatiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.SorumlulukMrkzTbl, QuerySql.SorumlulukMrkzTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.StokTbl, QuerySql.StokTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.StokTbl2, QuerySql.StokTbl2,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.UreticiTbl, QuerySql.UreticiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.UretimStokTbl, QuerySql.UretimStokTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.VergiTbl, QuerySql.VergiTbl,true, DataTransferCallback);
@@ -395,6 +395,7 @@ var LocalDb =
                 await DataTransfer(QueryLocal.BarkodTbl, QuerySql.BarkodTbl,pClear, DataTransferCallback);
                 await DataTransfer(QueryLocal.FiyatTbl, QuerySql.FiyatTbl,pClear, DataTransferCallback);
                 await DataTransfer(QueryLocal.StokTbl, QuerySql.StokTbl,pClear, DataTransferCallback);
+                await DataTransfer(QueryLocal.StokTbl2, QuerySql.StokTbl2,pClear, DataTransferCallback);
                 await DataTransfer(QueryLocal.BirimTbl, QuerySql.BirimTbl,pClear, DataTransferCallback);
 
                 pCallback(true);
@@ -422,7 +423,6 @@ var LocalDb =
         {
             try
             {   
-                await DataTransfer(QueryLocal.SiparisStokTbl, QuerySql.SiparisStokTbl,pClear, DataTransferCallback);
 
                 pCallback(true);
             }

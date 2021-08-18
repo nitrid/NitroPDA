@@ -80,11 +80,11 @@
                   </select> 
               </div>
                 <!-- <div class="row">                    
-                  <a class="btn btn-primary btn-block col-lg-12 col-sm-12 col-xl-12" href="#" ng-click="BtnDbCreate()" ng-show="!IsDbCreateWorking">Oluştur</a>   
+                  <a class="btn btn-round btn-primary btn-block col-lg-12 col-sm-12 col-xl-12" href="#" ng-click="BtnDbCreate()" ng-show="!IsDbCreateWorking">Oluştur</a>   
                 </div> -->
               <div class="row">
                 <div class="form-group col-lg-12">
-                  <button type="submit"class="btn btn-primary btn-block col-lg-12 col-sm-12 col-sm-12" href="#" ng-click="BtnDbCreate()" ng-show="!IsDbCreateWorking">Oluştur</button>
+                  <button type="submit"class="btn btn-round btn-primary btn-block col-lg-12 col-sm-12 col-sm-12" href="#" ng-click="BtnDbCreate()" ng-show="!IsDbCreateWorking">Oluştur</button>
                 </div>
               </div>
               <div class="row">
@@ -125,16 +125,9 @@
                     <input type="text" class="form-control" name="socket_port" placeholder="Soket Port" id="socket_port" ng-model="socket_port">
                 </div>               
                 <div class="col-xl-offset-12 form-group">
-                  <a class="btn btn-primary" href="#" ng-click="BtnTryConnect()">Bağlantı Test</a>                
-                  <a class="btn btn-success" href="#" ng-click="HostSettingSave()" data-dismiss="modal">Kaydet</a>   
-                </div>  
-                <div class="col-xl-12"> 
-                  <div ng-click="ChangeMode()">
-                    <label id="Off" class="pt-3" for="inputBasicOff">Offline</label>
-                    <input type="checkbox" id="inputBasicOn" data-plugin="switchery" data-switchery="true" style="display: none;">                                   
-                    <label id="On" class="pt-3" for="inputBasicOn">Online</label>
-                  </div>  
-                </div>         
+                  <a class="btn btn-round btn-primary" href="#" ng-click="BtnTryConnect()">Bağlantı Test</a>                
+                  <a class="btn btn-round btn-success" href="#" ng-click="HostSettingSave()" data-dismiss="modal">Kaydet</a>   
+                </div>       
               </div>
             </form>         
           </div>
@@ -169,7 +162,7 @@
                   <input type="text" class="form-control" name="sifre" placeholder="Şifre" id="sifre" ng-model="sifre">
               </div>          
                 <div class="col-xl-offset-12 form-group">
-                  <a class="btn btn-success" href="#" ng-click="ConfigSave()" data-dismiss="modal">Kaydet</a>   
+                  <a class="btn btn-round btn-success" href="#" ng-click="ConfigSave()" data-dismiss="modal">Kaydet</a>   
                 </div> 
                 <div class="row">
                   <div class="col-sm-12 col-md-12 text-danger py-5"><div class="col-form-label px-1 float-left  py-2"> Sql Bilgilerinizi Kaydettikten Sonra Servisi Yeniden Başlatmalısınız !</div></div>
@@ -193,13 +186,11 @@
                   <input required id="kullanıcı-secim" class="form-control" placeholder="Kullanıcı" ng-model="Kullanici">
                  <!--<label class="floating-label">Kullanıcı</label> -->
               </div>
-              <sifreleave>
               <div class="form-group form-material floating" data-plugin="formMaterial">
                 <input required type="password" class="form-control" name="password" placeholder="Şifre" ng-model="Password" />
                <!-- <label class="floating-label">Şifre</label> -->
               </div>
-              </sifreleave>
-               <div class="form-group form-material">
+               <div class="form-group form-material" ng-click="FirmaClick()">
                  <select class="form-control" data-plugin="selectpicker" data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
                     <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
                 </select>
@@ -222,15 +213,24 @@
               <div class="form-group clearfix">
                 <div class="row">
                   <div class="col-6 px-5">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg" ng-click="BtnEntry()">Giriş</button>
+                    <button type="submit" class="btn btn-round btn-primary btn-block btn-lg" ng-click="BtnEntry()">Giriş</button>
                   </div>
                   <div class="col-6 px-5">
-                    <button type="submit" class="btn btn-danger btn-block btn-lg" ng-click="DenemeClick()">Çıkış</button>
+                    <button type="submit" class="btn btn-round btn-danger btn-block btn-lg" ng-click="DenemeClick()">Çıkış</button>
                   </div>
+                </div>
+                <div class="row">
+                  <div class="pt-10 pl-25 offset-2 col-xl-12"> 
+                    <div ng-click="ChangeMode()">
+                      <label id="Off" class="pt-3" for="inputBasicOff">Offline</label>
+                      <input type="checkbox" id="inputBasicOn" data-plugin="switchery" data-switchery="true" style="display: none;">                                   
+                      <label id="On" class="pt-3" for="inputBasicOn">Online</label>
+                    </div>  
+                  </div>  
                 </div>
               </div>  
               <footer class=" page-copyright-inverse " style="text-align: center;">
-                <a href="http://www.teknoerp.com.tr/"><p>www.teknoerp.com.tr</p></a>
+                <a href="http://www.bekabilisim.com/"><p>www.bekabilisim.com</p></a>
                 <p style="color:#000;" >© 2013. Tüm hakları saklıdır.</p>
             </footer>   
 

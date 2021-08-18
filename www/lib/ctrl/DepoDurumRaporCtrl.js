@@ -228,69 +228,139 @@ function DepoDurumRaporCtrl($scope,$window,db)
     $scope.BtnGetir = function()
     {
         console.log($scope.CmbRaporTip)
-        if($scope.CmbRaporTip == 0)
+        if(localStorage.mode == "true")
         {
-            var TmpQuery = 
+            if($scope.CmbRaporTip == 0)
             {
-                db : '{M}.' + $scope.Firma,
-                query: 
-                "SELECT  " +
-                "sth_stok_kod AS STOKKOD, " +
-                "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = sth_stok_kod) AS STOKADI, " +
-                "SUM(sth_miktar) AS YUKLENEN, " +
-                "(SELECT dep_adi FROM DEPOLAR WHERE	dep_no = @DEPONO) AS DEPO, " +
-                "ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 1 and sth_tarih >= @TARIH AND sth_cikis_depo_no = @DEPONO ),0) AS SATILAN, " +
-                "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOKLAR.sth_stok_kod,@DEPONO,GETDATE())),0) AS KALAN " +
-                "FROM STOK_HAREKETLERI AS STOKLAR WHERE sth_tip = 2 AND sth_tarih = @TARIH AND sth_giris_depo_no = @DEPONO  GROUP BY sth_stok_kod ",
-                param:  ['DEPONO','TARIH'],
-                type:   ['int','date',],
-                value:  [$scope.DepoNo,$scope.Tarih]
+                var TmpQuery = 
+                {
+                    db : '{M}.' + $scope.Firma,
+                    query: 
+                    "SELECT  " +
+                    "sth_stok_kod AS STOKKOD, " +
+                    "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = sth_stok_kod) AS STOKADI, " +
+                    "SUM(sth_miktar) AS YUKLENEN, " +
+                    "(SELECT dep_adi FROM DEPOLAR WHERE	dep_no = @DEPONO) AS DEPO, " +
+                    "ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 1 and sth_tarih >= @TARIH AND sth_cikis_depo_no = @DEPONO ),0) AS SATILAN, " +
+                    "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOKLAR.sth_stok_kod,@DEPONO,GETDATE())),0) AS KALAN " +
+                    "FROM STOK_HAREKETLERI AS STOKLAR WHERE sth_tip = 2 AND sth_tarih = @TARIH AND sth_giris_depo_no = @DEPONO  GROUP BY sth_stok_kod ",
+                    param:  ['DEPONO','TARIH'],
+                    type:   ['int','date',],
+                    value:  [$scope.DepoNo,$scope.Tarih]
+                }
+                db.GetDataQuery(TmpQuery,function(Data)
+                {
+                    $scope.RaporData = Data;
+        
+                    if($scope.RaporData.length > 0)
+                    {
+                        FisData(Data)
+                        $("#TblStokListe").jsGrid({data : $scope.RaporData});
+                    }
+                    else
+                    {
+                        alertify.alert("Rapor İçeriği Boş !")
+                    }
+                });
             }
-            db.GetDataQuery(TmpQuery,function(Data)
+            else if($scope.CmbRaporTip == 1)
             {
-                $scope.RaporData = Data;
-    
-                if($scope.RaporData.length > 0)
+                var TmpQuery = 
                 {
-                    FisData(Data)
-                    $("#TblStokListe").jsGrid({data : $scope.RaporData});
+                    db : '{M}.' + $scope.Firma,
+                    query: 
+                    "SELECT  " +
+                    "sto_kod AS STOKKOD, " +
+                    "sto_isim AS STOKADI, " +
+                    "ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,GETDATE())),0) AS KALAN " +
+                    "FROM STOKLAR WHERE ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,GETDATE())),0) > 0 ",
+                    param:  ['DEPONO','TARIH'],
+                    type:   ['int','date',],
+                    value:  [$scope.DepoNo,$scope.Tarih]
                 }
-                else
+                db.GetDataQuery(TmpQuery,function(Data)
                 {
-                    alertify.alert("Rapor İçeriği Boş !")
-                }
-            });
+                    $scope.RaporData = Data;
+        
+                    if($scope.RaporData.length > 0)
+                    {
+                        FisData(Data)
+                        $("#TblStokListe").jsGrid({data : $scope.RaporData});
+                    }
+                    else
+                    {
+                        alertify.alert("Rapor İçeriği Boş !")
+                    }
+                });
+            }
         }
-        else if($scope.CmbRaporTip == 1)
+        else
         {
-            var TmpQuery = 
+            if($scope.CmbRaporTip == 0)
             {
-                db : '{M}.' + $scope.Firma,
-                query: 
-                "SELECT  " +
-                "sto_kod AS STOKKOD, " +
-                "sto_isim AS STOKADI, " +
-                "ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,GETDATE())),0) AS KALAN " +
-                "FROM STOKLAR WHERE ISNULL((SELECT dbo.fn_DepodakiMiktar (sto_kod,@DEPONO,GETDATE())),0) > 0 ",
-                param:  ['DEPONO','TARIH'],
-                type:   ['int','date',],
-                value:  [$scope.DepoNo,$scope.Tarih]
+                var TmpQuery = 
+                {
+                    db : '{M}.' + $scope.Firma,
+                    query: 
+                    "SELECT " +
+                    "sth_stok_kod AS STOKKOD, " +
+                    "(SELECT ADI FROM STOK WHERE KODU = sth_stok_kod) AS STOKADI, " +
+                    "SUM(sth_miktar) AS YUKLENEN, " +
+                    "(SELECT DEPOADI FROM DEPO WHERE DEPONO = '@DEPONO') AS DEPO, " +
+                    "IFNULL((SELECT SUM(sth_miktar) FROM STOKHAR WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 1 and sth_tarih >= '@TARIH' AND sth_cikis_depo_no = '@DEPONO' ),0) AS SATILAN, " +
+                    "IFNULL((SELECT DEPOMIKTAR FROM STOK WHERE KODU = sth_stok_kod),'') AS KALAN " +
+                    "FROM STOKHAR AS STOKLAR WHERE sth_tip = 2 AND sth_tarih = '@TARIH' AND sth_giris_depo_no = '@DEPONO'  GROUP BY sth_stok_kod ",
+                    param:  ['DEPONO','TARIH'],
+                    type:   ['int','date',],
+                    value:  [$scope.DepoNo,$scope.Tarih]
+                }
+                db.GetPromiseQuery(TmpQuery,function(Data)
+                {
+                    $scope.RaporData = Data;
+                    console.log(Data)
+                    if($scope.RaporData.length > 0)
+                    {
+                        FisData(Data)
+                        $("#TblStokListe").jsGrid({data : $scope.RaporData});
+                    }
+                    else
+                    {
+                        alertify.alert("Rapor İçeriği Boş !")
+                    }
+                });
             }
-            db.GetDataQuery(TmpQuery,function(Data)
+            else if($scope.CmbRaporTip == 1)
             {
-                $scope.RaporData = Data;
-    
-                if($scope.RaporData.length > 0)
+                var TmpQuery = 
                 {
-                    FisData(Data)
-                    $("#TblStokListe").jsGrid({data : $scope.RaporData});
+                    db : '{M}.' + $scope.Firma,
+                    query: 
+                    "SELECT  " +
+                    "KODU AS STOKKOD, " +
+                    "ADI AS STOKADI, " +
+                    "IFNULL(DEPOMIKTAR,'') AS KALAN " +
+                    "FROM STOK WHERE IFNULL(DEPOMIKTAR,'') > 0 ",
+                    param:  ['DEPONO','TARIH'],
+                    type:   ['int','date',],
+                    value:  [$scope.DepoNo,$scope.Tarih]
                 }
-                else
+                db.GetPromiseQuery(TmpQuery,function(Data)
                 {
-                    alertify.alert("Rapor İçeriği Boş !")
-                }
-            });
+                    $scope.RaporData = Data;
+        
+                    if($scope.RaporData.length > 0)
+                    {
+                        FisData(Data)
+                        $("#TblStokListe").jsGrid({data : $scope.RaporData});
+                    }
+                    else
+                    {
+                        alertify.alert("Rapor İçeriği Boş !")
+                    }
+                });
+            }
         }
+
     }
     $scope.BtnDepoListele = function()
     {   

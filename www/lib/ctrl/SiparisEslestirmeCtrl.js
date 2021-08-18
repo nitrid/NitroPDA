@@ -559,6 +559,14 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     {
         $timeout( function(){$window.document.getElementById("Barkod").focus();},100);  
     }
+    function CariFocus()
+    {
+        $timeout( function(){$window.document.getElementById("CariFocus").focus();},100);
+    }
+    function SiparisFocus()
+    {
+        $timeout( function(){$window.document.getElementById("SipSeriSira").focus();},100);
+    }
     function Beep()
     {
         navigator.notification.vibrate(1000);
@@ -1658,7 +1666,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $("#TblCari").jsGrid({data : $scope.CariListe});
                 $("#TblCari").jsGrid({pageIndex: true})
             }
-            
+            CariFocus();
         });
     }
     $scope.MiktarFiyatValid = function()
@@ -1836,6 +1844,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         {
             $scope.SiparisKabulListele()
         }
+        SiparisFocus();
     }
     $scope.SiparisKabulListele = function()
     {
@@ -1851,7 +1860,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.TblLoading = true;
                 $("#TblSiparisKabulListe").jsGrid({data : $scope.SiparisKabulListe});
             }
-            
         });
     }
     $scope.BarkodSiparisAra = function(keyEvent)
@@ -2025,6 +2033,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             {
                 $("#TbCariSec").addClass('active');
                 $("#TbMain").removeClass('active');
+                CariFocus();
             }        
             else
             {
@@ -2035,12 +2044,9 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BelgeBilgisiClick = function() 
     {
-       
-
         $("#TbBelgeBilgisi").addClass('active');
         $("#TbMain").removeClass('active');
         $("#TbSiparisSecimi").removeClass('active');
-
     }
     $scope.BarkodGirisClick = function() 
     {
@@ -2109,6 +2115,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         {
             $("#TbSiparisSecimi").addClass('active');
             $("#TbMain").removeClass('active');
+            SiparisFocus();
         }
         else
         {

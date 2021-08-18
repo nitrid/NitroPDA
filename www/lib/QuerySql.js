@@ -113,10 +113,10 @@ var QuerySql =
                 "DOVIZKUR1, " +
                 "DOVIZKUR2, " +
                 "ALTDOVIZKUR, " +
-                "RISK, " +
-                "RISKLIMIT, " +
+                //"RISK, " +
+                //"RISKLIMIT, " +
                 "ODEMEPLANI, " +
-                "CONVERT(NVARCHAR,CAST(BAKIYE AS MONEY),1) AS BAKIYE, " +
+                "BAKIYE," +// "CONVERT(NVARCHAR,CAST(BAKIYE AS MONEY),1) AS  " +
                 "BELGETARIH, " +
                 "ADRES, " +
                 "IL, " +
@@ -169,7 +169,7 @@ var QuerySql =
                 "cari_efatura_fl AS EFATURA  " +
                 "FROM CARI_MUSTAHSIL_TANIMLARI RIGHT OUTER JOIN " +
                 "CARI_HESAPLAR AS CARI ON CARI_MUSTAHSIL_TANIMLARI.Cm_carikodu = CARI.cari_kod " +
-                "WHERE((UPPER(cari_kod) LIKE  UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(cari_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
+                "WHERE ((UPPER(cari_kod) LIKE  UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(cari_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
                 "AND (((UPPER(cari_unvan1) LIKE UPPER(@ADI) + '%' or UPPER(cari_unvan2) LIKE UPPER(@ADI) + '%') OR (@ADI = '')) OR ((LOWER(cari_unvan1) LIKE LOWER(@ADI) + '%' or LOWER(cari_unvan2) LIKE LOWER(@ADI) + '%') OR (@ADI = ''))) " +
                 "AND ((CARI.cari_temsilci_kodu IN(SELECT value FROM STRING_SPLIT(@PLASIYERKODU,','))) OR (@PLASIYERKODU = ''))) AS TBL ORDER BY KODU " ,
             param : ['KODU','ADI','PLASIYERKODU'],
@@ -570,6 +570,19 @@ var QuerySql =
         param : ['KODU',"ADI",'DEPONO'],
         type :  ['string|25','string|50','int']
     },
+    StokDurumGetir :
+    {
+        query: "SELECT TOP 10  " +
+                "sth_cari_kodu AS CARIKODU, " +
+                "(select cari_unvan1 from CARI_HESAPLAR WHERE cari_kod=sth_cari_kodu) AS CARIADI, " +
+                "sth_evraktip AS EVRAKTIP, " +
+                "CONVERT(VARCHAR(10),sth_tarih,104) as TARIH, " +
+                "sth_miktar AS MIKTAR, " +
+                "ROUND(sth_tutar / sth_miktar,2) AS BFIYAT " +
+                "FROM STOK_HAREKETLERI WHERE sth_stok_kod = @STOKKOD and sth_cari_kodu = @CARIKOD ORDER BY sth_tarih desc ",
+        param : ['STOKKOD','CARIKOD'],
+        type : ['string|25','string|127']
+    },
     CariAdiGetir : 
     {
         quert : "SELECT  " +
@@ -643,6 +656,20 @@ var QuerySql =
         "ORDER BY sth_create_date DESC) AND Hesaplama.sth_stok_kod  = @sth_stok_kod" , 
         param : ['sth_stok_kod'],
         type  : ['string|25']
+    },
+    SonSatisFiyatGetir : 
+    {
+        query : "SELECT sth_cari_kodu AS CARI,sth_stok_kod AS STOK, " + 
+                "sth_tutar / sth_miktar  AS SONFIYAT, " +
+                "sth_har_doviz_cinsi AS DOVIZ, " + 
+                "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sth_har_doviz_cinsi,0))),'TL') AS DOVIZSEMBOL, " + 
+                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sth_har_doviz_cinsi,0),2)),1) AS DOVIZKUR " +  
+                "FROM STOK_HAREKETLERI AS Hesaplama WHERE sth_evraktip IN (1,4) AND  " + 
+                "sth_Guid = (SELECT TOP 1 sth_Guid FROM STOK_HAREKETLERI AS Hesaplama1  " + 
+                "WHERE Hesaplama1.sth_evraktip IN (1,4) AND Hesaplama1.sth_cari_kodu = Hesaplama.sth_cari_kodu AND Hesaplama1.sth_stok_kod = Hesaplama.sth_stok_kod  " + 
+                "ORDER BY sth_create_date DESC) AND Hesaplama.sth_cari_kodu  = @sth_cari_kodu AND Hesaplama.sth_stok_kod  = @sth_stok_kod" , 
+        param : ['sth_cari_kodu','sth_stok_kod'],
+        type : ['string|25','string|25']
     },
     StokDetay : 
     {
@@ -1492,6 +1519,11 @@ var QuerySql =
         query : "UPDATE DEPOLAR_ARASI_SIPARISLER SET ssip_teslim_miktar = ssip_teslim_miktar + @sip_teslim_miktar WHERE ssip_Guid = @sip_Guid " ,
         param : ['sip_teslim_miktar:int','sip_Guid:string|50']
     },
+    StokHarDepoSiparisDeleteUpdate :
+    {
+        query : "UPDATE DEPOLAR_ARASI_SIPARISLER SET ssip_teslim_miktar = ssip_teslim_miktar - @sip_teslim_miktar WHERE ssip_Guid = @sip_Guid " ,
+        param : ['sip_teslim_miktar:int','sip_Guid:string|50']
+    },
     SiparisDeleteUpdate :
     {
         query : "UPDATE SIPARISLER SET sip_teslim_miktar = sip_teslim_miktar - @sip_teslim_miktar WHERE sip_Guid = @sip_Guid " +
@@ -2052,6 +2084,12 @@ var QuerySql =
         type : ['int','date']
     },
     //Stok Hareket
+    StokHarOfflineGetir :
+    {
+        query: "SELECT sth_evrakno_seri,sth_evrakno_sira FROM STOK_HAREKETLERI where sth_evraktip = @sth_evraktip GROUP BY sth_evrakno_seri,sth_evrakno_sira",
+        param:   ['sth_evraktip'],
+        type:    ['int']
+    },
     StokHarGetir : 
     {
         query:  "SELECT CONVERT(VARCHAR(10),GETDATE(),112) AS sth_kur_tarihi , " +
@@ -3152,7 +3190,7 @@ var QuerySql =
     {
         query: "SELECT TIP + '-000-000-' + CONVERT(NVARCHAR(20),YEAR(GETDATE())) + '-' +  REPLACE(STR(CONVERT(NVARCHAR(10),ISNULL(REFNO,0)), 8), SPACE(1), '0') AS MAXREFNO " +
                 "FROM (SELECT " +
-                "CASE @sck_tip WHEN 0 THEN 'MC' WHEN 1 THEN 'MS' WHEN 6 THEN 'MK' END AS TIP, " +
+                "CASE @sck_tip WHEN 0 THEN 'MC' WHEN 1 THEN 'MS' WHEN 6 THEN 'MK' WHEN 5 THEN 'MO' END AS TIP, " +
                 "MAX(CONVERT(INT,SUBSTRING(sck_refno,17,25))) + 1 AS REFNO " +
                 "FROM ODEME_EMIRLERI WHERE sck_tip = @sck_tip ) AS TBL" ,
         param : ['sck_tip'],
@@ -4613,8 +4651,9 @@ var QuerySql =
     {
         query : "SELECT adr_cari_kod AS CARIKODU," +
                 "adr_adres_no AS ADRESNO," +
-                "adr_cadde AS CADDE," +
-                "adr_sokak AS SOKAK," +
+                "adr_cadde AS ADRES1," +
+                "adr_sokak AS ADRES2," +
+                "adr_ilce + '-' + adr_il AS ADRES," +
                 "adr_ilce AS ILCE," +
                 "adr_il AS IL," +
                 "cari_sektor_kodu AS SEKTOR," +
@@ -4688,14 +4727,10 @@ var QuerySql =
                 "bar_bedenpntr AS BEDENPNTR, " + 
                 "bar_renkpntr AS RENKPNTR, " + 
                 "bar_barkodtipi AS BARKODTIP, " + 
-                "(SELECT dbo.fn_beden_kirilimi (bar_bedenpntr,sto_beden_kodu)) AS BEDEN, " + 
-                "(SELECT dbo.fn_renk_kirilimi (bar_renkpntr,sto_renk_kodu)) AS RENK, " + 
                 "bar_partikodu AS PARTI, " + 
                 "bar_lotno AS LOT, " + 
                 "ISNULL((SELECT dbo.fn_StokBirimHesapla (sto_kod,bar_birimpntr,1,1)),1) AS KATSAYI, " +
-                "(SELECT dbo.fn_StokBirimi (sto_kod,bar_birimpntr)) AS BIRIM, " +
-                "ISNULL(( SELECT  msg_S_0165  FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] ( sto_kod ,1,GETDATE()) WHERE msg_S_0062=CASE WHEN bar_renkpntr=0 THEN bar_bedenpntr ELSE CASE WHEN bar_bedenpntr=0 THEN (bar_renkpntr-1)*40+1 ELSE (bar_renkpntr-1)*40+bar_bedenpntr END  END),0) AS KIRILIMMIKTAR, " + 
-                "ISNULL(( SELECT  msg_S_0165  FROM [dbo].[fn_DepolardakiRenkBedenDetayliMiktar] ( sto_kod ,2,GETDATE()) WHERE msg_S_0062=CASE WHEN bar_renkpntr=0 THEN bar_bedenpntr ELSE CASE WHEN bar_bedenpntr=0 THEN (bar_renkpntr-1)*40+1 ELSE (bar_renkpntr-1)*40+bar_bedenpntr END  END),0) AS KIRILIMMIKTAR2 " + 
+                "(SELECT dbo.fn_StokBirimi (sto_kod,bar_birimpntr)) AS BIRIM " + 
                 "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " + 
                 "RIGHT JOIN BARKOD_TANIMLARI AS BARKOD WITH (NOLOCK,INDEX=NDX_BARKOD_TANIMLARI_02) ON " + 
                 "STOK.sto_kod = BARKOD.bar_stokkodu"
@@ -4948,6 +4983,7 @@ var QuerySql =
                 "sat_bitis_tarih AS BITIS, " +
                 "sat_basla_tarih AS BASLANGIC, " +
                 "sat_brut_fiyat -(sat_det_isk_miktar1 + sat_det_isk_miktar2 + sat_det_isk_miktar3 + sat_det_isk_miktar4 + sat_det_isk_miktar5 + sat_det_isk_miktar6) AS FIYAT, " +
+                "sat_det_isk_miktar1 + sat_det_isk_miktar2 + sat_det_isk_miktar3 + sat_det_isk_miktar4 + sat_det_isk_miktar5 + sat_det_isk_miktar6 AS INDIRIM, " +
                 "sat_brut_fiyat AS BRUTFIYAT, " +
                 "sat_det_isk_miktar1 AS ISKONTOM1, " +
                 "sat_det_isk_miktar2 AS ISKONTOM2, " +
@@ -5047,8 +5083,6 @@ var QuerySql =
                 "SIPARIS.sip_isk4 AS ISK4, " +
                 "SIPARIS.sip_isk5 AS ISK5, " +
                 "SIPARIS.sip_isk6 AS ISK6, " +
-                "(SELECT dbo.fn_beden_kirilimi (bar_bedenpntr,sto_beden_kodu)) AS BEDEN, " +
-                "(SELECT dbo.fn_renk_kirilimi (bar_renkpntr,sto_renk_kodu)) AS RENK, " +
                 "ISNULL(BEDENHAR.BdnHar_BedenNo,0) AS BEDENNO, " +
                 "CAST(ISNULL(NULL,0) AS FLOAT) AS MIKTAR, " +
                 "(SELECT dbo.fn_StokBirimi (SIPARIS.sip_stok_kod,SIPARIS.sip_birim_pntr)) AS BIRIM, " +
@@ -5253,12 +5287,50 @@ var QuerySql =
                 "sto_siparis_dursun AS SIPARISDURSUN, "   + 
                 "sto_malkabul_dursun as MALKABULDURSUN, " +
                 "sto_sat_cari_kod AS STOKCARI, " + 
-                "sto_birim1_katsayi AS KAYSAYI1, " +
-                "sto_birim2_katsayi AS KAYSAYI2, " +
-                "sto_birim3_katsayi AS KAYSAYI3, " +
-                "sto_birim4_katsayi AS KAYSAYI4, " +
+                "sto_birim1_katsayi AS KATSAYI1, " +
+                "sto_birim2_katsayi AS KATSAYI2, " +
+                "sto_birim3_katsayi AS KATSAYI3, " +
+                "sto_birim4_katsayi AS KATSAYI4, " +
                 "sto_otvtutar AS OTVTUTAR " + 
                 "FROM STOKLAR AS STOK "+
+                "WHERE ((sto_anagrup_kod >= @ANAGRUP1) OR (@ANAGRUP1 = '')) AND ((sto_anagrup_kod <= @ANAGRUP2) OR (@ANAGRUP2 = '')) AND ((sto_altgrup_kod >= @ALTGRUP1) OR (@ALTGRUP1 = '')) " +
+                " AND ((sto_altgrup_kod <= @ALTGRUP2) OR (@ALTGRUP2 = '')) AND ((sto_uretici_kodu >= @URETICI1) OR (@URETICI1 = '')) AND ((sto_uretici_kodu <= @URETICI2) OR (@URETICI2 = '')) AND ((sto_sektor_kodu >= @SEKTOR1) OR (@SEKTOR1 = '')) " +
+                " AND ((sto_sektor_kodu <= @SEKTOR2) OR (@SEKTOR2 = '')) AND ((sto_marka_kodu >= @MARKA1) OR (@MARKA1 = '')) AND ((sto_marka_kodu <= @MARKA2) OR (@MARKA2 = ''))",
+        param : ['DEPONO','ANAGRUP1','ANAGRUP2','ALTGRUP1','ALTGRUP2','URETICI1','URETICI2','SEKTOR1','SEKTOR2','MARKA1','MARKA2'],
+        type : ['int','string','string','string','string','string','string','string','string','string','string']
+    },
+    StokTbl2 :
+    {
+        query : "SELECT sto_kod AS KODU, " + 
+                "sto_isim AS ADI, " +
+                "sto_kisa_ismi AS KISAAD, " + 
+                "sto_yabanci_isim AS YABANCIAD, " + 
+                "sto_doviz_cinsi AS DOVIZCINSI, " + 
+                "sto_perakende_vergi AS PERAKENDEVERGIPNTR, " + 
+                "sto_toptan_vergi AS TOPTANVERGIPNTR, " + 
+                "sto_altgrup_kod AS ALTGRUP, " + 
+                "sto_anagrup_kod AS ANAGRUP, " + 
+                "sto_uretici_kodu AS URETICI, " + 
+                "sto_sektor_kodu AS SEKTOR, " + 
+                "sto_reyon_kodu AS REYON, " + 
+                "sto_marka_kodu AS MARKA, " +
+                "sto_beden_kodu AS BEDENKODU, " + 
+                "sto_renk_kodu AS RENKKODU, " + 
+                "sto_pasif_fl AS AKTIFPASIF, " +
+                "(SELECT dbo.fn_VergiYuzde (sto_perakende_vergi)) AS PERAKENDEVERGI, " +
+                "(SELECT dbo.fn_VergiYuzde (sto_toptan_vergi)) AS TOPTANVERGI, " +
+                "sto_detay_takip AS DETAYTAKIP, " +
+                "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK2.sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " + 
+                "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK2.sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR2, " + 
+                "sto_siparis_dursun AS SIPARISDURSUN, "   + 
+                "sto_malkabul_dursun as MALKABULDURSUN, " +
+                "sto_sat_cari_kod AS STOKCARI, " + 
+                "sto_birim1_katsayi AS KATSAYI1, " +
+                "sto_birim2_katsayi AS KATSAYI2, " +
+                "sto_birim3_katsayi AS KATSAYI3, " +
+                "sto_birim4_katsayi AS KATSAYI4, " +
+                "sto_otvtutar AS OTVTUTAR " + 
+                "FROM STOKLAR AS STOK2 " +
                 "WHERE ((sto_anagrup_kod >= @ANAGRUP1) OR (@ANAGRUP1 = '')) AND ((sto_anagrup_kod <= @ANAGRUP2) OR (@ANAGRUP2 = '')) AND ((sto_altgrup_kod >= @ALTGRUP1) OR (@ALTGRUP1 = '')) " +
                 " AND ((sto_altgrup_kod <= @ALTGRUP2) OR (@ALTGRUP2 = '')) AND ((sto_uretici_kodu >= @URETICI1) OR (@URETICI1 = '')) AND ((sto_uretici_kodu <= @URETICI2) OR (@URETICI2 = '')) AND ((sto_sektor_kodu >= @SEKTOR1) OR (@SEKTOR1 = '')) " +
                 " AND ((sto_sektor_kodu <= @SEKTOR2) OR (@SEKTOR2 = '')) AND ((sto_marka_kodu >= @MARKA1) OR (@MARKA1 = '')) AND ((sto_marka_kodu <= @MARKA2) OR (@MARKA2 = ''))",

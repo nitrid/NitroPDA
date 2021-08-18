@@ -20,7 +20,7 @@
                                 <div class="col-11 px-1 py-5">
                                     <div class="input-group px-5">
                                         <input type="text" class="form-control focus" placeholder="Depo Listelemek İçin Tıklayınız..." ng-click="DepoSec()" ng-model="DepoAdi">
-                                        <button type="submit" class="btn btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                        <button type="submit" class="btn btn-round btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -39,12 +39,12 @@
                             </div>
                             <div class="row py-5">
                                 <div class="col-6">
-                                    <button class="btn btn-block btn-primary">
+                                    <button class="btn btn-round btn-block btn-primary">
                                         <span class="glyphicon glyphicon-print"  aria-hidden="true" ng-click="BtnFisYazdir()"></span>
                                     </button>
                                 </div>
                                 <div class="col-6">
-                                    <button type="submit" class="btn btn-primary btn-block" ng-click="BtnGetir()">Getir</button>
+                                    <button type="submit" class="btn btn-round btn-primary btn-block" ng-click="BtnGetir()">Getir</button>
                                 </div>
                             </div>  
                             <div class="col-1 offset-5" ng-show="Loading" >
@@ -62,7 +62,7 @@
                     <div style="margin-left: 0px; margin-right: 5px; margin-top: -5px;" class="panel-body">
                         <div class="row py-1">
                             <div class="col-4 px-1">
-                                <button class="form-group btn btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                                <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                             </div>
                         </div>
                         <div class="form-group row my-1">
@@ -76,7 +76,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" ng-keypress = "BtnDepoListeleEnter($event)" ng-model="TxtDepoAra" ng-disabled="EvrakLock">
                                     <span class="input-group-append">
-                                        <button type="submit" class="btn btn-primary"  ng-click="BtnDepoListele()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                                        <button type="submit" class="btn btn-round btn-primary"  ng-click="BtnDepoListele()"><i class="icon wb-search" aria-hidden="true"></i></button>
                                     </span>
                                 </div>
                             </div>

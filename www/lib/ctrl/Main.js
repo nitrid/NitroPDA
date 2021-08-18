@@ -97,6 +97,12 @@
     {
         UserParam = Param[$window.sessionStorage.getItem('User')];
         $scope.DepoNo = 1;
+        console.log(localStorage.mode)
+        $scope.OnOffMod = localStorage.mode;
+        if($scope.OnOffMod == "false")
+            $scope.OnOffMod = "Offline"
+        else
+            $scope.OnOffMod = "Online"
         if(typeof localStorage.FaturaParam != 'undefined')
         {
             localStorage.removeItem("FaturaParam");
@@ -126,7 +132,13 @@
         $scope.Firm = $window.sessionStorage.Firma;
         if(localStorage.mode == 'false')
         {
-            $('#vt-aktarim').modal("show");
+            alertify.okBtn('Evet');
+            alertify.cancelBtn('Hayır');
+    
+            alertify.confirm('Aktarılmamış Evraklarınız Olabilir Devam Etmek İstiyor Musunuz ?', 
+            async function()
+            { 
+            {$('#vt-aktarim').modal("show");
             let Status = await db.ConnectionPromise()
             if(!Status)
             {
@@ -158,7 +170,9 @@
                         }
                     });
                 }
-            });
+            });}
+            }
+            ,function(){});
         }
         else
         {
@@ -177,11 +191,12 @@
             
             db.Emit('GetMenu','',function(pMenuData)
             {
-                db.LocalDb.Filter.STOK = [$scope.DepoNo,'','','','','','','','','','']
-                db.LocalDb.Filter.PARAM = [pMenuData,UserParam.Sayim.DepoNo,new Date(),UserParam.AlinanSiparis.Seri,UserParam.SatisFatura.Seri,UserParam.SatisIrsaliye.Seri]
+                db.LocalDb.Filter.STOK = [UserParam.Sistem.OfflineDepo,'','','','','','','','','','']
+                db.LocalDb.Filter.STOK2 = [UserParam.AlinanSiparis.DepoNo,'','','','','','','','','','']
+                db.LocalDb.Filter.PARAM = [pMenuData,UserParam.Sistem.OfflineDepo,new Date(),UserParam.AlinanSiparis.Seri,UserParam.SatisFatura.Seri,UserParam.SatisIrsaliye.Seri]
                 //QuerySql.StokTbl.value = [$scope.DepoNo];
-                db.LocalDb.Filter.PARTI  = [$scope.DepoNo];
-                QuerySql.NakliyeOnayTbl.value = [$scope.DepoNo];
+                db.LocalDb.Filter.PARTI  = [UserParam.Sistem.OfflineDepo];
+                QuerySql.NakliyeOnayTbl.value = [UserParam.Sistem.OfflineDepo];
 
                 db.LocalDb.OpenDatabase($scope.VtFirm,function(data)
                 {
@@ -189,7 +204,7 @@
                     {
                         if(typeof localStorage.localDb == 'undefined')
                         {
-                            localStorage.localDb = JSON.stringify(JSON.parse('[{"FIRM" : "' + $scope.VtFirm + '"}]'));                            
+                            localStorage.localDb = JSON.stringify(JSON.parse('[{"FIRM" : "' + $scope.VtFirm + '"}]'));
                         }
                         else
                         {
@@ -220,20 +235,52 @@
                         
                         db.Disconnect();
                         angular.element('#vt-aktarim').modal('hide');
-                        alertify.alert("<a style='color:#3e8ef7''>" + $scope.DepoNo + " " + "'nolu Deponun Stok Aktarımı Tamamlandı.. !" + "</a>" );
-                        
+                        alertify.okBtn('Tamam');
+                        alertify.alert("<a style='color:#3e8ef7''>" + $scope.DepoNo + " " + "'nolu Deponun Stok Aktarımı Tamamlandı.. !" + "</a>" , 
+                        function()
+                        { 
+                            location.reload();
+                        }
+                        ,function(){});
                     }
-                                    
                 });
             });
-
-            
         });
         if(db.SocketConnected)
         {
             
             //$scope.$apply();
         }
+    }
+    $scope.Modline = function()
+    {
+        alertify.okBtn('Evet');
+        alertify.cancelBtn('Hayır');
+        if($scope.OnOffMod == "Offline")
+        {
+            $scope.OnOffModChange = "Online";
+        }
+        else
+        {
+            $scope.OnOffModChange = "Offline";
+        }
+        alertify.confirm($scope.OnOffModChange +" "+ 'Moda Geçmek İstediğinize Emin Misiniz ?', 
+        async function()
+        { 
+            if(localStorage.mode == "false")
+            {
+                localStorage.mode = "true";
+                $scope.OnOffMod = "Offline"
+            }
+            else
+            {
+                localStorage.mode = "false";
+                $scope.OnOffMod = "Online"
+            }
+            location.reload();
+        }
+        ,function(){});
+
     }
     db.LocalDb.On('TransferEvent',function(e)
     {   

@@ -22,17 +22,57 @@ var QueryLocal =
     {
         query : "SELECT SATIS_IRSALIYE_SIRA FROM PARAM"
     },
+    SiparisGonderGetir:
+    {
+        query:  "SELECT status AS STATUS,ROUND(SUM((sip_tutar - (sip_iskonto_1 + sip_iskonto_2 + sip_iskonto_3 + sip_iskonto_4 + sip_iskonto_5 + sip_iskonto_6) + sip_vergi)),2) AS TUTAR,* FROM SIPARIS WHERE status = 0 GROUP BY sip_evrakno_seri,sip_evrakno_sira",
+    },
+    StokHareketGonderGetir:
+    {
+        query:  "SELECT (SELECT UNVAN1 FROM CARI WHERE KODU = sth_cari_kodu) AS CARIADI,ROUND(SUM((sth_tutar - (sth_iskonto1 + sth_iskonto2 + sth_iskonto3 + sth_iskonto4 + sth_iskonto5 + sth_iskonto6) + sth_vergi)),2) AS TUTAR, strftime('%d.%m.%Y', sth_tarih) AS TARIH,status AS STATUS,* FROM STOKHAR WHERE status = 0 and sth_evraktip = '@sth_evraktip' GROUP BY sth_evrakno_seri,sth_evrakno_sira",
+        param:  ['sth_evraktip'],
+        type:   ['int']
+    },
+    CariHareketGonderGetir:
+    {
+        query:  "SELECT (SELECT UNVAN1 FROM CARI WHERE KODU = cha_kod) AS CARIADI, SUM(cha_meblag) AS TUTAR, strftime('%d.%m.%Y', cha_tarihi) AS TARIH, status AS STATUS,* FROM CARIHAR WHERE status = 0 and cha_evrak_tip = '@cha_evrak_tip' GROUP BY cha_evrakno_seri,cha_evrakno_sira ",
+        param:  ['cha_evrak_tip'],
+        type:   ['int']
+    },
+    SayimHareketGonderGetir:
+    {
+        query:  "SELECT status AS STATUS,* FROM SAYIM WHERE status = 0 GROUP BY sym_evrakno",
+    },
+    StokMiktarHesapla:
+    {
+        query:  "SELECT SUM(HESAP) AS DEPOMIKTAR FROM (SELECT CASE WHEN sth_tip = 0 THEN sth_miktar WHEN sth_tip = 1 THEN sth_miktar * -1 end as HESAP FROM STOKHAR WHERE sth_stok_kod = '@sth_stok_kod' OR sth_stok_kod = (SELECT KODU FROM BARKOD WHERE BARKOD = '@sth_stok_kod') " +
+                ") AS TBL",
+        param:  ['sth_stok_kod'],
+        type:   ['string|25']
+    },
+    CariMiktarHesapla:
+    {
+        query:  "SELECT IFNULL(SUM(HESAP),0) AS BAKIYE FROM (SELECT CASE WHEN cha_evrak_tip IN(64,63) THEN cha_meblag WHEN cha_evrak_tip IN (1,0) THEN cha_meblag * -1 end as HESAP FROM CARIHAR WHERE cha_kod = '@cha_kod' " +
+                ") AS TBL",
+        param:  ['cha_kod'],
+        type:   ['string|25']
+    },
+    DepoAra : 
+    {
+        query : "SELECT DEPONO AS KODU,DEPOADI AS ADI FROM DEPO WHERE ((DEPONO = '@DEPONO') OR ('@DEPONO' = '')) AND ((DEPOADI = '@DEPOADI') OR ('@DEPOADI' = ''))",
+        param : ['DEPONO','DEPOADI'],
+        type : ['string|25','string|25'] 
+    },
     CmbAdresNo : 
     {
         query : "SELECT " +
                 "ADRESNO AS KODU, " +
-                "CADDE AS ADI,  " +
-                "ADRESNO - 1 AS SIRANO," +
-                "SOKAK AS ADRES2," +
-                "IL," +
+                "ADRES1 AS ADI,  " +
+                "ADRESNO - 1 AS SIRANO, " +
+                "ADRES2 AS ADRES2, " +
+                "IL, " +
                 "ILCE " +
                 "FROM ADRES " +
-                "WHERE CARIKODU = @adr_cari_kod  ORDER BY CADDE ASC" ,
+                "WHERE CARIKODU = '@adr_cari_kod'  ORDER BY ADRES1 ASC",
         param : ['adr_cari_kod'],
         type : ['string|25']
     },
@@ -84,9 +124,17 @@ var QueryLocal =
         query : "SELECT '0' AS KODU, 'PEŞİN' AS ADI UNION ALL SELECT ODEMENO AS KODU, " +
                 "ODEMEADI  AS ADI FROM ODEMEPLAN"
     },
+    OdemeEmriGetir : 
+    {
+        query: "SELECT * FROM ODEMEEMIRLERI WHERE sck_ilk_evrak_seri = '@sck_ilk_evrak_seri' AND sck_ilk_evrak_sira_no = @sck_ilk_evrak_sira_no" ,
+        param : ['sck_ilk_evrak_seri','sck_ilk_evrak_sira_no'],
+        type : ['string|20','int','string|20']
+    },
     MaxCekRefNo : 
     {
-        query: "SELECT 'MC-000-000-00000001' AS MAXREFNO" ,
+        query: "SELECT TIP || '-000-000-' || CAST(strftime('%Y') AS NVARCHAR(20)) || '-' || SUBSTR('00000000'|| CAST(IFNULL(REFNO,0) AS NVARCHAR(10)),-8,8) AS MAXREFNO,REFNO " +
+        "FROM (SELECT CASE @sck_tip WHEN 0 THEN 'MC' WHEN 1 THEN 'MS' WHEN 6 THEN 'MK' WHEN 5 THEN 'MO' END AS TIP, IFNULL(MAX(CAST(SUBSTR(sck_refno,17,25) AS INT)),0) + 1 AS REFNO " +
+        "FROM ODEMEEMIRLERI WHERE sck_tip = @sck_tip ) AS TBL ",
         param : ['sck_tip'],
         type : ['int']
     },
@@ -188,7 +236,7 @@ var QueryLocal =
                 ",''                        " +
                 ",'@sck_borclu'             " +
                 ",''                        " +
-                ",@sck_vade                 " +
+                ",'@sck_vade '                " +
                 ",@sck_tutar                " +
                 ",@sck_doviz                " +
                 ",@sck_odenen               " +
@@ -243,6 +291,12 @@ var QueryLocal =
                  'sck_ilk_evrak_satir_no:int','sck_son_hareket_tarihi:date','sck_doviz_kur:float','sck_sonpoz:int','sck_srmmrk:string|25','sck_projekodu:string|25'],
         guid : "sck_Guid"
     },
+    CekHarDelete:
+    {
+        query:  "DELETE FROM ODEMEEMIRLERI WHERE (sck_ilk_evrak_seri = '@sck_ilk_evrak_seri' AND sck_ilk_evrak_sira_no = '@sck_ilk_evrak_sira_no' ) OR sck_refno = '@sck_refno'" ,
+        param : ['sck_ilk_evrak_seri','sck_ilk_evrak_sira_no','sck_refno'],
+        type : ['string|20','int','string|20']
+    },
     CariGetir : 
     {
         query : "SELECT  KODU, " +
@@ -267,6 +321,11 @@ var QueryLocal =
                 "DOVIZKUR1," +
                 "DOVIZKUR2," +
                 "ALTDOVIZKUR," +
+                "IFNULL((SELECT ADRES FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES, " +
+                "IFNULL((SELECT ADRES1 FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES1, " +
+                "IFNULL((SELECT ADRES2 FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES2, " +
+                "IFNULL((SELECT IL FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS IL, " +
+                "IFNULL((SELECT ILCE FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ILCE, " +
                 "RISK," +
                 "ODEMEPLANI," +
                 "BAKIYE," +
@@ -275,9 +334,12 @@ var QueryLocal =
                 "VERGISIZ," +
                 "EFATURA " +
                 "FROM CARI " +
-                "WHERE ((KODU LIKE '@KODU') OR ('@KODU' = ''))  AND ((UNVAN1 LIKE '@ADI') OR ('@ADI' = '')) ORDER BY KODU ASC",
-            param : ['KODU','ADI'],
-            type : ['string','string']
+                "WHERE((UPPER(CARI.KODU) LIKE  UPPER('@KODU') OR ('@KODU' = '')) OR (LOWER(CARI.KODU) LIKE LOWER('@KODU') OR ('@KODU' = ''))) " +
+                "AND ((UPPER(CARI.UNVAN1) LIKE  UPPER('@ADI') OR ('@ADI' = '')) OR (LOWER(CARI.UNVAN1) LIKE LOWER('@ADI') OR ('@ADI' = ''))) " +
+                "AND TEMSILCI = '@TEMSILCI' " +
+                "ORDER BY KODU ASC",
+            param : ['KODU','ADI','TEMSILCI'],
+            type : ['string','string','string']
     },
     CariListeGetir : 
     {
@@ -303,6 +365,11 @@ var QueryLocal =
                 "DOVIZKUR1," +
                 "DOVIZKUR2," +
                 "ALTDOVIZKUR," +
+                "IFNULL((SELECT ADRES FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES, " +
+                "IFNULL((SELECT ADRES1 FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES1, " +
+                "IFNULL((SELECT ADRES2 FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ADRES2, " +
+                "IFNULL((SELECT IL FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS IL, " +
+                "IFNULL((SELECT ILCE FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ILCE, " +
                 "RISK," +
                 "ODEMEPLANI," +
                 "BAKIYE," +
@@ -311,9 +378,10 @@ var QueryLocal =
                 "VERGISIZ," +
                 "EFATURA " +
                 "FROM CARI " +
-                "WHERE ((KODU LIKE '@KODU') OR ('@KODU' = ''))  AND ((UNVAN1 LIKE '@ADI') OR ('@ADI' = '')) ORDER BY KODU ASC",
-            param : ['KODU','ADI'],
-            type : ['string','string']
+                "WHERE ((UPPER(KODU) LIKE  UPPER('@KODU') || '%' OR ('@KODU' = '')) OR (LOWER(KODU) LIKE LOWER('@KODU') || '%' OR ('@KODU' = '')))" +
+                "AND (((UPPER(UNVAN1) LIKE UPPER('@ADI') || '%' or UPPER(UNVAN2) LIKE UPPER('@ADI') || '%') OR ('@ADI' = '')) OR ((LOWER(UNVAN1) LIKE LOWER('@ADI') || '%' or LOWER(UNVAN2) LIKE LOWER('@ADI') || '%') OR ('@ADI' = ''))) AND TEMSILCI = '@TEMSILCI' ORDER BY KODU ASC",
+                param : ['KODU','ADI','TEMSILCI'],
+                type : ['string','string','string']
     },
     BarkodGetir:
     {
@@ -340,15 +408,12 @@ var QueryLocal =
                 "PARTI, " +
                 "LOT, " +
                 "BARKODTIP, " +
-                "BEDEN, " +
-                "RENK, " +
                 "PERAKENDEVERGI, " +
                 "TOPTANVERGI, " +
                 "KATSAYI, " +
                 "BIRIM, " +
                 "DETAYTAKIP, " +
                 "DEPOMIKTAR, " +
-                "KIRILIMMIKTAR, " +
                 "SIPARISDURSUN, " +
                 "MALKABULDURSUN, " +
                 "OTVTUTAR " +
@@ -403,7 +468,59 @@ var QueryLocal =
                 "STOK.MALKABULDURSUN as MALKABULDURSUN, " +
                 "STOK.OTVTUTAR AS OTVTUTAR " +
                 "FROM STOK AS STOK " +
-                "WHERE ((STOK.KODU LIKE '@KODU') OR ('@KODU' = '')) AND ((STOK.ADI LIKE '@ADI') OR ('@ADI' = '')) " +
+                "WHERE DEPOMIKTAR > 0 AND ((UPPER(KODU) LIKE UPPER('@KODU') || '%' OR ('@KODU' = '')) OR (LOWER(KODU) LIKE LOWER('@KODU') || '%' OR ('@KODU' = ''))) " +
+				"AND ((UPPER(ADI) LIKE UPPER('@ADI') || '%' OR ('@ADI' = '')) OR (LOWER(ADI) LIKE LOWER('@ADI') || '%' OR ('@ADI' = '')))" +
+                "AND ((STOK.MARKA LIKE '@MKODU') OR ('@MKODU' = '')) AND '@DEPO' <> ''" ,
+        param : ['KODU','ADI','DEPO','MKODU']
+    },
+    StokGetir2:
+    {
+        query : "SELECT STOK.KODU AS KODU, " +
+                "STOK.ADI AS ADI, " +
+                "IFNULL((SELECT UNVAN1 FROM CARI WHERE KODU = STOK.STOKCARI),'') AS UNVAN1, " +
+                "IFNULL((SELECT UNVAN2 FROM CARI WHERE KODU = STOK.STOKCARI),'') AS UNVAN2, " +
+                "STOK.STOKCARI AS CARIKODU, " +
+                "IFNULL(STOK.KATSAYI2 * -1,0) AS MIKTAR, " +
+                "STOK.KISAAD AS KISAAD, " +
+                "STOK.YABANCIAD AS YABANCIAD, " +
+                "STOK.DOVIZCINSI AS DOVIZCINSI, " +
+                "0 AS DOVIZCINSKURU, " +
+                "STOK.PERAKENDEVERGIPNTR AS PERAKENDEVERGIPNTR, " +
+                "STOK.TOPTANVERGIPNTR AS TOPTANVERGIPNTR, " +
+                "STOK.ALTGRUP AS ALTGRUP, " +
+                "IFNULL((SELECT ADI FROM ALTGRUP WHERE KODU = STOK.ALTGRUP),'') AS ALTGRUPADI, " +
+                "STOK.ANAGRUP AS ANAGRUP, " +
+                "IFNULL((SELECT ADI FROM ANAGRUP WHERE KODU = STOK.ANAGRUP),'') AS ANAGRUPADI, " +
+                "STOK.URETICI AS URETICI, " +
+                "STOK.SEKTOR AS SEKTOR, " +
+                "STOK.REYON AS REYON, " +
+                "IFNULL((SELECT ADI FROM REYON WHERE KODU = STOK.REYON),'') AS REYONADI, " +
+                "STOK.MARKA AS MARKA, " +
+                "STOK.BEDENKODU AS BEDENKODU, " +
+                "STOK.RENKKODU AS RENKKODU, " +
+                "STOK.AKTIFPASIF AS AKTIFPASIF, " +
+                "'' AS BARKOD, " +
+                "1 AS BIRIMPNTR, " +
+                "0 AS BEDENPNTR, " +
+                "0 AS RENKPNTR, " +
+                "'' AS PARTI, " +
+                "0 AS LOT, " +
+                "0 AS BARKODTIP, " +
+                "'' AS BEDEN, " +
+                "'' AS RENK, " +
+                "STOK.PERAKENDEVERGI AS PERAKENDEVERGI, " +
+                "STOK.TOPTANVERGI AS TOPTANVERGI, " +
+                "1 AS KATSAYI, " +
+                "'' AS BIRIM, " +
+                "STOK.DETAYTAKIP AS DETAYTAKIP, " +
+                "STOK.DEPOMIKTAR AS DEPOMIKTAR, " +
+                "0 AS KIRILIMMIKTAR, " +
+                "STOK.SIPARISDURSUN AS SIPARISDURSUN, " +
+                "STOK.MALKABULDURSUN as MALKABULDURSUN, " +
+                "STOK.OTVTUTAR AS OTVTUTAR " +
+                "FROM STOK2 AS STOK " +
+                "WHERE ((UPPER(KODU) LIKE UPPER('@KODU') || '%' OR ('@KODU' = '')) OR (LOWER(KODU) LIKE LOWER('@KODU') || '%' OR ('@KODU' = ''))) " +
+				"AND ((UPPER(ADI) LIKE UPPER('@ADI') || '%' OR ('@ADI' = '')) OR (LOWER(ADI) LIKE LOWER('@ADI') || '%' OR ('@ADI' = '')))" +
                 "AND ((STOK.MARKA LIKE '@MKODU') OR ('@MKODU' = '')) AND '@DEPO' <> ''" ,
         param : ['KODU','ADI','DEPO','MKODU']
     },
@@ -439,11 +556,11 @@ var QueryLocal =
     FiyatGetir : 
     {
         query : "SELECT  " + 
-                "FIYAT," +
+                "ROUND(FIYAT,4) AS FIYAT," +
                 "DOVIZ, " + 
                 "DOVIZSEMBOL, " + 
                 "DOVIZKUR, " + 
-                "ISKONTOKOD " + 
+                "ROUND(ISKONTOKOD,2) AS ISKONTOKOD " + 
                 "FROM FIYAT " +
                 "WHERE STOKKODU = '@KODU' AND LISTENO = '@LISTENO' AND DEPONO IN (0,@DEPO) " +
                 "ORDER BY DEPONO DESC", 
@@ -475,8 +592,9 @@ var QueryLocal =
                 ",CARIKOD " +
                 ",BITIS " +
                 ",BASLANGIC " +
-                ", FIYAT " +
-                ",BRUTFIYAT " +
+                ",FIYAT " +
+                ",ROUND(INDIRIM,2) AS INDIRIM " +
+                ",ROUND(BRUTFIYAT,2) AS BRUTFIYAT " +
                 ",ISKONTOM1 " +
                 ",ISKONTOM2 " +
                 ",ISKONTOM3 " +
@@ -1231,7 +1349,7 @@ var QueryLocal =
                 ",0                                            " +
                 ") ",
         param : ['sip_create_user','sip_lastup_user','sip_firmano','sip_subeno','sip_tarih:date','sip_teslim_tarih:date','sip_tip',
-                 'sip_cins','sip_evrakno_seri','sip_evrakno_sira','sip_belgeno','sip_belge_tarih','sip_satici_kod',
+                 'sip_cins','sip_evrakno_seri','sip_evrakno_sira','sip_belgeno','sip_belge_tarih:date','sip_satici_kod',
                  'sip_musteri_kod','sip_stok_kod','sip_b_fiyat','sip_miktar','sip_birim_pntr','sip_teslim_miktar',
                  'sip_tutar','sip_iskonto_1','sip_iskonto_2','sip_iskonto_3','sip_iskonto_4','sip_iskonto_5',
                  'sip_iskonto_6','sip_vergi_pntr','sip_vergi','sip_opno','sip_aciklama','sip_depono','sip_OnaylayanKulNo',
@@ -1455,42 +1573,24 @@ var QueryLocal =
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
         type:   ['string|20','int','int','int']
     },
-    SiparisGonderGetir:
-    {
-        query:  "SELECT status AS STATUS,* FROM SIPARIS WHERE status = 0 GROUP BY sip_evrakno_seri,sip_evrakno_sira",
-    },
-    StokHareketGonderGetir:
-    {
-        query:  "SELECT status AS STATUS,* FROM STOKHAR WHERE status = 0 and sth_cins = '@sth_cins' and sth_tip = '@sth_tip' GROUP BY sth_evrakno_seri,sth_evrakno_sira",
-        param:  ['sth_tip','sth_cins'],
-        type:   ['int','int']
-    },
-    CariHareketGonderGetir:
-    {
-        query:  "SELECT status AS STATUS,* FROM CARIHAR WHERE status = 0 GROUP BY cha_evrakno_seri,cha_evrakno_sira",
-    },
-    SayimHareketGonderGetir:
-    {
-        query:  "SELECT status AS STATUS,* FROM SAYIM WHERE status = 0 GROUP BY sym_evrakno",
-    },
     //Stok Hareket
     StokHarGetir :
     {
         query : "SELECT sth_DBCno , " +
                 "(SELECT ADI from STOK WHERE KODU=sth_stok_kod) AS ADI , " +
-                "(sth_tutar / sth_miktar) AS FIYAT, " +
+                "ROUND((sth_tutar / sth_miktar),2) AS FIYAT, " +
                 "(select UNVAN1 from CARI WHERE KODU=sth_cari_kodu) AS CARIADI, " +
                 "(select SORUMLULUKISMI from SORUMLULUKMRKZ where SORUMLULUKKODU=sth_stok_srm_merkezi) AS SORUMLUMERADI, " +
                 "(select PERSONELADI from PERSONEL where PERSONELKODU=sth_plasiyer_kodu) AS PERSONELADI," +
                 "sth_miktar AS MIKTAR , " +
-                "sth_tutar AS TUTAR , " +
+                "ROUND(sth_tutar,2) AS TUTAR , " +
                 "(sth_satirno + 1) AS NO, " +
                 "sth_miktar2 AS MIKTAR2 , " +
-                "sth_vergi AS TOPTANVERGI, " +
+                "(SELECT TOPTANVERGI FROM STOK WHERE KODU = sth_stok_kod) AS TOPTANVERGI, " +
                 "IFNULL((SELECT RENKPNTR FROM BARKOD WHERE KODU = sth_stok_kod),0) AS RENKPNTR , " +
                 "IFNULL((SELECT BEDENPNTR FROM BARKOD WHERE KODU = sth_stok_kod),0) AS BEDENPNTR , " +
-                "IFNULL((SELECT SERI from SIPARISSTOK WHERE RECNO = sth_sip_uid),'') AS SIPSERI ," +
-                "IFNULL((SELECT SIRA from SIPARISSTOK WHERE RECNO = sth_sip_uid),0) AS SIPSIRA ," +
+                "(SELECT CASE BIRIM WHEN 'KİLOGRAM' THEN 'KG' WHEN 'ADET' THEN 'ADET' END AS BIRIM FROM BIRIM WHERE KODU = sth_stok_kod) AS BIRIMADI, " +
+                "(SELECT BIRIMPNTR FROM BIRIM WHERE KODU = sth_stok_kod) AS BIRIM, " +
                 "* FROM STOKHAR " +
                 "WHERE sth_evrakno_seri = '@sth_evrakno_seri' AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip ORDER BY sth_satirno ",
                 param:  ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
@@ -1499,14 +1599,14 @@ var QueryLocal =
     NakliyeGetir :
     {
         query : "SELECT sth_DBCno , " +
-                "(SELECT ADI from STOK WHERE KODU=sth_stok_kod) AS ADI , " +
+                "(SELECT ADI FROM STOK WHERE KODU=sth_stok_kod) AS ADI , " +
                 "(sth_tutar / sth_miktar) AS FIYAT, " +
                 "(select UNVAN1 from CARI WHERE KODU=sth_cari_kodu) AS CARIADI, " +
                 "(select SORUMLULUKISMI from SORUMLULUKMRKZ where SORUMLULUKKODU=sth_stok_srm_merkezi) AS SORUMLUMERADI, " +
                 "(select PERSONELADI from PERSONEL where PERSONELKODU=sth_plasiyer_kodu) AS PERSONELADI," +
                 "sth_miktar AS MIKTAR , " +
                 "sth_miktar2 AS MIKTAR2 , " +
-                "sth_vergi AS TOPTANVERGI, " +
+                "(SELECT TOPTANVERGI FROM STOK WHERE KODU = sth_stok_kod) AS TOPTANVERGI, " +
                 "IFNULL((SELECT SERI from SIPARISSTOK WHERE RECNO = sth_sip_uid),'') AS SIPSERI ," +
                 "IFNULL((SELECT SIRA from SIPARISSTOK WHERE RECNO = sth_sip_uid),0) AS SIPSIRA ," +
                 "* FROM DEPONAKLIYE " +
@@ -1820,7 +1920,7 @@ var QueryLocal =
                 " WHERE  sth_Guid = '@sth_Guid'",
         param : ['sth_miktar:float','sth_miktar2:float','sth_tutar:float','sth_vergi_pntr:int','sth_iskonto1:float','sth_iskonto2:float','sth_iskonto3:float',
         'sth_iskonto4:float','sth_iskonto5:float','sth_iskonto6:float','sth_sat_iskmas1:bit','sth_sat_iskmas2:bit','sth_sat_iskmas3:bit','sth_sat_iskmas4:bit',
-        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:int']
+        'sth_sat_iskmas5:bit','sth_sat_iskmas6:bit','sth_Guid:string']
     },
     MaxStokHarSira : 
     {
@@ -1930,7 +2030,8 @@ var QueryLocal =
     CariHarInsert : 
     {
         query : "INSERT INTO CARIHAR (" +
-                "[cha_DBCno] " +
+                " [cha_Guid] " +
+                ",[cha_DBCno] " +
                 ",[cha_SpecRecNo] " +
                 ",[cha_iptal] " +
                 ",[cha_fileid] " +
@@ -2074,7 +2175,9 @@ var QueryLocal =
                 ",[cha_HareketGrupKodu1] " +
                 ",[cha_HareketGrupKodu2] " +
                 ",[cha_HareketGrupKodu3] " +
+                ",[status] " +
                 ") VALUES ( " + 
+                "'@cha_Guid', " +
                 "0,                                     " + 
                 "0,                                     " + 
                 "0,                                     " + 
@@ -2218,7 +2321,8 @@ var QueryLocal =
                 "0,                                     " + 
                 "'',                                    " + 
                 "'',                                    " + 
-                "''                                     " +
+                "'',                                     " +
+                "0                                       " + 
                 ")  " ,
                 param : ['cha_create_user:int','cha_lastup_user:int','cha_firmano:int','cha_subeno:int','cha_evrak_tip:int','cha_evrakno_seri:string|25','cha_evrakno_sira:int',
                 'cha_tarihi:date','cha_tip:int','cha_cinsi:int','cha_normal_Iade:int','cha_tpoz:int','cha_ticaret_turu:int','cha_belge_no:string|25','cha_belge_tarih:date',
@@ -2227,7 +2331,9 @@ var QueryLocal =
                 'cha_meblag:float','cha_aratoplam:float','cha_vade:string|10','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float','cha_ft_iskonto4:float','cha_ft_iskonto5:float',
                 'cha_ft_iskonto6:float','cha_ft_masraf1:float','cha_ft_masraf2:float','cha_ft_masraf3:float','cha_ft_masraf4:float','cha_vergipntr:int','cha_vergi1:float','cha_vergi2:float',
                 'cha_vergi3:float','cha_vergi4:float','cha_vergi5:float','cha_vergi6:float','cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_vergisiz_fl:bit',
-                'cha_otvtutari:float','cha_otvvergisiz_fl:bit','cha_oivergisiz_fl:bit','cha_trefno:string|25','cha_sntck_poz:int','cha_e_islem_turu:int']
+                'cha_otvtutari:float','cha_otvvergisiz_fl:bit','cha_oivergisiz_fl:bit','cha_trefno:string|25','cha_sntck_poz:int','cha_e_islem_turu:int'],
+                guid : "cha_Guid"
+
     },
     CariHarEvrDelete : 
     {
@@ -2266,6 +2372,13 @@ var QueryLocal =
         'cha_ft_iskonto4:float','cha_ft_iskonto5:float','cha_ft_iskonto6:float','cha_otvtutari:float','cha_evrakno_seri:string','cha_evrakno_sira:int',
         'cha_evrak_tip:int','cha_satir_no:int']
     },
+    CekHarUpdate:
+    {
+        query:  "UPDATE ODEMEEMIRLERI " +
+                "SET sck_tutar = '@sck_tutar' " +
+                "WHERE sck_refno = '@sck_refno' " ,
+        param : ['sck_tutar:float','sck_refno:string|50']
+    },
     MaxCariHarSira : 
     {
         query : "SELECT IFNULL(MAX(cha_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM CARIHAR WHERE cha_evrakno_seri = ? AND cha_evrak_tip = ? "
@@ -2277,15 +2390,16 @@ var QueryLocal =
         query : "CREATE TABLE IF NOT EXISTS ADRES (" +
                 "CARIKODU NVARCHAR (25)," + 
                 "ADRESNO INTEGER," + 
-                "CADDE NVARCHAR(50), " + 
-                "SOKAK NVARCHAR(50), " +
+                "ADRES1 NVARCHAR(50), " + 
+                "ADRES NVARCHAR(50), " +
+                "ADRES2 NVARCHAR(50), " +
                 "ILCE NVARCHAR(15)," +
                 "IL NVARCHAR(15), " +
                 "SEKTOR NVARCHAR(25), " +
                 "GRUBU NVARCHAR(25), " + 
                 "BOLGE NVARCHAR (25), " +
                 "TEMSILCI NVARCHAR (25))",
-        insert : "INSERT INTO ADRES VALUES (?,?,?,?,?,?,?,?,?,?)"                
+        insert : "INSERT INTO ADRES VALUES (?,?,?,?,?,?,?,?,?,?,?)"                
     },
     AlisSartiTbl : 
     {
@@ -2355,15 +2469,11 @@ var QueryLocal =
                 "BEDENPNTR TINYINT," +
                 "RENKPNTR TINYINT, " +
                 "BARKODTIP TINYINT, " +
-                "BEDEN NVARCHAR(25), " + 
-                "RENK NVARCHAR (25), " +
                 "PARTI NVARCHAR (25), " +
                 "LOT INTEGER, " + 
                 "KATSAYI FLOAT, " +
-                "BIRIM NVARCHAR(25), " +
-                "KIRILIMMIKTAR FLOAT, " + 
-                "KIRILIMMIKTAR2 FLOAT)",
-        insert : "INSERT INTO BARKOD VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"                
+                "BIRIM NVARCHAR(25)) ",
+        insert : "INSERT INTO BARKOD VALUES (?,?,?,?,?,?,?,?,?,?)"                
     },
     BedenHarTbl : 
     {
@@ -2455,7 +2565,7 @@ var QueryLocal =
     {
         tag : "CARIHAR",
         query : "CREATE TABLE IF NOT EXISTS CARIHAR (" +
-                "cha_Guid INTEGER PRIMARY KEY AUTOINCREMENT," + 
+                "cha_Guid nvarchar," + 
                 "cha_DBCno INTEGER" +
                 ",cha_SpecRecNo INTEGER" +
                 ",cha_iptal INTEGER" +
@@ -2599,8 +2709,9 @@ var QueryLocal =
                 "cha_ilk_belge_doviz_kuru FLOAT," +
                 "cha_HareketGrupKodu1 NVARCHAR(25)," +
                 "cha_HareketGrupKodu2 NVARCHAR(25)," +
-                "cha_HareketGrupKodu3 NVARCHAR(25) )" ,
-        insert : "INSERT INTO CARIHAR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"                
+                "cha_HareketGrupKodu3 NVARCHAR(25)," +
+                " status bit )" ,
+        insert : "INSERT INTO CARIHAR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"                
     },
     DepoTbl : 
     {
@@ -3058,6 +3169,7 @@ var QueryLocal =
                 "CARIKOD nvarchar(25)," +
                 "BITIS datetime," +
                 "BASLANGIC datetime," +
+                "INDIRIM float," +
                 "FIYAT float," +
                 "BRUTFIYAT float," +
                 "ISKONTOM1 float," +
@@ -3082,7 +3194,7 @@ var QueryLocal =
                 "BOLGE nvarchar (25)," +
                 "GRUP nvarchar (25)," +
                 "TEMSILCI nvarchar (25))",
-        insert : "INSERT INTO SATISSARTI VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+        insert : "INSERT INTO SATISSARTI VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
     SayimTbl : 
     {
@@ -3456,8 +3568,6 @@ var QueryLocal =
                 "ISK4 bit," +
                 "ISK5 bit," +
                 "ISK6 bit," +
-                "BEDEN nvarchar (25)," +
-                "RENK nvarchar (25)," +
                 "BEDENNO tinyint," +
                 "MIKTAR float," +
                 "BIRIM nvarchar (25)," +
@@ -3473,8 +3583,8 @@ var QueryLocal =
                 "DETAYTAKIP tinyint," +
                 "SIPARISDURSUN tinyint," +
                 "MALKABULDURSUN tinyint," +
-                "ACIKLAMA nvarchar(50))",
-        insert : "INSERT INTO SIPARISSTOK VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                "ACIKLAMA nvarchar(50)) ",
+        insert : "INSERT INTO SIPARISSTOK VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
     SonAlisFiyatiTbl :
     {
@@ -3536,6 +3646,41 @@ var QueryLocal =
                 "KATSAYI4 FLOAT," +
                 "OTVTUTAR FLOAT)",
         insert : "INSERT INTO STOK VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    },
+    StokTbl2 : 
+    {
+        tag : "STOK2",
+        query : "CREATE TABLE IF NOT EXISTS STOK2 (" + 
+                "KODU NVARCHAR (25)," + 
+                "ADI NVARCHAR (50)," + 
+                "KISAAD NVARCHAR (25)," +
+                "YABANCIAD NVARCHAR (50)," + 
+                "DOVIZCINSI TINYINT," + 
+                "PERAKENDEVERGIPNTR TINYINT," + 
+                "TOPTANVERGIPNTR TINYINT," +
+                "ALTGRUP NVARCHAR (25)," + 
+                "ANAGRUP NVARCHAR (25)," + 
+                "URETICI NVARCHAR (25)," + 
+                "SEKTOR NVARCHAR (25)," + 
+                "REYON NVARCHAR (25)," + 
+                "MARKA NVARCHAR (25)," + 
+                "BEDENKODU NVARCHAR (25)," + 
+                "RENKKODU NVARCHAR (25)," + 
+                "AKTIFPASIF BOOLEAN," + 
+                "PERAKENDEVERGI FLOAT," + 
+                "TOPTANVERGI FLOAT," + 
+                "DETAYTAKIP TINYINT," +
+                "DEPOMIKTAR FLOAT," + 
+                "DEPOMIKTAR2 FLOAT," + 
+                "SIPARISDURSUN TINYINT," + 
+                "MALKABULDURSUN TINYINT," + 
+                "STOKCARI NVARCHAR(25)," +
+                "KATSAYI1 FLOAT," +
+                "KATSAYI2 FLOAT," +
+                "KATSAYI3 FLOAT," +
+                "KATSAYI4 FLOAT," +
+                "OTVTUTAR FLOAT)",
+        insert : "INSERT INTO STOK2 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     },
     StokHarTbl :
     {

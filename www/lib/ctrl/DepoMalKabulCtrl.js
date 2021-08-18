@@ -67,7 +67,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.CDepoListe = [];
         $scope.GDepoListe = [];
         $scope.NDepoListe = [];
-        $scope.StokHarListe = [];
+        $scope.DepoMalKListe = [];
         $scope.BirimListe = [];
         $scope.DepoMalKListe = [];
         $scope.DepoSiparisListe = [];
@@ -363,7 +363,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             0, // MASRAFVERGİ
             $scope.OdemeNo,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
             '',//AÇIKLAMA
-            '00000000-0000-0000-0000-000000000000', //sth_sip_uid
+            $scope.SipGuid, //sth_sip_uid
             '00000000-0000-0000-0000-000000000000' , //sth_fat_uid,
             ($scope.NakliyeDurum == 1) ? $scope.NDepo : $scope.GDepo, //GİRİSDEPONO
             $scope.CDepo, //CİKİSDEPONO
@@ -579,11 +579,11 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     {
         if(UserParam.Sistem.PartiLotKontrol == 1)
         {
-            for(i = 0;i < $scope.StokHarListe.length;i++)
+            for(i = 0;i < $scope.DepoMalKListe.length;i++)
             {   
                 if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
                 { 
-                    if($scope.Stok[0].PARTI == $scope.StokHarListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.StokHarListe[i].sth_lot_no)
+                    if($scope.Stok[0].PARTI == $scope.DepoMalKListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.DepoMalKListe[i].sth_lot_no)
                     {
                         alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
                         $scope.InsertLock = false;
@@ -780,11 +780,38 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         alertify.confirm('Bu Belgeyi Silmek İstediğinize Eminmisiniz ?', 
         function()
         { 
+            console.log($scope.DepoMalKListe)
             if($scope.DepoMalKListe.length > 0)
             {
-                db.ExecuteTag($scope.Firma,'StokHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
+                db.ExecuteTag($scope.Firma,'StokHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.EvrakTip,$scope.Cins],function(data)
                 {
-                    $scope.YeniEvrak();
+                    console.log(1)
+                    if(typeof(data.result.err) == 'undefined')
+                    {
+                        console.log
+                        angular.forEach($scope.DepoMalKListe,function(value)
+                        {
+                            console.log([value.sth_miktar,value.sth_sip_uid])
+                            if(value.sth_Guid != 0)
+                            {
+                                console.log([value.sth_miktar,value.sth_sip_uid])
+                                db.ExecuteTag($scope.Firma,'StokHarDepoSiparisDeleteUpdate',[value.sth_miktar,value.sth_sip_uid]);
+                            }
+                            db.ExecuteTag($scope.Firma,'BedenHarDelete',[value.sth_Guid,11],function(data)
+                            {
+                                if(typeof(data.result.err) != 'undefined')
+                                {
+                                    console.log(data.result.err);
+                                }
+                                $scope.YeniEvrak();
+                            });
+                        });
+                    }
+                    else
+                    {
+                        console.log(data.result.err);
+                    }
+
                 });
             }
             else
@@ -794,6 +821,60 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             }
         });
     }
+    $scope.SatirDelete = function()
+    {
+        alertify.okBtn('Evet');
+        alertify.cancelBtn('Hayır');
+
+        alertify.confirm('Evrağı silmek istediğinize eminmisiniz ?', 
+        function()
+        { 
+            if($scope.IslemListeSelectedIndex > -1)
+            {
+                db.ExecuteTag($scope.Firma,'StokHarSatirDelete',[$scope.DepoMalKListe[$scope.IslemListeSelectedIndex].sth_Guid],function(data)
+                {
+                    console.log($scope.DepoMalKListe[$scope.IslemListeSelectedIndex])
+                    console.log([$scope.DepoMalKListe[$scope.IslemListeSelectedIndex].sth_miktar,$scope.DepoMalKListe[$scope.IslemListeSelectedIndex].sth_sip_uid])
+                    db.ExecuteTag($scope.Firma,'StokHarDepoSiparisDeleteUpdate',[$scope.DepoMalKListe[$scope.IslemListeSelectedIndex].sth_miktar,$scope.DepoMalKListe[$scope.IslemListeSelectedIndex].sth_sip_uid],function(data)
+                    {   
+                    });
+                    console.log($scope.IslemListeSelectedIndex,[$scope.DepoMalKListe[$scope.IslemListeSelectedIndex]])
+                    db.ExecuteTag($scope.Firma,'BedenHarDelete',[$scope.DepoMalKListe[$scope.IslemListeSelectedIndex].sth_Guid,9],function(data)
+                    {
+                        if(typeof(data.result.err) != 'undefined')
+                        {
+                            console.log(data.result.err);
+                        }       
+                    });
+                    
+                    if($scope.DepoMalKListe.length <= 1)
+                    {
+                        $scope.YeniEvrak()
+                    }
+                    else
+                    {   
+                        db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
+                        {
+                            db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,11],function(BedenData)
+                            {
+                                $scope.BedenHarListe = BedenData;
+                            });
+
+                            $scope.DepoMalKListe = data;
+                            $("#TblIslem").jsGrid({data : $scope.DepoMalKListe});    
+                            $scope.BtnTemizle();
+                        });
+                    }
+                });
+            }
+            else
+            {
+                alertify.okBtn("Tamam");
+                alertify.alert("Seçili satır olmadan evrak silemezsiniz !");
+            }
+        },
+        function(){});
+    }
     $scope.EvrakTipChange = async function()
     {
         if($scope.CmbEvrakTip == 0)
@@ -802,7 +883,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             $scope.Cins = 6;
             $scope.Tip = 2;
             $scope.NakliyeDurum = 0
-            $scope.Seri = 'ANK-21'
         }
         else if($scope.CmbEvrakTip == 1)
         {   
@@ -810,7 +890,6 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             $scope.Cins = 6;
             $scope.Tip = 2;
             $scope.NakliyeDurum = 1
-            $scope.Seri = 'ANK.21'
         }
     }
     $scope.GDepoChange = function()
@@ -837,6 +916,16 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
                 $scope.NDepoAdi = item.ADI;
         });
     }
+    $scope.BirimChange = function()
+    {
+        if($scope.BirimListe.length > 0)
+        {
+            $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
+            $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
+            $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
+            $scope.MiktarFiyatValid();
+        }
+    }
     $scope.BtnSiparisListele = async function()
     {
         $scope.Loading = true;
@@ -846,6 +935,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         {
             db : '{M}.' + $scope.Firma,
             query:  "SELECT " +
+                    "MAX(ssip_Guid) AS SIPGUID, " +
                     "ISNULL((SELECT TOP 1 dep_adi FROM DEPOLAR WHERE dep_no = SIPARIS.ssip_girdepo),'') AS GIRISDEPOADI, " +
                     "ISNULL((SELECT TOP 1 dep_adi FROM DEPOLAR WHERE dep_no = SIPARIS.ssip_cikdepo),'') AS CIKISDEPOADI, " + 
                     "CONVERT(VARCHAR,SIPARIS.ssip_teslim_tarih, 104) AS TESLIMTARIH, " +
@@ -1151,6 +1241,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         $scope.GDepo = $scope.DepoSiparisListe[pIndex].GIRISDEPO.toString();
         $scope.CDepoAdi = $scope.DepoSiparisListe[pIndex].CIKISDEPOADI;
         $scope.GDepoAdi = $scope.DepoSiparisListe[pIndex].GIRISDEPOADI;
+        $scope.SipGuid = $scope.DepoSiparisListe[pIndex].SIPGUID;
     }
     $scope.SiparisListeGetirRowClick = function(pIndex,pItem,pObj)
     {
@@ -1189,7 +1280,8 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             }
             else
             {
-                if($scope.GDepo == $scope.CDepo <= 0 && $scope.DepoMalKListe.length < 1 || $scope.GDepo != $scope.CDepo <= 0 && $scope.DepoMalKListe.length < 1) 
+                console.log($scope.DepoMalKListe)
+                if($scope.GDepo == $scope.CDepo <= 0 && $scope.DepoSiparisListe.length < 1 || $scope.GDepo != $scope.CDepo <= 0 && $scope.DepoSiparisListe.length < 1) 
                 {
                     alertify.alert("Bu Ekrana Girebilmeniz İçin Sipariş Seçimi Yapılmalı ve Giriş ve Çıkış Depoları Farklı Olmalıdır.");
                 }
@@ -1215,7 +1307,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
     }
     $scope.SiparisSecimiClick = function() 
     {
-        if($scope.StokHarListe.length == 0)
+        if($scope.DepoMalKListe.length == 0)
         {
             $("#TbSiparisSecimi").addClass('active');
             $("#TbMain").removeClass('active');
