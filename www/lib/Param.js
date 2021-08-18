@@ -5,26 +5,26 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "",
+			"Firma": "TEST",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "0",
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
 			"SiparisOlmayanBarkodKabul": "1",
-			"PartiLotKontrol": "0",
-			"PartiLotMiktarKontrol": "0",
+			"PartiLotKontrol": "1",
+			"PartiLotMiktarKontrol": "1",
 			"KiloFlag": "26,27,28",
 			"KiloBaslangic": "7",
 			"KiloUzunluk": "5",
-			"KiloCarpan": "1",
+			"KiloCarpan": "100",
 			"Titresim": "1",
 			"PlasiyerKodu": "",
 			"FiyatDegistir": "1",
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "1917MZ01",
+			"BTYaziciAdi": "SW_C58B",
 			"FirmaListe": "",
 			"RiskParam": "1",
 			"RiskLimitOran": "100",
@@ -128,11 +128,11 @@ var Param = [
 			"BelgeNo": "",
 			"CDepo": "1",
 			"CDepoListe": "",
-			"GDepo": "1",
+			"GDepo": "2",
 			"GDepoListe": "",
 			"Sorumluluk": "",
 			"EvrakSil": "0",
-			"EksiyeDusme": "1"
+			"EksiyeDusme": "0"
 		},
 		"DepoNakliye": {
 			"Seri": "DNP",
@@ -190,12 +190,12 @@ var Param = [
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
-			"Seri": "IRS2021",
+			"Seri": "IRS",
 			"BelgeNo": "",
 			"Cari": "",
-			"DepoNo": "1",
+			"DepoNo": "2",
 			"DepoListe": "",
-			"Sorumluluk": "",
+			"Sorumluluk": "01",
 			"Personel": "01",
 			"Proje": "",
 			"SonSatisFiyati": "0",
@@ -282,7 +282,7 @@ var Param = [
 			]
 		},
 		"Menu": {
-			"Stok Detay": "0",
+			"Stok Detay": "1",
 			"Sayım Fişi": "1",
 			"Cari Listesi": "1",
 			"Fire": "0",
@@ -291,7 +291,7 @@ var Param = [
 			"Depo Sipariş": "0",
 			"Depo Mal Kabul": "0",
 			"Depo Nakliye": "0",
-			"Depo Durum Raporu": "0",
+			"Depo Durum Raporu": "1",
 			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
@@ -332,7 +332,7 @@ var Param = [
 			"Proforma Alınan Siparis": "0"
 		},
 		"AlisFatura": {
-			"EvrakTip": "0",
+			"EvrakTip": "1",
 			"Seri": "FTR",
 			"BelgeNo": "",
 			"Cari": "",
@@ -353,11 +353,11 @@ var Param = [
 			"FiyatAzalt": "1"
 		},
 		"SatisFatura": {
-			"EvrakTip": "0",
+			"EvrakTip": "1",
 			"Seri": "FTR",
 			"BelgeNo": "",
 			"Cari": "",
-			"DepoNo": "1",
+			"DepoNo": "2",
 			"DepoListe": "",
 			"Sorumluluk": "",
 			"Personel": "",
@@ -371,7 +371,9 @@ var Param = [
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
 			"Kasa": "K01",
-			"IskontoMatris": "1"
+			"IskontoMatris": "1",
+			"KDVYok": "1",
+			"FiyatAzalt": "1"
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
@@ -464,7 +466,7 @@ var Param = [
 			"CariHarfEkle": "E"
 		},
 		"DepoDurumRaporu": {
-			"Depo": "4"
+			"Depo": "2"
 		},
 		"StokVirman": {
 			"EvrakTip": "0",
@@ -519,7 +521,8 @@ var Param = [
 			"FirmaListe": "",
 			"RiskParam": "",
 			"RiskLimitOran": "",
-			"FisDizayn": "0"
+			"FisDizayn": "0",
+			"OfflineDepo": "1"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -688,8 +691,8 @@ var Param = [
 			"IskontoMatris": "0"
 		},
 		"SatisFatura": {
-			"EvrakTip": "0",
-			"Seri": "FTR",
+			"EvrakTip": "1",
+			"Seri": "F",
 			"BelgeNo": "",
 			"Cari": "",
 			"DepoNo": "1",
