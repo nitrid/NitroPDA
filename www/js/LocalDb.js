@@ -168,6 +168,8 @@ var LocalDb =
                 await CreateTable(QueryLocal.CariFoyTbl);
                 await CreateTable(QueryLocal.CariHarTbl);
                 await CreateTable(QueryLocal.DepoTbl);
+                await CreateTable(QueryLocal.EIrsaliyeDetaylariTbl);
+                console.log(QueryLocal.EIrsaliyeDetaylariTbl)
                 //await CreateTable(QueryLocal.DepoSiparisTbl);
                 //await CreateTable(QueryLocal.DepoSiparisStokTbl);
                 await CreateTable(QueryLocal.EtiketBasTbl);

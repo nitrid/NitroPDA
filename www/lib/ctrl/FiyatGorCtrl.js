@@ -70,7 +70,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.Loading = false;
         $scope.TblLoading = true
 
-        $scope.ListeFiyatNo = 0;
+        $scope.ListeFiyatNo = "1";
+        $scope.FiyatListeNo = "1";
     }
     function InitDepoMiktarGrid()
     {
@@ -387,7 +388,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         db : '{M}.' + $scope.Firma,
                         query : "SELECT TOP 1 " + 
                                 "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                                "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) * ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1),2) " + 
+                                "ROUND(dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) * ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1),2) " + 
                                 "ELSE " + 
                                 "ROUND(dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1),2) " + 
                                 "END AS FIYAT, " + 
@@ -402,6 +403,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         type:  ['string|50','int','int'],
                         value: [$scope.StokKodu,$scope.FiyatListe,$scope.DepoNo]
                     }
+                    console.log(Fiyat)
+                    console.log(1)
                     db.GetDataQuery(Fiyat,function(pFiyat)
                     {  
                         console.log(pFiyat)
@@ -598,7 +601,17 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         db.GetDataQuery(Fiyat,function(pFiyat)
         {  
             $scope.FiyatListeler = pFiyat;
-            $scope.DigerFiyat = $scope.ListeFiyatNo;
+            $scope.DigerFiyat = $scope.FiyatListeler[document.getElementById("FiyatSelect2").selectedIndex].FIYAT;
+            $scope.UpdateFiyat = $scope.FiyatListeler[document.getElementById("FiyatSelect").selectedIndex].FIYAT;
+        });
+    }
+    $scope.BtnFiyatUpdate = function()
+    {
+        console.log([$scope.YeniFiyat,$scope.StokKodu,$scope.FiyatListeNo])
+        db.ExecuteTag($scope.Firma,'FiyatListeUpdate',[$scope.YeniFiyat,$scope.StokKodu,$scope.FiyatListeNo],function(InsertResult)
+        {
+            console.log(InsertResult)
+            $scope.FiyatListeChange()
         });
     }
     $scope.BtnStokBarkodGetir = function(keyEvent)
@@ -743,6 +756,8 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.SonAlis = "";
         $scope.SonAlisDoviz = ""
         $scope.BarkodLock = false;
+        $scope.DigerFiyat = "";
+        $scope.UpdateFiyat = "";
         $window.document.getElementById("Barkod").focus();
     }
     $scope.BtnFiyatDegisListe = function()

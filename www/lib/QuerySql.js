@@ -26,13 +26,13 @@ var QuerySql =
     },
     CmbPersonelGetir : 
     {
-        query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI UNION ALL SELECT PER1.cari_per_kod AS KODU,PER1.cari_per_adi AS ADI,PER1.cari_per_soyadi AS SOYADI " +
+        query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP,'' AS TCKN,'00000000-0000-0000-0000-000000000000' AS GUID UNION ALL SELECT PER1.cari_per_kod AS KODU,PER1.cari_per_adi AS ADI,PER1.cari_per_soyadi AS SOYADI,PER1.cari_per_tip AS TIP,PER1.cari_per_TcKimlikNo AS TCKN, PER1.cari_per_Guid AS GUID " +
                 "FROM CARI_PERSONEL_TANIMLARI AS PER1 INNER JOIN CARI_PERSONEL_TANIMLARI AS PER2 ON " +
                 "PER1.cari_per_kod = PER2.cari_per_kod --AND PER1.cari_per_tip = 0 "
     },
     PersonelTipGetir : 
     {
-        query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP UNION ALL SELECT PER1.cari_per_kod AS KODU,PER1.cari_per_adi AS ADI,PER1.cari_per_soyadi AS SOYADI,PER1.cari_per_tip AS TIP " +
+        query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP,'' AS TCKN,'00000000-0000-0000-0000-000000000000' AS GUID UNION ALL SELECT PER1.cari_per_kod AS KODU,PER1.cari_per_adi AS ADI,PER1.cari_per_soyadi AS SOYADI,PER1.cari_per_tip AS TIP,PER1.cari_per_TcKimlikNo AS TCKN, PER1.cari_per_Guid AS GUID " +
                 "FROM CARI_PERSONEL_TANIMLARI AS PER1 INNER JOIN CARI_PERSONEL_TANIMLARI AS PER2 ON " +
                 "PER1.cari_per_kod = PER2.cari_per_kod where PER1.cari_per_tip in(@TIP,2) " ,
                 param : ['TIP'],
@@ -197,6 +197,8 @@ var QuerySql =
                 "CASE cari_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "cari_grup_kodu AS GRUP," +
                 "cari_temsilci_kodu AS TEMSILCI," +
+                "ISNULL((SELECT adr_tel_no1 FROM CARI_HESAP_ADRESLERI WHERE adr_adres_no = 1 AND adr_cari_kod = cari_kod),'') AS TELNO1, " +
+                "cari_EMail AS EMAIL, " +
                 "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = CARI.cari_temsilci_kodu),'') AS TEMSILCIADI," +
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi,0))) AS DOVIZSEMBOL," +
                 "(SELECT dbo.fn_DovizSembolu(ISNULL(cari_doviz_cinsi1,0))) AS DOVIZSEMBOL1," + 
@@ -224,6 +226,10 @@ var QuerySql =
 
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
+    },
+    MasrafHesapGetir:
+    {
+        query: "SELECT his_kod AS KODU, his_isim AS ADI FROM MASRAF_HESAPLARI"
     },
     IsMerkeziGetir:
     {
@@ -615,6 +621,12 @@ var QuerySql =
     FiyatListeGetir :
     {
         query : "SELECT  sfl_sirano AS LISTENO, sfl_aciklama AS LISTEADI FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI "
+    },
+    FiyatListeUpdate :
+    {
+        query : "UPDATE STOK_SATIS_FIYAT_LISTELERI SET sfiyat_fiyati = @FIYAT WHERE sfiyat_stokkod = @KODU and sfiyat_listesirano = @LISTENO ",
+        param : ['FIYAT','KODU','LISTENO'],
+        type : ['float','string|25','int']
     },
     IskontoMatrisGetir : 
     {
@@ -1058,7 +1070,7 @@ var QuerySql =
                 "(SELECT dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_beden_kodu)) AS BEDEN, " +
                 "(SELECT dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_renk_kodu)) AS RENK, " +
                 "ISNULL(BEDENHAR.BdnHar_BedenNo,0) AS BEDENNO, " +
-                "CAST(ISNULL(NULL,0) AS FLOAT) AS MIKTAR, " +
+                "CAST(ISNULL(NULL,0) ) AS MIKTAR, " +
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO  ,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
                 "(SELECT dbo.fn_StokBirimi (SIPARIS.sip_stok_kod,SIPARIS.sip_birim_pntr)) AS BIRIM, " +
                 "ISNULL(dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),0) AS BEDENPNTR, " +
@@ -2987,7 +2999,7 @@ var QuerySql =
     },
     CariHarUpdate:
     {
-        query:  "DECLARE @cha_Guid AS NVARCHAR(50) " +
+        query:  "DECLARE @cha_Guid  " +
                 "SET @cha_Guid = (SELECT TOP 1 cha_Guid FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = @cha_evrakno_seri " +
                 "AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip AND cha_satir_no = @cha_satir_no) " +
                 "UPDATE CARI_HESAP_HAREKETLERI " +
@@ -4575,7 +4587,7 @@ var QuerySql =
                     ",[eir_bitis_zamani] " +
                     ",[eir_normal_iade] " +
                     ",[eir_tip]) " +
-            "VALUES  " +
+                    "VALUES  " +
                     "(newid()             --<eir_Guid, uniqueidentifier,>  \n" +
                     ",0              --<eir_DBCno, smallint,>  \n" +
                     ",0              --<eir_SpecRECno, int,>  \n" +
@@ -4600,10 +4612,10 @@ var QuerySql =
                     ",''              --<eir_gib_seri, nvarchar(10),>  \n" +
                     ",0              --<eir_gib_sira, int,>  \n" +
                     ",0              --<eir_pozisyon, tinyint,>  \n" +
-                    ",'00000000-0000-0000-0000-000000000000'              --<eir_uuid, nvarchar(40),>  \n" +
+                    ",newid()              --<eir_uuid, nvarchar(40),>  \n" +
                     ",''              --<eir_mVkn, nvarchar(15),>  \n" +
                     ",@eir_tasiyici_firma_kodu              --<eir_tasiyici_firma_kodu, nvarchar(25),>  \n" +
-                    ",'00000000-0000-0000-0000-000000000000'              --<eir_sofor_uid, uniqueidentifier,>  \n" +
+                    ",@eir_sofor_uid              --<eir_sofor_uid, uniqueidentifier,>  \n" +
                     ",'00000000-0000-0000-0000-000000000000'               --<eir_sofor2_uid, uniqueidentifier,>  \n" +
                     ",@eir_tasiyici_arac_plaka              --<eir_tasiyici_arac_plaka, nvarchar(15),>  \n" +
                     ",@eir_tasiyici_dorse_plaka1              --<eir_tasiyici_dorse_plaka1, nvarchar(15),>  \n" +
@@ -4625,14 +4637,16 @@ var QuerySql =
                     ",''             --<eir_arac_tipi, nvarchar(50),>  \n" +
                     ",''              --<eir_guzergah_kodu, nvarchar(50),>  \n" +
                     ",''              --<eir_detay_bilgi, nvarchar(127),>  \n" +
-                    ",'1900-01-01 00:00:00.000'              --<eir_baslama_zamani, datetime,>  \n" +
-                    ",'1900-01-01 00:00:00.000'              --<eir_bitis_zamani, datetime,>  \n" +
+                    // ",'1900-01-01 00:00:00.000'              --<eir_baslama_zamani, datetime,>  \n" +
+                    // ",'1900-01-01 00:00:00.000'              --<eir_bitis_zamani, datetime,>  \n" +
+                    ",GETDATE()                   --<eir_baslama_zamani, datetime,>  \n" +
+                    ",GETDATE()                   --<eir_bitis_zamani, datetime,>  \n" +
                     ",0              --<eir_normal_iade, tinyint,>  \n" +
-                    ",0              --<eir_tip, tinyint,>  \n" +
+                    ",1              --<eir_tip, tinyint,>  \n" +
                     ")" ,
             param : ['eir_evrak_tip:int','eir_tipi:int','eir_evrakno_seri:string|10','eir_evrakno_sira:int','eir_tasiyici_firma_kodu:string|25',
                       'eir_tasiyici_arac_plaka:string|15','eir_tasiyici_dorse_plaka1:string|15','eir_tasiyici_dorse_plaka2:string|15','eir_sofor_adi:string|50',
-                     'eir_sofor_soyadi:string|50','eir_sofor2_adi:string|50','eir_sofor2_soyadi:string|50','eir_sofor_tckn:string|11','eir_sofor2_tckn:string|11']
+                     'eir_sofor_soyadi:string|50','eir_sofor2_adi:string|50','eir_sofor2_soyadi:string|50','eir_sofor_tckn:string|11','eir_sofor2_tckn:string|11','eir_sofor_uid:string|max']
     },
     EIrsUpdate : 
     {
@@ -4832,7 +4846,7 @@ var QuerySql =
                  "DEPOSIPARIS.ssip_girdepo AS GDEPO, " +
                  "DEPOSIPARIS.ssip_cikdepo As CDEPO, " +
                  "(DEPOSIPARIS.ssip_miktar - DEPOSIPARIS.ssip_teslim_miktar) AS BMIKTAR, " +
-                 "CAST(ISNULL(NULL,0) AS FLOAT) AS MIKTAR, " +
+                 "CAST(ISNULL(NULL,0) ) AS MIKTAR, " +
                  "(SELECT dbo.fn_StokBirimi (DEPOSIPARIS.ssip_stok_kod,DEPOSIPARIS.ssip_birim_pntr)) AS BIRIM, " +
                  "0 AS BEDENNO, " +
                  "BARKOD.bar_bedenpntr AS BEDENPNTR, " +
@@ -4937,7 +4951,8 @@ var QuerySql =
         query : "SELECT cari_per_kod AS PERSONELKODU, " +
                 "cari_per_adi AS PERSONELADI, " +
                 "cari_per_soyadi AS PERSONELSOYADI," +
-                "cari_per_tip AS PERSONELTIP " +
+                "cari_per_tip AS PERSONELTIP, " +
+                "cari_per_Guid AS GUID " +
                 "FROM CARI_PERSONEL_TANIMLARI"
     },
     ProjelerTbl : 
@@ -5084,7 +5099,7 @@ var QuerySql =
                 "SIPARIS.sip_isk5 AS ISK5, " +
                 "SIPARIS.sip_isk6 AS ISK6, " +
                 "ISNULL(BEDENHAR.BdnHar_BedenNo,0) AS BEDENNO, " +
-                "CAST(ISNULL(NULL,0) AS FLOAT) AS MIKTAR, " +
+                "CAST(ISNULL(NULL,0) ) AS MIKTAR, " +
                 "(SELECT dbo.fn_StokBirimi (SIPARIS.sip_stok_kod,SIPARIS.sip_birim_pntr)) AS BIRIM, " +
                 "ISNULL(BARKOD.bar_bedenpntr,0) AS BEDENPNTR, " +
                 "ISNULL(BARKOD.bar_renkpntr,0) AS RENKPNTR, " +
@@ -5360,7 +5375,7 @@ var QuerySql =
                 "ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_isemri_gider_kodu = URETIM.upl_isemri AND sth_stok_kod = URETIM.upl_kodu AND sth_tip = 1 AND sth_cins = 7 AND sth_evraktip = 0),0) " +
                 "ELSE 0 END AS GMIKTAR, " +
                 "URETIM.upl_depno AS DEPO, " +
-                "CAST(ISNULL(NULL,0) AS FLOAT) AS MIKTAR, " +
+                "CAST(ISNULL(NULL,0) ) AS MIKTAR, " +
                 "ISNULL(BARKOD.bar_bedenpntr,0) AS BEDENPNTR, " +
                 "ISNULL(BARKOD.bar_renkpntr,0) AS RENKPNTR, " +
                 "1 AS KATSAYI, " +
@@ -5530,6 +5545,175 @@ var QuerySql =
         "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri= @ftr_seri AND sth_evraktip = 4) AS SATIS_FATURA_SIRA, " +
         "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri= @irs_seri AND sth_evraktip = 1) AS SATIS_IRSALIYE_SIRA ",
         param : ['menudata:string|max','sym_depono:int','sym_tarihi:date','sip_evrakno_seri:string|10','ftr_seri:string|10','irs_seri:string|10'] 
-    }   
+    }   ,
     //#endregion "AKTARIM"
+    //#region "E-İrsaliye"
+    EIrsaliyeGonder :
+    {
+        query:  
+        "DECLARE @UID VARCHAR(50)" +
+        "SET @UID = cast(NEWID() AS VARCHAR(50)) " +
+        "EXEC GENSRV.[dbo].[PRD_E_IRSALIYE_INSERT] " + 
+        "@CUSER  = @CUSER, " +
+        "@LUSER  = @LUSER, " +
+        "@CDATE = @CDATE, " +
+        "@LDATE = @LDATE, " +
+        "@SERI  = @SERI, " +
+        "@SIRA = @SIRA, " +
+        "@BAYI_ID  = '', " +
+        "@REFERANS_NO = @UID, " +
+        "@IRSALIYE_NO  = '', " +
+        "@IRSALIYE_TIPI  = @IRSALIYE_TIPI, " +
+        "@SENARYO_TURU  = '', " +
+        "@IRSALIYE_TARIHI = @IRSALIYE_TARIHI, " +
+        "@IRSALIYE_SAATI = @IRSALIYE_TARIHI, " +
+        "@FIILI_SEVK_TARIHI = @IRSALIYE_TARIHI, " +
+        "@FIILI_SEVK_SAATI = @IRSALIYE_TARIHI, " +
+        "@SIPARIS_NO  = '', " +
+        "@SIPARIS_TARIHI = NULL, " +
+        "@SEVK_ARACI_PLAKASI  = '', " +
+        "@TESLIM_EDEN_ADI_SOYADI  = '', " +
+        "@TESLIM_EDEN_TELEFON  = '', " +
+        "@TESLIM_EDEN_EPOSTA  = '', " +
+        "@XSLT_NAME  = '', " +
+        "@IRSALIYE_NOTLARI  = '', " +
+        "@TASIMA_UNITESI_BILGILERI  = '', " +
+        "@SOFOR_BILGILERI_TCKN  = '', " +
+        "@SOFOR_BILGILERI_AD  = '', " +
+        "@SOFOR_BILGILERI_SOYAD  = '', " +
+        "@GIBE_GONDERILSIN_MI  = '', " +
+        "@STATUS  = 0, " +
+        "@ETTN  = '', " +
+        "@CALLBACK  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_UNVAN  = @OUNVAN1, " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_ADI  = @OUNVAN1, " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_SOYADI  = @OUNVAN2, " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_VKN  = @OVKN, " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_TCKN  = @OTCKN, " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_TICARET_SICIL_NO  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_MERSIS_NO  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_IL  = @OADRES1, " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_ILCE  = @OADRES2, " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_ULKE  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_KASABA  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_CADDE_SOKAK  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_BINA_ADI  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_KAPI_NO  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_POSTA_KODU  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_TELEFON  = @OTELNO1, " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_FAX  = '', " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_EPOSTA  = @OEMAIL, " +
+        "@IRSALIYE_OLUSTURAN_TARAF_BILGISI_WEB_SITE  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_UNVAN  = @UNVAN1, " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_ADI  = @UNVAN1, " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_SOYADI  = @UNVAN2, " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_VKN  = @VKN, " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_TCKN  = @TCKN, " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_TICARET_SICIL_NO  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_MERSIS_NO  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_ULKE  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_IL  = @ADRES1, " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_ILCE  = @ADRES2, " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_KASABA  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_CADDE_SOKAK  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_BINA_ADI  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_KAPI_NO  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_POSTA_KODU  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_TELEFON  = @TELNO1, " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_FAX  = '', " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_EPOSTA  = @EMAIL, " +
+        "@IRSALIYE_ALICISI_TARAF_BILGISI_WEB_SITE  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_UNVAN  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_ADI  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_SOYADI  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_VKN  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_TCKN  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_TICARET_SICIL_NO  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_MERSIS_NO  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_ULKE  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_IL  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_ILCE  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_KASABA  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_CADDE_SOKAK  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_BINA_ADI  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_KAPI_NO  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_POSTA_KODU  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_TELEFON  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_FAX  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_EPOSTA  = '', " +
+        "@URUN_SATICISI_TARAF_BILGISI_WEB_SITE  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_UNVAN  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_ADI  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_SOYADI  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_VKN  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_TCKN  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_TICARET_SICIL_NO  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_MERSIS_NO  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_ULKE  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_IL  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_ILCE  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_KASABA  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_CADDE_SOKAK  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_BINA_ADI  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_KAPI_NO  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_POSTA_KODU  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_TELEFON  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_FAX  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_EPOSTA  = '', " +
+        "@URUN_ALICISI_TARAF_BILGISI_WEB_SITE  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_UNVAN  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_ADI  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_SOYADI  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_VKN  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_TCKN  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_TICARET_SICIL_NO  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_MERSIS_NO  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_ULKE  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_IL  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_ILCE  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_KASABA  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_CADDE_SOKAK  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_BINA_ADI  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_KAPI_NO  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_POSTA_KODU  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_TELEFON  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_FAX  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_EPOSTA  = '', " +
+        "@ISLEMI_BASLATAN_TARAF_BILGISI_WEB_SITE  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_UNVAN  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_ADI  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_SOYADI  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_VKN  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_TCKN  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_TICARET_SICIL_NO  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_MERSIS_NO  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_ULKE  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_IL  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_ILCE  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_KASABA  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_CADDE_SOKAK  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_BINA_ADI  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_KAPI_NO  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_POSTA_KODU  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_TELEFON  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_FAX  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_EPOSTA  = '', " +
+        "@TASIYICI_FIRMA_BILGISI_WEB_SITE  = '', " +
+        "@HIZMET_URUN_ADI  = @STOKKOD, " +
+        "@BIRIM_TIPI  = '', " +
+        "@MIKTAR  = @MIKTAR, " +
+        "@SONRA_GONDERILECEK_MIKTAR  = 0, " +
+        "@FAZLA_GONDERILECEK_MIKTAR  = 0, " +
+        "@TUTAR  = @TUTAR, " +
+        "@TOPLAM_TUTAR  = @TOPTUTAR, " +
+        "@DETAY_NOT  = '' ",
+        param : ['CUSER:int','LUSER:int','CDATE:date','LDATE:date',
+        'SERI:string|25','SIRA:int','IRSALIYE_TIPI:int','IRSALIYE_TARIHI:date',
+        'OUNVAN1:string|25','OUNVAN2:string|25','OVKN:string|25','OTCKN:string|25','OADRES1:string|25',
+        'OADRES2:string|25','OTELNO1:string|25','OEMAIL:string|25',
+        'UNVAN1:string|25','UNVAN2:string|25','VKN:string|25','TCKN:string|25','ADRES1:string|25',
+        'ADRES2:string|25','TELNO1:string|25','EMAIL:string|25',
+        'STOKKOD:string|25','MIKTAR:int','TUTAR:int','TOPTUTAR:int']
+    },
+    //#endregion "E-İrsaliye"
 };

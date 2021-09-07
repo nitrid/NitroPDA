@@ -1,9 +1,9 @@
-function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
+function SarfFisiCtrl($scope,$window,$timeout,db,$filter)
 {      
     let IslemSelectedRow = null;
     let StokReceteSelectedRow = null;
     let StokSelectedRow = null;
-    let ParamName = "StokVirman";
+    let ParamName = "SarfFisi";
     let AnaKodu = "";
 
     $('#MdlPartiLot').on('hide.bs.modal', function () 
@@ -34,18 +34,13 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.Seri = "STV";
         $scope.Sira = 0;
-        $scope.EvrakTip = 6;
-        $scope.CariKodu = "";
-        $scope.CariAdi = "";
-        $scope.CariSoyAdi = "";
-        $scope.CariFiyatListe = 0;
-        $scope.CariDovizCinsi = 0;
-        $scope.CariDovizKuru = 0;
+        $scope.Tip = 1;
+        $scope.Cins = 5;
+        $scope.NormalIade = 0;
+        $scope.EvrakTip = 0;
         $scope.BelgeNo = "";
         $scope.DepoNo;
         $scope.DepoAdi = "";
-        $scope.Tip = 0;
-        $scope.NormalIade = 0;
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Saat = moment(new Date()).format("LTS");
         $scope.MalKabulSevkTarihi = moment(new Date()).format("DD.MM.YYYY");
@@ -59,8 +54,6 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         $scope.StokGridText = "";
         $scope.Proje = "";
         $scope.Miktar2 = 0;
-        $scope.CmbEvrakTip = '0';
-        $scope.Cins = 3;
         $scope.ToplamSatir = 0;
         $scope.CariBakiye = "";
         $scope.Adres = "";
@@ -83,7 +76,8 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         $scope.TxtReceteStokGrid = "";
         $scope.VirmanMiktar = 0;
         $scope.VirmanFiyat = 0;
-        
+        $scope.GiderKodu = "";
+        $scope.GiderAdi = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -102,6 +96,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         $scope.DepoMiktarListe = [];
         $scope.AdresNoListe = [];
         $scope.GirisHareket = [];
+        $scope.MasrafHesapListe = [];
 
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -431,14 +426,9 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.IrsaliyeListe = pData;
         $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe}); 
-        if($scope.CmbEvrakTip == 0)
-        {
-            $scope.BtnEtiketBas();
-        }
         $scope.BtnTemizle();
         DipToplamHesapla();
         ToplamMiktarHesapla();
-        $scope.BtnReceteStokGridGetir();
         
         $window.document.getElementById("Barkod").focus();
     }
@@ -491,7 +481,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             0, //SATIR ISKONTO TİP 10
             0, //CARİCİNSİ
             '',//CARİKODU
-            '',//İŞEMRİKODU
+            $scope.GiderKodu,//İŞEMRİKODU
             '',//PERSONEL
             0, //HARDOVİZCİNSİ
             0, //HARDOVİZKURU
@@ -516,7 +506,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             $scope.Stok[0].KDV,             //VERGİ
             0, // MASRAFVERGİPNTR,
             0, // MASRAFVERGİ
-            $scope.OdemeNo,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+            $scope.OdemeNo,
             '',//AÇIKLAMA
             '00000000-0000-0000-0000-000000000000', //sth_sip_uid
             '00000000-0000-0000-0000-000000000000', //sth_fat_uid,
@@ -640,48 +630,6 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;     
                     
-                     //Depo Miktar Getir (Stok Detay)
-                     var Virman =
-                     {
-                         db : '{M}.' + $scope.Firma,
-                         query : "SELECT  " +
-                        "max(sth_evrakno_seri) AS SERI, " +
-                        "max(sth_evrakno_sira) AS SIRA, " +
-                        "sth_create_date AS TARIH, " +
-                        "sth_stok_kod AS STOK, " +
-                        "sth_tutar AS TUTAR, " +
-                        "(sth_tutar / sth_miktar) AS ILKFIYAT, " +
-                        "sth_miktar AS MIKTAR, " +
-                        "ISNULL((SELECT dbo.fn_DepodakiMiktar (sth_stok_kod,0,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR " +
-                        "FROM STOK_HAREKETLERI  WHERE sth_tip = 0 AND  sth_stok_kod = @STOKKODU GROUP BY sth_create_date,sth_stok_kod,sth_tutar,sth_miktar order by sth_create_date desc ",
-                         param : ['STOKKODU'],
-                         type : ['string|50'],
-                         value : [$scope.StokKodu]
-                     }
-                     db.GetDataQuery(Virman,function(GirisHareket)
-                     {   
-                         $scope.GirisHareket = GirisHareket
-                         let DepoMiktar = $scope.Stok[0].DEPOMIKTAR
-                         for(i = 0;i < $scope.GirisHareket.length;i++)
-                         {
-                             if($scope.GirisHareket[i].MIKTAR < DepoMiktar)
-                             {
-                                 DepoMiktar = (DepoMiktar - $scope.GirisHareket[i].MIKTAR)
-                                 console.log($scope.GirisHareket[i])
-                                 console.log(DepoMiktar)
-                             }
-                             else
-                             {
-                                 $scope.VirmanMiktar = DepoMiktar
-                                 $scope.VirmanFiyat = $scope.GirisHareket[i].ILKFIYAT
-                                 $scope.Stok[0].FIYAT = $scope.VirmanFiyat
-                                 console.log($scope.GirisHareket[i])
-                                 return;
-                             }
-                         }
-                     });
-                    
-                    
                     //Depo Miktar Getir (Stok Detay)
                     var DepoMiktar =
                     {
@@ -739,6 +687,26 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                         }
                     }
 
+                    let FiyatParam = 
+                    { 
+                        CariKodu : $scope.CariKodu,
+                        CariFiyatListe : $scope.CariFiyatListe,
+                        CariDovizKuru : $scope.CariDovizKuru,
+                        CariIskontoKodu : $scope.CariIskontoKodu,
+                        DepoNo : $scope.DepoNo,
+                        FiyatListe : $scope.FiyatListeNo,
+                        AlisSatis : 1,
+                        OdemeNo : $scope.OdemeNo
+                    };
+                    
+                    await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()
+                    {   
+                        $scope.Fiyat = $scope.Stok[0].FIYAT;
+                        console.log(FiyatParam)
+                        $scope.MiktarFiyatValid(); 
+                        $scope.BarkodLock = true;
+                        $scope.$apply();
+                    });
                     // if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     // {
                     //     if($scope.Stok[0].PARTI !='')
@@ -867,13 +835,12 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         InitStokGrid();
         InitDizaynGrid();
 
-        $scope.FiyatListeNo = UserParam.StokVirman.FiyatListe;
+        $scope.FiyatListeNo = UserParam.SarfFisi.FiyatListe;
         $scope.EvrakLock = false;
-        $scope.Seri = UserParam.StokVirman.Seri;
-        $scope.BelgeNo = UserParam.StokVirman.BelgeNo;
-        $scope.CmbEvrakTip = UserParam.StokVirman.EvrakTip;
-        $scope.CariKodu = UserParam.StokVirman.Cari;
-        if(UserParam.StokVirman.FiyatLock == 1)
+        $scope.Seri = UserParam.SarfFisi.Seri;
+        $scope.BelgeNo = UserParam.SarfFisi.BelgeNo;
+        $scope.CariKodu = UserParam.SarfFisi.Cari;
+        if(UserParam.SarfFisi.FiyatLock == 1)
         {
             $scope.FiyatLock = true;
         }
@@ -890,148 +857,42 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             }
         ];
 
-        db.DepoGetir($scope.Firma,UserParam.StokVirman.DepoListe,function(data)
+        db.DepoGetir($scope.Firma,UserParam.SarfFisi.DepoListe,function(data)
         {
             $scope.DepoListe = data; 
-            $scope.DepoNo = UserParam.StokVirman.DepoNo;
+            $scope.DepoNo = UserParam.SarfFisi.DepoNo;
             $scope.DepoListe.forEach(function(item) 
             {
-                if(item.KODU == $scope.DepoNo)
+                if(item.KODU == $scope.DepoNo)  
                     $scope.DepoAdi = item.ADI;
+            });   
+        });
+        db.FillCmbDocInfo($scope.Firma,'MasrafHesapGetir',function(data)
+        {
+            $scope.MasrafHesapListe = data; 
+            $scope.GiderKodu = UserParam.SarfFisi.DepoNo;
+            $scope.MasrafHesapListe.forEach(function(item) 
+            {
+                if(item.KODU == $scope.GiderKodu )
+                    $scope.GiderAdi = item.ADI;
             });     
         });
         db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
         {
             $scope.SorumlulukListe = data; 
-            $scope.Sorumluluk = UserParam.StokVirman.Sorumluluk;
+            $scope.Sorumluluk = UserParam.SarfFisi.Sorumluluk;
             $scope.SorumlulukListe.forEach(function(item)
             {
                 if(item.KODU == $scope.Sorumluluk)
                     $scope.SorumlulukAdi = item.ADI;
             });
         });  
-        db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam.StokVirman.Proje});
+        db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam.SarfFisi.Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
 
         db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});       
         
-        $scope.EvrakTipChange();
         BarkodFocus();
-    }
-    $scope.BtnStokReceteEkle = function()
-    {
-        if($scope.TxtReceteMiktar == '')
-        {
-            alertify.alert("Miktar kısmı boş bırakılamaz.")
-        }
-        else
-        {
-            $scope.Stok[0].KODU = AnaKodu;
-            $scope.Stok[0].PARTI = 0;
-            $scope.Stok[0].LOT = 0;
-            $scope.Stok[0].TOPTANVERGIPNTR = 0;
-            $scope.Miktar = $scope.TxtReceteMiktar;
-            $scope.Stok[0].CARPAN = 1;
-            $scope.Tip = 0;
-            InsertData();
-    
-            let TmpKodu = AnaKodu;
-    
-            var TmpQuery = 
-            {
-                db : '{M}.' + $scope.Firma,
-                query: 
-                "SELECT rec_tuketim_kod AS TUKETIMKODU," +
-                "rec_tuketim_miktar AS TUKETIMMIKTAR, " +
-                "rec_uretim_tuketim AS HAREKET " + 
-                "FROM URUN_RECETELERI " +
-                "WHERE rec_anakod = @TmpKodu ",
-                param : ['TmpKodu'],
-                type : ['string|25'],
-                value : [TmpKodu]
-            }
-    
-            db.GetDataQuery(TmpQuery,function(TuketimData)
-            {
-                $scope.StokReceteListe = TuketimData;
-                console.log($scope.StokReceteListe)    
-                if($scope.StokReceteListe.length > 0)
-                {
-                    for(var i=0; i<$scope.StokReceteListe.length; i++)
-                    {
-                        $scope.Stok[0].PARTI = 0;
-                        $scope.Stok[0].LOT = 0;
-                        $scope.Stok[0].TOPTANVERGIPNTR = 0;
-                        $scope.Stok[0].CARPAN = 1;
-                        if($scope.StokReceteListe[i].HAREKET == 0)
-                        {
-                            $scope.Tip = 1;
-                        }
-                        else
-                        {
-                            $scope.Tip = 0;
-                        }
-                        $scope.Stok[0].KODU = $scope.StokReceteListe[i].TUKETIMKODU;
-                        $scope.Miktar = $scope.StokReceteListe[i].TUKETIMMIKTAR * $scope.TxtReceteMiktar;                
-                        InsertData();             
-                    }
-                    alertify.alert("Stoklar başarıyla eklendi.") 
-                }
-                else
-                {
-                    alertify.alert("Reçete içeriği boş!")
-                }
-            });
-        }
-    }
-    $scope.BtnReceteStokGridGetir = function()
-    {
-        $scope.Loading = true;
-        $scope.TblLoading = false;
-        let TmpKodu = '';
-
-        if($scope.TxtReceteStokGrid != "")
-        {
-            TmpKodu = $scope.TxtReceteStokGrid.replace("*","%").replace("*","%");
-        }
-        else
-        {
-            TmpKodu = ''; 
-        }
-        
-        var TmpQuery = 
-        {
-            db : '{M}.' + $scope.Firma,
-            query: 
-            "SELECT rec_anakod AS ANAKOD, " +
-            "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = URUN_RECETELERI.rec_anakod) AS ISIM " +
-            "FROM URUN_RECETELERI " +
-            "WHERE (rec_anakod LIKE @TmpKodu) OR (@TmpKodu = '') OR (rec_anakod = (SELECT TOP 1 bar_stokkodu FROM BARKOD_TANIMLARI WHERE bar_kodu = @TmpKodu)) GROUP BY rec_anakod ",
-            param : ['TmpKodu'],
-            type : ['string|25'],
-            value : [TmpKodu]
-        }
-
-
-        db.GetDataQuery(TmpQuery,function(ReceteData)
-        {
-            $scope.StokReceteListe = ReceteData;
-            if ($scope.StokReceteListe.length > 0)
-            {
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-                $("#TblStokReceteListe").jsGrid({data : $scope.StokReceteListe});
-                $("#TblStokReceteListe").jsGrid({data : $scope.StokReceteListe});
-            }
-            else
-            {
-                alertify.alert("Stok Bulunamadı")
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-                $("#TblStokReceteListe").jsGrid({data : $scope.StokReceteListe});
-                $("#TblStokReceteListe").jsGrid({data : $scope.StokReceteListe});
-            }
-        });
     }
     $scope.BtnStokGridGetir = function()
     {
@@ -1086,11 +947,11 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             $scope.BtnStokGridGetir();
         }
     }
-    $scope.StokVirmanEnter = function(keyEvent)
+    $scope.SarfFisiEnter = function(keyEvent)
     {
         if(keyEvent.which === 13)
         {
-            $scope.BtnReceteStokGridGetir();
+            $scope.BtnStokGridGetir();
         }  
     }
     $scope.BtnBarkodGetirClick = function()
@@ -1128,80 +989,9 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             }
         });
     }
-    $scope.BtnEtiketBas = function()
-    {
-        if($scope.StokKodu = $scope.IrsaliyeListe[0].sth_stok_kod)
-        {
-            var InsertData = 
-            [
-                UserParam.MikroId,
-                UserParam.MikroId,
-                2,
-                $scope.Seri,
-                $scope.Sira,
-                "",
-                $scope.BelgeNo,
-                0,
-                0,
-                $scope.IrsaliyeListe[0].sth_miktar,
-                $scope.DepoNo,
-                $scope.StokKodu,
-                1,
-                1,
-                $scope.Barkod,
-                1
-            ]
-            console.log($scope.Barkod)
-            db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
-            {
-                if(InsertResult != 'undefined')
-                {
-                    alertify.alert("Etiket Yazdırıldı.");
-                }
-            });
-        }
-        else
-        {
-            for(i = 0; i < $scope.IrsaliyeListe.length; i++)
-            {
-                $scope.StokKodu = $scope.IrsaliyeListe[i].sth_stok_kod;
-                var InsertData = 
-                [
-                    UserParam.MikroId,
-                    UserParam.MikroId,
-                    1,
-                    $scope.Seri,
-                    $scope.Sira,
-                    "",
-                    $scope.BelgeNo,
-                    0,
-                    0,
-                    $scope.IrsaliyeListe[i].sth_miktar,
-                    $scope.DepoNo,
-                    $scope.StokKodu,
-                    1,
-                    1,
-                    $scope.Barkod,
-                    $scope.IrsaliyeListe[i].sth_miktar
-                ]
-                console.log($scope.Barkod)
-                db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
-                {
-    
-                });
-            }
-            if(i == $scope.IrsaliyeListe.length)
-            {
-                alertify.alert("Etiket Yazdırıldı.");
-            }
-            else
-            {
-                alertify.alert("Etiket Yazdıralamadı.");
-            }
-        }
-    }
     $scope.MiktarFiyatValid = function()
     {
+        console.log($scope.Stok)
         $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
         $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
         $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
@@ -1226,15 +1016,6 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         $scope.BarkodGirisClick();
         StokBarkodGetir($scope.Barkod);
         console.log($scope.Barkod)
-    }
-    $scope.StokReceteListeRowClick = function(pIndex,pItem,pObj)
-    {
-        if ( StokReceteSelectedRow ) { StokReceteSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
-        var $row = pObj.rowByItem(pItem);
-        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
-        StokReceteSelectedRow = $row;
-
-        AnaKodu = $scope.StokReceteListe[pIndex].ANAKOD;
     }
     $scope.BtnTemizle = function()
     {
@@ -1458,18 +1239,6 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         $("#MdlIskontoEkran").modal('hide');
         DipToplamHesapla()
     }
-    $scope.EvrakTipChange = async function()
-    {
-        if(ParamName == "StokVirman" && $scope.CmbEvrakTip == 0) //GİREN
-        {
-            $scope.Tip = 0;        
-        }
-        else
-        {
-            $scope.Tip = 1;
-        }
-        //await db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
-    }
     $scope.BirimChange = function()
     {
         if($scope.BirimListe.length > 0)
@@ -1488,11 +1257,19 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                 $scope.DepoAdi = item.ADI;
         });
     }
+    $scope.MasrafHChange = function()
+    {
+        $scope.MasrafHesapListe.forEach(function(item) 
+        {
+            if(item.KODU == $scope.GiderKodu)
+                $scope.GiderAdi = item.ADI;
+        });
+    }
     $scope.Insert = function()
     { 
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {
-            if(ParamName == "StokVirman")
+            if(ParamName == "SarfFisi")
             {
                 if($scope.RiskParam != 0)
                 {
@@ -1509,11 +1286,6 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                     }
                 }
             }
-            if($scope.Miktar > $scope.VirmanMiktar)
-            {
-                alertify.alert("Bu  Fiyattan  " + $scope.VirmanMiktar + "  kadar  çıkış yapabilirsiniz!!");
-                return;
-            }
             if(UserParam.SatisIrsaliye.EksiyeDusme == 1 && $scope.EvrakTip == 1 &&  ($scope.Miktar * $scope.Stok[0].CARPAN) > $scope.Stok[0].DEPOMIKTAR)
             {
                 alertify.alert("Eksiye Düşmeye İzin Verilmiyor.");
@@ -1522,15 +1294,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             $scope.InsertLock = true
             if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2  )
             {          
-                console.log($scope.CmbEvrakTip)
-                if($scope.CmbEvrakTip == "0")
-                {
-                    InsertData();
-                }
-                else
-                {
-                    InsertData();
-                }
+                InsertData();
             }
             else
             {
@@ -1715,7 +1479,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                 
                 $scope.BedenHarListe = await db.GetPromiseTag($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,11])
 
-                db.DepoGetir($scope.Firma,UserParam.StokVirman.DepoListe,function(e)
+                db.DepoGetir($scope.Firma,UserParam.SarfFisi.DepoListe,function(e)
                 {
                     $scope.DepoListe = e; 
                     $scope.DepoNo = data[0].sth_giris_depo_no.toString();
@@ -1761,7 +1525,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         { 
             if($scope.IrsaliyeListe.length > 0)
             {
-                if(UserParam.StokVirman.EvrakSil == 0)
+                if(UserParam.SarfFisi.EvrakSil == 0)
                 {
                     db.ExecuteTag($scope.Firma,'StokHarEvrDelete',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
                     {
@@ -1820,7 +1584,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         { 
             if($scope.IslemListeSelectedIndex > -1)
             {
-                if(UserParam.StokVirman.EvrakSil == 0)
+                if(UserParam.SarfFisi.EvrakSil == 0)
                 {
                     db.ExecuteTag($scope.Firma,'StokHarSatirDelete',[$scope.IrsaliyeListe[$scope.IslemListeSelectedIndex].sth_Guid],function(data)
                     {
@@ -1844,12 +1608,12 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                             //ALIŞ = 0 SATIŞ = 1
                             if(pAlisSatis == 0)
                             {
-                                ParamName = "StokVirman";
+                                ParamName = "SarfFisi";
                                 $scope.YeniEvrak(0)
                             }
                             else
                             {
-                                ParamName = "StokVirman";
+                                ParamName = "SarfFisi";
                                 $scope.YeniEvrak(1)
                             }
                         }
@@ -1985,8 +1749,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
         function (result) 
         {
             $scope.TxtReceteStokGrid = result.text;
-            //$scope.StokVirmanEnter(13);
-            $scope.BtnReceteStokGridGetir();
+            //$scope.SarfFisiEnter(13);
         },
         function (error) 
         {
@@ -1997,11 +1760,5 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             orientation : "portrait"
         }
         );
-    }
-    $scope.StokReceteClick = function()
-    {
-        $("#TbStokRecete").addClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbDizayn").removeClass('active');
     }
 }

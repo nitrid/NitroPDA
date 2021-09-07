@@ -22,6 +22,7 @@
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak()">Yeni Evrak</button>
                                 <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Barkod Detay</a>
                                 <button class="dropdown-item" data-target="#MdlFiyatDegisikligi" data-toggle="modal" role="menu-item">Fiyat Değişikliği</a>
+                                <button class="dropdown-item" data-target="#MdlFiyatDegistir" data-toggle="modal" role="menu-item">Fiyat Değiştir</a>
                                 <button class="dropdown-item" data-target="#MdlReyonDegisikligi" data-toggle="modal" role="menu-item">Reyon Tanımları</a>
                             </div>
                         </div>
@@ -95,8 +96,8 @@
                             <div class="col-form-label px-1 float-right py-1">Fiyat Seç:</div>
                         </div>
                         <div class="col-4 px-1">
-                            <select class="form-control" ng-model="ListeFiyatNo" ng-change="FiyatListeChange()">
-                                <option ng-repeat="option in FiyatListeler" value="{{option.FIYAT}}">{{option.SATISADI}}</option>
+                            <select class="form-control" id="FiyatSelect2" ng-model="ListeFiyatNo" ng-change="FiyatListeChange()">
+                                <option ng-repeat="option in FiyatListeler" value="{{option.FIYATSIRALISTE}}">{{option.SATISADI}}</option>
                             </select>
                         </div>
                     </div>
@@ -267,6 +268,49 @@
                     </div>
                     <div class="row py-1 px-1">
                       <div id="TblFiyatDegis"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="MdlFiyatDegistir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Fiyay Tanımları</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row py-10">
+                        <div class="col-4 text-info"><div  class="col-form-label float-right"><b>Fiyat Liste :</b></div></div>
+                        <div class="col-8 px-1">
+                            <select class="form-control" id="FiyatSelect" ng-model="FiyatListeNo" ng-change="FiyatListeChange()">
+                                <option ng-repeat="option in FiyatListeler" value="{{option.FIYATSIRALISTE}}">{{option.SATISADI}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row py-10">
+                        <div class="col-4 text-info"><div  class="col-form-label float-right"><b>Fiyat :</b></div></div>
+                        <div class="col-8">
+                            <div class="input-group input-group-icon">
+                                <h5 class="text-center">{{UpdateFiyat}}</h4>    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row py-10">
+                        <div class="col-4 text-info"><div class="col-form-label float-right"><b>Yeni Fiyat :</b></div></div>
+                        <div class="col-8">
+                            <div class="input-group input-group-icon">
+                                <input type="text" class="form-control" ng-model="YeniFiyat"  id="Reyon" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 p-5">
+                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnFiyatUpdate()">Kaydet</button>        
+                        </div>
                     </div>
                 </div>
             </div>

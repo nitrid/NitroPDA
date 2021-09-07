@@ -207,6 +207,10 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/SiparisOperasyonlari.html"
     })
+    .when("/SarfFisi",
+    {
+        templateUrl : "html/evraklar/SarfFisi.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

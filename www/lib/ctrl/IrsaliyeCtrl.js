@@ -87,6 +87,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.RiskLimit = 0;
         $scope.FisDizaynTip = "0";
         $scope.SonSatisMiktar = "0";
+        $scope.TelNo1 = "";
+        $scope.Email = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -679,7 +681,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     {    
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
-
         $scope.IrsaliyeListe = pData;
         $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});    
         
@@ -1348,11 +1349,19 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         db.GetPromiseTag($scope.Firma,'PersonelTipGetir',[$scope.PersonelTip],function(data)
         {
             $scope.PersonelListe = data;
+            console.log(data)
             $scope.Personel = UserParam[ParamName].Personel;
             $scope.PersonelListe.forEach(function(item)
             {
                 if(item.KODU == $scope.Personel)
-                  $scope.PersonelAdi = item.ADI;
+                {
+                    $scope.PersonelAdi = item.ADI;
+                    $scope.TxtSfrAd = item.ADI;
+                    $scope.TxtSrfSoyAd = item.SOYADI;
+                    $scope.TxtSfrTckn = item.TCKN;
+                    $scope.TxtPlaka = UserParam[ParamName].Plaka;
+                    $scope.EirSoforId = item.GUID;
+                }
             });
         });
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
@@ -1639,7 +1648,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             console.log(StokData)
             if(StokData.length > 0)
             {
-                if(localStorage.mode = 'false')
+                if(localStorage.mode == 'false')
                 {
                     const StokData1 = await StokData;
                     for(x = 0;x < StokData1.length;x++)
@@ -1851,6 +1860,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
             $scope.Risk = $scope.CariListe[pIndex].RISK
             $scope.RiskLimit = $scope.CariListe[pIndex].RISKLIMIT;
+            $scope.TelNo1 = $scope.CariListe[pIndex].TELNO1;
+            $scope.Email = $scope.CariListe[pIndex].EMAIL;
+            console.log($scope.TelNo1,$scope.Email)
+            console.log($scope.CariListe[pIndex])
             $scope.DovizChangeKodu = "0"
             $scope.DovizChange()
             AdresNoGetir();
@@ -2324,7 +2337,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.PersonelListe.forEach(function(item)
         {
             if(item.KODU == $scope.Personel)
-            $scope.PersonelAdi = item.ADI;
+            {
+                $scope.PersonelAdi = item.ADI;
+                $scope.TxtSfrAd = item.ADI;
+                $scope.TxtSrfSoyAd = item.SOYADI;
+                $scope.TxtSfrTckn = item.TCKN;
+                $scope.TxtPlaka = UserParam[ParamName].Plaka;
+                $scope.EirSoforId = item.GUID;
+            }
+
         });
     }
     $scope.Insert = function()
@@ -2579,12 +2600,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 });
                 
                 db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sth_stok_srm_merkezi; $scope.SorumlulukAdi = data[0].SORUMLUMERADI});
-                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e;$scope.PersonelAdi = data[0].PERSONELADI});
+                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e;$scope.PersonelAdi = data[0].ADI;$scope.TxtSfrAd = data[0].ADI;$scope.TxtSrfSoyAd = data[0].SOYADI;$scope.TxtSfrTckn = data[0].TCKN;});
                 db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sth_proje_kodu});
                 db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(e){$scope.OdemePlanListe = e; $scope.OdemeNo = data[0].sth_odeme_op.toString()});
                 
                 $scope.IrsaliyeListe = data;
-                
+                console.log(data)
                 $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});  
                 DipToplamHesapla();
                 ToplamMiktarHesapla()
@@ -3208,15 +3229,34 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             return;
         }
 
-        $scope.EIrsListe = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
+        // $scope.EIrsListe = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
 
         if($scope.EIrsListe.length == 0)
         {
-            $scope.TxtSfrAd = "";
-            $scope.TxtSrfSoyAd = "";
-            $scope.TxtSfrTckn = "";
-            $scope.TxtPlaka = "";      
-
+            if($scope.PersonelListe.length > 0)
+            {
+                $scope.PersonelListe.forEach(function(item)
+                {
+                    if(item.KODU == $scope.Personel)
+                    {
+                        $scope.TxtSfrAd = item.ADI;
+                        $scope.TxtSfrAd1 = item.ADI;
+                        $scope.TxtSrfSoyAd = item.SOYADI;
+                        $scope.TxtSfrTckn = item.TCKN;
+                        $scope.TxtPlaka = UserParam[ParamName].Plaka;  
+                        $scope.EirSoforId = item.GUID;
+                        console.log(item)
+                    }
+                });
+            }
+            else
+            {
+                $scope.TxtSfrAd = "";
+                $scope.TxtSrfSoyAd = "";
+                $scope.TxtSfrTckn = "";
+                $scope.TxtPlaka = "";
+                $scope.EirSoforId = '00000000-0000-0000-0000-000000000000';
+            }
             $('#MdlEIrsGonder').modal("show");      
         }
         else
@@ -3227,7 +3267,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.TxtSrfSoyAd = $scope.EIrsListe[0].eir_sofor_soyadi;
                 $scope.TxtSfrTckn = $scope.EIrsListe[0].eir_sofor_tckn;
                 $scope.TxtPlaka = $scope.EIrsListe[0].eir_tasiyici_arac_plaka;    
-            });             
+            });
 
             if($scope.EIrsListe[0].eir_uuid == '00000000-0000-0000-0000-000000000000')
             {
@@ -3248,13 +3288,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 })
             }
         }
-
-        
     }
     $scope.BtnEIrsKaydet = async function()
     {
         if($scope.TxtSrfSoyAd != '' && $scope.TxtSfrAd != '' && $scope.TxtSfrTckn != '' && $scope.TxtPlaka != '')
-        {            
+        {
+            if($scope.TxtSfrAd1 != $scope.TxtSfrAd)
+            {
+                $scope.EirSoforId = '00000000-0000-0000-0000-000000000000';
+            }
             if($scope.EIrsListe.length == 0)
             {
                 let InsertData = 
@@ -3272,39 +3314,39 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     '',
                     '',
                     $scope.TxtSfrTckn,
-                    ''
+                    '',
+                    $scope.EirSoforId
                 ];
-    
                 await db.ExecutePromiseTag($scope.Firma,'EIrsDetayInsert',InsertData);
             }
             
-            let TmpData = await db.GetPromiseTag($scope.Firma,'EIrsSemaGetir',[$scope.Seri,$scope.Sira]);
+            // let TmpData = await db.GetPromiseTag($scope.Firma,'EIrsSemaGetir',[$scope.Seri,$scope.Sira]);
 
-            if(TmpData.length > 0)
-            {
-                db.EIrsGonder(TmpData,(pData) =>
-                {
-                    $('#MdlEIrsGonder').modal("hide");
+            // if(TmpData.length > 0)
+            // {
+            //     db.EIrsGonder(TmpData,(pData) =>
+            //     {
+            //         $('#MdlEIrsGonder').modal("hide");
                     
-                    if(typeof pData.err == 'undefined')
-                    {
-                        if(typeof pData.result.UUID != 'undefined')
-                        {
-                            db.ExecuteTag($scope.Firma,'EIrsUpdate',[pData.result.UUID,$scope.Seri,$scope.Sira],function(pResult)
-                            {                         
-                            });
-                        }
-                        else
-                        {
-                            alertify.alert("E-Irsaliye gönderilemedi !")
-                        }
-                    }
-                    else
-                    {
-                        alertify.alert("E-Irsaliye gönderilemedi ! " + pData.err.Message)
-                    }
-                });
-            }
+            //         if(typeof pData.err == 'undefined')
+            //         {
+            //             if(typeof pData.result.UUID != 'undefined')
+            //             {
+            //                 db.ExecuteTag($scope.Firma,'EIrsUpdate',[pData.result.UUID,$scope.Seri,$scope.Sira],function(pResult)
+            //                 {                         
+            //                 });
+            //             }
+            //             else
+            //             {
+            //                 alertify.alert("E-Irsaliye gönderilemedi !")
+            //             }
+            //         }
+            //         else
+            //         {
+            //             alertify.alert("E-Irsaliye gönderilemedi ! " + pData.err.Message)
+            //         }
+            //     });
+            // }
         }
         else
         {
@@ -3409,7 +3451,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 let TmpStatus = true
                 let TmpStokHarData = await db.GetPromiseTag($scope.Firma,'StokHarGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira,$scope.StokHareketGonderListe[i].sth_tip,0]);
                 let TmpBedenData = await db.GetPromiseTag($scope.Firma,'StokBedenHarGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira,$scope.StokHareketGonderListe[i].sth_tip,9]);
-                
+                let EIrsDetayData2 = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira]);
                 localStorage.mode = 'true';
                 let TmpMaxSira = await db.GetPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evraktip])
                 for (let m = 0; m < TmpStokHarData.length; m++)
@@ -3525,6 +3567,63 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             TmpStatus = false;
                         }
                     }
+                    let TmpDetay = EIrsDetayData2.find(x => x.eir_evrakno_sira == TmpStokHarData[m].sth_evrakno_sira)
+                    if(typeof TmpDetay != 'undefined')
+                    {
+                        localStorage.mode = 'false';
+                        let EIrsDetayData = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira]);
+                        TmpDetay = EIrsDetayData.find(x => x.eir_evrakno_sira == TmpStokHarData[m].sth_evrakno_sira)
+                        console.log($scope.StokHareketGonderListe[i])
+                        console.log(EIrsDetayData)
+                        if(EIrsDetayData.length != 0 && TmpDetay.status == "0")
+                        {
+                            let InsertDataDetay =
+                            [
+                                TmpDetay.eir_evrak_tip,
+                                3,
+                                TmpDetay.eir_evrakno_seri,
+                                TmpDetay.eir_evrakno_sira,
+                                '',
+                                TmpDetay.eir_tasiyici_arac_plaka,
+                                '',
+                                '',
+                                TmpDetay.eir_sofor_adi,
+                                TmpDetay.eir_sofor_soyadi,
+                                '',
+                                '',
+                                TmpDetay.eir_sofor_tckn,
+                                '',
+                                TmpDetay.eir_sofor_uid
+                            ]
+                            console.log(InsertDataDetay)
+                            localStorage.mode = 'true';
+                            let TmpDetayResult = await db.ExecutePromiseTag($scope.Firma,'EIrsDetayInsert',InsertDataDetay)
+                            let EIrsSeri = TmpDetay.eir_evrakno_seri
+                            let EIrsSira = TmpDetay.eir_evrakno_sira
+                            console.log(EIrsSeri,EIrsSira)
+                            if(typeof(TmpDetayResult.result.err) != 'undefined')
+                            {
+                                console.log(TmpDetayResult)
+                                TmpStatus = false;
+                            }
+                            else
+                            {
+                                console.log(TmpDetayResult)
+                                localStorage.mode = 'false';
+                                console.log(EIrsSeri,EIrsSira)
+                                let TmpUpdateQuery = 
+                                {
+                                    db : '{M}.' + $scope.Firma,
+                                    query: "UPDATE EIRSDETAY SET status = 1 WHERE eir_evrakno_seri = '@eir_evrakno_seri' AND eir_evrakno_sira = @eir_evrakno_sira and eir_tipi = 3" ,
+                                    param:  ['eir_evrakno_seri:string|20','eir_evrakno_sira:int'],
+                                    value : [EIrsSeri,EIrsSira]
+                                }
+                                console.log(TmpUpdateQuery)
+                                await db.GetPromiseQuery(TmpUpdateQuery)
+                                localStorage.mode = 'true';
+                            }
+                        }
+                    }
                 }
                 
                 localStorage.mode = 'false';
@@ -3536,7 +3635,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         query: "UPDATE STOKHAR SET status = 1 WHERE sth_evrakno_seri = '@sth_evrakno_seri' AND sth_evrakno_sira = @sth_evrakno_sira AND sth_tip = '@sth_tip' AND sth_cins = '@sth_cins'" ,
                         param:  ['sth_evrakno_seri:string|20','sth_evrakno_sira:int','sth_tip:int','sth_cins:int'],
                         value : [$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira,$scope.StokHareketGonderListe[i].sth_tip,$scope.StokHareketGonderListe[i].sth_cins]
-
                     }
                     await db.GetPromiseQuery(TmpUpdateQuery)
                     
@@ -3555,6 +3653,52 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             alertify.okBtn("Tamam");
             alertify.alert("Bu menü sadece offline mod'da çalışır !");
+        }
+    }
+    $scope.BtnEIrsGonder = async function()
+    {
+        console.log($scope.IrsaliyeListe)
+        for (let i = 0; i < $scope.IrsaliyeListe.length; i++) 
+        {
+            console.log($scope.IrsaliyeListe[i])
+            let Data = 
+            {
+                Param :
+                [
+                    $scope.IrsaliyeListe[i].sth_create_user, //CUSER
+                    $scope.IrsaliyeListe[i].sth_lastup_user, //LUSER
+                    $scope.IrsaliyeListe[i].sth_create_date, //CDATE
+                    $scope.IrsaliyeListe[i].sth_lastup_date, //LDATE
+                    $scope.IrsaliyeListe[i].sth_evrakno_seri, //SERİ
+                    $scope.IrsaliyeListe[i].sth_evrakno_sira, //SIRA
+                    $scope.IrsaliyeListe[i].sth_eirs_tipi, //IRSALIYE_TIP
+                    $scope.IrsaliyeListe[i].sth_tarih, //IRSALIYE_TARIHI
+                    'BEKASOFT', //UNVAN1
+                    'YAZILIM A.Ş', //UNVAN2
+                    '2124561230', //VKN
+                    "56707512767",
+                    'Atakent mah akdeniz cad', //ADRES1
+                    'Ören Sokak No: 7', //ADRES2
+                    '05352719986', //TELNO1
+                    'ekremirc1@gmail.com', //EMAIL
+                    $scope.CariAdi, //UNVAN1
+                    $scope.CariSoyAdi, //UNVAN2
+                    $scope.CariVDNO, //VKN
+                    "56707512767",
+                    $scope.Adres1, //ADRES1
+                    $scope.Adres2, //ADRES2
+                    $scope.TelNo1, //TELNO1
+                    $scope.Email, //EMAIL
+                    $scope.IrsaliyeListe[i].sth_stok_kod, //STOKKOD
+                    $scope.IrsaliyeListe[i].MIKTAR, //MIKTAR
+                    $scope.IrsaliyeListe[i].TUTAR, //TUTAR
+                    0 //TOPTUTAR
+                ],
+            };
+           await db.ExecutePromiseTag($scope.Firma,'EIrsaliyeGonder',Data.Param),function(data)
+            {
+                console.log(data)
+            };
         }
     }
 }
