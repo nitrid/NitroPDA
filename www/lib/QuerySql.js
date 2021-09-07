@@ -455,6 +455,116 @@ var QuerySql =
         param : ['KODU',"ADI",'DEPONO','MKODU'],
         type : ['string|25','string|50','int','string|25']
     },    
+    StokDetayGetir:
+    {
+        query : "SELECT " +
+                "KODU AS KODU, " +
+                "ADI AS ADI, " +
+                "UNVAN1 AS UNVAN1, " +
+                "UNVAN2 AS UNVAN2, " + 
+                "CARIKODU AS CARIKODU," + 
+                "MAX(MIKTAR) AS MIKTAR," +
+                "KISAAD AS KISAAD," +
+                "YABANCIAD AS YABANCIAD," +
+                "MAX(DOVIZCINSI) AS DOVIZCINSI," +
+                "MAX(DOVIZCINSKURU) AS DOVIZCINSKURU," +
+                "MAX(PERAKENDEVERGIPNTR) AS PERAKENDEVERGIPNTR," +
+                "MAX(TOPTANVERGIPNTR) AS TOPTANVERGIPNTR," +
+                "ALTGRUP AS ALTGRUP," +
+                "ALTGRUPADI AS ALTGRUPADI," +
+                "ANAGRUP AS ANAGRUP," +
+                "ANAGRUPADI AS ANAGRUPADI," +
+                "MAX(URETICI) AS URETICI," +
+                "MAX(SEKTOR) AS SEKTOR," +
+                "MAX(REYON) AS REYON," +
+                "MAX(REYONADI) AS REYONADI," +
+                "MAX(MARKA) AS MARKA," +
+                "MAX(BEDENKODU) AS BEDENKODU," +
+                "MAX(RENKKODU) AS RENKKODU," +
+                "MAX(BARKOD) AS BARKOD," +
+                "MAX(BIRIMPNTR) AS BIRIMPNTR," +
+                "MAX(BEDENPNTR) AS BEDENPNTR," +
+                "MAX(RENKPNTR) AS RENKPNTR," +
+                "MAX(PARTI) AS PARTI," +
+                "MAX(LOT) AS LOT," +
+                "MAX(BARKODTIP) AS BARKODTIP," +
+                "MAX(BEDEN) AS BEDEN," +
+                "MAX(RENK) AS RENK," +
+                "MAX(PERAKENDEVERGI) AS PERAKENDEVERGI," +
+                "MAX(TOPTANVERGI) AS TOPTANVERGI," +
+                "MAX(KATSAYI) AS KATSAYI," +
+                "MAX(BIRIM) AS BIRIM," +
+                "MAX(DETAYTAKIP) AS DETAYTAKIP," +
+                "MAX(DEPOMIKTAR) AS DEPOMIKTAR," +
+                "BEDENMIKTAR AS BEDENMIKTAR," +
+                "RENKMIKTAR AS RENKMIKTAR," +
+                "MAX(KIRILIMMIKTAR) AS KIRILIMMIKTAR, " +
+                "MAX(SIPARISDURSUN) AS SIPARISDURSUN, " +
+                "MAX(MALKABULDURSUN) AS MALKABULDURSUN, " +
+                "MAX(OTVTUTAR) AS OTVTUTAR," +
+                "MAX(DOVIZ) AS DOVIZ," +
+                "MAX(DOVIZSEMBOL) AS DOVIZSEMBOL, " +
+                "MAX(DOVIZKUR) AS DOVIZKUR, " +
+                "MAX(PRIMORANI) AS PRIMORANI " +
+                "FROM (SELECT " +
+                "sto_kod AS KODU, " +
+                "sto_isim AS ADI, " +
+                "ISNULL((SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = STOK.sto_sat_cari_kod),'') AS UNVAN1, " +
+                "ISNULL((SELECT cari_unvan2 FROM CARI_HESAPLAR WHERE cari_kod = STOK.sto_sat_cari_kod),'') AS UNVAN2, " +
+                "sto_sat_cari_kod AS CARIKODU, " +
+                "ISNULL(sto_birim2_katsayi * -1,0) AS MIKTAR, " +
+                "sto_kisa_ismi AS KISAAD, " +
+                "sto_yabanci_isim AS YABANCIAD, " +
+                "sto_doviz_cinsi AS DOVIZCINSI, " +
+                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sto_doviz_cinsi,0),2)),1) AS DOVIZCINSKURU, " +
+                "sto_perakende_vergi AS PERAKENDEVERGIPNTR, " +
+                "sto_toptan_vergi AS TOPTANVERGIPNTR, " +
+                "sto_altgrup_kod AS ALTGRUP, " +
+                "ISNULL((SELECT TOP 1 sta_isim FROM STOK_ALT_GRUPLARI WHERE sta_kod = sto_altgrup_kod),'') AS ALTGRUPADI, " +
+                "sto_anagrup_kod AS ANAGRUP, " +
+                "ISNULL((SELECT TOP 1 san_isim FROM STOK_ANA_GRUPLARI WHERE san_kod = sto_anagrup_kod),'') AS ANAGRUPADI, " +
+                "sto_uretici_kodu AS URETICI, " +
+                "sto_sektor_kodu AS SEKTOR, " +
+                "sto_reyon_kodu AS REYON, " +
+                "ISNULL((SELECT TOP 1 ryn_ismi FROM STOK_REYONLARI WHERE STOK_REYONLARI.ryn_kod = sto_reyon_kodu),'') AS REYONADI, " +
+                "sto_marka_kodu AS MARKA, " +
+                "sto_beden_kodu AS BEDENKODU, " +
+                "sto_renk_kodu AS RENKKODU, " +
+                "sto_pasif_fl AS AKTIFPASIF, " +
+                "'' AS BARKOD, " +
+                "1 AS BIRIMPNTR, " +
+                "0 AS BEDENPNTR, " +
+                "0 AS RENKPNTR, " +
+                "'' AS PARTI, " +
+                "0 AS LOT, " +
+                "0 AS BARKODTIP, " +
+                "'' AS BEDEN, " +
+                "'' AS RENK, " +
+                "(SELECT dbo.fn_VergiYuzde (sto_perakende_vergi)) AS PERAKENDEVERGI, " +
+                "(SELECT dbo.fn_VergiYuzde (sto_toptan_vergi)) AS TOPTANVERGI, " +
+                "1 AS KATSAYI, " +
+                "'' AS BIRIM, " +
+                "sto_detay_takip AS DETAYTAKIP, " +
+                "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
+                "0 AS RENKMIKTAR," +
+                "0 AS BEDENMIKTAR," +
+                "0 AS KIRILIMMIKTAR, " +
+                "sto_siparis_dursun AS SIPARISDURSUN, " +
+                "sto_malkabul_dursun as MALKABULDURSUN, " +
+                "sto_otvtutar AS OTVTUTAR, " +
+                "0 AS DOVIZ,  " +
+                " '' AS DOVIZSEMBOL,  " +
+                "1 AS DOVIZKUR,  " +
+                "sto_prim_orani AS PRIMORANI " +
+                "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
+                "WHERE ((UPPER(sto_kod) LIKE '%' + UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(sto_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
+				"AND ((UPPER(sto_isim) LIKE UPPER(@ADI) + '%' OR (@ADI = '')) OR (LOWER(sto_isim) LIKE LOWER (@ADI) + '%' OR (@ADI = '')))" +
+                "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
+                ") AS TMP " +
+                "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI,BEDENMIKTAR,RENKMIKTAR ORDER BY KODU desc" ,
+        param : ['KODU',"ADI",'DEPONO','MKODU'],
+        type : ['string|25','string|50','int','string|25']
+    },
     StokAnaSaglayiciGetir:
     {
         query : "SELECT " +
@@ -572,7 +682,7 @@ var QuerySql =
                 "CASE sto_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "sto_kod AS BARKOD " +
                 "FROM STOKLAR " +
-                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) OR LOWER(sto_kod) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER(sto_isim) LIKE UPPER(@KODU) OR LOWER(sto_isim) LIKE LOWER(@KODU)) OR (@KODU = '')) " ,
+                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) OR LOWER(sto_kod) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER(sto_isim) LIKE UPPER(@ADI) OR LOWER(sto_isim) LIKE LOWER(@ADI)) OR (@ADI = '')) " ,
         param : ['KODU',"ADI",'DEPONO'],
         type :  ['string|25','string|50','int']
     },

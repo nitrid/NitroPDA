@@ -469,23 +469,26 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {
         $("#TblDepoMiktar").jsGrid
         ({
+            responsive: true,
             width: "100%",
             height: "150px",
             updateOnResize: true,
             heading: true,
             selecting: true,
+            paging: true,
+            pageSize: 30,
             data : $scope.DepoMiktarListe,
             fields: [
                 {
                     name: "DEPONO",
-                    title: "DEPONO",
+                    title: "DEPO NO",
                     type: "number",
                     align: "center",
                     width: 75
                 }, 
                 {
                     name: "DEPOADI",
-                    title: "DEPOADI",
+                    title: "DEPO ADI",
                     type: "text",
                     align: "center",
                     width: 210
@@ -495,7 +498,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     title: "DEPO MIKTAR",
                     type: "number",
                     align: "center",
-                    width: 100
+                    width: 200
                 } 
             ],
             rowClick: function(args)
@@ -503,6 +506,37 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $scope.StokListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
+        });
+    }
+    function InitStokDepoGrid()
+    {
+        $("#TblStokDepo").jsGrid
+        ({
+            responsive: true,
+            width: "100%",
+            height: "150px",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            paging: true,
+            pageSize: 30,
+            data : $scope.StokListe,
+            fields: [
+                {
+                    name: "KODU",
+                    title: "KODU",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                }, 
+                {
+                    name: "DEPOMIKTAR",
+                    title: "DEPO MIKTAR",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                } 
+            ]
         });
     }
     function InitProjeEvrakGetirGrid()
@@ -1372,21 +1406,22 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                             //     $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
                             // });
                             
-                            // //Depo Miktar Getir (Stok Detay)
-                            // var DepoMiktar =
-                            // {
-                            //     db : '{M}.' + $scope.Firma,
-                            //     query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
-                            //     param : ['STOKKODU'],
-                            //     type : ['string|50'],
-                            //     value : [$scope.StokKodu]
-                            // }
-                            // db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
-                            // {   
-                            //     console.log(pDepoMiktar)
-                            //     $scope.DepoMiktarListe = pDepoMiktar
-                            //     $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
-                            // });
+                            //Depo Miktar Getir (Stok Detay)
+                            var DepoMiktar =
+                            {
+                                db : '{M}.' + $scope.Firma,
+                                query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
+                                param : ['STOKKODU'],
+                                type : ['string|50'],
+                                value : [$scope.StokKodu]
+                            }
+                            db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
+                            {   
+                                console.log(pDepoMiktar)
+                                $scope.DepoMiktarListe = pDepoMiktar
+                                console.log($scope.DepoMiktarListe)
+                                $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
+                            });
                             await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)
                             {   
                                 $scope.BirimListe = data;
@@ -1431,7 +1466,26 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                                 $scope.BarkodLock = true;
                                 $scope.$apply();
                             });
-        
+                            db.GetData($scope.Firma,'StokDetayGetir',[$scope.Stok[0].KODU,'',$scope.DepoNo,''],function(StokData)
+                            {
+                                $scope.StokDetayListe = StokData;
+                                console.log(StokData)
+                                if($scope.StokDetayListe.length > 0)
+                                {
+                                    $scope.Loading = false;
+                                    $scope.TblLoading = true;
+                                    $("#TblStokDepo").jsGrid({data : $scope.StokDetayListe});
+                                    $("#TblStokDepo").jsGrid({pageIndex: true});
+                                }
+                                else
+                                {
+                                    alertify.alert("Stok Bulunamadı");
+                                    $scope.Loading = false;
+                                    $scope.TblLoading = true;
+                                    $("#TblStokDepo").jsGrid({data : $scope.StokDetayListe});
+                                    $("#TblStokDepo").jsGrid({pageIndex: true});
+                                }
+                            });
                             if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
                             {   
                                 if($scope.Stok[0].BEDENKODU != '' && $scope.Stok[0].RENKKODU != '')
@@ -1805,6 +1859,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 db.GetData($scope.Firma,'StokGetir',[Kodu,Adi,$scope.DepoNo,''],function(StokData)
                 {
                     $scope.StokListe = StokData;
+                    console.log(StokData)
                     if($scope.StokListe.length > 0)
                     {
                         $scope.Loading = false;
@@ -1978,6 +2033,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         InitStokGrid();
         InitPartiLotGrid();
         InitDepoMiktarGrid();
+        InitStokDepoGrid();
         InitProjeEvrakGetirGrid();
         InitDizaynGrid();
         InitSipGrid();
