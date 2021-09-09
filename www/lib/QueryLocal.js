@@ -124,6 +124,14 @@ var QueryLocal =
         query : "SELECT '0' AS KODU, 'PEŞİN' AS ADI UNION ALL SELECT ODEMENO AS KODU, " +
                 "ODEMEADI  AS ADI FROM ODEMEPLAN"
     },
+    SonSatisFiyatGetir : 
+    {
+        query : "SELECT " + 
+                "SONFIYAT AS SONFIYAT FROM SONSATISFIYATI " +
+                "WHERE CARI = '@sth_cari_kodu' AND STOK = '@sth_stok_kod'" , 
+        param : ['sth_cari_kodu','sth_stok_kod'],
+        type : ['string|25','string|25']
+    },
     OdemeEmriGetir : 
     {
         query: "SELECT * FROM ODEMEEMIRLERI WHERE sck_ilk_evrak_seri = '@sck_ilk_evrak_seri' AND sck_ilk_evrak_sira_no = @sck_ilk_evrak_sira_no" ,
@@ -3726,12 +3734,12 @@ var QueryLocal =
     },
     SonSatisFiyatiTbl :
     {
-        tag : "SONSATİSFIYATI",
-        query : "CREATE TABLE IF NOT EXISTS SONSATİSFIYATI (" +
+        tag : "SONSATISFIYATI",
+        query : "CREATE TABLE IF NOT EXISTS SONSATISFIYATI (" +
                 "CARI nvarchar(30)," +
                 "STOK nvarchar(30)," +
                 "SONFIYAT float)",
-        insert : "INSERT INTO SONALISFIYATI VALUES (?,?,?)"
+        insert : "INSERT INTO SONSATISFIYATI VALUES (?,?,?)"
     },
     SorumlulukMrkzTbl : 
     {

@@ -5367,18 +5367,19 @@ var QuerySql =
     },
     SonSatisFiyatiTbl :
     {
-        query : "SELECT Hesaplama.sth_cari_kodu AS CARI, Hesaplama.sth_stok_kod AS STOK, " +
-                "CASE WHEN STOKHAREKETLERI.sth_tutar = 0 OR STOKHAREKETLERI.sth_miktar = 0 THEN 0, " +
-                "ELSE STOKHAREKETLERI.sth_tutar / STOKHAREKETLERI.sth_miktar - (STOKHAREKETLERI.sth_tutar / STOKHAREKETLERI.sth_miktar), " +
-                "* (STOKHAREKETLERI.sth_iskonto1 + STOKHAREKETLERI.sth_iskonto2 + STOKHAREKETLERI.sth_iskonto3 + STOKHAREKETLERI.sth_iskonto4 + STOKHAREKETLERI.sth_iskonto5, " +
-                "+ STOKHAREKETLERI.sth_iskonto6) / 100 END AS SONFIYAT " +
-                "FROM (SELECT TOP (100) PERCENT MAX(sth_RECno) AS Recno, sth_cari_kodu, sth_stok_kod " +  
-                "FROM STOK_HAREKETLERI " +
-                "WHERE (sth_evraktip = 4 OR sth_evraktip = 1) " +
-                "GROUP BY sth_cari_kodu, sth_stok_kod " +
-                "ORDER BY Recno DESC) AS Hesaplama INNER JOIN " +
-                "STOK_HAREKETLERI AS STOKHAREKETLERI ON Hesaplama.Recno = STOKHAREKETLERI.sth_RECno INNER JOIN " +
-                "CARI_HESAPLAR ON Hesaplama.sth_cari_kodu = CARI_HESAPLAR.cari_kod"
+        query : "SELECT Hesaplama.sth_cari_kodu AS CARI, Hesaplama.sth_stok_kod AS STOK,  " +
+        "CASE WHEN STOKHAREKETLERI.sth_tutar = 0 OR STOKHAREKETLERI.sth_miktar = 0 THEN 0 " +
+        "ELSE STOKHAREKETLERI.sth_tutar / STOKHAREKETLERI.sth_miktar - (STOKHAREKETLERI.sth_tutar / STOKHAREKETLERI.sth_miktar) * (STOKHAREKETLERI.sth_iskonto1 + STOKHAREKETLERI.sth_iskonto2 + STOKHAREKETLERI.sth_iskonto3 + STOKHAREKETLERI.sth_iskonto4 + STOKHAREKETLERI.sth_iskonto5 " +
+        "+ STOKHAREKETLERI.sth_iskonto6) / 100 END AS SONFIYAT " +
+        "FROM " +
+        "(SELECT TOP (100) PERCENT MAX(sth_Guid) AS Recno,  " +
+        "sth_cari_kodu,  " +
+        "sth_stok_kod    " +
+        "FROM STOK_HAREKETLERI  " +
+        "WHERE (sth_evraktip = 4 OR sth_evraktip = 1)  " +
+        "GROUP BY sth_cari_kodu,sth_stok_kod ) AS Hesaplama INNER JOIN  " +
+        "STOK_HAREKETLERI AS STOKHAREKETLERI ON Hesaplama.Recno = STOKHAREKETLERI.sth_Guid INNER JOIN  " +
+        "CARI_HESAPLAR ON Hesaplama.sth_cari_kodu = CARI_HESAPLAR.cari_kod ",
     },
     SorumlulukMrkzTbl : 
     {
