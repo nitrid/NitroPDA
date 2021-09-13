@@ -217,7 +217,9 @@ var ParamTemp =
 			"EksiyeDusme" : {"Title" : "Eksiye Düşme","DefaultValue" : "0"},
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
 			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"},
-			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"}	
+			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"},
+			"Plaka" : {"Title" : "Plaka","DefaultValue" : "0"},
+			"EIrsaliyeDetay" : {"Title" : "E-Irsaliye Detay","DefaultValue" : "0"}		
 		},
 		"KonsinyeIrsaliye" :
 		{

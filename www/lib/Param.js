@@ -8,7 +8,7 @@ var Param = [
 			"Firma": "TEST",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
-			"MalKabulEvrakTip": "0",
+			"MalKabulEvrakTip": "1",
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
 			"SiparisOlmayanBarkodKabul": "1",
@@ -210,7 +210,8 @@ var Param = [
 			"ProjeGetir": "0",
 			"OfflineSira": "0",
 			"FiyatAzalt": "1",
-			"Plaka": "34TS1967"
+			"Plaka": "34TS1967",
+			"EIrsaliyeDetay": "1"
 		},
 		"KonsinyeIrsaliye": {
 			"EvrakTip": "0",
@@ -303,7 +304,7 @@ var Param = [
 			"Verilen Sipariş": "0",
 			"Alış İrsaliyesi": "1",
 			"Tediye Makbuzu": "0",
-			"Mal Kabul Eşleştirme": "0",
+			"Mal Kabul Eşleştirme": "1",
 			"Kredi Sözlesme Izleme": "0",
 			"Cari Hesap Hareket": "1",
 			"Yapilacak Tahsilatlar/Ödemeler": "0",

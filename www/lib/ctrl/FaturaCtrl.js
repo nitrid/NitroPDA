@@ -882,7 +882,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.Seri,    //SERI
             $scope.Sira,    //SIRA
             $scope.ChaEvrakTip, //EVRAKTIP
-            0   //SATIRNO
+            0,   //SATIRNO
+            $scope.CariHarGuid
         ];
         console.log($scope.CariHarListe)
         console.log(CariHarUpdate)
@@ -1239,6 +1240,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     {    
         db.ExecuteTag($scope.Firma,'StokHarUpdate',pData.Param,function(InsertResult)
         {   
+            console.log(InsertResult)
             if(typeof(InsertResult.result.err) == 'undefined')
             {
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(FaturaData)

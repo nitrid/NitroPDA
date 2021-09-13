@@ -687,7 +687,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         DipToplamHesapla();
         ToplamMiktarHesapla();
         $scope.BtnTemizle();
-        
+        if(UserParam[ParamName].EIrsaliyeDetay == 1)
+        {
+            $scope.BtnEIrsKaydet();
+        }
         $window.document.getElementById("Barkod").focus();
     }
     function DipToplamHesapla()
@@ -3223,14 +3226,16 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnEIrsModalAc = async function()
     {
-        if($scope.IrsaliyeListe.length == 0)
+        if(UserParam[ParamName].EIrsaliyeDetay == 0)
         {
-            alertify.alert("İrsaliye kayıt etmeden gönderemezsiniz !")
-            return;
-        }
-
-        // $scope.EIrsListe = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
-
+            if($scope.IrsaliyeListe.length == 0)
+            {
+                alertify.alert("İrsaliye kayıt etmeden gönderemezsiniz !")
+                return;
+            }
+        }  
+        //$scope.EIrsListe = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
+        console.log($scope.EIrsListe)
         if($scope.EIrsListe.length == 0)
         {
             if($scope.PersonelListe.length > 0)
@@ -3297,6 +3302,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {
                 $scope.EirSoforId = '00000000-0000-0000-0000-000000000000';
             }
+            $scope.EIrsListe = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
             if($scope.EIrsListe.length == 0)
             {
                 let InsertData = 
@@ -3319,7 +3325,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 ];
                 await db.ExecutePromiseTag($scope.Firma,'EIrsDetayInsert',InsertData);
             }
-            
+            else
+            {
+                console.log("Zaten kayıt oluşturuldu")
+            }
             // let TmpData = await db.GetPromiseTag($scope.Firma,'EIrsSemaGetir',[$scope.Seri,$scope.Sira]);
 
             // if(TmpData.length > 0)
@@ -3354,12 +3363,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }
     }
     $scope.BtnEIrsGoster = async function()
-    {                
-        if($scope.IrsaliyeListe.length == 0)
+    {              
+        if(UserParam[ParamName].EIrsaliyeDetay == 0)
         {
-            alertify.alert("İrsaliye kayıt etmeden gösteremezsiniz !")
-            return;
-        }
+            if($scope.IrsaliyeListe.length == 0)
+            {
+                alertify.alert("İrsaliye kayıt etmeden gösteremezsiniz !")
+                return;
+            }
+        }  
 
         $scope.EIrsListe = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.Seri,$scope.Sira]);
         if($scope.EIrsListe.length == 0)

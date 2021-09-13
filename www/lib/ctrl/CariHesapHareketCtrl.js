@@ -224,6 +224,9 @@ function CariHesapHareketCtrl($scope,$window,db)
         $scope.Bakiye = 0;
         $scope.CariAdi = "";
         $scope.Carikodu = "";
+        $scope.DovizCinsi = "DÖVİZ CİNSİ 1"
+        $scope.DovizCinsi1 = "DÖVİZ CİNSİ 2"
+        $scope.DovizCinsi2 = "DÖVİZ CİNSİ 3"
         
         $scope.CariListe = [];
         $scope.CariFoyListe = [];
@@ -290,11 +293,17 @@ function CariHesapHareketCtrl($scope,$window,db)
                         "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
                         "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
-                        "(select ROUND(dbo.fn_CariHesapAnaDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,@ILKTARIH,@SONTARIH ,0,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS ANADOVIZBAKIYE1, " +
-                        "(select ROUND(dbo.fn_CariHesapOrjinalDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,@ILKTARIH,@SONTARIH ,0,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS ORJINALDOVIZBAKIYE, " +
-                        "(select ROUND(dbo.fn_CariHesapAlternatifDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,@ILKTARIH,@SONTARIH ,0,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS ALTERNATIFDOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV1ANADOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV1ORJINALDOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV1ALTERNATIFDOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV2ANADOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV2ORJINALDOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV2ALTERNATIFDOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV3ANADOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV3ORJINALDOVIZBAKIYE, " +
+                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV3ALTERNATIFDOVIZBAKIYE, " +
                         "[msg_S_0112] AS ORJINALDOVIZ " +
-                        "FROM dbo.fn_CariFoy ('',0,@KODU,0,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
+                        "FROM dbo.fn_CariFoy ('',0,@KODU,NULL,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
                 param:  ['KODU','ILKTARIH','SONTARIH'],
                 type:   ['string|25','date','date',],
                 value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
@@ -304,10 +313,20 @@ function CariHesapHareketCtrl($scope,$window,db)
             {
                 $scope.CariFoyListe = Data;                
                 $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
-                $scope.AnaDovizBakiye = $scope.CariFoyListe[0].ANADOVIZBAKIYE1
-                $scope.OrjDovizBakiye = $scope.CariFoyListe[0].ORJINALDOVIZBAKIYE
+                $scope.Dov1AnaDovizBakiye = $scope.CariFoyListe[0].DOV1ANADOVIZBAKIYE
+                $scope.Dov1OrjDovizBakiye = $scope.CariFoyListe[0].DOV1ORJINALDOVIZBAKIYE
+                $scope.Dov1AltDovizBakiye = $scope.CariFoyListe[0].DOV1ALTERNATIFDOVIZBAKIYE 
+
+                $scope.Dov2AnaDovizBakiye = $scope.CariFoyListe[0].DOV2ANADOVIZBAKIYE
+                $scope.Dov2OrjDovizBakiye = $scope.CariFoyListe[0].DOV2ORJINALDOVIZBAKIYE
+                $scope.Dov2AltDovizBakiye = $scope.CariFoyListe[0].DOV2ALTERNATIFDOVIZBAKIYE 
+                
+                $scope.Dov3AnaDovizBakiye = $scope.CariFoyListe[0].DOV3ANADOVIZBAKIYE
+                $scope.Dov3OrjDovizBakiye = $scope.CariFoyListe[0].DOV3ORJINALDOVIZBAKIYE
+                $scope.Dov3AltDovizBakiye = $scope.CariFoyListe[0].DOV3ALTERNATIFDOVIZBAKIYE 
+
                 $scope.OrjDoviz = $scope.CariFoyListe[0].ORJINALDOVIZ
-                $scope.AltDovizBakiye = $scope.CariFoyListe[0].ALTERNATIFDOVIZBAKIYE
+
                 console.log($scope.CariFoyListe[0].EVRAKTIPNO)
 
                 let TmpBakiye = 0;
@@ -361,6 +380,60 @@ function CariHesapHareketCtrl($scope,$window,db)
             
             $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
             $scope.Carikodu =$scope.CariListe[pIndex].KODU;
+            $scope.CariDovizCinsi = $scope.CariListe[pIndex].DOVIZCINSI;
+            $scope.CariDovizCinsi1 = $scope.CariListe[pIndex].DOVIZCINSI1;
+            $scope.CariDovizCinsi2 = $scope.CariListe[pIndex].DOVIZCINSI2;
+            console.log($scope.CariDovizCinsi,$scope.CariDovizCinsi1,$scope.CariDovizCinsi2)
+            if($scope.CariDovizCinsi == 0 )
+            {
+                $scope.TlBakiye = "TL BAKIYE";
+                $scope.DovizCinsi = $scope.TlBakiye;
+
+            }
+            else if($scope.CariDovizCinsi == 1 )
+            {
+                $scope.UsdBakiye = "DOLAR BAKIYE";
+                $scope.DovizCinsi = $scope.UsdBakiye;
+            }
+            else if($scope.CariDovizCinsi == 2 )
+            {
+                $scope.EuBakiye = "EURO BAKIYE";
+                $scope.DovizCinsi = $scope.EuBakiye;
+            }
+
+            if($scope.CariDovizCinsi1 == 0 )
+            {
+                $scope.TlBakiye = "TL BAKIYE";
+                $scope.DovizCinsi1 = $scope.TlBakiye;
+
+            }
+            else if($scope.CariDovizCinsi1 == 1 )
+            {
+                $scope.UsdBakiye = "DOLAR BAKIYE";
+                $scope.DovizCinsi1 = $scope.UsdBakiye;
+            }
+            else if($scope.CariDovizCinsi1 == 2 )
+            {
+                $scope.EuBakiye = "EURO BAKIYE";
+                $scope.DovizCinsi1 = $scope.EuBakiye;
+            }
+
+            if($scope.CariDovizCinsi2 == 0 )
+            {
+                $scope.TlBakiye = "TL BAKIYE";
+                $scope.DovizCinsi2 = $scope.TlBakiye;
+
+            }
+            else if($scope.CariDovizCinsi2 == 1 )
+            {
+                $scope.UsdBakiye = "DOLAR BAKIYE";
+                $scope.DovizCinsi2 = $scope.UsdBakiye;
+            }
+            else if($scope.CariDovizCinsi2 == 2 )
+            {
+                $scope.EuBakiye = "EURO BAKIYE";
+                $scope.DovizCinsi2 = $scope.EuBakiye;
+            }
             $scope.MainClick();
         }
     }
@@ -390,9 +463,8 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TbMain").addClass('active');
         $("#TbCari").removeClass('active');
         $("#TbDetay").removeClass('active');
-        $scope.CariFoyDetayListe = []
+        $scope.CariFoyDetayListe = [];
         $("#TblCariFoyDetay").jsGrid({data : $scope.CariFoyDetayListe});
-
     }
     $scope.BtnTemizle = function()
     {
@@ -404,5 +476,23 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TbDetay").addClass('active');
         $("#TbMain").removeClass('active');
         $("#TbCari").removeClass('active');
+    }
+    $scope.Dv1Click = function() 
+    {
+        $("#TbDov1").addClass('active');
+        $("#TbDov2").removeClass('active');
+        $("#TbDov3").removeClass('active');
+    }
+    $scope.Dv2Click = function() 
+    {
+        $("#TbDov2").addClass('active');
+        $("#TbDov1").removeClass('active');
+        $("#TbDov3").removeClass('active');
+    }
+    $scope.Dv3Click = function() 
+    {
+        $("#TbDov3").addClass('active');
+        $("#TbDov1").removeClass('active');
+        $("#TbDov2").removeClass('active');
     }
 }
