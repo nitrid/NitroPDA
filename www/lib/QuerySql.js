@@ -1055,8 +1055,8 @@ var QuerySql =
                 "MAX(SIPARIS.sip_opno) AS ODEMENO, " +
                 "SIPARIS.sip_aciklama AS ACIKLAMA " +
                 "FROM SIPARISLER AS SIPARIS INNER JOIN " +
-                "BARKOD_TANIMLARI AS BARKOD ON SIPARIS.sip_stok_kod = BARKOD.bar_stokkodu " +
-                "AND SIPARIS.sip_teslim_miktar < SIPARIS.sip_miktar INNER JOIN " +
+                // "BARKOD_TANIMLARI AS BARKOD ON SIPARIS.sip_stok_kod = BARKOD.bar_stokkodu " +
+                // "AND SIPARIS.sip_teslim_miktar < SIPARIS.sip_miktar INNER JOIN " +
                 "CARI_HESAPLAR ON SIPARIS.sip_musteri_kod = CARI_HESAPLAR.cari_kod " +
                 "WHERE SIPARIS.sip_teslim_tarih>=@ILKTARIH AND SIPARIS.sip_teslim_tarih<=@SONTARIH AND " +
                 "((CARI_HESAPLAR.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) AND SIPARIS.sip_OnaylayanKulNo <> @ONAYLAYANKULNO AND ((SIPARIS.sip_musteri_kod = @CARIKODU) OR (@CARIKODU = '')) " +
@@ -1180,7 +1180,7 @@ var QuerySql =
                 "(SELECT dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_beden_kodu)) AS BEDEN, " +
                 "(SELECT dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_renk_kodu)) AS RENK, " +
                 "ISNULL(BEDENHAR.BdnHar_BedenNo,0) AS BEDENNO, " +
-                "CAST(ISNULL(NULL,0) ) AS MIKTAR, " +
+                // "CAST(ISNULL(NULL,0) ) AS MIKTAR, " +
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOK.sto_kod,@DEPONO  ,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
                 "(SELECT dbo.fn_StokBirimi (SIPARIS.sip_stok_kod,SIPARIS.sip_birim_pntr)) AS BIRIM, " +
                 "ISNULL(dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),0) AS BEDENPNTR, " +
@@ -1211,7 +1211,7 @@ var QuerySql =
                 "AND BARKOD.bar_renkpntr = CASE WHEN STOK.sto_renk_kodu <> '' THEN  ISNULL(dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),0) ELSE 0 END " +
                 "WHERE SIPARIS.sip_musteri_kod = @CARI " + 
                 "AND ((SIPARIS.sip_evrakno_seri = @SERI OR (@SERI = '')) AND ((SIPARIS.sip_evrakno_sira = @SIRA) OR (@SIRA = 0))) " +
-                "AND ((BARKOD.bar_kodu = @BARKOD OR STOK.sto_kod = @BARKOD) OR (@BARKOD = '')) " +
+                "AND ((BARKOD.bar_kodu = @BARKOD OR STOK.sto_kod = @BARKOD) OR (@BARKOD = '')) AND (BEDENHAR.BdnHar_BedenNo = @BEDENNO OR (@BEDENNO = '')) " +
                 "AND ISNULL(BEDENHAR.BdnHar_HarGor,SIPARIS.sip_miktar) > ISNULL(BEDENHAR.BdnHar_TesMik,SIPARIS.sip_teslim_miktar) " +
                 "AND ((SELECT dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_beden_kodu)) IS NOT NULL " +
                 "OR (SELECT dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),STOK.sto_renk_kodu)) IS NOT NULL) " +
@@ -1283,8 +1283,8 @@ var QuerySql =
                 "BEDENHAR.BdnHar_TesMik," +
                 "sip_parti_kodu," +
                 "sip_lot_no " ,
-        param : ['DEPONO','CARI','SERI','SIRA','BARKOD'],
-        type : ['int','string|25','string|10','int','string|25']
+        param : ['DEPONO','CARI','SERI','SIRA','BARKOD','BEDENNO'],
+        type : ['int','string|25','string|10','int','string|25','string|25']
     },
     EslestirmeOtukmaSayı :
     {
@@ -1541,20 +1541,20 @@ var QuerySql =
     SiparisProjeGetir:
     {
        query: "SELECT " +
-       "sip_evrakno_seri AS SERI, " +
-       "sip_evrakno_sira AS SIRA, " +
-       "sip_projekodu AS PROJEKOD, " +
-       "ISNULL((SELECT som_isim FROM SORUMLULUK_MERKEZLERI WHERE som_kod = sip_stok_sormerk),'') AS SORUMLUMERADI , " +
-       "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = sip_satici_kod),'') AS PERSONELADI, " +
-       "sip_tip , " +
-       "sip_musteri_kod , " +
-       "sip_belgeno , " +
-       "sip_tarih, " +
-       "sip_teslim_tarih, " +
-       "sip_stok_sormerk, " +
-       "sip_satici_kod, " +
-       "sip_opno, " +
-       "sip_depono " +
+        "sip_evrakno_seri AS SERI, " +
+        "sip_evrakno_sira AS SIRA, " +
+        "sip_projekodu AS PROJEKOD, " +
+        "ISNULL((SELECT som_isim FROM SORUMLULUK_MERKEZLERI WHERE som_kod = sip_stok_sormerk),'') AS SORUMLUMERADI , " +
+        "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = sip_satici_kod),'') AS PERSONELADI, " +
+        "sip_tip , " +
+        "sip_musteri_kod , " +
+        "sip_belgeno , " +
+        "sip_tarih, " +
+        "sip_teslim_tarih, " +
+        "sip_stok_sormerk, " +
+        "sip_satici_kod, " +
+        "sip_opno, " +
+        "sip_depono " +
         "FROM SIPARISLER WHERE sip_tip = @sip_tip and sip_cins = @sip_cins AND sip_projekodu != '' AND ((sip_projekodu = @sip_projekodu ) OR (@sip_projekodu = '')) AND sip_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
         "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_projekodu,sip_stok_sormerk,sip_satici_kod, " +
         "sip_miktar,sip_tip,sip_belgeno,sip_musteri_kod,sip_tarih,sip_teslim_tarih,sip_opno,sip_depono ",
@@ -1648,9 +1648,9 @@ var QuerySql =
     },
     SiparisDeleteUpdate :
     {
-        query : "UPDATE SIPARISLER SET sip_teslim_miktar = sip_teslim_miktar - @sip_teslim_miktar WHERE sip_Guid = @sip_Guid " +
-                "UPDATE BEDEN_HAREKETLERI SET BdnHar_TesMik = BdnHar_TesMik - @sip_teslim_miktar WHERE BdnHar_Har_uid = @sip_Guid AND BdnHar_BedenNo = ISNULL((SELECT BdnHar_BedenNo FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = @sth_Guid),0)",
-        param : ['sip_teslim_miktar:int','sip_Guid:string|50']
+        query : "UPDATE BEDEN_HAREKETLERI SET BdnHar_TesMik = BdnHar_TesMik + @sip_teslim_miktar WHERE BdnHar_Har_uid = @sip_Guid AND BdnHar_BedenNo IN ((SELECT BdnHar_BedenNo FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = @sth_Guid))" +
+                "UPDATE SIPARISLER SET sip_teslim_miktar = sip_teslim_miktar + @sip_teslim_miktar WHERE sip_Guid = @sip_Guid " ,
+        param : ['sip_teslim_miktar:int','sip_Guid:string|50','sth_Guid:string|50']
     },
     MaxSiparisSira : 
     {
@@ -1662,16 +1662,18 @@ var QuerySql =
     SiparisListeGetir :
     {
         query : "SELECT " +
-                "(sip_miktar - sip_teslim_miktar) AS BMIKTAR, " +
+                "ISNULL((BdnHar_HarGor - BdnHar_TesMik)	,(sip_miktar - sip_teslim_miktar)) AS BMIKTAR, " +
                 "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod) AS ADI, " +
                 "sip_stok_kod AS KODU, " +
-                "BdnHar_BedenNo, " +
+                "ISNULL(CAST(BdnHar_BedenNo AS nvarchar),'') AS BEDENNO, " +
                 "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
-                "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN " +
+                "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN, " +
+                "ISNULL(dbo.fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo),0) AS BEDENPNTR, " +
+                "ISNULL(dbo.fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo),0) AS RENKPNTR " +
                 "FROM SIPARISLER LEFT OUTER JOIN BEDEN_HAREKETLERI ON sip_Guid = BdnHar_Har_uid " +
-                "WHERE sip_depono = @sip_depono AND sip_musteri_kod = @sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and (sip_miktar - sip_teslim_miktar) > 0",
+                "WHERE sip_depono = @sip_depono AND sip_musteri_kod = @sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and ISNULL((BdnHar_HarGor - BdnHar_TesMik),(sip_miktar - sip_teslim_miktar)) > 0 ",
         param : ['sip_depono','sip_musteri_kod','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
-        type : ['string|15','string|25','string|10','int','int']       
+        type : ['string|15','string|25','string|10','int','int']
     },
     SipBedenHarGetir:
     {
@@ -2279,7 +2281,7 @@ var QuerySql =
                 "IF (@sth_evraktip=3) " + 
                 "BEGIN " +
                 "SELECT @sth_fat_uid = cha_Guid FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = @sth_evrakno_seri " +
-                "AND cha_evrakno_sira = @sth_evrakno_sira AND cha_evrak_tip = 0 " +                
+                "AND cha_evrakno_sira = @sth_evrakno_sira AND cha_evrak_tip = 0 " +
                 "END " +
                 "INSERT INTO [STOK_HAREKETLERI] " +
                 "([sth_DBCno] " +
@@ -2991,6 +2993,7 @@ var QuerySql =
                 ",@cha_meblag									--<cha_meblag, float,> \n" + 
                 ",@cha_aratoplam								--<cha_aratoplam, float,> \n" + 
                 ",(SELECT CAST(DATEPART(YYYY,@cha_vade) AS [CHAR](4)) + RIGHT('0' + CAST(DATEPART(M,@cha_vade) AS [VARCHAR](2)),2) + RIGHT('0' + CAST(DATEPART(D,@cha_vade) AS [VARCHAR](2)),2))	--<cha_vade, int,> \n" + 
+                //",@cha_vade                                     --<cha_vade, int,> \n" + 
                 ",0												--<cha_Vade_Farki_Yuz, float,> \n" + 
                 ",@cha_ft_iskonto1								--<cha_ft_iskonto1, float,> \n" + 
                 ",@cha_ft_iskonto2								--<cha_ft_iskonto2, float,> \n" + 
@@ -3109,9 +3112,7 @@ var QuerySql =
     },
     CariHarUpdate:
     {
-        query:  "DECLARE @cha_Guid  " +
-                "SET @cha_Guid = (SELECT TOP 1 cha_Guid FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = @cha_evrakno_seri " +
-                "AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip AND cha_satir_no = @cha_satir_no) " +
+        query:  
                 "UPDATE CARI_HESAP_HAREKETLERI " +
                 "SET cha_meblag=@cha_meblag " +
                 ",cha_aratoplam=@cha_aratoplam " +
@@ -3136,7 +3137,7 @@ var QuerySql =
         param : ['cha_meblag:float','cha_aratoplam:float','cha_vergi1:float','cha_vergi2:float','cha_vergi3:float','cha_vergi4:float','cha_vergi5:float','cha_vergi6:float',
                  'cha_vergi7:float','cha_vergi8:float','cha_vergi9:float','cha_vergi10:float','cha_ft_iskonto1:float','cha_ft_iskonto2:float','cha_ft_iskonto3:float',
                  'cha_ft_iskonto4:float','cha_ft_iskonto5:float','cha_ft_iskonto6:float','cha_otvtutari:float','cha_evrakno_seri:string|25','cha_evrakno_sira:int',
-                 'cha_evrak_tip:int','cha_satir_no:int']
+                 'cha_evrak_tip:int','cha_satir_no:int','cha_Guid:string|MAX']
     },
     MaxCariHarSira : 
     {

@@ -2420,7 +2420,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                                 });
                                 if(value.sth_Guid != 0)
                                 {
-                                    db.ExecuteTag($scope.Firma,'SiparisDeleteUpdate',[value.sth_miktar,value.sth_sip_uid,value.sth_Guid]);
+                                    let TmpMiktar = value.sth_miktar * -1
+                                    db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[TmpMiktar,value.sth_sip_uid,value.sth_Guid]);
                                     console.log(value.sth_miktar,value.sth_sip_uid,value.sth_Guid);
                                 }
                                 db.ExecuteTag($scope.Firma,'BedenHarDelete',[value.sth_Guid,11],function(data)
@@ -2469,7 +2470,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                         {
                             if($scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_Guid != 0)
                             {
-                                db.ExecuteTag($scope.Firma,'SiparisDeleteUpdate',[$scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar,$scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_sip_uid]);
+                                let TmpMiktar = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar * -1
+                                db.ExecuteTag($scope.Firma,'SiparisDeleteUpdate',[TmpMiktar,$scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_sip_uid]);
                             }
 
                            if(typeof(data.result.err) == 'undefined')

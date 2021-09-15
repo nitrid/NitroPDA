@@ -344,7 +344,7 @@ var QueryLocal =
                 "FROM CARI " +
                 "WHERE((UPPER(CARI.KODU) LIKE  UPPER('@KODU') OR ('@KODU' = '')) OR (LOWER(CARI.KODU) LIKE LOWER('@KODU') OR ('@KODU' = ''))) " +
                 "AND ((UPPER(CARI.UNVAN1) LIKE  UPPER('@ADI') OR ('@ADI' = '')) OR (LOWER(CARI.UNVAN1) LIKE LOWER('@ADI') OR ('@ADI' = ''))) " +
-                "AND TEMSILCI = '@TEMSILCI' " +
+                "AND (TEMSILCI = '@TEMSILCI' OR ('@TEMSILCI' = '')) " +
                 "ORDER BY KODU ASC",
             param : ['KODU','ADI','TEMSILCI'],
             type : ['string','string','string']
@@ -387,7 +387,7 @@ var QueryLocal =
                 "EFATURA " +
                 "FROM CARI " +
                 "WHERE ((UPPER(KODU) LIKE  UPPER('@KODU') || '%' OR ('@KODU' = '')) OR (LOWER(KODU) LIKE LOWER('@KODU') || '%' OR ('@KODU' = '')))" +
-                "AND (((UPPER(UNVAN1) LIKE UPPER('@ADI') || '%' or UPPER(UNVAN2) LIKE UPPER('@ADI') || '%') OR ('@ADI' = '')) OR ((LOWER(UNVAN1) LIKE LOWER('@ADI') || '%' or LOWER(UNVAN2) LIKE LOWER('@ADI') || '%') OR ('@ADI' = ''))) AND TEMSILCI = '@TEMSILCI' ORDER BY KODU ASC",
+                "AND (((UPPER(UNVAN1) LIKE UPPER('@ADI') || '%' or UPPER(UNVAN2) LIKE UPPER('@ADI') || '%') OR ('@ADI' = '')) OR ((LOWER(UNVAN1) LIKE LOWER('@ADI') || '%' or LOWER(UNVAN2) LIKE LOWER('@ADI') || '%') OR ('@ADI' = ''))) AND (TEMSILCI = '@TEMSILCI'OR ('@TEMSILCI' = '')) ORDER BY KODU ASC",
                 param : ['KODU','ADI','TEMSILCI'],
                 type : ['string','string','string']
     },
