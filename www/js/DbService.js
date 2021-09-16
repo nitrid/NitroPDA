@@ -991,8 +991,10 @@ angular.module('app.db', []).service('db',function($rootScope)
             // SATIŞ ŞARTI GETİR
             if(pEvrParam.SatisSarti == 1)
             {
+                console.log([pFiyatParam.CariKodu,BarkodData[0].KODU,pFiyatParam.DepoNo])
                 await _GetPromiseTag(pFirma,'SatisSartiGetir',[pFiyatParam.CariKodu,BarkodData[0].KODU,pFiyatParam.DepoNo],function(SatisSartiData)
                 {
+                    console.log(SatisSartiData)
                     if(SatisSartiData.length > 0)
                     {   
                         BarkodData[0].ODEPLAN = SatisSartiData[0].ODEPLAN

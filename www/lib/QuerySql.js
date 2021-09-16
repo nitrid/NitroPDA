@@ -5062,6 +5062,7 @@ var QuerySql =
         query : "SELECT cari_per_kod AS PERSONELKODU, " +
                 "cari_per_adi AS PERSONELADI, " +
                 "cari_per_soyadi AS PERSONELSOYADI," +
+                "cari_per_TcKimlikNo AS TCKN, " +
                 "cari_per_tip AS PERSONELTIP, " +
                 "cari_per_Guid AS GUID " +
                 "FROM CARI_PERSONEL_TANIMLARI"

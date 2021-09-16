@@ -109,7 +109,7 @@ var QueryLocal =
     },
     PersonelTipGetir : 
     {
-        query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP,'00000000-0000-0000-0000-000000000000' AS GUID UNION ALL SELECT PER1.PERSONELKODU AS KODU,PER1.PERSONELADI AS ADI,PER1.PERSONELSOYADI AS SOYADI,PER1.PERSONELTIP AS TIP,PER1.GUID AS GUID  " +
+        query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP,'' AS TCKN,'00000000-0000-0000-0000-000000000000' AS GUID UNION ALL SELECT PER1.PERSONELKODU AS KODU,PER1.PERSONELADI AS ADI,PER1.PERSONELSOYADI AS SOYADI,PER1.PERSONELTIP AS TIP,PER1.TCKN AS TCKN,PER1.GUID AS GUID  " +
                 "FROM PERSONEL AS PER1 INNER JOIN PERSONEL AS PER2 ON " +
                 "PER1.PERSONELKODU = PER2.PERSONELKODU where PER1.PERSONELTIP in(@TIP,2) " ,
                 param : ['TIP'],
@@ -623,7 +623,7 @@ var QueryLocal =
                 ",DOVIZKUR " +
                 "FROM SATISSARTI " +
                 "WHERE " +
-                "BASLANGIC <= date('now') AND (BITIS >= date('now')  OR BITIS = '18991230') AND CARIKOD = '@sat_cari_kod' AND STOKKOD = '@sat_stok_kod' AND (DEPO = '@sat_depo_no' OR DEPO = 0) " +
+                "BASLANGIC <= strftime('%Y-%m-%dT00:00:00.000Z','now') AND (BITIS >= strftime('%Y-%m-%dT00:00:00.000Z','now')  OR BITIS = '18991230') AND CARIKOD = '@sat_cari_kod' AND STOKKOD = '@sat_stok_kod' AND (DEPO = '@sat_depo_no' OR DEPO = 0) " +
                 "ORDER BY BASLANGIC,DEPO DESC , BITIS ASC" , 
         param : ['sat_cari_kod','sat_stok_kod','sat_depo_no'],
         type : ['string','string','int']
@@ -3277,9 +3277,10 @@ var QueryLocal =
                 "PERSONELKODU nvarchar(25)," +
                 "PERSONELADI nvarchar(50)," +
                 "PERSONELSOYADI nvarchar(50)," +
+                "TCKN nvarchat(50), " +
                 "PERSONELTIP int," +
                 "GUID nvarchar(50))" ,
-        insert : "INSERT INTO PERSONEL VALUES (?,?,?,?,?)"
+        insert : "INSERT INTO PERSONEL VALUES (?,?,?,?,?,?)"
     },
     ProjelerTbl : 
     {
@@ -3302,8 +3303,8 @@ var QueryLocal =
     {
         tag : "SATISSARTI",
         query : "CREATE TABLE IF NOT EXISTS SATISSARTI (" +
-                "STOKKOD nvarchar(25)," +
-                "CARIKOD nvarchar(25)," +
+                "STOKKOD nvarchar(50)," +
+                "CARIKOD nvarchar(50)," +
                 "BITIS datetime," +
                 "BASLANGIC datetime," +
                 "INDIRIM float," +
