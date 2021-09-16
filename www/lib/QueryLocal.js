@@ -623,7 +623,7 @@ var QueryLocal =
                 ",DOVIZKUR " +
                 "FROM SATISSARTI " +
                 "WHERE " +
-                " CARIKOD = '@sat_cari_kod' AND STOKKOD = '@sat_stok_kod' AND (DEPO = '@sat_depo_no' OR DEPO = 0) " +
+                "BASLANGIC <= date('now') AND (BITIS >= date('now')  OR BITIS = '18991230') AND CARIKOD = '@sat_cari_kod' AND STOKKOD = '@sat_stok_kod' AND (DEPO = '@sat_depo_no' OR DEPO = 0) " +
                 "ORDER BY BASLANGIC,DEPO DESC , BITIS ASC" , 
         param : ['sat_cari_kod','sat_stok_kod','sat_depo_no'],
         type : ['string','string','int']

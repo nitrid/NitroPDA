@@ -703,7 +703,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         {       
             await db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],async function(data)
             {
-                if(localStorage.mode = 'false')
+                if(localStorage.mode == 'false')
                 {
 
                     const datas = await data;
@@ -1012,7 +1012,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
                 {
                     await db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],async function(data)
                     {
-                        if(localStorage.mode = 'false')
+                        if(localStorage.mode == 'false')
                         {
                             const datas = await data;
                             for(x = 0;x < datas.length;x++)
@@ -1205,7 +1205,8 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             $scope.Seri,
             $scope.Sira,
             $scope.ChaEvrakTip,
-            $scope.IslemListeSelectedItem.cha_satir_no
+            $scope.IslemListeSelectedItem.cha_satir_no,
+            $scope.IslemListeSelectedItem.cha_Guid
         ]
         db.ExecuteTag($scope.Firma,'CariHarUpdate',Param,function(InsertResult)
         {   
@@ -1580,7 +1581,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
 
-        if(localStorage.mode = "false")
+        if(localStorage.mode == "false")
         {
             var TmpQuery = 
             {

@@ -316,6 +316,7 @@ function DepoDurumRaporCtrl($scope,$window,db)
                 }
                 db.GetPromiseQuery(TmpQuery,function(Data)
                 {
+                    console.log([$scope.DepoNo,$scope.Tarih])
                     $scope.RaporData = Data;
                     console.log(Data)
                     if($scope.RaporData.length > 0)
@@ -338,8 +339,13 @@ function DepoDurumRaporCtrl($scope,$window,db)
                     "SELECT  " +
                     "KODU AS STOKKOD, " +
                     "ADI AS STOKADI, " +
-                    "IFNULL(DEPOMIKTAR,'') AS KALAN " +
-                    "FROM STOK WHERE IFNULL(DEPOMIKTAR,'') > 0 ",
+                    "(SELECT SUM(HESAP) AS DEPOMIKTAR FROM (SELECT CASE WHEN sth_tip = 0 THEN sth_miktar WHEN sth_tip = 1 THEN sth_miktar * -1 end as HESAP FROM STOKHAR WHERE sth_stok_kod = KODU OR sth_stok_kod = (SELECT KODU FROM BARKOD WHERE BARKOD = KODU) " +
+                    ") AS TBL) + " +
+                    "DEPOMIKTAR AS KALAN " +
+                    "FROM STOK WHERE " +
+                    "((SELECT SUM(HESAP) AS DEPOMIKTAR FROM (SELECT CASE WHEN sth_tip = 0 THEN sth_miktar WHEN sth_tip = 1 THEN sth_miktar * -1 end as HESAP FROM STOKHAR WHERE sth_stok_kod = KODU OR sth_stok_kod = (SELECT KODU FROM BARKOD WHERE BARKOD = KODU) " +
+                    ") AS TBL) + " +
+                    "DEPOMIKTAR) > 0 " ,
                     param:  ['DEPONO','TARIH'],
                     type:   ['int','date',],
                     value:  [$scope.DepoNo,$scope.Tarih]

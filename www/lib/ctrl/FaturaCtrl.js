@@ -2032,7 +2032,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 {
                     await db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],async function(data)
                     {
-                        if(localStorage.mode = 'false')
+                        if(localStorage.mode == 'false')
                         {
                             const datas = await data;
                             for(x = 0;x < datas.length;x++)
