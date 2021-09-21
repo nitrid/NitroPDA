@@ -5658,7 +5658,64 @@ var QuerySql =
         "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri= @ftr_seri AND sth_evraktip = 4) AS SATIS_FATURA_SIRA, " +
         "(SELECT ISNULL(MAX(sth_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM STOK_HAREKETLERI WHERE sth_evrakno_seri= @irs_seri AND sth_evraktip = 1) AS SATIS_IRSALIYE_SIRA ",
         param : ['menudata:string|max','sym_depono:int','sym_tarihi:date','sip_evrakno_seri:string|10','ftr_seri:string|10','irs_seri:string|10'] 
-    }   ,
+    },
+    StokHarRaporTbl :
+    {
+        query:
+        "SELECT " +
+        "sth_stok_kod AS KODU, " +
+        "ISNULL((SELECT sto_isim from STOKLAR WHERE sto_kod=sth_stok_kod),'') AS ADI ,  " +
+        "CASE WHEN sth_tutar <> 0 AND sth_miktar <> 0 THEN ROUND((sth_tutar / sth_miktar),2) ELSE 0 END AS FIYAT,  " +
+        "(select cari_unvan1 from CARI_HESAPLAR WHERE cari_kod=sth_cari_kodu) AS CARIADI,  " +
+        "sth_miktar AS MIKTAR ,  " +
+        "sth_miktar2 AS MIKTAR2 ,  " +
+        "ROUND(sth_tutar,2) AS TUTAR,   " +
+        "(SELECT dbo.fn_StokBirimi(sth_stok_kod,sth_birim_pntr)) AS BIRIMADI,  " +
+        "(SELECT dbo.fn_StokBirimHesapla(sth_stok_kod,1,sth_miktar,sth_birim_pntr)) AS BIRIM, " +
+        "ISNULL((SELECT sto_birim1_ad as ADET FROM STOKLAR WHERE sto_kod = sth_stok_kod),'') AS BIRIM1,  " +
+        "sth_giris_depo_no AS GIRISDEPONO, " +
+        "sth_cikis_depo_no AS CIKISDEPONO, " +
+        "sth_tip AS TIP, " +
+        "CONVERT(VARCHAR(10),sth_tarih,121) AS TARIH " +
+        "FROM STOK_HAREKETLERI WHERE sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) ",
+    },
+    CariHarRaporTbl :
+    {
+        query:
+        "SELECT  " +
+        "TOP 10 " +
+        "#msg_S_0200 AS CARIKODU, " +
+        "#msg_S_0201 AS CARIADI, " +
+        "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH,         " +
+        "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA,  " +
+        "msg_S_0090 AS SERI,  " +
+        "msg_S_0091 AS SIRA,  " +
+        "msg_S_0094 AS EVRAKTIP,  " +
+        "CASE msg_S_0094 WHEN 'Satış faturası' THEN 4 WHEN  'Alış faturası' THEN 3 ELSE 0 END AS EVRAKTIPNO ,  " +
+        "msg_S_0003 AS CINSI,  " +
+        "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH,  " +
+        "msg_S_0099 AS VADEGUN,  " +
+        "msg_S_0100 AS BA,  " +
+        "msg_s_0112 AS DOVIZCINS,  " +
+        "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC,  " +
+        "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK,  " +
+        "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE,  " +
+        "ROUND(CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))),2) AS ANADOVIZBORCBAKIYE,  " +
+        "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE,  " +
+        "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE,  " +
+        "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE,  " +
+        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = '') AS DOV1ANADOVIZBAKIYE,  " +
+        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = '') AS DOV1ORJINALDOVIZBAKIYE,  " +
+        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = '') AS DOV1ALTERNATIFDOVIZBAKIYE,  " +
+        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = '') AS DOV2ANADOVIZBAKIYE,  " +
+        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = '') AS DOV2ORJINALDOVIZBAKIYE,  " +
+        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = '') AS DOV2ALTERNATIFDOVIZBAKIYE,  " +
+        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = '') AS DOV3ANADOVIZBAKIYE,  " +
+        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = '') AS DOV3ORJINALDOVIZBAKIYE,  " +
+        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = '') AS DOV3ALTERNATIFDOVIZBAKIYE,  " +
+        "[msg_S_0112] AS ORJINALDOVIZ " +
+        "FROM dbo.fn_CariFoy ('',0,'',NULL,'20181231','18991230',getdate(),0,'') ORDER BY msg_S_0089 DESC "
+    },
     //#endregion "AKTARIM"
     //#region "E-İrsaliye"
     EIrsaliyeGonder :

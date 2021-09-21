@@ -1585,7 +1585,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnGonder = function()
     {
-        db.GetData($scope.Firma,'StokHareketGonderGetir',[],function(Data)
+        db.GetData($scope.Firma,'StokHareketGonderGetir',[2],function(Data)
             {
                 $scope.StokHareketGonderListe = Data;
                 console.log(Data)

@@ -624,7 +624,7 @@ var QueryLocal =
                 "FROM SATISSARTI " +
                 "WHERE " +
                 "BASLANGIC <= strftime('%Y-%m-%dT00:00:00.000Z','now') AND (BITIS >= strftime('%Y-%m-%dT00:00:00.000Z','now')  OR BITIS = '18991230') AND CARIKOD = '@sat_cari_kod' AND STOKKOD = '@sat_stok_kod' AND (DEPO = '@sat_depo_no' OR DEPO = 0) " +
-                "ORDER BY BASLANGIC,DEPO DESC , BITIS ASC" , 
+                "ORDER BY BASLANGIC,DEPO DESC , BITIS ASC", 
         param : ['sat_cari_kod','sat_stok_kod','sat_depo_no'],
         type : ['string','string','int']
     },
@@ -2390,6 +2390,11 @@ var QueryLocal =
     MaxCariHarSira : 
     {
         query : "SELECT IFNULL(MAX(cha_evrakno_sira),0) + 1 AS MAXEVRSIRA FROM CARIHAR WHERE cha_evrakno_seri = ? AND cha_evrak_tip = ? "
+    },
+    CariHarRaporGetir : 
+    {
+        query:  "SELECT * FROM CARIHARRAPOR WHERE CARIKODU = '@CARIKODU' " ,
+        param : ['CARIKODU:string|50']
     },
     //EIrsDetayları
     EIrsDetayInsert : 
@@ -4237,6 +4242,65 @@ var QueryLocal =
         "eir_tip tinyint, " +
         "status bit )" ,
         insert : "INSERT INTO EIRSDETAY VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-    }
+    },
+    StokHarRaporTbl :
+    {
+        tag : "STOKHARRAPOR",
+        query : "CREATE TABLE IF NOT EXISTS STOKHARRAPOR (" +
+                "KODU nvarchar (50), " + 
+                "ADI int, " +
+                "FIYAT float, " +
+                "CARIADI nvarchar (50)," +
+                "MIKTAR int," +
+                "MIKTAR2 int, " +
+                "TUTAR float," +
+                "BIRIMADI nvarchar (50)," +
+                "BIRIM nvarchar (50), " +
+                "BIRIM1 nvarchar (50)," +
+                "GIRISDEPONO int," +
+                "CIKISDEPONO int," +
+                "TIP int," +
+                "TARIH datetime " +
+                ")" ,
+            insert : "INSERT INTO STOKHARRAPOR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    },
+    CariHarRaporTbl :
+    {
+        tag : "CARIHARRAPOR",
+        query : "CREATE TABLE IF NOT EXISTS CARIHARRAPOR (" + 
+        "CARIKODU nvarchar (50), " +
+        "CARIADI nvarchar (50), " +
+        "TARIH datetime,         " +
+        "SERISIRA nvarchar (50),  " +
+        "SERI nvarchar (50),  " +
+        "SIRA int,  " +
+        "EVRAKTIP int,  " +
+        "EVRAKTIPNO int,  " +
+        "CINSI int,  " +
+        "VADETARIH datetime,  " +
+        "VADEGUN nvarchar (50),  " +
+        "BA nvarchar (50),  " +
+        "DOVIZCINS nvarchar (50),  " +
+        "ANADOVIZBORC float,  " +
+        "ANADOVIZALACAK float,  " +
+        "ANADOVIZBAKIYE float,  " +
+        "ANADOVIZBORCBAKIYE float,  " +
+        "ANADOVIZALACAKBAKIYE float,  " +
+        "ORJINALDOVIZBORCBAKIYE float,  " +
+        "ORJINALDOVIZALACAKBAKİYE,  " +
+        "DOV1ANADOVIZBAKIYE float,  " +
+        "DOV1ORJINALDOVIZBAKIYE float,  " +
+        "DOV1ALTERNATIFDOVIZBAKIYE float,  " +
+        "DOV2ANADOVIZBAKIYE float,  " +
+        "DOV2ORJINALDOVIZBAKIYE float,  " +
+        "DOV2ALTERNATIFDOVIZBAKIYE float,  " +
+        "DOV3ANADOVIZBAKIYE float,  " +
+        "DOV3ORJINALDOVIZBAKIYE float,  " +
+        "DOV3ALTERNATIFDOVIZBAKIYE float,  " +
+        "ORJINALDOVIZ nvarchar (50)"+
+        ")" ,
+        insert : "INSERT INTO CARIHARRAPOR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+
+    },
     //#endregion "LOCAL TABLOLAR OLUŞTURMA VE AKTARIM"
 };

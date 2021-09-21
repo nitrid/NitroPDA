@@ -271,75 +271,121 @@ function CariHesapHareketCtrl($scope,$window,db)
         }
         else
         {
-            let TmpQuery = 
+            if(localStorage.mode == 'true')
             {
-                db : '{M}.' + $scope.Firma,
-                query:  "SELECT  " +
-                        "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +       
-                        "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA, " +
-                        "msg_S_0090 AS SERI, " +
-                        "msg_S_0091 AS SIRA, " +
-                        "msg_S_0094 AS EVRAKTIP, " +
-                        "CASE msg_S_0094 WHEN 'Satış faturası' THEN 4 WHEN  'Alış faturası' THEN 3 ELSE 0 END AS EVRAKTIPNO , " +
-                        "msg_S_0003 AS CINSI, " +
-                        "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
-                        "msg_S_0099 AS VADEGUN, " +
-                        "msg_S_0100 AS BA, " +
-                        "msg_s_0112 AS DOVIZCINS, " +
-                        "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
-                        "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
-                        "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE, " +
-                        "ROUND(CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))),2) AS ANADOVIZBORCBAKIYE, " +
-                        "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
-                        "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
-                        "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
-                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV1ANADOVIZBAKIYE, " +
-                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV1ORJINALDOVIZBAKIYE, " +
-                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV1ALTERNATIFDOVIZBAKIYE, " +
-                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV2ANADOVIZBAKIYE, " +
-                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV2ORJINALDOVIZBAKIYE, " +
-                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV2ALTERNATIFDOVIZBAKIYE, " +
-                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV3ANADOVIZBAKIYE, " +
-                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV3ORJINALDOVIZBAKIYE, " +
-                        "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV3ALTERNATIFDOVIZBAKIYE, " +
-                        "[msg_S_0112] AS ORJINALDOVIZ " +
-                        "FROM dbo.fn_CariFoy ('',0,@KODU,NULL,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
-                param:  ['KODU','ILKTARIH','SONTARIH'],
-                type:   ['string|25','date','date',],
-                value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
-            }
-    
-            db.GetDataQuery(TmpQuery,function(Data)
-            {
-                $scope.CariFoyListe = Data;                
-                $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
-                $scope.Dov1AnaDovizBakiye = $scope.CariFoyListe[0].DOV1ANADOVIZBAKIYE
-                $scope.Dov1OrjDovizBakiye = $scope.CariFoyListe[0].DOV1ORJINALDOVIZBAKIYE
-                $scope.Dov1AltDovizBakiye = $scope.CariFoyListe[0].DOV1ALTERNATIFDOVIZBAKIYE 
-
-                $scope.Dov2AnaDovizBakiye = $scope.CariFoyListe[0].DOV2ANADOVIZBAKIYE
-                $scope.Dov2OrjDovizBakiye = $scope.CariFoyListe[0].DOV2ORJINALDOVIZBAKIYE
-                $scope.Dov2AltDovizBakiye = $scope.CariFoyListe[0].DOV2ALTERNATIFDOVIZBAKIYE 
-                
-                $scope.Dov3AnaDovizBakiye = $scope.CariFoyListe[0].DOV3ANADOVIZBAKIYE
-                $scope.Dov3OrjDovizBakiye = $scope.CariFoyListe[0].DOV3ORJINALDOVIZBAKIYE
-                $scope.Dov3AltDovizBakiye = $scope.CariFoyListe[0].DOV3ALTERNATIFDOVIZBAKIYE 
-
-                $scope.OrjDoviz = $scope.CariFoyListe[0].ORJINALDOVIZ
-
-                console.log($scope.CariFoyListe[0].EVRAKTIPNO)
-
-                let TmpBakiye = 0;
-                for (let i = 0; i < $scope.CariFoyListe.length; i++) 
+                let TmpQuery = 
                 {
-                    TmpBakiye += $scope.CariFoyListe[i].ANADOVIZBAKIYE;
-                    console.log($scope.CariFoyListe[i].ANADOVIZBAKIYE);
-                    $scope.CariFoyListe[i].ANADOVIZBAKIYE = TmpBakiye.toFixed(2);
+                    db : '{M}.' + $scope.Firma,
+                    query:  "SELECT  " +
+                            "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +       
+                            "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA, " +
+                            "msg_S_0090 AS SERI, " +
+                            "msg_S_0091 AS SIRA, " +
+                            "msg_S_0094 AS EVRAKTIP, " +
+                            "CASE msg_S_0094 WHEN 'Satış faturası' THEN 4 WHEN  'Alış faturası' THEN 3 ELSE 0 END AS EVRAKTIPNO , " +
+                            "msg_S_0003 AS CINSI, " +
+                            "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
+                            "msg_S_0099 AS VADEGUN, " +
+                            "msg_S_0100 AS BA, " +
+                            "msg_s_0112 AS DOVIZCINS, " +
+                            "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
+                            "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
+                            "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE, " +
+                            "ROUND(CONVERT(NVARCHAR,CAST([msg_S_1706] AS DECIMAL(10,2))),2) AS ANADOVIZBORCBAKIYE, " +
+                            "CONVERT(NVARCHAR,CAST([msg_S_1707] AS DECIMAL(10,2))) AS ANADOVIZALACAKBAKIYE, " +
+                            "CONVERT(NVARCHAR,CAST([msg_S_1710] AS DECIMAL(10,2))) AS ORJINALDOVIZBORCBAKIYE, " +
+                            "CONVERT(NVARCHAR,CAST([msg_S_1711] AS DECIMAL(10,2))) AS ORJINALDOVIZALACAKBAKİYE, " +
+                            "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV1ANADOVIZBAKIYE, " +
+                            "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV1ORJINALDOVIZBAKIYE, " +
+                            "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV1ALTERNATIFDOVIZBAKIYE, " +
+                            "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV2ANADOVIZBAKIYE, " +
+                            "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV2ORJINALDOVIZBAKIYE, " +
+                            "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',1,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV2ALTERNATIFDOVIZBAKIYE, " +
+                            "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV3ANADOVIZBAKIYE, " +
+                            "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi2,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV3ORJINALDOVIZBAKIYE, " +
+                            "(select ROUND(dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',2,cari_doviz_cinsi1,0,0,0,0),2) from CARI_HESAPLAR where cari_kod = @KODU) AS DOV3ALTERNATIFDOVIZBAKIYE, " +
+                            "[msg_S_0112] AS ORJINALDOVIZ " +
+                            "FROM dbo.fn_CariFoy ('',0,@KODU,NULL,'20181231',@ILKTARIH,@SONTARIH,0,'') ORDER BY #msg_S_0092 ASC " ,
+                    param:  ['KODU','ILKTARIH','SONTARIH'],
+                    type:   ['string|25','date','date',],
+                    value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
                 }
+        
+                db.GetDataQuery(TmpQuery,function(Data)
+                {
+                    $scope.CariFoyListe = Data;       
+                    if(Data.length == 0)
+                    {
+                        alertify.alert("Veri Yok")
+                        $("#TblCariFoy").jsGrid({data : Data});
+                        return;
+                    }           
+                    $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
+                    $scope.Dov1AnaDovizBakiye = $scope.CariFoyListe[0].DOV1ANADOVIZBAKIYE
+                    $scope.Dov1OrjDovizBakiye = $scope.CariFoyListe[0].DOV1ORJINALDOVIZBAKIYE
+                    $scope.Dov1AltDovizBakiye = $scope.CariFoyListe[0].DOV1ALTERNATIFDOVIZBAKIYE 
 
-                $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
-            });
+                    $scope.Dov2AnaDovizBakiye = $scope.CariFoyListe[0].DOV2ANADOVIZBAKIYE
+                    $scope.Dov2OrjDovizBakiye = $scope.CariFoyListe[0].DOV2ORJINALDOVIZBAKIYE
+                    $scope.Dov2AltDovizBakiye = $scope.CariFoyListe[0].DOV2ALTERNATIFDOVIZBAKIYE 
+                    
+                    $scope.Dov3AnaDovizBakiye = $scope.CariFoyListe[0].DOV3ANADOVIZBAKIYE
+                    $scope.Dov3OrjDovizBakiye = $scope.CariFoyListe[0].DOV3ORJINALDOVIZBAKIYE
+                    $scope.Dov3AltDovizBakiye = $scope.CariFoyListe[0].DOV3ALTERNATIFDOVIZBAKIYE 
 
+                    $scope.OrjDoviz = $scope.CariFoyListe[0].ORJINALDOVIZ
+
+                    let TmpBakiye = 0;
+                    for (let i = 0; i < $scope.CariFoyListe.length; i++) 
+                    {
+                        TmpBakiye += $scope.CariFoyListe[i].ANADOVIZBAKIYE;
+                        console.log($scope.CariFoyListe[i].ANADOVIZBAKIYE);
+                        $scope.CariFoyListe[i].ANADOVIZBAKIYE = TmpBakiye.toFixed(2);
+                    }
+
+                    $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
+                });
+            }
+            else
+            {
+                db.GetData($scope.Firma,'CariHarRaporGetir',[$scope.Carikodu],function(Data)
+                {
+                    $scope.CariFoyListe = Data;   
+                    if(Data.length == 0)
+                    {
+                        alertify.alert("Veri Yok")
+                    }             
+                    else
+                    {
+                        $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
+                        $scope.Dov1AnaDovizBakiye = $scope.CariFoyListe[0].DOV1ANADOVIZBAKIYE
+                        $scope.Dov1OrjDovizBakiye = $scope.CariFoyListe[0].DOV1ORJINALDOVIZBAKIYE
+                        $scope.Dov1AltDovizBakiye = $scope.CariFoyListe[0].DOV1ALTERNATIFDOVIZBAKIYE 
+    
+                        $scope.Dov2AnaDovizBakiye = $scope.CariFoyListe[0].DOV2ANADOVIZBAKIYE
+                        $scope.Dov2OrjDovizBakiye = $scope.CariFoyListe[0].DOV2ORJINALDOVIZBAKIYE
+                        $scope.Dov2AltDovizBakiye = $scope.CariFoyListe[0].DOV2ALTERNATIFDOVIZBAKIYE 
+                        
+                        $scope.Dov3AnaDovizBakiye = $scope.CariFoyListe[0].DOV3ANADOVIZBAKIYE
+                        $scope.Dov3OrjDovizBakiye = $scope.CariFoyListe[0].DOV3ORJINALDOVIZBAKIYE
+                        $scope.Dov3AltDovizBakiye = $scope.CariFoyListe[0].DOV3ALTERNATIFDOVIZBAKIYE 
+    
+                        $scope.OrjDoviz = $scope.CariFoyListe[0].ORJINALDOVIZ
+    
+                        console.log($scope.CariFoyListe[0].EVRAKTIPNO)
+    
+                        let TmpBakiye = 0;
+                        for (let i = 0; i < $scope.CariFoyListe.length; i++) 
+                        {
+                            TmpBakiye += $scope.CariFoyListe[i].ANADOVIZBAKIYE;
+                            console.log($scope.CariFoyListe[i].ANADOVIZBAKIYE);
+                            $scope.CariFoyListe[i].ANADOVIZBAKIYE = TmpBakiye.toFixed(2);
+                        }
+    
+                        $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
+                    }
+                });
+            }
         }
     }
     $scope.BtnCariFoyDetayGetir = function()

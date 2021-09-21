@@ -97,7 +97,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.ProjeListe = [];
         $scope.OdemePlanListe = [];
         $scope.IrsaliyeListe = [];
-        $scope.EIrsListe = []
+        $scope.EIrsListe = [];
         $scope.BedenHarListe = [];
         $scope.BirimListe = [];
         $scope.StokListe = [];
@@ -2603,7 +2603,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 });
                 
                 db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sth_stok_srm_merkezi; $scope.SorumlulukAdi = data[0].SORUMLUMERADI});
-                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e;$scope.PersonelAdi = data[0].ADI;$scope.TxtSfrAd = data[0].ADI;$scope.TxtSrfSoyAd = data[0].SOYADI;$scope.TxtSfrTckn = data[0].TCKN;});
+                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e;console.log(PersonelListe);$scope.PersonelAdi = e[0].ADI;$scope.TxtSfrAd = e[0].ADI;$scope.TxtSrfSoyAd = data[0].SOYADI;$scope.TxtSfrTckn = e[0].TCKN;});
                 db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sth_proje_kodu});
                 db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(e){$scope.OdemePlanListe = e; $scope.OdemeNo = data[0].sth_odeme_op.toString()});
                 

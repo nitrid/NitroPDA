@@ -198,6 +198,8 @@ var LocalDb =
                 await CreateTable(QueryLocal.SorumlulukMrkzTbl);
                 await CreateTable(QueryLocal.StokTbl);
                 await CreateTable(QueryLocal.StokTbl2);
+                await CreateTable(QueryLocal.StokHarRaporTbl);
+                await CreateTable(QueryLocal.CariHarRaporTbl);
                 await CreateTable(QueryLocal.StokHarTbl);
                 await CreateTable(QueryLocal.UreticiTbl);
                 //await CreateTable(QueryLocal.UretimStokTbl);
@@ -252,6 +254,8 @@ var LocalDb =
                 await DataTransfer(QueryLocal.NakliyeOnayTbl, QuerySql.NakliyeOnayTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.PartiTbl,QuerySql.PartiTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.ParamTbl, QuerySql.ParamTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.StokHarRaporTbl, QuerySql.StokHarRaporTbl,true, DataTransferCallback);
+                await DataTransfer(QueryLocal.CariHarRaporTbl, QuerySql.CariHarRaporTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.RenkTbl, QuerySql.RenkTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.BedenTbl, QuerySql.BedenTbl,true, DataTransferCallback);
                 await DataTransfer(QueryLocal.KasaTbl, QuerySql.KasaTbl,true, DataTransferCallback);
