@@ -450,7 +450,7 @@ function SarfFisiCtrl($scope,$window,$timeout,db,$filter)
             0, //FİRMA NO
             0, //ŞUBE NO
             $scope.Tarih,
-            $scope.Tip, //0 İSE GİREN 1 ÇIKAN
+            $scope.Tip, //0 GİREN // 1 ÇIKAN
             $scope.Cins,
             $scope.NormalIade,
             $scope.EvrakTip,

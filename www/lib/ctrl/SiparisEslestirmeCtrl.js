@@ -43,7 +43,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.Personel = "";
         $scope.Proje = "";
         $scope.ToplamSatir = 0;
-        $scope.Tarih = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
+        $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.MalKabulSevkTarihi = new Date().toLocaleDateString('tr-TR',{ year: 'numeric', month: 'numeric', day: 'numeric' });
         $scope.Vade = moment(new Date()).format("YYYY-MM-DD");
         $scope.BelgeTarih = 0;
@@ -584,7 +584,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.CariKodu,
             $scope.SipSeri,
             $scope.SipSira,
-            pBarkod
+            pBarkod,
+            ''
         ]; 
         db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(BarkodData)
         {
@@ -1002,7 +1003,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.CariFiyatListe ,  // FİYATLİSTENO
             0   //NAKLİYEDEPO
         ];
-          
+          console.log(InsertData)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -1206,6 +1207,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     function CariHarInsert()
     {
+        console.log(typeof $scope.Vade)
         var InsertData = 
         [
             UserParam.MikroId,
@@ -1238,6 +1240,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             0,  //KASAHIZMET
             "", //KASAHIZKOD
             0, //KARSIDGRUPNO
+            0, //KasaCİns
+            1, //KasaKur
             "",
             $scope.Stok[0].TOPTUTAR, //MEBLAG
             $scope.Stok[0].TUTAR,    //ARATOPLAM
@@ -1275,8 +1279,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
           console.log($scope.Stok[0].TOPTUTAR)
         db.ExecuteTag($scope.Firma,'CariHarInsert',InsertData,function(InsertResult)
         {   
-            ChaGuid = InsertResult.result.recordset[0].cha_Guid;
-            
             StokHarInsert();
            
             db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(CariHarGetir)
@@ -1407,6 +1409,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.CariFiyatListe,
             0   //NAKLİYEDEPO
           ];
+          console.log(InsertData)
 
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {   
@@ -1597,7 +1600,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         db.DepoGetir($scope.Firma,EvrakParam.DepoListe,function(data)
         {
             $scope.DepoListe = data; 
-            $scope.DepoNo = 2;
+            $scope.DepoNo = EvrakParam.DepoNo;
             $scope.DepoListe.forEach(function(item) 
             {
                 if(item.KODU == $scope.DepoNo)
@@ -2164,7 +2167,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         db.DepoGetir($scope.Firma,EvrakParam.DepoListe,function(data)
         {
             $scope.DepoListe = data; 
-            $scope.DepoNo = EvrakParam.DepoNo;
             $scope.DepoListe.forEach(function(item) 
             {
                 if(item.KODU == $scope.DepoNo)

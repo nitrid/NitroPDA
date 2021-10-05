@@ -892,6 +892,13 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             db.GetData($scope.Firma,'CariHarGetir',[$scope.Seri,$scope.Sira,$scope.ChaEvrakTip],function(data)
             {
                 $scope.CariHarListe = data;
+                console.log($scope.CariHarListe)
+                // db.GetData($scope.Firma,'CariGetir',[$scope.CariHarListe[0].cha_kod,'',''],function(data)
+                // {
+                //     $scope.CariBakiye = data[0].BAKIYE;
+                //     console.log($scope.CariBakiye)
+                // });
+
             });
 
             if(typeof pCallback != 'undefined')
@@ -2001,6 +2008,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 {
                     $scope.CariHarListe = Data;
                     $scope.Tpoz = Data[0].cha_tpoz
+                    $scope.CariHarGuid = Data[0].cha_Guid
+
                     if($scope.Tpoz == 1 )
                     {
                         db.GetData($scope.Firma,'CmbKasaGetir',[0],function(data)
@@ -2452,12 +2461,15 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     $scope.Insert = function()
     {
         console.log($scope.Stok[0].FIYAT + "   " + $scope.Fiyat)
-        if($scope.Stok[0].FIYAT < $scope.Fiyat)
+        if(UserParam[ParamName].FiyatAzalt == 1)
         {
-            alertify.alert("Fiyatı düşüremezsin")
-            $scope.Stok[0].FIYAT = $scope.Fiyat
-            $scope.MiktarFiyatValid();
-            return;
+            console.log($scope.Stok[0].FIYAT + "   " + $scope.Fiyat)
+            if($scope.Stok[0].FIYAT < $scope.Fiyat)
+            {
+                alertify.alert("Fiyatı düşüremezsin")
+                $scope.Stok[0].FIYAT = $scope.Fiyat
+                return;
+            }
         }
         if(String($scope.Miktar).length > 7)
         {
@@ -2498,7 +2510,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                         if(pResult == true)
                         {
                             console.log($scope.CariHarGuid)
-                            StokHarInsert();     
+                            StokHarInsert();
                         }
                     });
                     $scope.InsertLock = false;
@@ -2981,15 +2993,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     }
     $scope.MiktarFiyatValid = function()
     {
-        if(UserParam[ParamName].FiyatAzalt == 1)
-        {
-            console.log($scope.Stok[0].FIYAT + "   " + $scope.Fiyat)
-            if($scope.Stok[0].FIYAT < $scope.Fiyat)
-            {
-                alertify.alert("Fiyatı düşüremezsin")
-                $scope.Stok[0].FIYAT = $scope.Fiyat
-            }
-        }
         if($scope.CmbEvrakTip != 5)
         {
             $scope.Stok[0].INDIRIM = 0;
@@ -3273,33 +3276,70 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             KalanBakiye = 0;
             $scope.OncekiBakiye = 0;
             //-----------OFFLINE İÇİN BEKLETİLİYOR//-----------\\
-            // var TmpQuery = 
-            // {
-            //     db : '{M}.' + $scope.Firma,
-            //     query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
-            //             "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
-            //     param:  ['CARIKODU'], 
-            //     type:   ['string|25'], 
-            //     value:  [$scope.CariKodu]    
-            // }
-        
-            // await db.GetPromiseQuery(TmpQuery,function(Data)
-            // {
-            //     $scope.CariBakiye = Data[0].BAKIYE
-            // });
-            console.log($scope.FatKontrol)
-            if($scope.FatKontrol == 1)
+            if(localStorage.mode == "true")
             {
-                OncekiBakiye = $scope.CariBakiye - $scope.GenelToplam + $scope.TahToplam 
-                KalanBakiye = OncekiBakiye + $scope.GenelToplam
+                var TmpQuery = 
+                {
+                    db : '{M}.' + $scope.Firma,
+                    query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
+                            "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
+                    param:  ['CARIKODU'], 
+                    type:   ['string|25'], 
+                    value:  [$scope.CariKodu]    
+                }
+        
+                await db.GetPromiseQuery(TmpQuery,function(Data)
+                {
+                    $scope.CariBakiye = Data[0].BAKIYE
+                });
+                console.log($scope.FatKontrol)
+                if($scope.FatKontrol == 1)
+                {
+                    $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam
+                    KalanBakiye = $scope.CariBakiye + $scope.GenelToplam
+                    OncekiBakiye = KalanBakiye - $scope.GenelToplam
+                }
+                else
+                {
+                    OncekiBakiye = $scope.CariBakiye - $scope.GenelToplam
+                    $scope.CariBakiye = $scope.CariBakiye + $scope.TahToplam
+                    KalanBakiye =  $scope.CariBakiye
+                }
             }
             else
             {
-                OncekiBakiye = $scope.CariBakiye + $scope.TahToplam 
-                KalanBakiye = OncekiBakiye + $scope.GenelToplam
+                var TmpQuery = 
+                {
+                    db : '{M}.' + $scope.Firma,
+                    query:  "SELECT BAKIYE + " +
+                            "(SELECT IFNULL(SUM(HESAP),0) AS BAKIYE FROM (SELECT CASE WHEN cha_evrak_tip IN(64,63) THEN cha_meblag WHEN cha_evrak_tip IN (1,0) THEN cha_meblag * -1 end as HESAP FROM CARIHAR WHERE cha_kod = '@CARIKODU' " +
+                            ") AS TBL) AS BAKIYE, " +
+                            "BAKIYE AS ILKBAKIYE " +
+                            "FROM CARI  WHERE KODU = '@CARIKODU' " ,
+                    param:  ['CARIKODU'], 
+                    type:   ['string|25'], 
+                    value:  [$scope.CariKodu]    
+                }
+        
+                await db.GetPromiseQuery(TmpQuery,function(Data)
+                {
+                    $scope.CariBakiye = Data[0].BAKIYE
+                    $scope.IlkBakiye = Data[0].ILKBAKIYE
+                    console.log(Data)
+                });
+                console.log($scope.FatKontrol)
+                if($scope.FatKontrol == 1)
+                {
+                    KalanBakiye = ($scope.IlkBakiye + $scope.GenelToplam)
+                    OncekiBakiye = $scope.IlkBakiye
+                }
+                else
+                {
+                    OncekiBakiye = $scope.IlkBakiye 
+                    KalanBakiye =  $scope.IlkBakiye + $scope.GenelToplam 
+                }
             }
 
-            console.log("Cari Bakiye 1 " + $scope.CariBakiye1)
             console.log("Cari Bakiye " + $scope.CariBakiye)
             console.log("Önceki Bakiye " + OncekiBakiye)
             console.log("Kalan Bakiye " + KalanBakiye)
@@ -3316,16 +3356,24 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 Satır = Satır + "                                             -"+ "\n"; 
             }
             FisDizayn =  $scope.FisDeger + "\n" + "----------------------------------------------" + "\n" + "URUN ADI                  "+ " MIKTAR "+ " FIYAT  " + " TUTAR" + "\n" + $scope.FisData + "\n" + "----------------------------------------------" + "\n" + " " + "\n"
-            FisDizayn = FisDizayn + "                          Ara Toplam : " + $scope.AraToplam + "\n"  +"                      Toplam Indirim : " + $scope.ToplamIndirim + "\n" + "                          Net Toplam : " + $scope.NetToplam + "\n" + "                           ToplamKdv : " + $scope.ToplamKdv + "\n" + "                        Genel Toplam : " + $scope.GenelToplam + "\n"
+            FisDizayn = FisDizayn + "                          Ara Toplam : " + $scope.AraToplam + "\n"  +"                      Toplam Indirim : " + $scope.ToplamIndirim + "\n" + "                          Net Toplam : " + $scope.NetToplam + "\n" + "                           ToplamKdv : " + $scope.ToplamKdv + "\n" + "                        Genel Toplam : " + $scope.GenelToplam + "\n" + "                          Önceki Bakiye : " + OncekiBakiye + "\n" + "                          Kalan Bakiye : " + KalanBakiye + "\n" 
             FisDizayn = FisDizayn.split("İ").join("I").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u");
     
             console.log(FisDizayn)
-            var S = "#Intent;scheme=rawbt;";
-            var P =  "package=ru.a402d.rawbtprinter;end;";
-            var textEncoded = encodeURI(FisDizayn);
+            db.BTYazdir(FisDizayn,UserParam.Sistem,function(pStatus)
+            {
+                if(pStatus)
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                }
+            });
+            // var S = "#Intent;scheme=rawbt;";
+            // var P =  "package=ru.a402d.rawbtprinter;end;";
+            // var textEncoded = encodeURI(FisDizayn);
     
-            window.location.href="intent:"+textEncoded+S+P;
+            // window.location.href="intent:"+textEncoded+S+P;
     
+            
             alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
         }
         else if ($scope.FisDizaynTip == 1)
@@ -3344,12 +3392,11 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             {
                 db : '{M}.' + $scope.Firma,
                 query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
-                        "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
+                        "FROM CARI_HESAPLAR  WHERE cari_kod = '@CARIKODU' " ,
                 param:  ['CARIKODU'], 
                 type:   ['string|25'], 
                 value:  [$scope.CariKodu]    
             }
-        
             await db.GetPromiseQuery(TmpQuery,function(Data)
             {
                 $scope.CariBakiye = Data[0].BAKIYE

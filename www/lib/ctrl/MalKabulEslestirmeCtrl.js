@@ -1274,20 +1274,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.DepoNo, //GİRİSDEPONO
             0,             //CİKİSDEPONO
             $scope.Tarih, //MALKABULSEVKTARİHİ
-            $scope.Sorumluluk, // CARİSORUMLULUKMERKEZİ
-            $scope.Sorumluluk,
-            0,  // VERGİSİZFL
-            0,  // ADRESNO
-            $scope.Stok[0].PARTI,
-            $scope.Stok[0].LOT,
-            0,  // LOT
-            $scope.Proje,
-            '', // EXİMKODU
-            0,  // DİSTİCARETTURU
-            0,  // OTVVERGİSİZFL
-            0,  // OİVVERGİSİZ
-           $scope.CariFiyatListe,
-           0   //NAKLİYEDEPO
+            '01', '01', 0, '0', '', 0, '', '', 0, 0, 0, 1, 0, 0
         ];
         console.log(InsertData)
 
@@ -1647,7 +1634,6 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data){$scope.SorumlulukListe = data;$scope.Sorumluluk = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].SORUMLULUK.toString();});
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data;$scope.ProjeKodu = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].PROJE.toString();});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = $scope.SiparisKabulListe[$scope.SiparisKabulListeSelectedIndex].ODEMENO.toString();});
-        $scope.Vade = $scope.OdemeNo
     }
     $scope.BtnStokGridGetir = function()
     {

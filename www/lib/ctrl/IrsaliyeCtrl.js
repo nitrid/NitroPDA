@@ -806,6 +806,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             0,  //NAKLİYEDEPO
             0   // NAKLİYEDURUMU
         ];
+        console.log(InsertData)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {  
             if(typeof(InsertResult.result.err) == 'undefined')
@@ -2465,7 +2466,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 else
                 {
                     let UpdateStatus = false;
-                console.log("Girdi")
+                    console.log("Girdi")
                     angular.forEach($scope.IrsaliyeListe,function(value)
                     {
                         if(value.sth_stok_kod == $scope.Stok[0].KODU)

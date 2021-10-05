@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "TEST",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "1",
@@ -26,7 +26,7 @@ var Param = [
 			"BTYaziciTip": "CORDOVABT",
 			"BTYaziciAdi": "SW_C58B",
 			"FirmaListe": "",
-			"RiskParam": "1",
+			"RiskParam": "0",
 			"RiskLimitOran": "100",
 			"FisDizayn": "0",
 			"OfflineDepo": "2"
@@ -301,7 +301,7 @@ var Param = [
 			"Alış Faturası": "1",
 			"Tahsilat Makbuzu": "1",
 			"Sipariş Eşleştirme": "1",
-			"Verilen Sipariş": "0",
+			"Verilen Sipariş": "1",
 			"Alış İrsaliyesi": "1",
 			"Tediye Makbuzu": "0",
 			"Mal Kabul Eşleştirme": "1",
@@ -366,7 +366,7 @@ var Param = [
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
-			"SatisSarti": "1",
+			"SatisSarti": "0",
 			"AlisSarti": "0",
 			"FiyatListe": "1",
 			"EvrakSil": "0",
@@ -375,7 +375,7 @@ var Param = [
 			"Kasa": "K01",
 			"IskontoMatris": "0",
 			"KDVYok": "1",
-			"FiyatAzalt": "1"
+			"FiyatAzalt": "0"
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
@@ -1001,7 +1001,7 @@ var Param = [
 			"EvrakSil": "0"
 		},
 		"AlinanSiparis": {
-			"Seri": "SPR",
+			"Seri": "B",
 			"BelgeNo": "",
 			"Cari": "",
 			"DepoNo": "1",
@@ -1147,7 +1147,7 @@ var Param = [
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "0",
-			"Seri": "IRS",
+			"Seri": "B",
 			"BelgeNo": "",
 			"Cari": "",
 			"DepoNo": "1",
@@ -1155,9 +1155,9 @@ var Param = [
 			"Sorumluluk": "",
 			"Personel": "",
 			"Proje": "",
-			"SonSatisFiyati": "0",
+			"SonSatisFiyati": "1",
 			"SonAlisFiyati": "0",
-			"SatisSarti": "0",
+			"SatisSarti": "1",
 			"AlisSarti": "0",
 			"FiyatListe": "0",
 			"EvrakSil": "0",
@@ -1210,7 +1210,7 @@ var Param = [
 		},
 		"SatisFatura": {
 			"EvrakTip": "0",
-			"Seri": "FTR",
+			"Seri": "B",
 			"BelgeNo": "",
 			"Cari": "",
 			"DepoNo": "1",
@@ -1218,11 +1218,11 @@ var Param = [
 			"Sorumluluk": "",
 			"Personel": "",
 			"Proje": "",
-			"SonSatisFiyati": "0",
+			"SonSatisFiyati": "1",
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
-			"FiyatListe": "1",
+			"FiyatListe": "0",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",

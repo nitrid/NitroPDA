@@ -538,6 +538,8 @@ angular.module('app.db', []).service('db',function($rootScope)
         }        
         _SqlExecute(m,function(data)
         {
+            console.log(data)
+            console.log(pCallback)
             if(pCallback)
             {
                 pCallback(data);
@@ -1025,7 +1027,7 @@ angular.module('app.db', []).service('db',function($rootScope)
                     }
                 });
             }
-     }
+        }
         if(pCallback)
         {
             Fiyat = BarkodData[0].FIYAT;

@@ -223,7 +223,6 @@ var QuerySql =
                 "WHERE((UPPER(CARI.cari_kod) LIKE  UPPER(@KODU) OR (@KODU = '')) OR (LOWER(CARI.cari_kod) LIKE LOWER(@KODU) OR (@KODU = ''))) " +
                 "AND ((UPPER(CARI.cari_unvan1) LIKE  UPPER(@ADI) OR (@ADI = '')) OR (LOWER(CARI.cari_unvan1) LIKE LOWER(@ADI) OR (@ADI = ''))) " +
                 "AND ((CARI.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY cari_kod ASC",
-
             param : ['KODU','ADI','PLASIYERKODU'],
             type : ['string|25','string|127','string|25']
     },
@@ -2961,7 +2960,7 @@ var QuerySql =
                 ",@cha_evrak_tip								--<cha_evrak_tip, tinyint,> \n" + 
                 ",@cha_evrakno_seri								--<cha_evrakno_seri, nvarchar_evrakseri,> \n" + 
                 ",@cha_evrakno_sira								--<cha_evrakno_sira, int,> \n" + 
-                ",@cha_satir_no				    --<cha_satir_no, int,> \n" + 
+                ",@cha_satir_no				                    --<cha_satir_no, int,> \n" + 
                 ",@cha_tarihi									--<cha_tarihi, datetime,> \n" + 
                 ",@cha_tip										--<cha_tip, tinyint,> \n" + 
                 ",@cha_cinsi									--<cha_cinsi, tinyint,> \n" + 
