@@ -253,6 +253,8 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Barkod Detay</a>
                                 <button class="dropdown-item" data-target="#MdlStokDepo" data-toggle="modal" role="menu-item">Stok Depo Miktar</a>
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="StokDurumRaporClick()">Cari Detaylı Stok Durumu</button>
+
                             </div>
                         </div>
                     </div>
@@ -517,6 +519,16 @@
                         <div class="col-12">
                             <button class="btn btn-round btn-block btn-primary " ng-click="BtnGunSonuYazdir()">Yazdır</button>
                         </div>
+                    </div>
+                </div>
+                <div id="TbStokDurum" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick(0)"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <div id="TblStokDurum"></div>
                     </div>
                 </div>
             </div>

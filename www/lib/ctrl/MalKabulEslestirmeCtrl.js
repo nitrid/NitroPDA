@@ -653,18 +653,24 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                 {   
                     $scope.BirimListe = data; 
                     $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
-
+                    console.log($scope.Stok[0])
+                    console.log($scope.Birim)
+                    console.log($scope.BirimListe)
                     if($scope.BirimListe.length > 0)
                     { 
                         $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
                         $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
                         $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
+                        console.log([$scope.Stok[0].BIRIMPNTR,$scope.Stok[0].BIRIM,$scope.Stok[0].CARPAN])
+                        $scope.MiktarFiyatValid();
                     }
                     else
                     { //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
                         $scope.Stok[0].BIRIMPNTR = 1;
                         $scope.Stok[0].BIRIM = 'ADET';
                         $scope.Stok[0].CARPAN = 1;
+                        console.log([$scope.Stok[0].BIRIMPNTR,$scope.Stok[0].BIRIM,$scope.Stok[0].CARPAN])
+                        $scope.MiktarFiyatValid();
                     }
                 });
                 //ESLESTİRMESTOKGETİR FONKSİYONUNDAN DÖNEN TİPE GÖRE İŞLEMLER YAPILIYOR.
@@ -1407,7 +1413,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
 
                         if(!UpdateStatus)
                         {
-                            BedenHarInsert(FaturaData[0].sth_Guid);
+                            BedenHarInsert(pData.Guid);
                         }
                     }                        
                     InsertAfterRefresh(FaturaData);
@@ -2208,6 +2214,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                                 Guid : value.sth_Guid
                             };
                             console.log(Data)
+                            UpdateStatus = true;
                             UpdateDataFat(Data);
                             $scope.InsertLock = false
                         }
@@ -2217,7 +2224,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                             {
                                 if(pResult)
                                 {
-                                    CariHarUpdate(); 
+                                    CariHarUpdate();
                                 }
                             });
                             $scope.InsertLock = false; 

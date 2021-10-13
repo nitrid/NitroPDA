@@ -99,6 +99,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.RenkListe = [];
         $scope.BedenListe = [];
         DepoMiktarListe = [];
+        $scope.StokDurumListe = [];
 
         $scope.AciklamaGuid = ''
         $scope.Aciklama1 = ''
@@ -504,6 +505,71 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             rowClick: function(args)
             {
                 $scope.StokListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitStokDurumGrid()
+    {
+        $("#TblStokDurum").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.StokDurumListe,
+            paging : true,
+            pageSize: 30,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: 
+            [
+            {
+                name: "CARIKODU",
+                title: "CARİ KODU",
+                type: "number",
+                align: "center",
+                width: 150
+            },
+            {
+                name: "CARIADI",
+                title: "CARİ ADI",
+                type: "number",
+                align: "center",
+                width: 200
+            },
+            {
+                name: "EVRAKTIP",
+                title: "SERI",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "TARIH",
+                title: "TARIH",
+                type: "number",
+                align: "center",
+                width: 75
+            },
+            {
+                name: "MIKTAR",
+                title: "MIKTAR",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "BFIYAT",
+                title: "BFIYAT",
+                type: "number",
+                align: "center",
+                width: 100
+            }
+           ],
+            rowClick: function(args)
+            {
+                $scope.CariListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -2037,6 +2103,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         InitProjeEvrakGetirGrid();
         InitDizaynGrid();
         InitSipGrid();
+        InitStokDurumGrid();
         
         $scope.EvrakLock = false;
         $scope.Seri = UserParam[ParamName].Seri;
@@ -2930,7 +2997,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblAciklama").removeClass('active');
         $("#TbStok").removeClass('active');
         $("#TbDizayn").removeClass('active');
-
+        $("#TbStokDurum").removeClass('active');
     }
     $scope.ManuelAramaClick = function() 
     {
@@ -2942,6 +3009,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbIslemSatirlari").removeClass('active');
         $("#TblAciklama").removeClass('active');
         $("#TbDizayn").removeClass('active');
+        $("#TbStokDurum").removeClass('active');
+
         StokFocus();
     }
     $scope.CariSecClick = function() 
@@ -2976,6 +3045,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblAciklama").removeClass('active');
         $("#TbStok").removeClass('active');
         $("#TbDizayn").removeClass('active');
+        $("#TbStokDurum").removeClass('active');
     }
     $scope.BarkodGirisClick = function() 
     {   
@@ -2995,6 +3065,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TblAciklama").removeClass('active');
                 $("#TbStok").removeClass('active');
                 $("#TbDizayn").removeClass('active');
+                $("#TbStokDurum").removeClass('active');
+
                             
                 BarkodFocus();
             }
@@ -3014,6 +3086,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblAciklama").removeClass('active');
         $("#TbStok").removeClass('active');
         $("#TbDizayn").removeClass('active');
+        $("#TbStokDurum").removeClass('active');
     }
     $scope.ScanBarkod = function()
     {
@@ -3493,6 +3566,22 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.DizaynListe = Data;
             $("#TblDizayn").jsGrid({data : $scope.DizaynListe});
             $("#TbDizayn").addClass('active');
+        });
+    }
+    $scope.StokDurumRaporClick = async function()
+    {
+        $("#TbStok").removeClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+
+        await db.GetData($scope.Firma,'StokDurumGetir',[$scope.Barkod,$scope.CariKodu],function(Data)
+        {
+            $scope.StokDurumListe = Data;
+            $("#TblStokDurum").jsGrid({data : $scope.StokDurumListe});
+            $("#TbStokDurum").addClass('active');
         });
     }
     $scope.BtnGonder = function()

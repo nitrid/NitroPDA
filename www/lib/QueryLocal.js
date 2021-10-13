@@ -126,11 +126,13 @@ var QueryLocal =
     },
     SonSatisFiyatGetir : 
     {
-        query : "SELECT " + 
-                "SONFIYAT AS SONFIYAT FROM SONSATISFIYATI " +
-                "WHERE CARI = '@sth_cari_kodu' AND STOK = '@sth_stok_kod'" , 
-        param : ['sth_cari_kodu','sth_stok_kod'],
-        type : ['string|25','string|25']
+        query : 
+            "SELECT CARI,STOK,IFNULL(sth_tutar / sth_miktar,SONFIYAT) AS SONFIYAT " +
+            "FROM SONSATISFIYATI AS SONF LEFT JOIN STOKHAR ON STOKHAR.sth_cari_kodu = SONF.CARI " +
+            "WHERE EVRAKTIP IN (1,4) AND " +
+            "CARI  = '@sth_cari_kodu' AND STOK  = '@sth_stok_kod' ORDER BY OLUSTURULMATARIHI,sth_satirno,sth_evrakno_sira DESC",
+            param : ['sth_cari_kodu','sth_stok_kod'],
+            type : ['string|25','string|25']
     },
     OdemeEmriGetir : 
     {
@@ -3744,8 +3746,10 @@ var QueryLocal =
         query : "CREATE TABLE IF NOT EXISTS SONSATISFIYATI (" +
                 "CARI nvarchar(30)," +
                 "STOK nvarchar(30)," +
+                "EVRAKTIP int, " +
+                "OLUSTURULMATARIHI datetime," +
                 "SONFIYAT float)",
-        insert : "INSERT INTO SONSATISFIYATI VALUES (?,?,?)"
+        insert : "INSERT INTO SONSATISFIYATI VALUES (?,?,?,?,?)"
     },
     SorumlulukMrkzTbl : 
     {

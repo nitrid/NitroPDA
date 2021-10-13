@@ -370,6 +370,7 @@ var QuerySql =
                 "MAX(MARKA) AS MARKA," +
                 "MAX(BEDENKODU) AS BEDENKODU," +
                 "MAX(RENKKODU) AS RENKKODU," +
+                "MAX(GUN) AS GUN, " +
                 "MAX(BARKOD) AS BARKOD," +
                 "MAX(BIRIMPNTR) AS BIRIMPNTR," +
                 "MAX(BEDENPNTR) AS BEDENPNTR," +
@@ -420,6 +421,7 @@ var QuerySql =
                 "sto_beden_kodu AS BEDENKODU, " +
                 "sto_renk_kodu AS RENKKODU, " +
                 "sto_pasif_fl AS AKTIFPASIF, " +
+                "sto_garanti_sure AS GUN," +
                 "'' AS BARKOD, " +
                 "1 AS BIRIMPNTR, " +
                 "0 AS BEDENPNTR, " +
@@ -807,9 +809,9 @@ var QuerySql =
                 "FROM STOK_HAREKETLERI AS Hesaplama WHERE sth_evraktip IN (1,4) AND  " + 
                 "sth_Guid = (SELECT TOP 1 sth_Guid FROM STOK_HAREKETLERI AS Hesaplama1  " + 
                 "WHERE Hesaplama1.sth_evraktip IN (1,4) AND Hesaplama1.sth_stok_kod = Hesaplama.sth_stok_kod  " + 
-                "ORDER BY sth_create_date DESC)" , 
-        param : ['1'],
-        type : ['string|25']
+                "ORDER BY sth_create_date DESC) AND Hesaplama.sth_cari_kodu  = @sth_cari_kodu AND Hesaplama.sth_stok_kod  = @sth_stok_kod" , 
+                param : ['sth_cari_kodu','sth_stok_kod'],
+                type : ['string|25','string|25']
     },
     SatisSartiGetir : 
     {
@@ -1143,7 +1145,7 @@ var QuerySql =
                 "SIPARIS.sip_musteri_kod AS CARI, " +
                 "ROUND(SIPARIS.sip_b_fiyat * SIPARIS.sip_doviz_kuru,2)  AS FIYAT, " +
                 "ISNULL(BEDENHAR.BdnHar_HarGor,SIPARIS.sip_miktar) AS SIPMIKTAR, " +
-                "BARKOD.bar_birimpntr AS BIRIMPNTR, " +
+                "ISNULL(BARKOD.bar_birimpntr,1) AS BIRIMPNTR, " +
                 "ISNULL(BEDENHAR.BdnHar_TesMik,SIPARIS.sip_teslim_miktar) AS TESLIMMIKTAR, " +
                 "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sto_doviz_cinsi,0),2)),1) AS DOVIZCINSKURU, " +
                 "SIPARIS.sip_tutar AS TUTAR, " +
@@ -1186,7 +1188,7 @@ var QuerySql =
                 "ISNULL(dbo.fn_bedenharnodan_renk_no_bul(BEDENHAR.BdnHar_BedenNo),0) AS RENKPNTR, " +
                 "STOK.sto_beden_kodu AS BEDENKODU, " +
                 "STOK.sto_renk_kodu AS RENKKODU, " +
-                "ISNULL((SELECT dbo.fn_StokBirimHesapla (SIPARIS.sip_stok_kod,BARKOD.bar_birimpntr,1,1)),1) AS KATSAYI, " +
+                "ISNULL((SELECT dbo.fn_StokBirimHesapla (SIPARIS.sip_stok_kod,ISNULL(BARKOD.bar_birimpntr,1),1,1)),1) AS KATSAYI, " +
                 "(SELECT dbo.fn_VergiYuzde (SIPARIS.sip_vergi_pntr)) AS TOPTANVERGI, " +
                 "STOK.sto_detay_takip AS DETAYTAKIP, " +
                 "STOK.sto_siparis_dursun AS SIPARISDURSUN, " +
@@ -5368,19 +5370,21 @@ var QuerySql =
     },
     SonSatisFiyatiTbl :
     {
-        query : "SELECT Hesaplama.sth_cari_kodu AS CARI, Hesaplama.sth_stok_kod AS STOK,  " +
-        "CASE WHEN STOKHAREKETLERI.sth_tutar = 0 OR STOKHAREKETLERI.sth_miktar = 0 THEN 0 " +
-        "ELSE STOKHAREKETLERI.sth_tutar / STOKHAREKETLERI.sth_miktar - (STOKHAREKETLERI.sth_tutar / STOKHAREKETLERI.sth_miktar) * (STOKHAREKETLERI.sth_iskonto1 + STOKHAREKETLERI.sth_iskonto2 + STOKHAREKETLERI.sth_iskonto3 + STOKHAREKETLERI.sth_iskonto4 + STOKHAREKETLERI.sth_iskonto5 " +
-        "+ STOKHAREKETLERI.sth_iskonto6) / 100 END AS SONFIYAT " +
-        "FROM " +
-        "(SELECT TOP (100) PERCENT MAX(sth_Guid) AS Recno,  " +
-        "sth_cari_kodu,  " +
-        "sth_stok_kod    " +
-        "FROM STOK_HAREKETLERI  " +
-        "WHERE (sth_evraktip = 4 OR sth_evraktip = 1)  " +
-        "GROUP BY sth_cari_kodu,sth_stok_kod ) AS Hesaplama INNER JOIN  " +
-        "STOK_HAREKETLERI AS STOKHAREKETLERI ON Hesaplama.Recno = STOKHAREKETLERI.sth_Guid INNER JOIN  " +
-        "CARI_HESAPLAR ON Hesaplama.sth_cari_kodu = CARI_HESAPLAR.cari_kod ",
+        query : "SELECT Hesaplama.sth_cari_kodu AS CARI, Hesaplama.sth_stok_kod AS STOK, Hesaplama.sth_evraktip AS EVRAKTIP, Hesaplama.sth_create_date AS OLUSTURULMATARIHI,  " +
+                "CASE WHEN STOKHAREKETLERI.sth_tutar = 0 OR STOKHAREKETLERI.sth_miktar = 0 THEN 0 " +
+                "ELSE STOKHAREKETLERI.sth_tutar / STOKHAREKETLERI.sth_miktar - (STOKHAREKETLERI.sth_tutar / STOKHAREKETLERI.sth_miktar) * (STOKHAREKETLERI.sth_iskonto1 + STOKHAREKETLERI.sth_iskonto2 + STOKHAREKETLERI.sth_iskonto3 + STOKHAREKETLERI.sth_iskonto4 + STOKHAREKETLERI.sth_iskonto5 " +
+                "+ STOKHAREKETLERI.sth_iskonto6) / 100 END AS SONFIYAT " +
+                "FROM " +
+                "(SELECT TOP (100) PERCENT MAX(sth_Guid) AS Recno,  " +
+                "sth_cari_kodu,  " +
+                "sth_evraktip, " +
+                "sth_create_date," +
+                "sth_stok_kod    " +
+                "FROM STOK_HAREKETLERI  " +
+                "WHERE (sth_evraktip = 4 OR sth_evraktip = 1)  " +
+                "GROUP BY sth_cari_kodu,sth_stok_kod,sth_evraktip,sth_create_date ) AS Hesaplama INNER JOIN  " +
+                "STOK_HAREKETLERI AS STOKHAREKETLERI ON Hesaplama.Recno = STOKHAREKETLERI.sth_Guid INNER JOIN  " +
+                "CARI_HESAPLAR ON Hesaplama.sth_cari_kodu = CARI_HESAPLAR.cari_kod ",
     },
     SorumlulukMrkzTbl : 
     {

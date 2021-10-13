@@ -264,7 +264,7 @@
                         <div class="col-4 px-1">
                             <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
-                                <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Detay</button>
+                                <button class="dropdown-item" data-target="#MdlStokDetay" ng-click="StokDetayClick()" data-toggle="modal" role="menu-item">Detay</button>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="StokDurumRaporClick()">Cari Detaylı Stok Durumu</button>
                             </div>
                         </div>
@@ -792,12 +792,19 @@
                         <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].DOVIZSEMBOL}}</label></div>
                     </div>
                     <div class="row pt-5">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat  :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].FIYAT}}</label></div>
+                    </div>
+                    <div class="row pt-5">
                         <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat 2 :</b></label></div>
                         <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].FIYAT}}</label></div>
                     </div>
                     <div class="row">
                         <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Döviz :</b></label></div>
                         <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].DOVIZ}}</label></div>
+                    </div>
+                    <div class="row py-1 px-1">
+                        <div id="TblDepoMiktar"></div>
                     </div>
                 </div>
             </div>

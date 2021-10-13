@@ -669,6 +669,49 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             }
         });
     }
+    function InitDepoMiktarGrid()
+    {
+        $("#TblDepoMiktar").jsGrid
+        ({
+            responsive: true,
+            width: "100%",
+            height: "150px",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            paging: true,
+            pageSize: 30,
+            data : $scope.DepoMiktarListe,
+            fields: [
+                {
+                    name: "DEPONO",
+                    title: "DEPO NO",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                }, 
+                {
+                    name: "DEPOADI",
+                    title: "DEPO ADI",
+                    type: "text",
+                    align: "center",
+                    width: 210
+                }, 
+                {
+                    name: "DEPOMIKTAR",
+                    title: "DEPO MIKTAR",
+                    type: "number",
+                    align: "center",
+                    width: 200
+                } 
+            ],
+            rowClick: function(args)
+            {
+                $scope.StokListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
     function BarkodFocus(pData)
     {
         if(pData == 1)
@@ -967,11 +1010,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                             }
                         }
                     }
-                    //OFFLINE DOLAYISI İLE GEÇİCİ OLARAK KALDIRILDI
-                    // await db.GetPromiseTag($scope.Firma,'StokDetay',[$scope.Stok[0].KODU],function(Data) //STOK DETAY
-                    // {   
-                    //     $scope.StokDetay = Data
-                    // });
                     await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[BarkodData[0].KODU],function(data)//BIRIM GETİR
                     {   
                         $scope.BirimListe = data; 
@@ -991,6 +1029,21 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                             $scope.Stok[0].CARPAN = 1;
                             $scope.MiktarFiyatValid();
                         }
+                    });
+                    var DepoMiktar =
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query : "SELECT dep_adi DEPOADI,dep_no DEPONO,(SELECT dbo.fn_DepodakiMiktar(@STOKKODU,DEPOLAR.dep_no,GETDATE())) AS DEPOMIKTAR FROM DEPOLAR ",
+                        param : ['STOKKODU'],
+                        type : ['string|50'],
+                        value : [$scope.Stok[0].KODU]
+                    }
+                    db.GetDataQuery(DepoMiktar,function(pDepoMiktar)
+                    {   
+                        console.log(pDepoMiktar)
+                        $scope.DepoMiktarListe = pDepoMiktar
+                        console.log($scope.DepoMiktarListe)
+                        $("#TblDepoMiktar").jsGrid({data : $scope.DepoMiktarListe});
                     });
                     let FiyatParam = 
                     { 
@@ -1451,6 +1504,13 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         }
         
         $scope.EvrakTipChange(false);
+    }
+    $scope.StokDetayClick = async function()
+    {
+        await db.GetPromiseTag($scope.Firma,'StokDetay',[$scope.CariKodu,$scope.Stok[0].KODU],function(Data) //STOK DETAY
+        {   
+            $scope.StokDetay = Data
+        });
     }
     $scope.BtnPartiLotGetir = function()
     {   
@@ -2716,6 +2776,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         InitDizaynGrid();
         InitStokDurumGrid();
         InitStokHarGrid();
+        InitDepoMiktarGrid();
 
        //ALIŞ = 0 SATIŞ = 1
         if(pAlisSatis == 0)
