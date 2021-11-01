@@ -1,6 +1,47 @@
 function VadeAralikliFaturalarCtrl($scope,$window,db)
 {   
-
+    let CariSelectedRow = null;
+    function InitCariGrid()
+    {
+        $("#TblCari").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.CariListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields:
+            [
+                {
+                    name: "KODU",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "UNVAN1",
+                    type: "text",
+                    align: "center",
+                    width: 300
+                },
+                {
+                    name: "BAKIYE",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                } 
+            ],
+            rowClick: function(args)
+            {
+                $scope.CariListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
     function InitVadeAralikGrid()
     {   
         $("#TblVadeAralikliFatura").jsGrid
@@ -54,7 +95,7 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
                 },
                 {
                     name: "GECEN_GUN",
-                    title: "KALAN TARİH",
+                    title: "GEÇEN GÜN",
                     type: "text",
                     align: "center",
                     width: 120
@@ -63,17 +104,70 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
         });
     }
     $scope.Init = function()
-    {   console.log(123)
+    { 
         $scope.Firma = $window.sessionStorage.getItem('Firma');
         UserParam = Param[$window.sessionStorage.getItem('User')];//DD.MM.YYYY
         
         $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Bakiye = 0;
-
+        $scope.CariAdi = '';
+        $scope.Carikodu = '';
+        $scope.TxtCariAra = '';
+        $scope.CmbCariAra = 0;
+        
         $scope.VadeAralikliFaturaListe = [];
 
+        InitCariGrid()
         InitVadeAralikGrid();
+    }
+    $scope.CariListeRowClick = function(pIndex,pItem,pObj)
+    {
+        if(!$scope.EvrakLock)
+        {
+            if ( CariSelectedRow ) { CariSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+            var $row = pObj.rowByItem(pItem);
+            $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+            CariSelectedRow = $row;
+            
+            $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
+            $scope.Carikodu =$scope.CariListe[pIndex].KODU;
+            $scope.MainClick();
+        }
+    }
+    $scope.BtnCariListele = function()
+    {   
+        let Kodu = '';
+        let Adi = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;  
+
+        if($scope.TxtCariAra != "")
+        {
+            if($scope.CmbCariAra == "0")
+            {   
+                Adi = $scope.TxtCariAra.replace("*","%").replace("*","%");
+            }
+            else
+            {
+                Kodu = $scope.TxtCariAra.replace("*","%").replace("*","%");
+            }
+        }
+        
+        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
+        {
+            $scope.Loading = false;
+            $scope.TblLoading = true; 
+            $scope.CariListe = data;      
+            $("#TblCari").jsGrid({data : $scope.CariListe});
+            $("#TblCari").jsGrid({pageIndex: true})
+        });
+    }
+    $scope.CariSecClick = function() 
+    {
+        $("#TbCari").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbDetay").removeClass('active');
     }
     $scope.deneme = function()
     {
@@ -93,7 +187,7 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
             $scope.BtnVadeAralikliFaturaGetir(Data[i].cha_kod)
         });
     }
-    $scope.BtnVadeAralikliFaturaGetir = function(pCari)
+    $scope.BtnVadeAralikliFaturaGetir = function()
     {
        
 
@@ -223,36 +317,23 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
             "END " +
             "CLOSE TahCursor " +
             "DEALLOCATE TahCursor " +
-" " +
-            " SELECT CONVERT(VARCHAR(10), VADE_TARIH, 104) AS TARIH, " +
-            "DATEDIFF(day,CAST(CAST(GETDATE() AS DATE) AS DATETIME),VADE_TARIH) AS GECEN_GUN, " +
+            " " +
+            " SELECT  ISNULL((SELECT cha_tarihi FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = KAPATAN_SERI and cha_evrakno_sira = KAPATAN_SIRA and cha_kod = @carikodu and cha_tip = 1),GETDATE()) AS KAPANMATARIH, CONVERT(VARCHAR(10), VADE_TARIH, 104) AS TARIH, " +
+            "DATEDIFF(day,CAST(CAST(ISNULL((SELECT cha_tarihi FROM CARI_HESAP_HAREKETLERI WHERE cha_evrakno_seri = KAPATAN_SERI and cha_evrakno_sira = KAPATAN_SIRA AND cha_tip = 1),GETDATE()) AS DATE) AS DATETIME),VADE_TARIH) AS GECEN_GUN, " +
             "SIRA AS SIRA, SERI AS SERI, " +
             "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = CARIKODU) AS UNVAN , " +
-            " convert(varchar,cast(TUTAR as money), 1) AS  TUTAR " +
-            "FROM  #FatTmp WHERE TUTAR > 0 AND  VADE_TARIH >= @ILKTARIH AND VADE_TARIH <= @SONTARIH  ORDER BY VADE_TARIH" ,
+            " convert(varchar,cast(ORJINAL_TUTAR as money), 1) AS  TUTAR " +
+            "FROM  #FatTmp   ORDER BY VADE_TARIH" ,
             param:  ['carikodu','ILKTARIH','SONTARIH'],
             type:   ['string|50','date','date',],
-            value:  [pCari,$scope.IlkTarih,$scope.SonTarih]
+            value:  [$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih]
         }
-
+       
         db.GetDataQuery(TmpQuery,function(Data)
         {
-                
+            console.log(Data)
                 $scope.VadeAralikliFaturaListe = Data 
-                for(i = 0;i < $scope.VadeAralikliFaturaListe.length;i++)
-                {
-                    if($scope.TumFaturalar.length == 0)
-                    {
-                        $scope.TumFaturalar[0] = $scope.VadeAralikliFaturaListe[i] 
-                    }
-                    else
-                    {
-                        $scope.TumFaturalar[$scope.TumFaturalar.length] = $scope.VadeAralikliFaturaListe[i]
-                    }
-                }
-                
-                console.log($scope.TumFaturalar)
-                $("#TblVadeAralikliFatura").jsGrid({data : $scope.TumFaturalar});
+                $("#TblVadeAralikliFatura").jsGrid({data : $scope.VadeAralikliFaturaListe});
         });
     }
     $scope.MainClick = function() 
@@ -264,5 +345,67 @@ function VadeAralikliFaturalarCtrl($scope,$window,db)
     {
         $scope.CariAdi = "";
         $scope.Carikodu = "";
+    }
+    $scope.ExcelExport = function()
+    {
+         
+            $scope.ExcelDataListesi = $scope.VadeAralikliFaturaListe
+
+        let ExcelDataListe = [];
+        let ExcelHeaderListe = [];
+
+        for(i = 0; i < Object.keys($scope.ExcelDataListesi[0]).length; i++)
+        {
+            let a = {};
+            
+            a.text = Object.keys($scope.ExcelDataListesi[0])[i];
+            ExcelHeaderListe.push(a)
+        }
+
+        ExcelDataListe.push(ExcelHeaderListe)
+
+        for(i = 0; i < $scope.ExcelDataListesi.length; i++)
+        {
+            let Dizi = [];
+
+            for(m = 0;m < Object.keys($scope.ExcelDataListesi[i]).length;m++)
+            {
+                let b = {};
+                b.text = $scope.ExcelDataListesi[i][Object.keys($scope.ExcelDataListesi[i])[m]]
+                Dizi.push(b);
+                console.log(Dizi)
+            }
+            
+            ExcelDataListe.push(Dizi)
+        }
+        console.log(ExcelDataListe)
+        var RaporListeData = 
+        [
+            {
+                "sheetName":"Sayfa",
+                "data":  ExcelDataListe
+            },
+            
+        ];
+        var options = {
+            fileName:"ExtreRapor",
+            extension:".xlsx",
+            sheetName:"Sayfa",
+            fileFullName:"report.xlsx",
+            header:true,
+            maxCellWidth: 20
+        };
+
+        Jhxlsx.export(RaporListeData, options);
+
+        var url ='data.json';
+        $.get(url, {},function (data) 
+        {
+            Jhxlsx.export(data.RaporListeData, data.options);
+            db.Connection(function(data)
+            {
+            });
+        })
+
     }
 }

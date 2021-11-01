@@ -361,12 +361,12 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             0,  // OİVVERGİSİZ
             1,
             ($scope.NakliyeDurum == 1) ? $scope.GDepo : 0,   //NAKLİYEDEPO
-            0
+            0,
+            $scope.Stok[0].BELGENO
         ];
 
-        db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
+        db.ExecuteTag($scope.Firma,'StokHarDepoSıparısInsert',InsertData,function(InsertResult)
         {   
-            
             if(typeof(InsertResult.result.err) == 'undefined')
             {
                 console.log(InsertResult.result.recordsets[0][0].sth_Guid)

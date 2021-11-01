@@ -866,7 +866,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 }
                                 else
                                 {
-                                    alertify.alert("hahah")
+                                    alertify.alert("")
                                 }
                             }
                         }
