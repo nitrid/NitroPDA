@@ -1536,6 +1536,14 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     }
     $scope.BtnPartiLotOlustur = function()
     {   
+        var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+        var SktTarih = $scope.SktTarih.split(".").reverse();
+        var Tarih = $scope.Tarih.split(".").reverse();
+        var IlkTarih = new Date(SktTarih);
+        var IkinciTarih = new Date(Tarih);
+        var KalanGun = Math.round(Math.abs((IlkTarih - IkinciTarih) / oneDay));
+        console.log(KalanGun)
+
         if($scope.TxtParti == '')
         {
             $("#LblPartiLotAlert").show();
@@ -1545,39 +1553,46 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         {   
             if(isNaN($scope.TxtLot))
             $scope.TxtLot = 0;
-          
-            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
-            {   
-                if(data.length > 0)
-                {
-                    $scope.PartiLotListe = data;
-                    $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
-                    $("#LblPartiLotAlert").show();
-                    $scope.LblPartiLotAlert = "Bu PartiLot Daha Önceden Oluşturulmuş !"
-                }
-                else
-                {
-                    let Data = 
-                    [
-                        UserParam.MikroId,
-                        UserParam.MikroId,
-                        $scope.TxtParti,
-                        $scope.TxtLot,
-                        $scope.Stok[0].KODU,
-                        $scope.SktTarih
-                    ]   
-                    db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
+            console.log(KalanGun,$scope.Stok[0].GUN)
+            if(KalanGun > $scope.Stok[0].GUN)
+            {
+                db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
+                {   
+                    if(data.length > 0)
                     {
-                        if(typeof(InsertResult.result.err) == 'undefined')
+                        $scope.PartiLotListe = data;
+                        $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+                        $("#LblPartiLotAlert").show();
+                        $scope.LblPartiLotAlert = "Bu PartiLot Daha Önceden Oluşturulmuş !"
+                    }
+                    else
+                    {
+                        let Data = 
+                        [
+                            UserParam.MikroId,
+                            UserParam.MikroId,
+                            $scope.TxtParti,
+                            $scope.TxtLot,
+                            $scope.Stok[0].KODU,
+                            '',
+                            $scope.SktTarih
+                        ]   
+                        db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
                         {
-                            $scope.Stok[0].PARTI = $scope.TxtParti;
-                            $scope.Stok[0].LOT = $scope.TxtLot;
-                            $('#MdlPartiLot').modal('hide');
-                        }
-                    });
-                }
-            });
-            
+                            if(typeof(InsertResult.result.err) == 'undefined')
+                            {
+                                $scope.Stok[0].PARTI = $scope.TxtParti;
+                                $scope.Stok[0].LOT = $scope.TxtLot;
+                                $('#MdlPartiLot').modal('hide');
+                            }
+                        });
+                    }
+                });
+            }
+            else
+            {
+                alertify.alert("Son kullanım tarihinizi kontrol ediniz")
+            }    
         }
     }
     $scope.BtnPartiEnter = function(keyEvent)
@@ -3336,7 +3351,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             OncekiBakiye = 0;
             KalanBakiye = 0;
             $scope.OncekiBakiye = 0;
-            //-----------OFFLINE İÇİN BEKLETİLİYOR//-----------\\
             if(localStorage.mode == "true")
             {
                 var TmpQuery = 
@@ -3375,30 +3389,50 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                     query:  "SELECT BAKIYE + " +
                             "(SELECT IFNULL(SUM(HESAP),0) AS BAKIYE FROM (SELECT CASE WHEN cha_evrak_tip IN(64,63) THEN cha_meblag WHEN cha_evrak_tip IN (1,0) THEN cha_meblag * -1 end as HESAP FROM CARIHAR WHERE cha_kod = '@CARIKODU' " +
                             ") AS TBL) AS BAKIYE, " +
+                            "BAKIYE + " +
+                            "(SELECT IFNULL(SUM(HESAP),0) AS BAKIYE FROM (SELECT CASE WHEN cha_evrak_tip IN(64,63) THEN cha_meblag WHEN cha_evrak_tip IN (0) THEN cha_meblag * -1 end as HESAP FROM CARIHAR WHERE cha_kod = '@CARIKODU' " +
+                            ") AS TBL) AS TAHBAKIYE, " +
                             "BAKIYE AS ILKBAKIYE " +
                             "FROM CARI  WHERE KODU = '@CARIKODU' " ,
                     param:  ['CARIKODU'], 
                     type:   ['string|25'], 
                     value:  [$scope.CariKodu]    
                 }
-        
                 await db.GetPromiseQuery(TmpQuery,function(Data)
                 {
                     $scope.CariBakiye = Data[0].BAKIYE
+                    $scope.DuzBakiye = Data[0].TAHBAKIYE
                     $scope.IlkBakiye = Data[0].ILKBAKIYE
                     console.log(Data)
                 });
-                console.log($scope.FatKontrol)
                 if($scope.FatKontrol == 1)
                 {
-                    KalanBakiye = ($scope.IlkBakiye + $scope.GenelToplam)
-                    OncekiBakiye = $scope.IlkBakiye
+                    $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam
+                    
+                    $scope.DuzBakiye = $scope.DuzBakiye - $scope.GenelToplam
+
+                    KalanBakiye = $scope.CariBakiye + $scope.GenelToplam
+
+                    OncekiBakiye = $scope.DuzBakiye
                 }
                 else
                 {
-                    OncekiBakiye = $scope.IlkBakiye 
-                    KalanBakiye =  $scope.IlkBakiye + $scope.GenelToplam 
+                    OncekiBakiye = $scope.CariBakiye - $scope.GenelToplam
+
+                    $scope.CariBakiye = $scope.CariBakiye + $scope.TahToplam
+
+                    KalanBakiye =  $scope.CariBakiye
                 }
+                // if($scope.FatKontrol == 1)
+                // {
+                //     KalanBakiye = ($scope.IlkBakiye + $scope.GenelToplam)
+                //     OncekiBakiye = $scope.IlkBakiye
+                // }
+                // else
+                // {
+                //     OncekiBakiye = $scope.IlkBakiye 
+                //     KalanBakiye =  $scope.IlkBakiye + $scope.GenelToplam 
+                // }
             }
 
             console.log("Cari Bakiye " + $scope.CariBakiye)

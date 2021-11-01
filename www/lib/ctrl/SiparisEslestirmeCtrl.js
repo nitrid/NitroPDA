@@ -1711,9 +1711,13 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 if(($scope.Miktar *  $scope.Stok[0].CARPAN) > ($scope.Stok[0].SIPMIKTAR - $scope.Stok[0].TESLIMMIKTAR))
                 {
                     alertify.okBtn("Tamam");
-                    alertify.alert("Girdiğiniz Miktar Sipariş Miktarından Büyük !");
+                    alertify.confirm("Girdiğiniz Miktar Sipariş Miktarından Büyük ! Devam Etmek İstediğinize Emin Misiniz ?", 
+                    function()
+                    { 
+                        
+                    }
+                    ,function(){});
                     $scope.InsertLock = false;
-                    return;
                 }
             }
     

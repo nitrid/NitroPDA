@@ -1129,6 +1129,7 @@ function FasonGirisCikisCtrl($scope,$window,$timeout,db,$filter)
                         $scope.TxtParti,
                         $scope.TxtLot,
                         $scope.Stok[0].KODU,
+                        '',
                         $scope.SktTarih
                     ]   
                     db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)

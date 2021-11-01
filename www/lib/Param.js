@@ -74,7 +74,7 @@ var Param = [
 			"SiparisOnay": "",
 			"IskontoMatris": "1",
 			"EksiyeDusme": "0",
-			"ProjeGetir": "0",
+			"ProjeGetir": "1",
 			"FiyatAzalt": "1"
 		},
 		"VerilenSiparis": {
@@ -149,11 +149,11 @@ var Param = [
 		"NakliyeOnay": {
 			"Seri": "",
 			"BelgeNo": "",
-			"CDepo": "",
+			"CDepo": "1",
 			"CDepoListe": "",
-			"GDepo": "",
+			"GDepo": "1",
 			"GDepoListe": "",
-			"NDepo": "",
+			"NDepo": "2",
 			"NDepoListe": "",
 			"EvrakSil": "0"
 		},
@@ -185,7 +185,7 @@ var Param = [
 			"FiyatLock": "0",
 			"EvrakSil": "0",
 			"IskontoMatris": "0",
-			"ProjeGetir": "1",
+			"ProjeGetir": "0",
 			"FiyatAzalt": "1"
 		},
 		"SatisIrsaliye": {
@@ -292,9 +292,9 @@ var Param = [
 			"Deposevk": "1",
 			"Depo Sipariş": "0",
 			"Depo Mal Kabul": "0",
-			"Depo Nakliye": "0",
+			"Depo Nakliye": "1",
 			"Depo Durum Raporu": "1",
-			"NakliyeOnay": "0",
+			"NakliyeOnay": "1",
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
 			"Satış Faturası": "1",
@@ -364,7 +364,7 @@ var Param = [
 			"Sorumluluk": "",
 			"Personel": "",
 			"Proje": "",
-			"SonSatisFiyati": "0",
+			"SonSatisFiyati": "1",
 			"SonAlisFiyati": "0",
 			"SatisSarti": "0",
 			"AlisSarti": "0",
@@ -573,7 +573,7 @@ var Param = [
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
 			"EksiyeDusme": "0",
-			"ProjeGetir": "0",
+			"ProjeGetir": "1",
 			"FiyatAzalt": "0"
 		},
 		"VerilenSiparis": {

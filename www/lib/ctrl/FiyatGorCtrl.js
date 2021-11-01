@@ -1136,7 +1136,9 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         [
            $scope.Barkod,
            $scope.EklenecekStokKodu,
-           $scope.EklenecekBirimPntr
+           $scope.EklenecekBirimPntr,
+           0, //bar_baglantitipi
+           0  //bar_barkodtipi
         ];
 
         db.ExecuteTag($scope.Firma,'BarkodInsert',InsertData,function(InsertResult)

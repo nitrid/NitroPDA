@@ -783,14 +783,18 @@ var QuerySql =
     SonSatisFiyatGetir : 
     {
         query : "SELECT sth_cari_kodu AS CARI,sth_stok_kod AS STOK, " + 
-                "sth_tutar / sth_miktar  AS SONFIYAT, " +
+                "CASE WHEN (select sfiyat_lastup_date from STOK_SATIS_FIYAT_LISTELERI WHERE sfiyat_stokkod = @sth_stok_kod AND sfiyat_listesirano = 1 and sfiyat_birim_pntr = 1 " +
+                ") > sth_lastup_date THEN (select sfiyat_fiyati AS FIYAT from STOK_SATIS_FIYAT_LISTELERI WHERE sfiyat_stokkod = @sth_stok_kod AND sfiyat_listesirano = 1 and sfiyat_birim_pntr = 1 " +
+                ") WHEN (select sfiyat_lastup_date from STOK_SATIS_FIYAT_LISTELERI WHERE sfiyat_stokkod = @sth_stok_kod AND sfiyat_listesirano = 1 and sfiyat_birim_pntr = 1 " +
+                ") < sth_lastup_date THEN  " +
+                "sth_tutar / sth_miktar END AS SONFIYAT, " +
                 "sth_har_doviz_cinsi AS DOVIZ, " + 
                 "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sth_har_doviz_cinsi,0))),'TL') AS DOVIZSEMBOL, " + 
                 "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sth_har_doviz_cinsi,0),2)),1) AS DOVIZKUR " +  
                 "FROM STOK_HAREKETLERI AS Hesaplama WHERE sth_evraktip IN (1,4) AND  " + 
                 "sth_Guid = (SELECT TOP 1 sth_Guid FROM STOK_HAREKETLERI AS Hesaplama1  " + 
                 "WHERE Hesaplama1.sth_evraktip IN (1,4) AND Hesaplama1.sth_cari_kodu = Hesaplama.sth_cari_kodu AND Hesaplama1.sth_stok_kod = Hesaplama.sth_stok_kod  " + 
-                "ORDER BY sth_create_date DESC) AND Hesaplama.sth_cari_kodu  = @sth_cari_kodu AND Hesaplama.sth_stok_kod  = @sth_stok_kod" , 
+                "ORDER BY sth_create_date DESC) AND Hesaplama.sth_cari_kodu  = @sth_cari_kodu AND Hesaplama.sth_stok_kod  = @sth_stok_kod", 
         param : ['sth_cari_kodu','sth_stok_kod'],
         type : ['string|25','string|25']
     },
@@ -888,7 +892,8 @@ var QuerySql =
                 "FROM PARTILOT " +
                 "WHERE pl_stokkodu = @pl_stokkodu " +
                 "AND ((pl_partikodu = @pl_partikodu) OR (@pl_partikodu = '')) AND ((pl_lotno = @pl_lotno) OR (@pl_lotno = 0)) " +
-                "ORDER BY pl_partikodu ASC ",
+                "AND ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,@DEPONO,GETDATE(),pl_partikodu,pl_lotno)),0) > 0 " +
+                "ORDER BY pl_son_kullanim_tar ASC ",
         param : ['pl_stokkodu','DEPONO','pl_partikodu','pl_lotno'],
         type : ['string|25','int','string|25','int']
     },
@@ -971,7 +976,7 @@ var QuerySql =
             ",@pl_partikodu						--<pl_partikodu, nvarchar(25),> \n" +
             ",@pl_lotno							--<pl_lotno, int,> \n" +
             ",@pl_stokkodu						--<pl_stokkodu, nvarchar(25),> \n" +
-            ",''								--<pl_aciklama, nvarchar(50),> \n" +
+            ",@pl_aciklama								--<pl_aciklama, nvarchar(50),> \n" +
             ",0									--<pl_olckalkdeg_deg1, float,> \n" +
             ",0									--<pl_olckalkdeg_deg2, float,> \n" +
             ",0									--<pl_olckalkdeg_deg3, float,> \n" +
@@ -1011,7 +1016,7 @@ var QuerySql =
             ",''									--<pl_kod10, nvarchar(25),> \n" +
             ",CONVERT(VARCHAR(10),GETDATE(),112)	--<pl_uretim_tar, datetime,> \n" +
             ")",
-        param : ['pl_create_user:int','pl_lastup_user:int','pl_partikodu:string|25','pl_lotno:int','pl_stokkodu:string|25','pl_son_kullanim_tar:date']
+        param : ['pl_create_user:int','pl_lastup_user:int','pl_partikodu:string|25','pl_lotno:int','pl_stokkodu:string|25','pl_aciklama:string|25','pl_son_kullanim_tar:date']
     },
     MaxPartiLot : 
     {
@@ -4554,38 +4559,38 @@ var QuerySql =
             ",[bar_har_uid] " +
             ",[bar_asortitanimkodu]) " +
             " VALUES " +
-            "(NEWID()       --<bar_Guid, uniqueidentifier,> \n" +
-            ",0         --<bar_DBCno, smallint,> \n" +
-            ",0         --<bar_SpecRECno, int,> \n" +
-            ",0         --<bar_iptal, bit,> \n" +
-            ",0         --<bar_fileid, smallint,> \n" +
-            ",0         --<bar_hidden, bit,> \n" +
-            ",0         --<bar_kilitli, bit,> \n" +
-            ",0         --<bar_degisti, bit,> \n" +
-            ",0         --<bar_checksum, int,> \n" +
-            ",1         --<bar_create_user, smallint,> \n" +
-            ",GETDATE()        --<bar_create_date, datetime,> \n" +
-            ",1         --<bar_lastup_user, smallint,> \n" +
-            ",GETDATE()     --<bar_lastup_date, datetime,> \n" +
-            ",''            --<bar_special1, nvarchar(4),> \n" +
-            ",''        --<bar_special2, nvarchar(4),> \n" +
-            ",''            --<bar_special3, nvarchar(4),> \n" +
-            ",@bar_kodu         --<bar_kodu, [dbo].[barkod_str],> \n" +
-            ",@bar_stokkodu     --<bar_stokkodu, nvarchar(25),> \n" +
-            ",''            --<bar_partikodu, nvarchar(25),> \n" +
-            ",0         --<bar_lotno, int,> \n" +
-            ",''            --<bar_serino_veya_bagkodu, nvarchar(25),> \n" +
-            ",0         --<bar_barkodtipi, tinyint,> \n" +
-            ",0         --<bar_icerigi, tinyint,> \n" + 
-            ",@bar_birimpntr        --<bar_birimpntr, tinyint,> \n" +
-            ",0         --<bar_master, bit,> \n" +
-            ",0         --<bar_bedenpntr, tinyint,> \n" +
-            ",0         --<bar_renkpntr, tinyint,> \n" +
-            ",0         --,<bar_baglantitipi, tinyint,> \n" +
+            "(NEWID()                                       --<bar_Guid, uniqueidentifier,> \n" +
+            ",0                                             --<bar_DBCno, smallint,> \n" +
+            ",0                                             --<bar_SpecRECno, int,> \n" +
+            ",0                                             --<bar_iptal, bit,> \n" +
+            ",0                                             --<bar_fileid, smallint,> \n" +
+            ",0                                             --<bar_hidden, bit,> \n" +
+            ",0                                             --<bar_kilitli, bit,> \n" +
+            ",0                                             --<bar_degisti, bit,> \n" +
+            ",0                                             --<bar_checksum, int,> \n" +
+            ",1                                             --<bar_create_user, smallint,> \n" +
+            ",GETDATE()                                     --<bar_create_date, datetime,> \n" +
+            ",1                                             --<bar_lastup_user, smallint,> \n" +
+            ",GETDATE()                                     --<bar_lastup_date, datetime,> \n" +
+            ",''                                            --<bar_special1, nvarchar(4),> \n" +
+            ",''                                            --<bar_special2, nvarchar(4),> \n" +
+            ",''                                            --<bar_special3, nvarchar(4),> \n" +
+            ",@bar_kodu                                     --<bar_kodu, [dbo].[barkod_str],> \n" +
+            ",@bar_stokkodu                                 --<bar_stokkodu, nvarchar(25),> \n" +
+            ",@bar_partikodu                                --<bar_partikodu, nvarchar(25),> \n" +
+            ",0                                             --<bar_lotno, int,> \n" +
+            ",''                                            --<bar_serino_veya_bagkodu, nvarchar(25),> \n" +
+            ",@bar_barkodtipi                               --<bar_barkodtipi, tinyint,> \n" +
+            ",0                                             --<bar_icerigi, tinyint,> \n" + 
+            ",@bar_birimpntr                                --<bar_birimpntr, tinyint,> \n" +
+            ",0                                             --<bar_master, bit,> \n" +
+            ",0                                             --<bar_bedenpntr, tinyint,> \n" +
+            ",0                                             --<bar_renkpntr, tinyint,> \n" +
+            ",@bar_baglantitipi                             --,<bar_baglantitipi, tinyint,> \n" +
             ",'00000000-0000-0000-0000-000000000000'        --<bar_har_uid, uniqueidentifier,> \n" +
             ",0         --<bar_asortitanimkodu, nvarchar(25),> \n" +
            ") ",
-           param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int']
+           param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int','bar_baglantitipi:int','bar_barkodtipi:int','bar_partikodu:string|25']
     },  
     //E-Süreçler
     EIrsSemaGetir : 

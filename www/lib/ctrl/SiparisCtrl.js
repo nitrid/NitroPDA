@@ -1838,6 +1838,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                         $scope.TxtParti,
                         $scope.TxtLot,
                         $scope.Stok[0].KODU,
+                        '',
                         $scope.SktTarih
                     ]   
                     db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
@@ -2120,7 +2121,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             $scope.FiyatLock = true;
         }
-               
         $scope.Stok = 
         [
             {
@@ -2213,7 +2213,19 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
            $scope.SipOnayKulNo = UserParam.MikroId
         }
+        if(UserParam[ParamName].ProjeGetir == 1)
+        {
+            $scope.ProjeEvrakGetirModal();
+        }
         BarkodFocus();
+    }
+    $scope.StokDetayClick = async function()
+    {
+        await db.GetPromiseTag($scope.Firma,'StokDetay',[$scope.CariKodu,$scope.Stok[0].KODU],function(Data) //STOK DETAY
+        {   
+            $scope.StokDetay = Data;
+            console.log(Data)
+        });
     }
     $scope.DepoChange = function()
     {
@@ -2692,7 +2704,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     $scope.ProjeEvrakSec = function()
     {
        angular.element('#MdlProjeEvrakGetir').modal('hide');
-       $scope.EvrakGetir()
+       $scope.EvrakGetir();
     }
     $scope.ProjeEvrakGetirModal = async function()
     {

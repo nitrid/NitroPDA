@@ -251,7 +251,7 @@
                         <div class="col-4 px-1">
                             <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0 h-40" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
-                                <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Barkod Detay</a>
+                                <button class="dropdown-item" data-target="#MdlStokDetay" ng-click="StokDetayClick()" data-toggle="modal" role="menu-item">Detay</button>
                                 <button class="dropdown-item" data-target="#MdlStokDepo" data-toggle="modal" role="menu-item">Stok Depo Miktar</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="StokDurumRaporClick()">Cari Detaylı Stok Durumu</button>
 
@@ -595,6 +595,7 @@ Tel:0252 214 78 58 muglasutas@hotmail.com<br>
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="col-1 offset-5" ng-show="Loading">
                             <div class="loader vertical-align-middle loader-circle"></div>
                         </div>
@@ -808,25 +809,33 @@ Tel:0252 214 78 58 muglasutas@hotmail.com<br>
                     <h4 class="modal-title">Stok Detay</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Son Satis Fiyat :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].SONFIYAT}}</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Kirilim Miktar :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].KIRILIMMIKTAR}}</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Depo Miktar :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].DEPOMIKTAR}}</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Döviz Sembol :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].DOVIZSEMBOL}}</label></div>
+                    </div>
                     <div class="row pt-5">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Ana Grup :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].ANAGRUP}} - {{Stok[0].ANAGRUPADI}}</label></div>
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat  :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].FIYAT}}</label></div>
+                    </div>
+                    <div class="row pt-5">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat 2 :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].FIYAT}}</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Alt Grup :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].ALTGRUP}} - {{Stok[0].ALTGRUPADI}}</label></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Reyon :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Stok[0].REYON}} - {{Stok[0].REYONADI}}</label></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat 1 :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Fiyat}}</label></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat 2 :</b></label></div>
-                        <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{SatisFiyatListe2}}</label></div>
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Döviz :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].DOVIZ}}</label></div>
                     </div>
                     <div class="row py-1 px-1">
                         <div id="TblDepoMiktar"></div>

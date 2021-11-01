@@ -49,6 +49,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.Tip = 0;
         $scope.NormalIade = 0;
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.Tarih2 = moment(new Date()).format("YYMM");
         $scope.Saat = moment(new Date()).format("LTS");
         $scope.MalKabulSevkTarihi = moment(new Date()).format("DD.MM.YYYY");
         $scope.BelgeTarih = 0;
@@ -89,6 +90,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.SonSatisMiktar = "0";
         $scope.TelNo1 = "";
         $scope.Email = "";
+        $scope.PartiSira = "001";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -750,7 +752,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     {
                         InsertAfterRefresh(IrsaliyeData);
                     });
-
                 });
             }
             else
@@ -791,7 +792,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.BarkodLock = false;
         $scope.IrsaliyeListe = pData;
         $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});    
-        
+        if(ParamName == "AlisIrsaliye")
+        {
+            $scope.BtnEtiketBasAuto();
+        }
         DipToplamHesapla();
         ToplamMiktarHesapla();
         $scope.BtnTemizle();
@@ -1138,6 +1142,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         $scope.BarkodLock = true;
                         $scope.$apply();
                     });
+                    console.log($scope.Stok[0])
                     if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
                     {
                         if($scope.Stok[0].BEDENKODU != '' && $scope.Stok[0].RENKKODU != '')
@@ -1153,6 +1158,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 $scope.BedenListe = pBedenData;
                                 $scope.Stok[0].BEDENPNTR = "1";
                             });
+                            console.log($scope.Stok[0])
                         }
                     }
                     if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
@@ -1174,10 +1180,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         else
                         {
                             PartiLotEkran();
-                            $timeout( function(){
-                            $window.document.getElementById("Parti").focus();
-                            $window.document.getElementById("Parti").select();
-                            },250)
                         }
                     }
                     if($scope.OtoEkle == true)
@@ -1210,12 +1212,36 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.TxtParti = "";
                 $scope.TxtLot = 0;
                 $scope.PartiLotListe = [];
+                $scope.MaxLot();
+                console.log($scope.Tarih2)
+                $scope.PartiKodu = $scope.Tarih2 + $scope.PartiSira;
+                var TmpQuery = 
+                {
+                    db : '{M}.' + $scope.Firma,
+                    query:  
+                    "SELECT SUBSTRING(CONVERT(nvarchar,GETDATE(),112),3,4) + " + 
+                    "ISNULL(MAX(SUBSTRING(CONVERT(nvarchar,pl_partikodu,112),5,10)),'000') " + 
+                    "+ 1 AS PARTIKOD FROM PARTILOT WHERE pl_stokkodu = @STOKKOD AND pl_partikodu LIKE (@PARTITARIH + '%' ) ORDER BY MAX(pl_partikodu) DESC ",
+                    param:  ['STOKKOD','PARTITARIH'],
+                    type:   ['string|25','string|25'],
+                    value:  [$scope.Stok[0].KODU,$scope.Tarih2]
+                }
+                db.GetPromiseQuery(TmpQuery,function(data)
+                {   
+                    console.log(data)
+                    $scope.TxtParti = data[0].PARTIKOD;
+                    $scope.Aciklama = $scope.Tarih;
+                });
 
                 $("#LblPartiLotAlert").hide();
                 
                 $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
 
                 $('#MdlPartiLot').modal('show');
+                $timeout( function(){
+                $window.document.getElementById("Parti").focus();
+                $window.document.getElementById("Parti").select();
+                },400)
             }
         }
     }
@@ -1642,13 +1668,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnPartiLotOlustur = function()
     {   
-        var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-        var SktTarih = $scope.SktTarih.split(".").reverse();
-        var Tarih = $scope.Tarih.split(".").reverse();
-        var IlkTarih = new Date(SktTarih);
-        var IkinciTarih = new Date(Tarih);
-        var KalanGun = Math.round(Math.abs((IlkTarih - IkinciTarih) / oneDay));
-        console.log(KalanGun)
+        // var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+        // var SktTarih = $scope.SktTarih.split(".").reverse();
+        // var Tarih = $scope.Tarih.split(".").reverse();
+        // var IlkTarih = new Date(SktTarih);
+        // var IkinciTarih = new Date(Tarih);
+        // var KalanGun = Math.round(Math.abs((IlkTarih - IkinciTarih) / oneDay));
+        // console.log(KalanGun)
 
         if($scope.TxtParti == '')
         {
@@ -1659,10 +1685,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {   
             if(isNaN($scope.TxtLot))
             $scope.TxtLot = 0;
-            console.log(KalanGun,$scope.Stok[0].GUN)
-            if(KalanGun > $scope.Stok[0].GUN)
-            {
-                db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
+            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
                 {   
                     if(data.length > 0)
                     {
@@ -1680,24 +1703,76 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             $scope.TxtParti,
                             $scope.TxtLot,
                             $scope.Stok[0].KODU,
+                            $scope.Tarih,
                             $scope.SktTarih
                         ]   
                         db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
                         {
                             if(typeof(InsertResult.result.err) == 'undefined')
                             {
+                                console.log(1)
                                 $scope.Stok[0].PARTI = $scope.TxtParti;
                                 $scope.Stok[0].LOT = $scope.TxtLot;
-                                $('#MdlPartiLot').modal('hide');
+
+                                let BarkodInsertData = 
+                                [
+                                    $scope.TxtParti,
+                                    $scope.Stok[0].KODU,
+                                    $scope.Stok[0].BIRIMPNTR,
+                                    3, //bar_baglantitipi
+                                    2,  //bar_barkodtipi
+                                    $scope.TxtParti
+                                ]
+                                console.log(BarkodInsertData)
+                                db.ExecuteTag($scope.Firma,'BarkodInsert',BarkodInsertData,function(InsertResult)
+                                {
+                                    if(typeof(InsertResult.result.err) == 'undefined')
+                                    {
+                                        $('#MdlPartiLot').modal('hide');
+                                    }
+                                });
                             }
                         });
                     }
                 });
-            }
-            else
-            {
-                alertify.alert("Son kullanım tarihinizi kontrol ediniz")
-            }            
+            // if(KalanGun > $scope.Stok[0].GUN)
+            // {
+            //     db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
+            //     {   
+            //         if(data.length > 0)
+            //         {
+            //             $scope.PartiLotListe = data;
+            //             $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+            //             $("#LblPartiLotAlert").show();
+            //             $scope.LblPartiLotAlert = "Bu PartiLot Daha Önceden Oluşturulmuş !"
+            //         }
+            //         else
+            //         {
+            //             let Data = 
+            //             [
+            //                 UserParam.MikroId,
+            //                 UserParam.MikroId,
+            //                 $scope.TxtParti,
+            //                 $scope.TxtLot,
+            //                 $scope.Stok[0].KODU,
+            //                 $scope.SktTarih
+            //             ]   
+            //             db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
+            //             {
+            //                 if(typeof(InsertResult.result.err) == 'undefined')
+            //                 {
+            //                     $scope.Stok[0].PARTI = $scope.TxtParti;
+            //                     $scope.Stok[0].LOT = $scope.TxtLot;
+            //                     $('#MdlPartiLot').modal('hide');
+            //                 }
+            //             });
+            //         }
+            //     });
+            // }
+            // else
+            // {
+            //     alertify.alert("Son kullanım tarihinizi kontrol ediniz")
+            // }            
         }
     }
     $scope.BtnPartiEnter = function(keyEvent)
@@ -1914,6 +1989,53 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             alertify.alert("Etiket Yazdıralamadı.");
         }
+    }
+    $scope.BtnEtiketBasAuto = function()
+    {
+        if($scope.StokKodu != "")
+        {
+            console.log($scope.IrsaliyeListe)
+            console.log($scope.StokKodu)
+            var InsertData = 
+            [
+                UserParam.MikroId,
+                UserParam.MikroId,
+                1,
+                $scope.Seri,
+                $scope.Sira,
+                "",
+                $scope.BelgeNo,
+                0,
+                0,
+                $scope.Miktar * $scope.Stok[0].CARPAN,
+                $scope.DepoNo,
+                $scope.StokKodu,
+                1,
+                1,
+                $scope.TxtParti,
+                $scope.Miktar * $scope.Stok[0].CARPAN
+            ]
+            console.log(InsertData)
+            db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
+            {
+                if(typeof(InsertResult.result.err) == 'undefined')
+                {
+                    alertify.alert("Etiket Yazdırıldı.");
+                }
+                else
+                {
+                    alertify.alert("Etiket Yazdıralamadı.");
+                }
+            });
+        }
+
+    }
+    $scope.StokDetayClick = async function()
+    {
+        await db.GetPromiseTag($scope.Firma,'StokDetay',[$scope.CariKodu,$scope.Stok[0].KODU],function(Data) //STOK DETAY
+        {   
+            $scope.StokDetay = Data
+        });
     }
     $scope.MiktarFiyatValid = function()
     {
@@ -2316,7 +2438,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
                 $scope.Update(i);
             }
-            
         }
         else
         {
@@ -2729,7 +2850,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 });
                 
                 db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sth_stok_srm_merkezi; $scope.SorumlulukAdi = data[0].SORUMLUMERADI});
-                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e;console.log(PersonelListe);$scope.PersonelAdi = e[0].ADI;$scope.TxtSfrAd = e[0].ADI;$scope.TxtSrfSoyAd = data[0].SOYADI;$scope.TxtSfrTckn = e[0].TCKN;});
+                db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e;console.log($scope.PersonelListe);$scope.PersonelAdi = e[0].ADI;$scope.TxtSfrAd = e[0].ADI;$scope.TxtSrfSoyAd = data[0].SOYADI;$scope.TxtSfrTckn = e[0].TCKN;});
                 db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sth_proje_kodu});
                 db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(e){$scope.OdemePlanListe = e; $scope.OdemeNo = data[0].sth_odeme_op.toString()});
                 
@@ -3615,11 +3736,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 let TmpStatus = true
                 let TmpStokHarData = await db.GetPromiseTag($scope.Firma,'StokHarGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira,$scope.StokHareketGonderListe[i].sth_tip,0]);
                 let TmpBedenData = await db.GetPromiseTag($scope.Firma,'StokBedenHarGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira,$scope.StokHareketGonderListe[i].sth_tip,9]);
-                let EIrsDetayData2 = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira]);
+                var EIrsDetayData = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira]);
                 localStorage.mode = 'true';
                 let TmpMaxSira = await db.GetPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evraktip])
                 for (let m = 0; m < TmpStokHarData.length; m++)
                 {
+                    console.log(TmpStokHarData)
+                    console.log(m)
                     let InsertData = 
                     [
                         TmpStokHarData[m].sth_create_user,
@@ -3705,7 +3828,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         TmpStokHarData[m].sth_nakliyedeposu,
                         TmpStokHarData[m].sth_nakliyedurumu,
                     ];
-                    console.log(InsertData)
                     let TmpResult = await db.ExecutePromiseTag($scope.Firma,'StokHarInsert',InsertData)
                     if(typeof(TmpResult.result.err) != 'undefined')
                     {
@@ -3731,15 +3853,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             TmpStatus = false;
                         }
                     }
-                    let TmpDetay = EIrsDetayData2.find(x => x.eir_evrakno_sira == TmpStokHarData[m].sth_evrakno_sira)
-                    if(typeof TmpDetay != 'undefined')
+                    localStorage.mode = 'false';
+                    var EIrsStatusData = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[TmpStokHarData[0].sth_evrakno_seri,TmpStokHarData[0].sth_evrakno_sira]);
+                    console.log(EIrsStatusData)
+                    let TmpDetay = EIrsStatusData.find(x => x.eir_evrakno_sira == TmpStokHarData[0].sth_evrakno_sira)
+                    localStorage.mode = 'true';
+                    console.log(TmpDetay)
+                    if(typeof TmpDetay != 'undefined' && TmpDetay.status == 0)
                     {
-                        localStorage.mode = 'false';
-                        let EIrsDetayData = await db.GetPromiseTag($scope.Firma,'EIrsGetir',[$scope.StokHareketGonderListe[i].sth_evrakno_seri,$scope.StokHareketGonderListe[i].sth_evrakno_sira]);
-                        TmpDetay = EIrsDetayData.find(x => x.eir_evrakno_sira == TmpStokHarData[m].sth_evrakno_sira)
-                        console.log($scope.StokHareketGonderListe[i])
-                        console.log(EIrsDetayData)
-                        if(EIrsDetayData.length != 0 && TmpDetay.status == "0")
+                        if(EIrsStatusData.length != 0)
                         {
                             let InsertDataDetay =
                             [
@@ -3760,11 +3882,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 TmpDetay.eir_sofor_uid
                             ]
                             console.log(InsertDataDetay)
-                            localStorage.mode = 'true';
                             let TmpDetayResult = await db.ExecutePromiseTag($scope.Firma,'EIrsDetayInsert',InsertDataDetay)
+                            console.log(TmpDetayResult)
                             let EIrsSeri = TmpDetay.eir_evrakno_seri
                             let EIrsSira = TmpDetay.eir_evrakno_sira
-                            console.log(EIrsSeri,EIrsSira)
                             if(typeof(TmpDetayResult.result.err) != 'undefined')
                             {
                                 console.log(TmpDetayResult)
@@ -3774,7 +3895,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             {
                                 console.log(TmpDetayResult)
                                 localStorage.mode = 'false';
-                                console.log(EIrsSeri,EIrsSira)
                                 let TmpUpdateQuery = 
                                 {
                                     db : '{M}.' + $scope.Firma,
@@ -3782,14 +3902,16 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                     param:  ['eir_evrakno_seri:string|20','eir_evrakno_sira:int'],
                                     value : [EIrsSeri,EIrsSira]
                                 }
-                                console.log(TmpUpdateQuery)
                                 await db.GetPromiseQuery(TmpUpdateQuery)
                                 localStorage.mode = 'true';
                             }
                         }
+                        else
+                        {
+                            console.log("E-İrsaliye kayıtı yok!")
+                        }
                     }
                 }
-                
                 localStorage.mode = 'false';
                 if (TmpStatus)
                 {
