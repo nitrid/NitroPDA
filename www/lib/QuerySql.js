@@ -1560,10 +1560,12 @@ var QuerySql =
         "sip_stok_sormerk, " +
         "sip_satici_kod, " +
         "sip_opno, " +
-        "sip_depono " +
+        "sip_depono, " +
+        "SUM(sip_miktar) AS sip_miktar, " +
+        "SUM(sip_teslim_miktar) AS sip_teslim_miktar " +
         "FROM SIPARISLER WHERE sip_tip = @sip_tip and sip_cins = @sip_cins AND sip_projekodu != '' AND ((sip_projekodu = @sip_projekodu ) OR (@sip_projekodu = '')) AND sip_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
         "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_projekodu,sip_stok_sormerk,sip_satici_kod, " +
-        "sip_miktar,sip_tip,sip_belgeno,sip_musteri_kod,sip_tarih,sip_teslim_tarih,sip_opno,sip_depono ",
+        "sip_tip,sip_belgeno,sip_musteri_kod,sip_tarih,sip_teslim_tarih,sip_opno,sip_depono ",
         param:  ['sip_tip','sip_cins','sip_projekodu'],
         type:   ['int','int','string|20']
     },
@@ -1581,7 +1583,7 @@ var QuerySql =
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sip_Guid AND BdnHar_Tipi = 9),0) AS RENKPNTR , " +
                 "ISNULL((SELECT TOP 1 (SELECT [dbo].fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo)) FROM BEDEN_HAREKETLERI WHERE BdnHar_Har_uid = sip_Guid AND BdnHar_Tipi = 9),0) AS BEDENPNTR , " +
                 "* FROM SIPARISLER WHERE sip_evrakno_seri = @sip_evrakno_seri AND " +
-                "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins " +
+                "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins AND sip_miktar > sip_teslim_miktar " +
                 "ORDER BY sip_satirno ASC ",
         param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip','sip_cins'],
         type:   ['string|20','int','int','int']
@@ -2269,7 +2271,7 @@ var QuerySql =
                 "sth_plasiyer_kodu,  " +
                 "sth_odeme_op,  " +
                 "sth_cikis_depo_no  " +
-                "FROM STOK_HAREKETLERI WHERE sth_evraktip = @sth_evraktip and sth_cins = @sth_cins AND sth_proje_kodu != '' AND ((sth_proje_kodu = @sth_proje_kodu ) OR (@sth_proje_kodu = '')) --AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
+                "FROM STOK_HAREKETLERI WHERE sth_evraktip = @sth_evraktip and sth_cins = @sth_cins AND sth_proje_kodu != '' AND ((sth_proje_kodu = @sth_proje_kodu ) OR (@sth_proje_kodu = '')) AND sth_tarih = CONVERT(VARCHAR(10),GETDATE(),112) " +
                 "GROUP BY sth_evrakno_seri,sth_evrakno_sira,sth_proje_kodu,sth_stok_srm_merkezi,sth_plasiyer_kodu, " +
                 "sth_tip,sth_belge_no,sth_cari_kodu,sth_tarih,sth_teslim_tarihi,sth_odeme_op,sth_cikis_depo_no ",
                 param:  ['sth_evraktip','sth_cins','sth_proje_kodu'],

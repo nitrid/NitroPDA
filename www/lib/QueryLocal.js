@@ -603,8 +603,8 @@ var QueryLocal =
                 ",BITIS " +
                 ",BASLANGIC " +
                 ",FIYAT " +
-                ",ROUND(INDIRIM,2) AS INDIRIM " +
-                ",ROUND(BRUTFIYAT,2) AS BRUTFIYAT " +
+                ",ROUND(INDIRIM,3) AS INDIRIM " +
+                ",ROUND(BRUTFIYAT,3) AS BRUTFIYAT " +
                 ",ISKONTOM1 " +
                 ",ISKONTOM2 " +
                 ",ISKONTOM3 " +

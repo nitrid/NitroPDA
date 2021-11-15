@@ -79,6 +79,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.EvrakDovizTip = "";
         $scope.Risk = 0;
         $scope.RiskLimit = 0;
+        $scope.CheckEvrak = 0;
 
         $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
@@ -100,6 +101,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BedenListe = [];
         DepoMiktarListe = [];
         $scope.StokDurumListe = [];
+        $scope.ProjeEvrakGetirListe = [];
 
         $scope.AciklamaGuid = ''
         $scope.Aciklama1 = ''
@@ -2179,11 +2181,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                   $scope.PersonelAdi = item.ADI;
             });
         });      
-        db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; $scope.Proje = UserParam[ParamName].Proje});
+        db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data; console.log(data); $scope.Proje = UserParam[ParamName].Proje});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = $scope.OdemePlan;});
         
         if(localStorage.mode == 'true')
         {
+            console.log([$scope.Seri,$scope.EvrakTip,0])
             await db.MaxSiraPromiseTag($scope.Firma,'MaxSiparisSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
             {
                 $scope.Sira = data
@@ -2215,7 +2218,8 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         }
         if(UserParam[ParamName].ProjeGetir == 1)
         {
-            $scope.ProjeEvrakGetirModal();
+            console.log($scope.CheckEvrak)
+            $scope.ProjeEvrakGetirModal($scope.CheckEvrak);
         }
         BarkodFocus();
     }
@@ -2358,10 +2362,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         ProjeEvrakSelectedRow = $row;
-        $scope.ProjeEvrakSelectedIndex = pItem;
-
-        $scope.Seri = $scope.ProjeEvrakSelectedIndex.SERI;
-        $scope.Sira = $scope.ProjeEvrakSelectedIndex.SIRA;
+        $scope.ProjeEvrakSelectedIndex = pIndex;
+        $scope.Seri = $scope.ProjeEvrakGetirListe[$scope.ProjeEvrakSelectedIndex].SERI;
+        $scope.Sira = $scope.ProjeEvrakGetirListe[$scope.ProjeEvrakSelectedIndex].SIRA;
     }
     $scope.MiktarPress = function(keyEvent)
     {
@@ -2670,27 +2673,104 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         }
         BarkodFocus();
     }
-    $scope.ProjeEvrakGetir = function()
+    $scope.ProjeEvrakGetirModal = async function(pParam)
     {
-        db.GetData($scope.Firma,'SiparisProjeGetir',[$scope.EvrakTip,0,$scope.ProjeKod],function(data)
+        if(typeof pParam == "undefined")
         {
-            $scope.ProjeEvrakGetirListe = data;
-            if($scope.ProjeEvrakGetirListe.length > 0)
+            pParam = $scope.CheckEvrak;
+            console.log($scope.CheckEvrak)
+        }
+        if($scope.ProjeGetirParam == "0")
+        {
+            $("#MdlEvrakGetir").modal('show');
+        }
+        else if($scope.ProjeGetirParam == "1")
+        {
+            $scope.CheckEvrak = pParam;
+            if($scope.CheckEvrak == 0 )
             {
-                $scope.Loading = false;
-                $scope.TblLoading = true;
-                $scope.Status = $scope.ProjeEvrakGetirListe[0].status
-                $("#TblProjeEvrakGetirListe").jsGrid({data : $scope.ProjeEvrakGetirListe});  
-                $("#TblProjeEvrakGetirListe").jsGrid({pageIndex: true})
+                $("#MdlProjeEvrakGetir").modal('show');
+                $timeout( function(){
+                    $window.document.getElementById("ProjeLabel").focus();
+                    $window.document.getElementById("ProjeLabel").select();
+                },100);  
             }
-            else
+        }
+    }
+    $scope.ProjeEvrakGetir = async function()
+    {
+        $scope.ProjeEvrakGetirListe = [];
+
+        // Okuttuğu proje kodundan mikroda evrak var mı onu aratıyor. 
+        // Boş girilmişse, o gün proje kodundan girilmiş bütün evrakları getirir.
+        await db.GetData($scope.Firma,'SiparisProjeGetir',[$scope.EvrakTip,0,$scope.ProjeKod],async function(data)
+        {
+            for (let i = 0; i < data.length; i++)
             {
+                if(data[i].sip_teslim_miktar < data[i].sip_miktar)
+                {
+                    $scope.ProjeEvrakGetirListe.push(data[i]);
+                }
+            }
+            
+            // Okuttuğu proje kodunu mikro'dan gelen proje kodu listesinde arıyor.
+            let TmpProjeListe = $scope.ProjeListe.find(x => x.KODU == $scope.ProjeKod)
+            console.log(TmpProjeListe)
+            console.log($scope.ProjeEvrakGetirListe)
+
+            
+            // Okuttuğu proje kodu mikro da yoksa VEYA Proje kodu boş ve Mikroda kayıtlı evrak yoksa
+            if((typeof TmpProjeListe == "undefined") || TmpProjeListe.KODU == "" && $scope.ProjeEvrakGetirListe.length == 0)
+            {
+                console.log("Proje bulunamadı")
                 angular.element('#MdlProjeEvrakGetir').modal('hide');
-                alertify.alert("Evrak Bulunamadı")
+                alertify.alert("Proje Bulunamadı")
                 $scope.Loading = false;
                 $scope.TblLoading = true;
                 $("#TblProjeEvrakGetirListe").jsGrid({data : $scope.ProjeEvrakGetirListe});
                 $("#TblProjeEvrakGetirListe").jsGrid({pageIndex: true})
+                $scope.CheckEvrak = 0;
+            }
+            // Okuttuğu proje koduna kayıtlı evrak var mı?
+            else if($scope.ProjeEvrakGetirListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblProjeEvrakGetirListe").jsGrid({data : $scope.ProjeEvrakGetirListe});  
+                $("#TblProjeEvrakGetirListe").jsGrid({pageIndex: true})
+                $scope.CheckEvrak = 0;
+                if($scope.ProjeEvrakGetirListe.length == 1)
+                {
+                    let Obj = $("#TblProjeEvrakGetirListe").data("JSGrid");
+                    let Item = Obj.rowByItem($scope.ProjeEvrakGetirListe[0]);
+                    $scope.ProjeEvrakListeRowClick(0,Item,Obj);
+                    $scope.ProjeEvrakSec(); 
+                }
+            }
+            // Okuttuğu proje kodu boş değilse
+            else if($scope.ProjeEvrakGetirListe.length == 0 && TmpProjeListe.KODU != '')
+            {
+                //YENİEVRAK
+                alertify.alert("Proje, Mikroda Kayıtlı ve Bulundu")
+                $scope.Proje = $scope.ProjeKod;
+                $scope.CheckEvrak = 1;
+                angular.element('#MdlProjeEvrakGetir').modal('hide');
+                $scope.ProjeChange();
+            }
+        });
+    }
+    $scope.ProjeEvrakSec = function()
+    {
+       angular.element('#MdlProjeEvrakGetir').modal('hide');
+       $scope.EvrakGetir();
+    }
+    $scope.ProjeChange = async function()
+    {
+        $scope.ProjeListe.forEach(function(item) 
+        {
+            if(item.KODU == $scope.Proje)
+            {
+                $scope.Proje = item.KODU;
             }
         });
     }
@@ -2701,24 +2781,29 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.ProjeEvrakGetir();
         }
     }
-    $scope.ProjeEvrakSec = function()
+    $scope.BtnEksikEvrak = async function()
     {
-       angular.element('#MdlProjeEvrakGetir').modal('hide');
-       $scope.EvrakGetir();
-    }
-    $scope.ProjeEvrakGetirModal = async function()
-    {
-        if($scope.ProjeGetirParam == "0")
+        if($scope.SiparisListe.length > 0)
         {
-            $("#MdlEvrakGetir").modal('show');
-        }
-        else if($scope.ProjeGetirParam == "1")
-        {
-            $("#MdlProjeEvrakGetir").modal('show');
-            $timeout( function(){
-                $window.document.getElementById("ProjeLabel").focus();
-                $window.document.getElementById("ProjeLabel").select();
-            },100);  
+            console.log($scope.SiparisListe)
+            for (let i = 0; i < $scope.SiparisListe.length; i++) 
+            {
+                console.log($scope.SiparisListe.length)
+                let TmpUpdateQuery = 
+                {
+                    db : '{M}.' + $scope.Firma,
+                    query: "UPDATE SIPARISLER SET sip_cari_sormerk = @STOKMERKEZ WHERE sip_evrakno_seri = @sip_evrakno_seri AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins" ,
+                    param:  ['STOKMERKEZ:string|25','sip_evrakno_seri:string|20','sip_evrakno_sira:int','sip_tip:int','sip_cins:int'],
+                    value : ['Eksik Evrak',$scope.SiparisListe[i].sip_evrakno_seri,$scope.SiparisListe[i].sip_evrakno_sira,$scope.SiparisListe[i].sip_tip,$scope.SiparisListe[i].sip_cins]
+                    //value : [$scope.Sorumluluk,$scope.SiparisListe[i].sip_evrakno_seri,$scope.SiparisListe[i].sip_evrakno_sira,$scope.SiparisListe[i].sip_tip,$scope.SiparisListe[i].sip_cins]
+                }
+                console.log($scope.Sorumluluk)
+                console.log(TmpUpdateQuery)
+                db.GetDataQuery(TmpUpdateQuery,function(data)
+                {
+                    console.log(data)
+                })
+            }
         }
     }
     $scope.EvrakGetir = function()

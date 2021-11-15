@@ -144,9 +144,9 @@
                     </div>
                     <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">Proje:</div></div>
-                        <div class="col-8 px-1">
-                            <select class="form-control" ng-model="Proje" ng-disabled="EvrakLock">
-                                <option ng-repeat="option in ProjeListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                        <div class="col-8 px-1 pb-2">
+                            <select class="form-control" id="ProjeSelect" type="text" ng-model="Proje" ng-change="ProjeChange()" ng-disabled="EvrakLock">
+                                <option ng-repeat="option in ProjeListe" value="{{option.KODU}}">{{option.KODU}}</option>
                             </select>
                         </div>
                     </div>
@@ -283,7 +283,7 @@
                     </div>
                     <div class="row pt-5">
                         <div class="col-lg-12" style="display: inline; text-align: left; overflow: hidden;">  
-                            <label class="mb-0 h6 text-danger">D.MIKTAR : {{Stok[0].DEPOMIKTAR}} - {{Stok[0].KIRILIMMIKTAR}}</label> 
+                            <label class="mb-0 h6 text-danger">D.MIKTAR : {{Stok[0].DEPOMIKTAR}} R/B: {{Stok[0].KIRILIMMIKTAR}}</label> 
                         </div>                        
                     </div>
                     <div class="row my-0 ">

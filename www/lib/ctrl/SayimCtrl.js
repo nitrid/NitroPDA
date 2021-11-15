@@ -800,7 +800,7 @@ function SayimCtrl($scope,$window,$timeout,db)
         {   
             if(isNaN($scope.TxtLot))
             $scope.TxtLot = 0;
-          
+            console.log([$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot])
             db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
             {   
                 if(data.length > 0)
@@ -819,6 +819,7 @@ function SayimCtrl($scope,$window,$timeout,db)
                         $scope.TxtParti,
                         $scope.TxtLot,
                         $scope.Stok[0].KODU,
+                        $scope.Tarih,
                         $scope.SktTarih
                     ]   
                     db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)

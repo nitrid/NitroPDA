@@ -194,7 +194,8 @@ var ParamTemp =
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
 			"IskontoMatris" : {"Title" : "İskonto Matris","DefaultValue" : "0"},
 			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"},
-			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"}	
+			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"},
+			"PartiBarkodOlustur" : {"Title" : "Parti Barkodu Olustur","DefaultValue" : "0"}	
 		},
 		"SatisIrsaliye" :
 		{

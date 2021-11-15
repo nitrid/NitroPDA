@@ -3386,12 +3386,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 var TmpQuery = 
                 {
                     db : '{M}.' + $scope.Firma,
-                    query:  "SELECT BAKIYE + " +
-                            "(SELECT IFNULL(SUM(HESAP),0) AS BAKIYE FROM (SELECT CASE WHEN cha_evrak_tip IN(64,63) THEN cha_meblag WHEN cha_evrak_tip IN (1,0) THEN cha_meblag * -1 end as HESAP FROM CARIHAR WHERE cha_kod = '@CARIKODU' " +
-                            ") AS TBL) AS BAKIYE, " +
+                    query:  "SELECT " +
                             "BAKIYE + " +
                             "(SELECT IFNULL(SUM(HESAP),0) AS BAKIYE FROM (SELECT CASE WHEN cha_evrak_tip IN(64,63) THEN cha_meblag WHEN cha_evrak_tip IN (0) THEN cha_meblag * -1 end as HESAP FROM CARIHAR WHERE cha_kod = '@CARIKODU' " +
-                            ") AS TBL) AS TAHBAKIYE, " +
+                            ") AS TBL) AS BAKIYE, " +
                             "BAKIYE AS ILKBAKIYE " +
                             "FROM CARI  WHERE KODU = '@CARIKODU' " ,
                     param:  ['CARIKODU'], 
@@ -3401,19 +3399,16 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 await db.GetPromiseQuery(TmpQuery,function(Data)
                 {
                     $scope.CariBakiye = Data[0].BAKIYE
-                    $scope.DuzBakiye = Data[0].TAHBAKIYE
-                    $scope.IlkBakiye = Data[0].ILKBAKIYE
                     console.log(Data)
                 });
                 if($scope.FatKontrol == 1)
-                {
+                {                    
                     $scope.CariBakiye = $scope.CariBakiye - $scope.GenelToplam
                     
-                    $scope.DuzBakiye = $scope.DuzBakiye - $scope.GenelToplam
-
                     KalanBakiye = $scope.CariBakiye + $scope.GenelToplam
 
-                    OncekiBakiye = $scope.DuzBakiye
+                    OncekiBakiye = $scope.CariBakiye
+
                 }
                 else
                 {
@@ -3459,7 +3454,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             {
                 if(pStatus)
                 {
-                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );         
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Gerçekleşti </a>" );
                 }
             });
             // var S = "#Intent;scheme=rawbt;";

@@ -74,7 +74,7 @@ var Param = [
 			"SiparisOnay": "",
 			"IskontoMatris": "1",
 			"EksiyeDusme": "0",
-			"ProjeGetir": "1",
+			"ProjeGetir": "0",
 			"FiyatAzalt": "1"
 		},
 		"VerilenSiparis": {
@@ -186,7 +186,8 @@ var Param = [
 			"EvrakSil": "0",
 			"IskontoMatris": "0",
 			"ProjeGetir": "0",
-			"FiyatAzalt": "1"
+			"FiyatAzalt": "1",
+			"PartiBarkodOlustur": "0"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -309,8 +310,8 @@ var Param = [
 			"Cari Hesap Hareket": "1",
 			"Yapilacak Tahsilatlar/Ödemeler": "0",
 			"Stok Rapor": "0",
-			"Cari Secimli Siparis Raporu": "0",
-			"Cari Secimli Siparis Durum Raporu": "0",
+			"Cari Secimli Siparis Raporu": "1",
+			"Cari Secimli Siparis Durum Raporu": "1",
 			"Durağan Cariler Raporu": "0",
 			"Kasa Rapor": "0",
 			"Banka Rapor": "0",
@@ -573,7 +574,7 @@ var Param = [
 			"SiparisOnay": "",
 			"IskontoMatris": "0",
 			"EksiyeDusme": "0",
-			"ProjeGetir": "1",
+			"ProjeGetir": "0",
 			"FiyatAzalt": "0"
 		},
 		"VerilenSiparis": {
