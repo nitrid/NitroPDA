@@ -1308,6 +1308,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                     console.log(pData)
                     if(pData.BedenPntr != 0 || pData.RenkPntr != 0)
                     {   
+                        console.log($scope.BedenHarListe)
                         let value = db.ListEqual($scope.BedenHarListe,{BdnHar_Har_uid : pData.Guid, BdnHar_BedenNo : Kirilim(pData.BedenPntr,pData.RenkPntr)});
                         if(value != null)
                         {
@@ -2008,13 +2009,14 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "UPDATE CARI_HESAP_HAREKETLERI SET cha_special1 = 1" +
+            query:  "UPDATE CARI_HESAP_HAREKETLERI SET cha_special1 = @cha_special1 " +
                     "WHERE cha_evrakno_seri = @cha_evrakno_seri AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip ",
-            param:  ['cha_evrakno_seri','cha_evrakno_sira','cha_evrak_tip'],
-            type:   ['string|25','int','int',],
-            value:  [$scope.Seri,$scope.Sira,$scope.EvrakTip]
+            param:  ['cha_special1','cha_evrakno_seri','cha_evrakno_sira','cha_evrak_tip'],
+            type:   ['string|25','string|25','int','int',],
+            value:  [$scope.Special,$scope.Seri,$scope.Sira,$scope.ChaEvrakTip]
         }
-
+        console.log([$scope.Special,$scope.Seri,$scope.Sira,$scope.ChaEvrakTip])
+        console.log(TmpQuery)
         db.ExecuteQuery(TmpQuery,function(data)
         {   
             if(typeof(data.result.err) == 'undefined')
@@ -2195,6 +2197,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                         if(item.KODU == $scope.DepoNo)
                             $scope.DepoAdi = item.ADI;
                     });     
+                });
+                db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,11],function(BedenData)
+                {   
+                    $scope.BedenHarListe = BedenData;
                 });
                 db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(e){$scope.SorumlulukListe = e; $scope.Sorumluluk = data[0].sth_stok_srm_merkezi});
                 db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = data[0].sth_plasiyer_kodu});
@@ -2809,7 +2815,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.TahToplam = 0;
             $scope.FatSeri = "";
             $scope.FatSira = 0;
-        } 
+        }
         $scope.FatKontrol = 0;
         $scope.FiyatListeNo = UserParam[ParamName].FiyatListe;
         $scope.EvrakLock = false;
@@ -2818,6 +2824,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.CmbEvrakTip = UserParam[ParamName].EvrakTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
         $scope.AdresNo = UserParam[ParamName].AdresNo;
+        $scope.Special = UserParam[ParamName].Special;
         if(UserParam[ParamName].KDVYok == "1")
         {
             $scope.VergiChk = true;

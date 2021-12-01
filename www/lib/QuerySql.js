@@ -1298,6 +1298,12 @@ var QuerySql =
         param : ['SERI','SIRA','sth_stok_kod'],
         type : ['string|20','int','string|20']
     },
+    //Ihracat
+    IhracatListeGetir :
+    {
+        query: "SELECT ihr_kodu AS KODU, ihr_ismi AS ADI, ihr_Satici AS CARI FROM IHRACAT_DOSYALARI WHERE (ihr_kodu = @KODU OR(@KODU = '')) AND (ihr_ismi = @ADI OR(@ADI = ''))",
+        param:['KODU:string|50','ADI:string|50']
+    },
     //Sipariş
     SiparisInsert : 
     {

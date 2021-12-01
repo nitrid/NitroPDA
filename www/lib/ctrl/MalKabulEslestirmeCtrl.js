@@ -2186,6 +2186,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                         {   
                             let TmpFiyat  = value.sth_tutar / value.sth_miktar
                             let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
+                            let BdnMiktar = ($scope.Miktar * $scope.Stok[0].CARPAN);
                             let Data = 
                             {
                                 Param :
@@ -2211,6 +2212,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                                 BedenPntr : $scope.Stok[0].BEDENPNTR,
                                 RenkPntr : $scope.Stok[0].RENKPNTR,
                                 Miktar : TmpMiktar,
+                                BdnMiktar : BdnMiktar,
                                 Guid : value.sth_Guid
                             };
                             console.log(Data)

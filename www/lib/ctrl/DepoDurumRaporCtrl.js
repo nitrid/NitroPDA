@@ -251,7 +251,7 @@ function DepoDurumRaporCtrl($scope,$window,db)
                     "(SELECT dep_adi FROM DEPOLAR WHERE	dep_no = @DEPONO) AS DEPO, " +
                     "ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 1 and sth_tarih >= @TARIH AND sth_cikis_depo_no = @DEPONO ),0) AS SATILAN, " +
                     "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOKLAR.sth_stok_kod,@DEPONO,GETDATE())),0) AS KALAN " +
-                    "FROM STOK_HAREKETLERI AS STOKLAR WHERE sth_giris_depo_no = @DEPONO GROUP BY sth_stok_kod ",
+                    "FROM STOK_HAREKETLERI AS STOKLAR WHERE sth_giris_depo_no = @DEPONO and ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 2 and sth_tarih >= @TARIH AND sth_giris_depo_no = @DEPONO ),0) > 0 GROUP BY sth_stok_kod ",
                     param:  ['DEPONO','TARIH'],
                     type:   ['int','date',],
                     value:  [$scope.DepoNo,$scope.Tarih]

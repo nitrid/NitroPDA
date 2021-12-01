@@ -5,6 +5,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     let StokSelectedRow = null;
     let PartiLotSelectedRow = null;
     let ProjeEvrakSelectedRow = null;
+    let IhracatSelectedRow = null;
     let ParamName = "";
 
     $('#MdlPartiLot').on('hide.bs.modal', function () 
@@ -92,6 +93,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.Email = "";
         $scope.PartiSira = "001";
         $scope.CheckEvrak = 0;
+        $scope.IhracatKodu = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -112,6 +114,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.ProjeEvrakGetirListe = [];
         $scope.SonSatisListe = [];
         $scope.KirilimListe = [];
+        $scope.IhracatListe = [];
 
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -124,9 +127,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = "";
+        $scope.CmbIhracatAra = "0";
+        $scope.TxtIhracatAra = "";
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
         $scope.FiyatLock = false;
+        $scope.IhracatLoad = false;
         $scope.IslemListeSelectedIndex = -1;
         $scope.PartiLotListeSelectedIndex = 0;
 
@@ -717,6 +723,47 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             }
         });
     }
+    function InitIhracatGrid()
+    {   
+        $("#TblIhracat").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.IhracatListe,
+            paging : true,
+            pageSize: 30,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: 
+            [
+                {
+                    name: "KODU",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "ADI",
+                    type: "text",
+                    align: "center",
+                    width: 300
+                },
+                {
+                    name: "CARI",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                }
+            ],
+            rowClick: function(args)
+            {
+                $scope.IhracatListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
     function BarkodFocus()
     {
         $timeout( function(){$window.document.getElementById("Barkod").focus();},100);  
@@ -911,7 +958,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.Stok[0].PARTI,
             $scope.Stok[0].LOT,
             $scope.Proje,
-            '', // EXİMKODU
+            $scope.IhracatKodu, // EXİMKODU
             0,  // DİSTİCARETTURU
             0,  // OTVVERGİSİZFL
             0,  // OİVVERGİSİZ
@@ -928,7 +975,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 {  
                     $scope.IrsaliyeListe = IrsaliyeData;
                     console.log($scope.Stok[0])
-                    if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
+                    if($scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].RENKPNTR != 0)
                     {   
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
                     } 
@@ -1422,6 +1469,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         InitStokHarGrid();
         InitDepoMiktarGrid();
         InitStokDurumGrid();
+        InitIhracatGrid();
 
         $scope.FiyatListeNo = UserParam[ParamName].FiyatListe;
         $scope.EvrakLock = false;
@@ -1429,6 +1477,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.CmbEvrakTip = UserParam[ParamName].EvrakTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
+        $scope.Special = UserParam[ParamName].Special;
         if(UserParam[ParamName].FiyatLock == 1)
         {
             $scope.FiyatLock = true;
@@ -1553,7 +1602,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.TblLoading = false;
         let Kodu = '';
         let Adi = '';
-
         if($scope.TxtCariAra != "")
         {
             if($scope.CmbCariAra == "0")
@@ -1568,6 +1616,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         await db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],async function(data)
         {
             console.log([Kodu,Adi,UserParam.Sistem.PlasiyerKodu])
+            console.log(data)
             if(data.length > 0)
             {
                 if(localStorage.mode == 'false')
@@ -1621,6 +1670,58 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.TblLoading = true;
                 $("#TblCari").jsGrid({data : $scope.CariListe});
                 $("#TblCari").jsGrid({pageIndex : true});
+            }
+        });
+    }
+    $scope.BtnIhracatListele = async function()
+    {   
+        $scope.Loading = true;
+        $scope.TblLoading = false;
+        let Kodu = '';
+        let Adi = '';
+
+        if($scope.TxtIhracatAra != "")
+        {
+            if($scope.CmbIhracatAra == "0")
+            {   
+                Adi = $scope.TxtIhracatAra.replace("*","%").replace("*","%");
+            }
+            else
+            {
+                Kodu = $scope.TxtIhracatAra.replace("*","%").replace("*","%");
+            }
+        }
+        console.log([Kodu,Adi])
+        await db.GetData($scope.Firma,'IhracatListeGetir',[Kodu,Adi],async function(data)
+        {
+            console.log([data])
+            if(data.length > 0)
+            {
+                $scope.IhracatListe = data;  
+                if($scope.IhracatListe.length > 0)
+                {
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblIhracat").jsGrid({data : $scope.IhracatListe});
+                    $("#TblIhracat").jsGrid({pageIndex : true});
+                    CariFocus();
+                }
+                else
+                {
+                    alertify.alert("Kod Bulunamadı")
+                    $scope.Loading = false;
+                    $scope.TblLoading = true;
+                    $("#TblIhracat").jsGrid({data : $scope.IhracatListe});
+                    $("#TblIhracat").jsGrid({pageIndex : true});
+                }
+            }
+            else
+            {
+                alertify.alert("Kod Bulunamadı")
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblIhracat").jsGrid({data : $scope.IhracatListe});
+                $("#TblIhracat").jsGrid({pageIndex : true});
             }
         });
     }
@@ -1938,13 +2039,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "UPDATE STOK_HAREKETLERI SET sth_special1 = 1 " +
+            query:  "UPDATE STOK_HAREKETLERI SET sth_special1 = @sth_special1 " +
                     "WHERE sth_evrakno_seri = @sth_evrakno_seri AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip ",
-            param:  ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
-            type:   ['string|25','int','int',],
-            value:  [$scope.Seri,$scope.Sira,$scope.EvrakTip]
+            param:  ['sth_special1','sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
+            type:   ['string|25','string|25','int','int',],
+            value:  [$scope.Special,$scope.Seri,$scope.Sira,$scope.EvrakTip]
         }
-
         db.ExecuteQuery(TmpQuery,function(data)
         {   
             if(typeof(data.result.err) == 'undefined')
@@ -2081,6 +2181,45 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $scope.Stok[0].KDV = 0;
             $scope.Stok[0].TOPTUTAR = $scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM;
             $scope.Stok[0].TOPTANVERGIPNTR = 0;
+        }
+    }
+    $scope.IhracatListeRowClick = function(pIndex,pItem,pObj)
+    {
+        if(!$scope.EvrakLock)
+        {
+            if ( IhracatSelectedRow ) { IhracatSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+            var $row = pObj.rowByItem(pItem);
+            $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+            IhracatSelectedRow = $row;
+            
+            $scope.IhracatKodu = $scope.IhracatListe[pIndex].KODU;
+            $scope.IhracatAdi = $scope.IhracatListe[pIndex].ADI;
+            $scope.CariKodu = $scope.IhracatListe[pIndex].CARI;
+            $scope.IhracatCariKod = $scope.IhracatListe[pIndex].CARI;
+            if($scope.CariKodu != "")
+            {
+                db.GetData($scope.Firma,'CariListeGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
+                {
+                    $scope.CariListe = data;
+                    if(data.length > 0)
+                    {
+                        $("#TblCari").jsGrid({data : $scope.CariListe});
+
+                        let Obj = $("#TblCari").data("JSGrid");
+                        let Item = Obj.rowByItem(data[0]);
+                        
+                        $scope.CariListeRowClick(0,Item,Obj);
+                    }
+                    else
+                    {
+                        alertify.alert("Cari Bulunamadı.")
+                    }
+
+                });
+            }
+            $scope.DovizChangeKodu = "0"
+            $scope.DovizChange()
+            AdresNoGetir();
         }
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
@@ -2534,7 +2673,18 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Tip = 1;
                 $scope.Cins = 2;
             }
+            else if($scope.CmbEvrakTip == 5) // İhraç Kayıtlı İrsaliye
+            {
+                $scope.EvrakTip = 1;
+                $scope.NormalIade = 0;
+                $scope.Tip = 1;
+                $scope.Cins = 12;
+                $scope.IhracatLoad = true;
+            }
+            if($scope.CmbEvrakTip != 5)
+            $scope.IhracatLoad = false;
         }
+        //SIRA
         if(localStorage.mode == 'true')
             {
                 await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip,0],function(data)
@@ -3088,6 +3238,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbStok").removeClass('active');
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
+        $("#TbIhracatSec").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
     {
@@ -3095,6 +3246,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbStokDurum").removeClass('active');
         $("#TbMain").removeClass('active');
         $("#TbDizayn").removeClass('active');
+        $("#TbIhracatSec").removeClass('active');
     }
     $scope.BarkodGirisClick = function() 
     {   
@@ -3104,7 +3256,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }
         else
         {
-            if($scope.CariAdi != "")
+            if($scope.CariAdi != "" || $scope.IhracatKodu != "")
             {
                 $("#TbBarkodGiris").addClass('active');
                 $("#TbMain").removeClass('active');
@@ -3114,6 +3266,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbStok").removeClass('active');
                 $("#TbDizayn").removeClass('active');
                 $("#TbStokDurum").removeClass('active');
+                $("#TbIhracatSec").removeClass('active');
                             
                 BarkodFocus();
             }
@@ -3134,6 +3287,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $("#TbStok").removeClass('active');
             $("#TbDizayn").removeClass('active');
             $("#TbStokDurum").removeClass('active');
+            $("#TbIhracatSec").removeClass('active');
         }
         else
         {
@@ -3143,6 +3297,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $("#TbBarkodGiris").removeClass('active');
             $("#TbStok").removeClass('active');
             $("#TbStokDurum").removeClass('active');
+            $("#TbIhracatSec").removeClass('active');
         }
     }
     $scope.CariSecClick = function()
@@ -3154,6 +3309,23 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         else
         {
         $("#TbCariSec").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbDizayn").removeClass('active');
+        $("#TbStokDurum").removeClass('active');
+        $("#TbIhracatSec").removeClass('active');
+        CariFocus();
+        }
+    }
+    $scope.IhracatSecClick = function()
+    {
+        if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
+        {            
+            alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );
+        }
+        else
+        {
+        $("#TbIhracatSec").addClass('active');
+        $("#TbCariSec").removeClass('active');
         $("#TbMain").removeClass('active');
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
@@ -3188,7 +3360,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         await db.GetData($scope.Firma,'StokProjeGetir',[$scope.EvrakTip,0,$scope.ProjeKod],async function(data)
         {
             $scope.ProjeEvrakGetirListe = data;
-
+            console.log(data)
             console.log($scope.ProjeKod)
             console.log(TmpProje)
             // Okuttuğu proje kodu mikro da var mı?

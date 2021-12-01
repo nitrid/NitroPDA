@@ -2069,13 +2069,12 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "UPDATE SIPARISLER SET sip_special1 = 1 " +
+            query:  "UPDATE SIPARISLER SET sip_special1 = @sip_special1 " +
                     "WHERE sip_evrakno_seri = @sip_evrakno_seri AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip ",
-            param:  ['sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
-            type:   ['string|25','int','int',],
-            value:  [$scope.Seri,$scope.Sira,$scope.EvrakTip]
+            param:  ['sip_special1','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
+            type:   ['string|25','string|25','int','int',],
+            value:  [$scope.Special,$scope.Seri,$scope.Sira,$scope.EvrakTip]
         }
-
         db.ExecuteQuery(TmpQuery,function(data)
         {   
             if(typeof(data.result.err) == 'undefined')
@@ -2113,6 +2112,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BelgeNo = UserParam[ParamName].BelgeNo;
         $scope.EvrakTip = pAlinanVerilen;
         $scope.CariKodu = UserParam[ParamName].Cari;
+        $scope.Special = UserParam[ParamName].Special;
 
         if(pAlinanVerilen == 0)
         $scope.PersonelTip = "0";
@@ -2794,13 +2794,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                     db : '{M}.' + $scope.Firma,
                     query: "UPDATE SIPARISLER SET sip_cari_sormerk = @STOKMERKEZ WHERE sip_evrakno_seri = @sip_evrakno_seri AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins" ,
                     param:  ['STOKMERKEZ:string|25','sip_evrakno_seri:string|20','sip_evrakno_sira:int','sip_tip:int','sip_cins:int'],
-                    value : ['Eksik Evrak',$scope.SiparisListe[i].sip_evrakno_seri,$scope.SiparisListe[i].sip_evrakno_sira,$scope.SiparisListe[i].sip_tip,$scope.SiparisListe[i].sip_cins]
+                    value : ['EKSIK',$scope.SiparisListe[i].sip_evrakno_seri,$scope.SiparisListe[i].sip_evrakno_sira,$scope.SiparisListe[i].sip_tip,$scope.SiparisListe[i].sip_cins]
                     //value : [$scope.Sorumluluk,$scope.SiparisListe[i].sip_evrakno_seri,$scope.SiparisListe[i].sip_evrakno_sira,$scope.SiparisListe[i].sip_tip,$scope.SiparisListe[i].sip_cins]
                 }
                 console.log($scope.Sorumluluk)
                 console.log(TmpUpdateQuery)
                 db.GetDataQuery(TmpUpdateQuery,function(data)
                 {
+                    alertify.alert("Sorumluluk 'Eksik' olarak kaydedildi")
                     console.log(data)
                 })
             }

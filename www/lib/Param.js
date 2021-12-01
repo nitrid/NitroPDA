@@ -24,7 +24,7 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "SW_C58B",
+			"BTYaziciAdi": "1917MZ01",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "100",
@@ -75,7 +75,8 @@ var Param = [
 			"IskontoMatris": "1",
 			"EksiyeDusme": "0",
 			"ProjeGetir": "0",
-			"FiyatAzalt": "1"
+			"FiyatAzalt": "1",
+			"Special": "2"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -98,7 +99,8 @@ var Param = [
 			"IskontoMatris": "0",
 			"ProjeGetir": "0",
 			"TedarikcidenSiparis": "0",
-			"FiyatAzalt": "1"
+			"FiyatAzalt": "1",
+			"Special": "0"
 		},
 		"ProformaAlinanSiparis": {
 			"Seri": "PRSP",
@@ -187,7 +189,8 @@ var Param = [
 			"IskontoMatris": "0",
 			"ProjeGetir": "0",
 			"FiyatAzalt": "1",
-			"PartiBarkodOlustur": "0"
+			"PartiBarkodOlustur": "0",
+			"Special": "0"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -212,7 +215,8 @@ var Param = [
 			"OfflineSira": "0",
 			"FiyatAzalt": "1",
 			"Plaka": "34TS1967",
-			"EIrsaliyeDetay": "1"
+			"EIrsaliyeDetay": "1",
+			"Special": "4"
 		},
 		"KonsinyeIrsaliye": {
 			"EvrakTip": "0",
@@ -353,7 +357,8 @@ var Param = [
 			"EvrakSil": "0",
 			"Kasa": "",
 			"IskontoMatris": "0",
-			"FiyatAzalt": "1"
+			"FiyatAzalt": "1",
+			"Special": "0"
 		},
 		"SatisFatura": {
 			"EvrakTip": "1",
@@ -376,7 +381,8 @@ var Param = [
 			"Kasa": "K01",
 			"IskontoMatris": "0",
 			"KDVYok": "1",
-			"FiyatAzalt": "0"
+			"FiyatAzalt": "0",
+			"Special": "3"
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
@@ -432,7 +438,8 @@ var Param = [
 			"HavaleKasa": "H01",
 			"OdemeKasa": "O01",
 			"EvrakSil": "0",
-			"EvrakTip": "0"
+			"EvrakTip": "0",
+			"Special": "5"
 		},
 		"TediyeMakbuzu": {
 			"EvrakTip": "0",
@@ -575,7 +582,8 @@ var Param = [
 			"IskontoMatris": "0",
 			"EksiyeDusme": "0",
 			"ProjeGetir": "0",
-			"FiyatAzalt": "0"
+			"FiyatAzalt": "0",
+			"Special": "0"
 		},
 		"VerilenSiparis": {
 			"Seri": "SPR",
@@ -598,7 +606,8 @@ var Param = [
 			"IskontoMatris": "0",
 			"TedarikcidenSiparis": "0",
 			"ProjeGetir": "0",
-			"FiyatAzalt": "0"
+			"FiyatAzalt": "0",
+			"Special": "0"
 		},
 		"ProformaAlinanSiparis": {
 			"Seri": "PRSP",
@@ -697,7 +706,8 @@ var Param = [
 			"EvrakSil": "0",
 			"IskontoMatris": "0",
 			"ProjeGetir": "0",
-			"FiyatAzalt": "0"
+			"FiyatAzalt": "0",
+			"Special": "0"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -721,7 +731,8 @@ var Param = [
 			"ProjeGetir": "0",
 			"FiyatAzalt": "0",
 			"Plaka": "34DJU805",
-			"EIrsaliyeDetay": "1"
+			"EIrsaliyeDetay": "1",
+			"Special": "0"
 		},
 		"KonsinyeIrsaliye": {
 			"EvrakTip": "0",

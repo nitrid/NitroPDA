@@ -4252,7 +4252,7 @@ var QueryLocal =
         tag : "STOKHARRAPOR",
         query : "CREATE TABLE IF NOT EXISTS STOKHARRAPOR (" +
                 "KODU nvarchar (50), " + 
-                "ADI int, " +
+                "ADI nvarchar (50), " +
                 "FIYAT float, " +
                 "CARIADI nvarchar (50)," +
                 "MIKTAR int," +

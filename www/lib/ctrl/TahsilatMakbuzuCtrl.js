@@ -688,6 +688,7 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         $scope.ChaEvrakTip = UserParam[ParamName].ChaEvrakTip;
         $scope.ChaTip = UserParam[ParamName].ChaTip;
         $scope.CariKodu = UserParam[ParamName].Cari;
+        $scope.Special = UserParam[ParamName].Special;
 
         if(typeof (localStorage.FaturaParam) != 'undefined')
         {
@@ -1313,11 +1314,11 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "UPDATE CARI_HESAP_HAREKETLERI SET cha_special1 = 1 " +
+            query:  "UPDATE CARI_HESAP_HAREKETLERI SET cha_special1 = @cha_special1 " +
                     "WHERE cha_evrakno_seri = @cha_evrakno_seri AND cha_evrakno_sira = @cha_evrakno_sira AND cha_evrak_tip = @cha_evrak_tip ",
-            param:  ['cha_evrakno_seri','cha_evrakno_sira','cha_evrak_tip'],
-            type:   ['string|25','int','int',],
-            value:  [$scope.Seri,$scope.Sira,$scope.ChaEvrakTip]
+            param:  ['cha_special1','cha_evrakno_seri','cha_evrakno_sira','cha_evrak_tip'],
+            type:   ['string|25','string|25','int','int',],
+            value:  [$scope.Special,$scope.Seri,$scope.Sira,$scope.ChaEvrakTip]
         }
 
         db.ExecuteQuery(TmpQuery,function(data)
