@@ -231,6 +231,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             selecting: true,
             data : $scope.PartiLotListe,
             pageSize: 10,
+            paging : true,
             pageButtonCount: 3,
             pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
             fields: [
@@ -261,14 +262,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     type: "number",
                     align: "center",
                     width: 100
-                }, 
-                {
-                    name: "KALAN",
-                    title: "KALAN",
-                    type: "number",
-                    align: "center",
-                    width: 100
-                }, 
+                },
                 {
                     name: "SKTTARIH",
                     title: "SKT TARİHİ",
@@ -383,16 +377,41 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     {
                         if($scope.Stok[0].PARTI !='')
                         {
-                            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.Depo,$scope.Stok[0].PARTI,$scope.Stok[0].LOT],function(data)
-                            {   
+                            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,'',0],function(data)
+                            {
+                                $scope.PartiLotList = [];
                                 $scope.PartiLotListe = data;
-
-                                if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
-                                {   
-                                    $scope.Miktar = $scope.PartiLotListe[0].MIKTAR;
-                                    $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
+                                console.log(data)
+                                let Check = false;
+                                for (let i = 0; i < data.length; i++)
+                                {
+                                    if(data[0].SKTTARIH == data[i].SKTTARIH)
+                                    {
+                                        if($scope.Stok[0].PARTI == data[i].PARTI && $scope.Stok[0].LOT == data[i].LOT)
+                                        {
+                                            Check = true;
+                                            $scope.PartiLotList.push(data[i]);
+                                        }
+                                    }
                                 }
-                                $scope.MiktarFiyatValid();
+                                console.log($scope.PartiLotList)
+                                if(Check == true)
+                                {
+                                    if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
+                                    {   
+                                        $scope.Miktar = $scope.PartiLotList[0].MIKTAR;
+                                        $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
+                                    }
+                                    $scope.MiktarFiyatValid();
+                                }
+                                else
+                                {
+                                    alertify.alert("Daha yakın olan tarihli bir partilot mevcut!",function()
+                                    { 
+                                        $scope.BtnTemizle();
+                                    },
+                                    function(){});      
+                                }
                             });
                         }
                         else

@@ -2069,7 +2069,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "UPDATE SIPARISLER SET sip_special1 = @sip_special1 " +
+            query:  "UPDATE SIPARISLER SET sip_special1 = @sip_special1,sip_special2 = 1 " +
                     "WHERE sip_evrakno_seri = @sip_evrakno_seri AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip ",
             param:  ['sip_special1','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
             type:   ['string|25','string|25','int','int',],
@@ -2811,7 +2811,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {
         db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(data)
         {
-
             if(data.length > 0)
             {
                 Init();
@@ -3351,7 +3350,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
     {   
         db.GetData($scope.Firma,'AciklamaGetir',[0,0,$scope.Seri,$scope.Sira],function(pData)
         {
-
             if(pData.length > 0)
             {
                 $scope.AciklamaSatir = pData
@@ -3363,7 +3361,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $scope.AciklamaGuid = $scope.AciklamaSatir[0].egk_Guid
             }
 
-        })
+        });
     }
     $scope.BtnEtiketBas = function()
     {
@@ -3438,7 +3436,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         for(i = 0; i < $scope.ExcelDataListesi.length; i++)
         {
             let Dizi = [];
-
             for(m = 0;m < Object.keys($scope.ExcelDataListesi[i]).length;m++)
             {
                 let b = {};

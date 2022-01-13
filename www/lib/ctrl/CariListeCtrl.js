@@ -95,6 +95,7 @@ function CariListeCtrl($scope,$window,db)
     $scope.YeniEvrak = async function ()
     {
         Init();
+        $scope.CariHarfEkle = UserParam.CariEkle.CariHarfEkle;
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
@@ -106,8 +107,7 @@ function CariListeCtrl($scope,$window,db)
 
         await db.GetPromiseQuery(TmpQuery,async function(Data)
         {
-            $scope.CariHarfEkle = UserParam.CariEkle.CariHarfEkle;
-            console.log($scope.CariHarfEkle)
+            
             $scope.CariEkleKodu = $scope.CariHarfEkle + Data[0].MAXCARIKOD;
         });
     }

@@ -113,8 +113,8 @@ var QuerySql =
                 "DOVIZKUR1, " +
                 "DOVIZKUR2, " +
                 "ALTDOVIZKUR, " +
-                //"RISK, " +
-                //"RISKLIMIT, " +
+                "RISK, " +
+                "RISKLIMIT, " +
                 "ODEMEPLANI, " +
                 "BAKIYE," +// "CONVERT(NVARCHAR,CAST(BAKIYE AS MONEY),1) AS  " +
                 "BELGETARIH, " +
@@ -371,6 +371,9 @@ var QuerySql =
                 "MAX(BEDENKODU) AS BEDENKODU," +
                 "MAX(RENKKODU) AS RENKKODU," +
                 "MAX(GUN) AS GUN, " +
+                "MAX(OTVUYG) AS OTVUYG, " +
+                "MAX(OTVLISTE) AS OTVLISTE, " +
+                "MAX(OTVBRM) AS OTVBRM, " +
                 "MAX(BARKOD) AS BARKOD," +
                 "MAX(BIRIMPNTR) AS BIRIMPNTR," +
                 "MAX(BEDENPNTR) AS BEDENPNTR," +
@@ -422,6 +425,9 @@ var QuerySql =
                 "sto_renk_kodu AS RENKKODU, " +
                 "sto_pasif_fl AS AKTIFPASIF, " +
                 "sto_garanti_sure AS GUN," +
+                "sto_otvuygulama AS OTVUYG," +
+                "sto_otvliste AS OTVLISTE, " +
+                "sto_otvbirimi AS OTVBRM, " +
                 "'' AS BARKOD, " +
                 "1 AS BIRIMPNTR, " +
                 "0 AS BEDENPNTR, " +
@@ -776,7 +782,7 @@ var QuerySql =
         "FROM STOK_HAREKETLERI AS Hesaplama WHERE sth_evraktip IN (13,3) AND  " + 
         "sth_Guid = (SELECT TOP 1 sth_Guid FROM STOK_HAREKETLERI AS Hesaplama1  " + 
         "WHERE Hesaplama1.sth_evraktip IN (13,3)  AND Hesaplama1.sth_stok_kod = Hesaplama.sth_stok_kod  " + 
-        "ORDER BY sth_create_date DESC) AND Hesaplama.sth_stok_kod  = @sth_stok_kod" , 
+        "ORDER BY sth_create_date DESC) AND Hesaplama.sth_stok_kod  = @sth_stok_kod ",
         param : ['sth_stok_kod'],
         type  : ['string|25']
     },
@@ -893,6 +899,21 @@ var QuerySql =
                 "WHERE pl_stokkodu = @pl_stokkodu " +
                 "AND ((pl_partikodu = @pl_partikodu) OR (@pl_partikodu = '')) AND ((pl_lotno = @pl_lotno) OR (@pl_lotno = 0)) " +
                 "AND ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,@DEPONO,GETDATE(),pl_partikodu,pl_lotno)),0) > 0 " +
+                "ORDER BY pl_son_kullanim_tar ASC ",
+        param : ['pl_stokkodu','DEPONO','pl_partikodu','pl_lotno'],
+        type : ['string|25','int','string|25','int']
+    },
+    AlisPartiLotGetir :
+    {
+        query : "SELECT pl_partikodu AS PARTI, " + 
+                "pl_lotno AS LOT, " +
+                "pl_stokkodu AS STOK, " +
+                "ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,@DEPONO,GETDATE(),pl_partikodu,pl_lotno)),0) AS MIKTAR, " +
+                "0 AS KALAN, " +
+                "pl_son_kullanim_tar AS SKTTARIH " + 
+                "FROM PARTILOT " +
+                "WHERE pl_stokkodu = @pl_stokkodu " +
+                "AND ((pl_partikodu = @pl_partikodu) OR (@pl_partikodu = '')) AND ((pl_lotno = @pl_lotno) OR (@pl_lotno = 0)) " +
                 "ORDER BY pl_son_kullanim_tar ASC ",
         param : ['pl_stokkodu','DEPONO','pl_partikodu','pl_lotno'],
         type : ['string|25','int','string|25','int']
@@ -1122,7 +1143,7 @@ var QuerySql =
         "(SELECT dep_adi FROM DEPOLAR WHERE dep_no =  NAKLIYE.sth_cikis_depo_no) AS   CDEPOADI ,"  +       
         "(SELECT dep_adi FROM DEPOLAR WHERE dep_no =  NAKLIYE.sth_nakliyedeposu) AS   NDEPOADI "  +       
         "FROM STOK_HAREKETLERI AS NAKLIYE  " +
-        "WHERE NAKLIYE.sth_tarih>=@ILKTARIH AND  NAKLIYE.sth_tarih<=@SONTARIH and NAKLIYE.sth_evraktip = 17 AND NAKLIYE.sth_evraktip=@TIP and NAKLIYE.sth_nakliyedurumu = 0 " +
+        "WHERE NAKLIYE.sth_tarih>=@ILKTARIH AND  NAKLIYE.sth_tarih<=@SONTARIH and NAKLIYE.sth_evraktip = 17 and NAKLIYE.sth_nakliyedurumu = 0 " +
         "GROUP BY NAKLIYE.sth_tarih,NAKLIYE.sth_evrakno_seri, NAKLIYE.sth_evrakno_sira," +
         "NAKLIYE.sth_giris_depo_no,NAKLIYE.sth_cikis_depo_no,NAKLIYE.sth_nakliyedeposu,NAKLIYE.sth_evraktip,NAKLIYE.sth_birim_pntr " ,
         param : ['ILKTARIH','SONTARIH','TIP'],
@@ -4586,7 +4607,7 @@ var QuerySql =
             ",@bar_kodu                                     --<bar_kodu, [dbo].[barkod_str],> \n" +
             ",@bar_stokkodu                                 --<bar_stokkodu, nvarchar(25),> \n" +
             ",@bar_partikodu                                --<bar_partikodu, nvarchar(25),> \n" +
-            ",0                                             --<bar_lotno, int,> \n" +
+            ",@bar_lotno                                             --<bar_lotno, int,> \n" +
             ",''                                            --<bar_serino_veya_bagkodu, nvarchar(25),> \n" +
             ",@bar_barkodtipi                               --<bar_barkodtipi, tinyint,> \n" +
             ",0                                             --<bar_icerigi, tinyint,> \n" + 
@@ -4598,7 +4619,7 @@ var QuerySql =
             ",'00000000-0000-0000-0000-000000000000'        --<bar_har_uid, uniqueidentifier,> \n" +
             ",0         --<bar_asortitanimkodu, nvarchar(25),> \n" +
            ") ",
-           param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int','bar_baglantitipi:int','bar_barkodtipi:int','bar_partikodu:string|25']
+           param : ['bar_kodu:string|50','bar_stokkodu:string|25','bar_birimpntr:int','bar_baglantitipi:int','bar_barkodtipi:int','bar_partikodu:string|25','bar_lotno:int']
     },  
     //E-Süreçler
     EIrsSemaGetir : 
@@ -4906,7 +4927,8 @@ var QuerySql =
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi1,0),2)) AS DOVIZKUR1, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(cari_doviz_cinsi2,0),2)) AS DOVIZKUR2, " +
                 "(SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(1,0),2)) AS ALTDOVIZKUR, " +
-                "ISNULL((SELECT sum(ct_tutari) FROM dbo.CARI_HESAP_TEMINATLARI WHERE ct_carikodu = cari_kod),0) AS RISK, " +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1475\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISK, " +
+                "ISNULL((SELECT ROUND(SUM([msg_S_1479\\T]),2) FROM dbo.fn_CariDovizCinsindenRiskFoyu(0,cari_kod,CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),CONVERT(NVARCHAR,GETDATE(),112),0,'',0)),0) AS RISKLIMIT, " +
                 "cari_odemeplan_no AS ODEMEPLANI, " +
                 "ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS BAKIYE," +
                 "CARI_MUSTAHSIL_TANIMLARI.Cm_BelgeNo AS BELGENO, " +
@@ -4999,6 +5021,12 @@ var QuerySql =
                  "ISNULL((SELECT sfl_aciklama FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=FIYAT.sfiyat_listesirano),'') AS LISTEADI, " +
                  "sfiyat_deposirano AS DEPONO, " +
                  "sfiyat_odemeplan AS ODEMENO, " +
+                 "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                 "ROUND(dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) * ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1),2) " + 
+                 "ELSE " + 
+                 "ROUND(dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1),2) " + 
+                 "END AS FIYAT2, " + 
+                 "ROUND(dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1),2) AS KDVDAHILFIYAT, " +
                  "CASE (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=FIYAT.sfiyat_listesirano) " +
                  "WHEN 0 THEN FIYAT.sfiyat_fiyati " +
                  "ELSE FIYAT.sfiyat_fiyati / (((SELECT dbo.fn_VergiYuzde (STOK.sto_toptan_vergi)) / 100) + 1) " +
@@ -5017,7 +5045,8 @@ var QuerySql =
                  "INNER JOIN STOKLAR AS STOK ON " +
                  "FIYAT.sfiyat_stokkod = STOK.sto_kod " +
                  "INNER JOIN BARKOD_TANIMLARI AS BARKOD WITH (NOLOCK,INDEX=NDX_BARKOD_TANIMLARI_02) ON " +
-                 "STOK.sto_kod = BARKOD.bar_stokkodu"
+                 "STOK.sto_kod = BARKOD.bar_stokkodu GROUP BY sfiyat_listesirano,sfiyat_stokkod,sfiyat_deposirano,sfiyat_odemeplan,sfiyat_fiyati,sto_toptan_vergi,sfiyat_doviz" +
+				 ",sto_isim,sto_altgrup_kod,sto_uretici_kodu,sto_sektor_kodu,sto_reyon_kodu,sto_marka_kodu,sfiyat_iskontokod ",
     },
     FiyatListeTbl :
     {
@@ -5368,18 +5397,19 @@ var QuerySql =
                 "sip_HareketGrupKodu2, " +
                 "sip_HareketGrupKodu3)" ,
     },
-    SonAlisFiyatiTbl : 
+    SonAlisFiyatiTbl :
     {
-        query : "SELECT Hesaplama.sth_cari_kodu AS CARI, " +
-                "Hesaplama.sth_stok_kod AS STOK, " +
-                "CASE WHEN STOKHAREKETLERI.sth_tutar = 0 OR STOKHAREKETLERI.sth_miktar = 0 THEN, " +
-                "ELSE STOKHAREKETLERI.sth_tutar / STOKHAREKETLERI.sth_miktar END AS SONFIYAT , " +
-                "FROM (SELECT TOP (100) PERCENT MAX(sth_RECno) AS Recno, sth_cari_kodu, sth_stok_kod " +
-                "FROM STOK_HAREKETLERI " +
-                "WHERE (sth_evraktip = 3 OR sth_evraktip = 13) " +
-                "GROUP BY sth_cari_kodu, sth_stok_kod " +
-                "ORDER BY Recno DESC) AS Hesaplama INNER JOIN " +
-                "STOK_HAREKETLERI AS STOKHAREKETLERI ON Hesaplama.Recno = STOKHAREKETLERI.sth_RECno"
+        query : "SELECT sth_cari_kodu AS CARI," +
+        "sth_stok_kod AS STOK, " + 
+        "ROUND((sth_tutar / sth_miktar) * ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sth_stok_kod)) / 100) + 1),2)  AS SONFIYAT, " + 
+        "sth_har_doviz_cinsi AS DOVIZ, " + 
+        "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sth_har_doviz_cinsi,0))),'TL') AS DOVIZSEMBOL, " + 
+        "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sth_har_doviz_cinsi,0),2)),1) AS DOVIZKUR, " + 
+        "sth_create_date AS OLUSTURULMATARIHI " +
+        "FROM STOK_HAREKETLERI AS Hesaplama WHERE sth_evraktip IN (13,3) AND  " + 
+        "sth_Guid = (SELECT TOP 1 sth_Guid FROM STOK_HAREKETLERI AS Hesaplama1  " + 
+        "WHERE Hesaplama1.sth_evraktip IN (13,3)  AND Hesaplama1.sth_stok_kod = Hesaplama.sth_stok_kod  " + 
+        "ORDER BY sth_create_date DESC)",
     },
     SonSatisFiyatiTbl :
     {

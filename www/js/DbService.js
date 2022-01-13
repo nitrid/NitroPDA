@@ -320,7 +320,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                 }
                 pQuery.value = [];
             } 
-            console.log(pQuery)
             _LocalDb.GetData(pQuery,pQuery.value,function(data)
             {
                 if(typeof(data.result.err) == 'undefined')

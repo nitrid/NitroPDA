@@ -450,10 +450,17 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
         await db.GetPromiseTag($scope.Firma,"NakliyeListele",TmpParam,function(data)
         {
             $scope.NakliyeListe = data;
+            console.log(data)
             if($scope.NakliyeListe.length > 0)
             {
                 $scope.Loading = false;
                 $scope.TblLoading = true;
+            }
+            else
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                alertify.alert("Veri yok")
             }
             $("#TblNakliyeListe").jsGrid({data : $scope.NakliyeListe});
         });

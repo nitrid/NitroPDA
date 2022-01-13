@@ -87,6 +87,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.RotaKontrol = false;
         $scope.RotaAciklama = "";
         $scope.Indirim = 0;
+        $scope.RiskLimit = 0
+        $scope.Risk = 0;
+
         //CARİHAREKET
         if(ParamName == "AlisFatura")
         {
@@ -190,6 +193,18 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 },
                 {
                     name: "BAKIYE",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                },
+                {
+                    name: "RISK",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                },
+                {
+                    name: "RISKLIMIT",
                     type: "number",
                     align: "center",
                     width: 75
@@ -2138,6 +2153,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                                         $scope.CariVDADI = $scope.CariListe[0].VDADI;
                                         $scope.CariVDNO = $scope.CariListe[0].VDNO;
                                         $scope.Risk = $scope.CariListe[0].RISK;
+                                        $scope.RiskLimit = $scope.CariListe[0].RISKLIMIT;
                                         $("#TblCari").jsGrid({data : $scope.CariListe});
                                         console.log(datas)
                                         let Obj = $("#TblCari").data("JSGrid");
@@ -2158,6 +2174,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                             $scope.CariVDADI = $scope.CariListe[0].VDADI;
                             $scope.CariVDNO = $scope.CariListe[0].VDNO;
                             $scope.Risk = $scope.CariListe[0].RISK;
+                            $scope.RiskLimit = $scope.CariListe[0].RISKLIMIT;
                             $("#TblCari").jsGrid({data : $scope.CariListe});
                             
                             let Obj = $("#TblCari").data("JSGrid");
@@ -2168,24 +2185,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                             $scope.Loading = false;
                             $scope.TblLoading = true;
                         }
-
-                    });
-                    await db.GetPromiseTag($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
-                    {
-                        $scope.CariListe = data;
-                        $scope.Adres = $scope.CariListe[0].ADRES;
-                        $scope.Adres1 = $scope.CariListe[0].ADRES1;
-                        $scope.Adres2 = $scope.CariListe[0].ADRES2;
-                        $scope.CariBakiye = $scope.CariListe[0].BAKIYE;
-                        $scope.CariVDADI = $scope.CariListe[0].VDADI;
-                        $scope.CariVDNO = $scope.CariListe[0].VDNO;
-                        $scope.Risk = $scope.CariListe[0].RISK;
-                        $("#TblCari").jsGrid({data : $scope.CariListe});
-
-                        let Obj = $("#TblCari").data("JSGrid");
-                        let Item = Obj.rowByItem(data[0]);
-                        
-                        $scope.CariListeRowClick(0,Item,Obj);
                     });
                 }
                 db.DepoGetir($scope.Firma,UserParam[ParamName].DepoListe,function(e)
@@ -2562,18 +2561,65 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             {   
                 if(ParamName == "SatisFatura")
                 {
-                    if($scope.RiskParam != 0)
+                    if(localStorage.mode == "true")
                     {
-                        let TmpRiskOran = ($scope.CariBakiye / $scope.Risk) * 100;
-        
-                        if(TmpRiskOran >= 100)
+                        var TmpQuery = 
                         {
-                            alertify.alert("Risk limitini aştınız");
+                            db : '{M}.' + $scope.Firma,
+                            query:  "SELECT CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE " +
+                                    "FROM CARI_HESAPLAR  WHERE cari_kod = @CARIKODU " ,
+                            param:  ['CARIKODU'], 
+                            type:   ['string|25'], 
+                            value:  [$scope.CariKodu]    
+                        }
+                        db.GetPromiseQuery(TmpQuery,function(Data)
+                        {
+                            $scope.CariBakiye = Data[0].BAKIYE
+                        });
+                    }
+                    else
+                    {
+                        var TmpQuery = 
+                        {
+                            db : '{M}.' + $scope.Firma,
+                            query:  "SELECT " +
+                                    "BAKIYE + " +
+                                    "(SELECT IFNULL(SUM(HESAP),0) AS BAKIYE FROM (SELECT CASE WHEN cha_evrak_tip IN(64,63) THEN cha_meblag WHEN cha_evrak_tip IN (0,1) THEN cha_meblag * -1 end as HESAP FROM CARIHAR WHERE cha_kod = '@CARIKODU' " +
+                                    ") AS TBL) AS BAKIYE, " +
+                                    "BAKIYE AS ILKBAKIYE " +
+                                    "FROM CARI  WHERE KODU = '@CARIKODU' " ,
+                            param:  ['CARIKODU'], 
+                            type:   ['string|25'], 
+                            value:  [$scope.CariKodu]    
+                        }
+                        db.GetPromiseQuery(TmpQuery,function(Data)
+                        {
+                            $scope.CariBakiye = Data[0].BAKIYE
+                            console.log(Data)
+                        });
+                    }
+                    if($scope.RiskParam == 1)
+                    {
+                        let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
+                        if(TmpRiskOran >= 100 && TmpRiskOran != 0)
+                        {
+                            alertify.alert("Risk limitini aştınız. \n" + "Risk Limiti: " + $scope.RiskLimit);
                             return;
                         }
                         if(TmpRiskOran >= UserParam.Sistem.RiskLimitOran)
                         {
                             alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
+                        }
+                    }
+                    if($scope.RiskParam == 2)
+                    {
+                        console.log($scope.CariBakiye)
+                        console.log($scope.Risk,$scope.RiskLimit)
+                        console.log($scope.Stok[0].TOPTUTAR,$scope.CariBakiye,($scope.Stok[0].TOPTUTAR + parseFloat($scope.CariBakiye)),$scope.RiskLimit)
+                        if(($scope.Stok[0].TOPTUTAR + parseFloat($scope.CariBakiye)) > $scope.RiskLimit && $scope.RiskLimit != 0)
+                        {
+                            alertify.alert("Risk limitini aştınız. \n" + "Risk Limiti: " + $scope.RiskLimit + " Bakiye: " + $scope.CariBakiye);
+                            return;
                         }
                     }
                 }   
@@ -3079,8 +3125,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         if($scope.CmbEvrakTip != 5)
         {
             $scope.Stok[0].INDIRIM = 0;
-            console.log($scope.Stok[0].ISK)
-            $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
+            $scope.Stok[0].TUTAR = (($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT);
+
             $scope.Stok[0].ISK.TUTAR1 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100);
             $scope.Stok[0].ISK.TIP1 = $scope.Stok[0].ISK.TUTAR1 === 0 ? 0 : 1; 
             $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN1 / 100));       
@@ -3106,18 +3152,20 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100));
             $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM.toFixed(2)
             $scope.Stok[0].TOPTANVERGI1 = 0;
-            if($scope.VergiChk == false)
+
+            if($scope.VergiChk == true)
             {
                 $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
-                $scope.Stok[0].TOPTANVERGI1 = $scope.Stok[0].TOPTANVERGI
+                $scope.Stok[0].TOPTANVERGI1 = $scope.Stok[0].TOPTANVERGI;
             }
-            else if($scope.VergiChk == true)
+            else if($scope.VergiChk == false)
             {
                 $scope.Stok[0].KDV = 0;
                 $scope.Stok[0].TOPTANVERGI1 = 0;
                 if(localStorage.mode == "false"){$scope.Stok[0].TOPTANVERGIPNTR = 1;}else{$scope.Stok[0].TOPTANVERGIPNTR = 0;}
             }
             $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
+
         }
         else
         {
@@ -3157,7 +3205,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.DovizSembol = $scope.CariListe[pIndex].DOVIZSEMBOL
             $scope.DovizSembol1 = $scope.CariListe[pIndex].DOVIZSEMBOL1
             $scope.DovizSembol2 = $scope.CariListe[pIndex].DOVIZSEMBOL2
-            $scope.Risk = $scope.CariListe[pIndex].RISK
+            $scope.Risk = $scope.CariListe[pIndex].RISK;
+            $scope.RiskLimit = $scope.CariListe[pIndex].RISKLIMIT;
             $scope.DovizChangeKodu = "0"
             $scope.DovizChange()
             //$scope.MainClick()
@@ -3395,7 +3444,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                     db : '{M}.' + $scope.Firma,
                     query:  "SELECT " +
                             "BAKIYE + " +
-                            "(SELECT IFNULL(SUM(HESAP),0) AS BAKIYE FROM (SELECT CASE WHEN cha_evrak_tip IN(64,63) THEN cha_meblag WHEN cha_evrak_tip IN (0) THEN cha_meblag * -1 end as HESAP FROM CARIHAR WHERE cha_kod = '@CARIKODU' " +
+                            "(SELECT IFNULL(SUM(HESAP),0) AS BAKIYE FROM (SELECT CASE WHEN cha_evrak_tip IN(64,63) THEN cha_meblag WHEN cha_evrak_tip IN (0,1) THEN cha_meblag * -1 end as HESAP FROM CARIHAR WHERE cha_kod = '@CARIKODU' " +
                             ") AS TBL) AS BAKIYE, " +
                             "BAKIYE AS ILKBAKIYE " +
                             "FROM CARI  WHERE KODU = '@CARIKODU' " ,

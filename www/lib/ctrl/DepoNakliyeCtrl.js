@@ -441,7 +441,8 @@ function DepoNakliyeCtrl($scope,$window,$timeout,db,$filter)
             0,  // OTVVERGİSİZFL
             0,  // OİVVERGİSİZ
             0,   // FİYATLİSTENO
-            $scope.NDepo
+            $scope.NDepo,
+            0
           ];
           
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)

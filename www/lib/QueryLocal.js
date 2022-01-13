@@ -124,6 +124,15 @@ var QueryLocal =
         query : "SELECT '0' AS KODU, 'PEŞİN' AS ADI UNION ALL SELECT ODEMENO AS KODU, " +
                 "ODEMEADI  AS ADI FROM ODEMEPLAN"
     },
+    TumSonAlisGetir :
+    {
+        query : "SELECT CARI,STOK,ROUND(IFNULL(sth_tutar / sth_miktar,SONFIYAT),2) AS SONFIYAT " +
+        "FROM SONALISFIYATI AS SONF LEFT JOIN STOKHAR ON STOKHAR.sth_cari_kodu = SONF.CARI " +
+        "WHERE " +
+        "STOK  = '@sth_stok_kod' ORDER BY OLUSTURULMATARIHI,sth_satirno,sth_evrakno_sira DESC",
+        param : ['sth_stok_kod'],
+        type  : ['string|25']
+    },
     SonSatisFiyatGetir : 
     {
         query : 
@@ -337,6 +346,7 @@ var QueryLocal =
                 "IFNULL((SELECT IL FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS IL, " +
                 "IFNULL((SELECT ILCE FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ILCE, " +
                 "RISK," +
+                "RISKLIMIT," +
                 "ODEMEPLANI," +
                 "BAKIYE," +
                 "BELGENO," +
@@ -381,6 +391,7 @@ var QueryLocal =
                 "IFNULL((SELECT IL FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS IL, " +
                 "IFNULL((SELECT ILCE FROM ADRES WHERE ADRESNO = 1 AND CARIKODU = KODU),'') AS ILCE, " +
                 "RISK," +
+                "RISKLIMIT," +
                 "ODEMEPLANI," +
                 "BAKIYE," +
                 "BELGENO," +
@@ -2676,13 +2687,14 @@ var QueryLocal =
                 "DOVIZKUR2 FLOAT," + 
                 "ALTDOVIZKUR FLOAT," + 
                 "RISK FLOAT," + 
+                "RISKLIMIT FLOAT," + 
                 "ODEMEPLANI INTEGER," + 
                 "BAKIYE FLOAT," + 
                 "BELGENO NVARCHAR(20)," + 
                 "BELGETARIH DATETIME," + 
                 "VERGISIZ BIT," + 
                 "EFATURA BIT)",
-        insert : "INSERT INTO CARI VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"                
+        insert : "INSERT INTO CARI VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"                
     },
     CariFoyTbl : 
     {
@@ -3005,6 +3017,8 @@ var QueryLocal =
                  "LISTEADI nvarchar (25)," +
                  "DEPONO int," +
                  "ODEMENO int," +
+                 "FIYAT2 float," +
+                 "KDVDAHILFIYAT float," +
                  "FIYAT float," +
                  "DOVIZ tinyint," +
                  "DOVIZSEMBOL nvarchar (25)," +
@@ -3016,7 +3030,7 @@ var QueryLocal =
                  "REYON nvarchar (25)," +
                  "MARKA nvarchar (25)," +
                  "ISKONTOKOD nvarchar (4))",               
-        insert : "INSERT INTO FIYAT VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"               
+        insert : "INSERT INTO FIYAT VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"               
     },
     FiyatListeTbl:
     {
@@ -3737,8 +3751,12 @@ var QueryLocal =
         query : "CREATE TABLE IF NOT EXISTS SONALISFIYATI (" +
                 "CARI nvarchar(30)," +
                 "STOK nvarchar(30)," +
-                "SONFIYAT float)",
-        insert : "INSERT INTO SONALISFIYATI VALUES (?,?,?)"
+                "SONFIYAT float," +
+                "DOVIZ float," +
+                "DOVIZSEMBOL nvarchar," +
+                "DOVIZKUR float, " + 
+                "OLUSTURULMATARIHI datetime )",
+        insert : "INSERT INTO SONALISFIYATI VALUES (?,?,?,?,?,?,?)"
     },
     SonSatisFiyatiTbl :
     {

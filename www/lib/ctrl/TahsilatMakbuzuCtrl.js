@@ -1320,7 +1320,6 @@ function TahsilatMakbuzuCtrl($scope,$window,$timeout,db)
             type:   ['string|25','string|25','int','int',],
             value:  [$scope.Special,$scope.Seri,$scope.Sira,$scope.ChaEvrakTip]
         }
-
         db.ExecuteQuery(TmpQuery,function(data)
         {   
             if(typeof(data.result.err) == 'undefined')
