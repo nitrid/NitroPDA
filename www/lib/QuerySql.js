@@ -561,7 +561,7 @@ var QuerySql =
         query : "SELECT " +
                 "sto_kod AS KODU, " +
                 "sto_isim AS ADI, " +
-                "ISNULL((SELECT dbo.fn_DepodakiMiktar(sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
+                "ISNULL((SELECT dbo.fn_DepodakiMiktar(sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),9906) AS DEPOMIKTAR, " +
                 "sto_birim1_ad AS BIRIM1, " +
                 "CASE sto_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "sto_kod AS BARKOD " +
@@ -5686,7 +5686,7 @@ var QuerySql =
             ",''            --<bar_special3, nvarchar(4),> \n" +
             ",@bar_kodu         --<bar_kodu, [dbo].[barkod_str],> \n" +
             ",@bar_stokkodu     --<bar_stokkodu, nvarchar(25),> \n" +
-            ",''            --<bar_partikodu, nvarchar(25),> \n" +
+            ",@bar_partikodu            --<bar_partikodu, nvarchar(25),> \n" +
             ",0         --<bar_lotno, int,> \n" +
             ",''            --<bar_serino_veya_bagkodu, nvarchar(25),> \n" +
             ",0         --<bar_barkodtipi, tinyint,> \n" +
@@ -5699,7 +5699,7 @@ var QuerySql =
             ",'00000000-0000-0000-0000-000000000000'        --<bar_har_uid, uniqueidentifier,> \n" +
             ",0         --<bar_asortitanimkodu, nvarchar(25),> \n" +
            ") ",
-           param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_birimpntr:int']
+           param : ['bar_kodu:string|25','bar_stokkodu:string|25','bar_partikodu:string|25','bar_birimpntr:int']
     }    
     //#endregion "AKTARIM"
 };

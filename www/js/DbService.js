@@ -662,6 +662,7 @@ angular.module('app.db', []).service('db',function($rootScope)
         }
         _SqlExecute(m,function(data)
         {
+            console.log(data)
             if(pCallback)
             {
                 if(data.result.recordset.length > 0)

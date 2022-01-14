@@ -29,7 +29,16 @@ var ParamTemp =
 			"FirmaListe" : {"Title" : "Firma Liste","DefaultValue" : ""},
 			"RiskParam": {"Title" : "Risk Param","DefaultValue" : ""},
 			"RiskLimitOran": {"Title" : "Risk Limit Oran","DefaultValue" : ""},
-			"FisDizayn": {"Title" : "Fiş Dizayn","DefaultValue" : "0"}
+			"FisDizayn": {"Title" : "Fiş Dizayn","DefaultValue" : "0"},
+			"QR": {"Title" : "QR Kodu","DefaultValue" : "0"},
+			"BarkodBaslangic": {"Title" : "Barkod Başlangıç Değeri","DefaultValue" : "9"},
+			"BarkodKarakterSayi": {"Title" : "Barkod Karakter Sayısı","DefaultValue" : "6"},
+			"LotBaslangic": {"Title" : "Lot Baslangıç Değeri","DefaultValue" : "14"},
+			"LotKarakterSayi": {"Title" : "Lot Karakter Sayısı","DefaultValue" : "3"},
+			"RefBaslangic": {"Title" : "Ref Başlangıç Değeri","DefaultValue" : "5"},
+			"RefKarakterSayi": {"Title" : "Ref Karakter Sayısı","DefaultValue" : "3"},
+			"SktTarihiBaslangic": {"Title" : "S.K.T Başlangıç Değeri","DefaultValue" : "11"},
+			"SktTarihiKarakterSayi": {"Title" : "S.K.T Karakter Sayısı","DefaultValue" : "6"}
 		},
 		"Sayim" :
 		{

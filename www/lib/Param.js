@@ -28,7 +28,16 @@ var Param = [
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "70",
-			"FisDizayn": "0"
+			"FisDizayn": "0",
+			"QR": "1",
+			"BarkodBaslangic":"9",
+			"BarkodKarakterSayi":"6",
+			"LotBaslangic":"15",
+			"LotKarakterSayi":"4",
+			"RefBaslangic":"5",
+			"RefKarakterSayi":"7",
+			"SktTarihiBaslangic":"11",
+			"SktTarihiKarakterSayi":"6"
 		},
 		"StokRaporu": {
 			"DepoNo": "4"

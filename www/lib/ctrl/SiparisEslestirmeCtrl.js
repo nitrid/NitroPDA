@@ -113,6 +113,13 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SiparisKabulListeSelectedIndex = 0;
         $scope.SonSatisListeSelectedIndex = 0; 
 
+        $scope.bar_baslangic=UserParam.Sistem.BarkodBaslangic;
+        $scope.bar_karakter_sayi=UserParam.Sistem.BarkodKarakterSayi;
+        $scope.lot_baslangic=UserParam.Sistem.LotBaslangic;
+        $scope.lot_karakter_sayi=UserParam.Sistem.LotKarakterSayi;
+        $scope.ref_baslangic=UserParam.Sistem.RefBaslangic;
+        $scope.ref_karakter_sayisi=UserParam.Sistem.RefKarakterSayi;
+
         $scope.TxtParti = "";
         $scope.TxtLot = 0;
         $scope.SktTarih = new Date().toLocaleDateString();
@@ -123,6 +130,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.FiyatEdit = 0;
 
         $scope.TblLoading = true;
+
+        
     }
     function InitCariGrid()
     {   
@@ -675,6 +684,13 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     function BarkodGetir(pBarkod)
     {
+        if (UserParam.Sistem.QR=='1') {
+            EmreBarkodGetir(pBarkod)
+            
+        }
+        else{
+
+
         if(pBarkod != '')
         {
             // KILO BARKOD KONTROL EDİLİYOR. DÖNEN DEĞERLER ATANIYOR. ALI KEMAL KARACA 18.09.2019
@@ -769,6 +785,109 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 $scope.$apply();
             });
         }
+    }
+}
+
+    function EmreBarkodGetir(pBarkod) {
+        let StokKodu = pBarkod.substr(UserParam.Sistem.BarkodBaslangic,UserParam.Sistem.BarkodKarakterSayi);
+        $scope.Ref = pBarkod.substr(UserParam.Sistem.RefBaslangic,UserParam.Sistem.RefKarakterSayi);
+        $scope.Lot = pBarkod.substr(UserParam.Sistem.LotBaslangic,UserParam.Sistem.LotKarakterSayi);
+        $scope.SktTarihi= pBarkod.substr(UserParam.Sistem.SktBaslangic,UserParam.Sistem.SktKarakterSayi)
+        if(pBarkod != '')
+        {
+            // KILO BARKOD KONTROL EDİLİYOR. DÖNEN DEĞERLER ATANIYOR. ALI KEMAL KARACA 18.09.2019
+            //pBarkod = db.KiloBarkod(pBarkod,UserParam).Barkod;
+            $scope.Miktar = db.KiloBarkod(pBarkod,UserParam).Miktar;
+            let Kilo = pBarkod;
+            let KiloFlag = UserParam.Sistem.KiloFlag;
+            let FlagDizi = KiloFlag.split(',')
+            let Flag = Kilo.slice(0,2);
+     
+            for (i = 0; i < FlagDizi.length; i++ )
+            {
+                if(Flag == FlagDizi[i])
+                {
+                    var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
+                    var Uzunluk = Kilo.slice(parseInt(UserParam.Sistem.KiloBaslangic),parseInt(UserParam.Sistem.KiloBaslangic)+parseInt(UserParam.Sistem.KiloUzunluk));
+                    pBarkod = kBarkod
+                    $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan) / 100
+                }
+            }
+            //SİPARİŞE BAĞLI VEYA NORMAL STOK OLARAK GETİRME FONKSİYONU
+            EslestirmeStokGetir(StokKodu,async function(pData,pTip)
+            {
+                $scope.Stok = pData
+                //FONKSİYONDA $scope.Stok İÇERİĞİ BOŞ GELİRSE TÜM İŞLEMLER İPTAL EDİLİYOR. ALI KEMAL KARACA 18.09.2019
+                if($scope.Stok.length == 0)
+                {
+                    $scope.InsertLock = false;
+                    $scope.BtnTemizle();
+                    return;
+                }
+                //BİRİM GETİRİLİYOR
+                await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[$scope.Stok[0].KODU],function(data)
+                {   
+                    if($scope.Stok[0].BIRIMPNTR == null)
+                    {
+                        console.log("Girdi")
+                        $scope.Stok[0].BIRIMPNTR = 1;
+                    }
+                    $scope.BirimListe = data; 
+                    $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
+                    console.log($scope.Birim)
+                    
+                    console.log($scope.BirimListe)
+                    if($scope.BirimListe.length > 0)
+                    {
+                        $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){console.log(d); return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;
+                        $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
+                        $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
+                        console.log($scope.Stok[0].BIRIM,$scope.Stok[0].BIRIMPNTR)
+                    }
+                    else
+                    {  //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
+                        $scope.Stok[0].BIRIMPNTR = 1;
+                        $scope.Stok[0].BIRIM = 'ADET';
+                        $scope.Stok[0].CARPAN = 1;
+                    }
+                });
+                //ESLESTİRMESTOKGETİR FONKSİYONUNDAN DÖNEN TİPE GÖRE İŞLEMLER YAPILIYOR.
+                if (pTip == 'Stok')
+                {
+                    //EĞER TİP STOK İSE..
+                    let FiyatParam = 
+                    { 
+                        CARIADI : $scope.CariAdi,
+                        CariKodu : $scope.CariKodu,
+                        CariFiyatListe : $scope.CariFiyatListe,
+                        OdemeNo : $scope.OdemeNo,
+                        DepoNo : $scope.DepoNo,
+                        FiyatListe : 1,
+                        AlisSatis : ($scope.EvrakTip === 0 ? 0 : 1)
+                    };
+                    console.log(FiyatParam)
+                    await db.FiyatGetir($scope.Firma,pData,FiyatParam,UserParam[ParamName]);
+                }
+                //RENK BEDEN ,PARTİ LOT KONTROLÜ YAPILIYOR VE POP UP EKRANLARI AÇILIYOR.
+                RenkBedenPartiLotKontrol();
+
+                if($scope.OtoEkle == true)
+                {
+                    MiktarLock = true
+                    $scope.Insert()
+                }
+                else
+                {
+                    $window.document.getElementById("Miktar").focus();
+                    $window.document.getElementById("Miktar").select();
+                }
+
+                $scope.MiktarFiyatValid();
+                $scope.BarkodLock = true;
+                $scope.$apply();
+            });
+        }
+        
     }
     function IrsInsert()
     { 
@@ -2361,7 +2480,8 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.BtnBarkodGetirClick = function()
     {
-        BarkodGetir($scope.Barkod);
+        BarkodGetir($scope.Barkod)
+ 
     }
     $scope.MiktarPress = function(keyEvent)
     {
