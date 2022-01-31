@@ -561,7 +561,7 @@ var QuerySql =
         query : "SELECT " +
                 "sto_kod AS KODU, " +
                 "sto_isim AS ADI, " +
-                "ISNULL((SELECT dbo.fn_DepodakiMiktar(sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),9906) AS DEPOMIKTAR, " +
+                "ISNULL((SELECT dbo.fn_DepodakiMiktar(sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
                 "sto_birim1_ad AS BIRIM1, " +
                 "CASE sto_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "sto_kod AS BARKOD " +

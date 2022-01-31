@@ -354,7 +354,6 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         }
         else
         {
-        
 
         let Kilo = pBarkod;
         let KiloFlag = UserParam.Sistem.KiloFlag;
@@ -790,6 +789,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         }
         db.GetData($scope.Firma,'StokAdiGetir',[Kodu,Adi,$scope.DepoNo],function(StokData)
         {
+            $scope.DepoNo=9901;
             $scope.StokListe = StokData;
             if ($scope.StokListe.length > 0)
             {

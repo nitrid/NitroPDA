@@ -1039,9 +1039,7 @@ function SayimCtrl($scope,$window,$timeout,db)
         BarkodFocus();
 
         console.log("aa",$scope.barkodno)
-        $scope.PartiLotInsert();
-        $scope.BarkodInsert();
-        
+        $scope.PartiLotInsert();        
     }
     $scope.BtnBarkodGetirClick = function()
     {
