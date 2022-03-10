@@ -115,6 +115,13 @@ function StokHareketCtrl($scope,$window,db)
                     
                 },
                 {
+                    name: "CARI",
+                    title: "CARİ ADI",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+                {
                     name: "SERISIRA",
                     title: "SERİ SIRA",
                     type: "text",
@@ -130,41 +137,75 @@ function StokHareketCtrl($scope,$window,db)
                     width: 180
                 },
                 {
-                    name: "CINSI",
-                    title: "CİNSİ",
-                    type: "text",
-                    align: "center",
-                    width: 120
-                },
-           
-                {
-                    name: "DEPO",
-                    title: "DEPO",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                },
-                {
-                    name: "KARSIDEPO",
-                    title: "KARSI DEPO",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                },
-                {
                     name: "GIRISMIKTAR",
                     title: "GİRİS MIKTAR",
                     type: "number",
                     align: "center",
-                    width: 200
+                    width: 120
                 },
                 {
                     name: "CIKISMIKTAR",
                     title: "ÇIKIS MIKTAR",
                     type: "number",
                     align: "center",
-                    width: 200
+                    width: 120
                 },
+                {
+                    name: "CINSI",
+                    title: "CİNSİ",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "BIRIM",
+                    title: "BİRİM",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "BRUTFIYAT",
+                    title: "BRÜT BİRİM FİYAT",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "NETBIRIMFIYAT",
+                    title: "NET BİRİM FIYAT",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "BRUTTUTAR",
+                    title: "BRÜT TUTAR",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "NETTUTAR",
+                    title: "NET TUTAR",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "FATSERI",
+                    title: "FATURA SERI",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
+                {
+                    name: "FATSIRA",
+                    title: "FATURA SIRA",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                }
              
             ],
         });
@@ -195,9 +236,15 @@ function StokHareketCtrl($scope,$window,db)
     }
     $scope.BtnStokFoyGetir = function()
     {
+        if($scope.StokKodu == "")
+        {
+            alertify.alert("Lütfen Stok Seçin !" );
+            return;
+        }
         if($scope.DepoKodu == '')
         {
             alertify.alert("Lütfen Depo Seçin !" );
+            return;
         }
         else
         {
@@ -206,13 +253,22 @@ function StokHareketCtrl($scope,$window,db)
                 db : '{M}.' + $scope.Firma,
                 query:  "SELECT  " +
                         "CONVERT(VARCHAR(10),#msg_S_0092,104) AS TARIH, " +
-                        "msg_S_0094 AS EVRAKTIP, " +
-                        "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0157) AS SERISIRA, " +
-                        "msg_S_0888 AS CINSI, " +
-                        "msg_S_0159 AS DEPO, " +
-                        "msg_s_0160 AS KARSIDEPO, " +
-                        "[msg_S_0163\\T] AS GIRISMIKTAR, " +
+                        "msg_S_0094 AS EVRAKTIP,  " +
+                        "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0157) AS SERISIRA,  " +
+                        "msg_S_0888 AS CINSI,  " +
+                        "msg_S_0159 AS DEPO,  " +
+                        "msg_S_0160 AS KARSIDEPO,  " +
+                        "msg_S_0166 AS BIRIM, " +
+                        "[msg_S_0163\\T] AS GIRISMIKTAR,  " +
                         "[msg_S_0164\\T] AS CIKISMIKTAR, " +
+                        "[msg_S_0247] AS KALANMIKTAR, " +
+                        "[msg_S_0180\\O] AS BRUTFIYAT, " +
+                        "[msg_S_0181\\O] AS NETBIRIMFIYAT, " +
+                        "[msg_S_0182] AS BRUTTUTAR, " +
+                        "[msg_S_0195] AS NETTUTAR, " +
+                        "ISNULL([msg_S_0196],'') AS FATSERI, " +
+                        "ISNULL([msg_S_0197],'') AS FATSIRA, " +
+                        "msg_S_0201 as CARI, " +
                         "ISNULL((SELECT dbo.fn_DepodakiMiktar(@KODU,@DEPO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR " +
                         "FROM dbo.fn_StokFoy (@KODU,'20191231',@ILKTARIH,@SONTARIH,1,@DEPO) ORDER BY #msg_S_0092 DESC " ,
                 param:  ['KODU','ILKTARIH','SONTARIH','DEPO'],

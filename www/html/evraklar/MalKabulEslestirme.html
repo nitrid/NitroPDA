@@ -15,15 +15,16 @@
                             <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
                                 <option value="0">Alış İrsaliyesi</option>
                                 <option value="1">Alış Faturası</option>
+                                <option value="2">Ithalat İrsaliyesi</option>
                             </select>
                         </div>
                         <div class="col-4 px-1">
-                            <button type="button" class="btn btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak()">Yeni Evrak</button>
                                 <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Evrak Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete()">Evrak Sil</button>
-                                <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakGonder()">Gönder</a>
+                                <!-- <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakGonder()">Gönder</a> -->
                             </div>
                         </div>
                     </div>
@@ -53,30 +54,30 @@
                     </div>
                     <div class="row py-10">
                         <div class="col-6 offset-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="SiparisSecimi()">Sipariş Seçim</button>
+                            <button class="btn btn-round btn-block btn-primary h-50" ng-click="SiparisSecimi()">Sipariş Seçim</button>
                         </div>
                     </div>                       
                     <div class="row py-10 ">
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
+                            <button class="btn btn-round btn-block btn-primary h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="CariSecClick()">Cari Seç</button>
+                            <button class="btn btn-round btn-block btn-primary h-50" ng-click="CariSecClick()">Cari Seç</button>
                         </div>
                     </div>
                     <div class="row py-10">
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="BarkodGirisClick()">Barkod Giriş</button>
+                            <button class="btn btn-round btn-block btn-primary h-50" ng-click="BarkodGirisClick()">Barkod Giriş</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary h-50" ng-click="TbIslemSatirlariClick()">İşlem Satırları</button>
+                            <button class="btn btn-round btn-block btn-primary h-50" ng-click="TbIslemSatirlariClick()">İşlem Satırları</button>
                         </div>
                     </div> 
                 </div>
                 <div id="TbSiparisSecimi" class="tab-pane">
                     <div class="row pt-0 pb-1 pb-5">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="row my-0 py-0">
@@ -107,10 +108,10 @@
                     </div>
                     <div class="row py-1">
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnSiparisKabulSec()">Seç</button>
+                            <button class="btn btn-round btn-block btn-primary" ng-click="BtnSiparisKabulSec()">Seç</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnSiparisKabulListele()">Listele</button>
+                            <button class="btn btn-round btn-block btn-primary" ng-click="BtnSiparisKabulListele()">Listele</button>
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading">
@@ -123,10 +124,10 @@
                 <div id="TbBelgeBilgisi" class="tab-pane">
                     <div class="row pt-0 pb-1 pb-5">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
                         </div>
                     </div>
                     <div class="row py-1">
@@ -169,6 +170,12 @@
                             <select class="form-control" ng-model="Sorumluluk" >
                                 <option ng-repeat="option in SorumlulukListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-info px-1"><div class="col-form-label float-right py-2">İthalat Kodu:</div></div>
+                        <div class="col-8 px-1">
+                            <input type="text" class="form-control" ng-model="IthalatKod" ng-disabled="EvrakLock">
                         </div>
                     </div>
                     <div class="row my-0 py-0">
@@ -217,10 +224,10 @@
                 <div id="TbCariSec" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
                         </div>
                     </div>
                     <div class="row pt-5">
@@ -241,10 +248,10 @@
                     </div>
                     <div class="form-group row my-1">
                         <div class="col-6">
-                            <button class="form-group btn btn-block btn-primary my-1" ng-click="MainClick()">Seç</button>
+                            <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="MainClick()">Seç</button>
                         </div>
                         <div class="col-6">
-                            <button class="form-group btn btn-block btn-primary my-1" ng-click="BtnCariListele()">Listele</button>
+                            <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="BtnCariListele()">Listele</button>
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading">
@@ -257,10 +264,10 @@
                 <div id="TbBarkodGiris" class="tab-pane">
                     <div class="row pt-0 pb-1 pb-5">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1" ng-click="TbIslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1" ng-click="TbIslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
                         </div>
                         <div class="col-4 px-1">
                             <div class="checkbox-custom checkbox-info">
@@ -274,20 +281,20 @@
                             <div class="input-group">
                                 <input type="text" class="form-control" ng-model="Barkod" ng-keypress = "BtnStokBarkodGetir($event)" ng-disabled="BarkodLock" id="Barkod">
                                 <span class="input-group-append">
-                                <button type="submit" class="btn btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                <button type="submit" class="btn btn-round btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="row pt-5">
                         <div class="col-5 px-1">
-                            <button type="submit" data-target="#MdlStokGetir" data-toggle="modal" class="btn btn-primary btn-block h-40">Sipariş Listesi</button>        
+                            <button type="submit" data-target="#MdlStokGetir" data-toggle="modal" class="btn btn-round btn-primary btn-block h-40">Sipariş Listesi</button>        
                         </div>
                         <div class="col-2 px-1">
-                            <button type="submit" class="btn btn-primary btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
                         </div>
                         <div class="col-5 px-1">
-                            <button type="submit" class="btn btn-primary btn-block h-40" ng-click="BtnBarkodGetirClick()">Getir</button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnBarkodGetirClick()">Getir</button>        
                         </div>
                     </div>
                     <div class="row pt-5">
@@ -369,37 +376,54 @@
                     </div>
                     <div class="row my-0">
                         <div class="col-12 pt-5 px-1">
-                            <button type="submit" class="btn btn-primary btn-block h-40" ng-disabled="InsertLock" ng-click="Insert()">Ekle</button>
+                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-disabled="InsertLock" ng-click="Insert()">Ekle</button>
                         </div>
                     </div>
                 </div>
                 <div id="TbIslemSatirlari" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-block btn-primary mb-1" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
                         </div>
                         <div class="col-4 px-1">
-                            <button type="button" class="btn btn-primary btn-block dropdown-toggle mb-1" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle mb-1" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" role="menu-item" ng-click="SatirDelete()">Satır Sil</button>
-                                <button class="dropdown-item"  ng-click="BtnOnlineYazdir()"  role="menu-item">Online Yazdır</button>
+                                <!-- <button class="dropdown-item"  ng-click="BtnOnlineYazdir()"  role="menu-item">Online Yazdır</button> -->
                             <!--    <button class="dropdown-item" ng-click="BtnIskontoEkran(0)" data-toggle="modal"  role="menu-item">Evrak İskonto</button>
                                 <button class="dropdown-item" ng-click="BtnIskontoEkran(1)" data-toggle="modal"  role="menu-item">Satır İskonto</button> -->
-                                <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button> 
+                                <!-- <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button>  -->
                             </div> 
                         </div>
                     </div>
                     <div class="row py-1 px-1">
                         <div id="TblIslem"></div>
                     </div>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Ara Toplam :</span> {{AraToplam | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">İskonto :</span> {{ToplamIndirim | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Net Toplam :</span> {{NetToplam | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">KDV :</span> {{ToplamKdv | number:2}}</h5>
-                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam :</span> {{GenelToplam | number:2}}</h5>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-round btn-block btn-primary h-60">
+                                        <span class="glyphicon glyphicon-print"  aria-hidden="true" ng-click="YazdirTipSecim()"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Ara Toplam :</span> {{AraToplam | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam İndirim :</span> {{ToplamIndirim | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Net Toplam :</span> {{NetToplam | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Kdv :</span> {{ToplamKdv | number:2}}</h5>
+                                    <h5 class="text-right my-1"><span style="color:dodgerblue;">Genel Toplam :</span> {{GenelToplam | number:2}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>            
         </div>
@@ -443,15 +467,15 @@
 
                     <div class="form-group row my-1">
                         <div class="col-12">
-                            <button class="form-group btn btn-block btn-primary my-1" ng-click="BtnPartiLotOlustur()">Oluştur Ve Seç</button>
+                            <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="BtnPartiLotOlustur()">Oluştur Ve Seç</button>
                         </div>
                     </div>
                     <div class="form-group row my-1">
                         <div class="col-6">
-                            <button class="form-group btn btn-block btn-primary my-1" ng-click="BtnPartiLotSec()">Seç</button>
+                            <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="BtnPartiLotSec()">Seç</button>
                         </div>
                         <div class="col-6">
-                            <button class="form-group btn btn-block btn-primary my-1" ng-click="BtnPartiLotGetir()">Getir</button>
+                            <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="BtnPartiLotGetir()">Getir</button>
                         </div>
                     </div>
                     <div id="TblPartiLot"></div>
@@ -484,7 +508,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-12 col-sm-12 col-lg-12 pt-15 my-0">
-                            <button type="submit" class="btn btn-primary btn-block form-control-sm" ng-click="BtnRenkBedenSec()">Seç</button>
+                            <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm" ng-click="BtnRenkBedenSec()">Seç</button>
                         </div>
                     </div>
                 </div>
@@ -513,7 +537,7 @@
                         </div>
                     </div>
                     <div class="row my-5">
-                        <button type="submit" class="btn btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="EvrakGetir()">Getir</button>
+                        <button type="submit" class="btn btn-round btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="EvrakGetir()">Getir</button>
                     </div>
                 </div>
             </div>
@@ -533,10 +557,10 @@
                     <div class="row">
                         <div class="form-group row col-lg-12 my-0 ml-5">
                              <div class="col-lg-6 col-sm-6 col-lg-6">
-                            <button class="btn btn-block btn-primary" ng-click="BtnStokGridSec()">Seç</button>
+                            <button class="btn btn-round btn-block btn-primary" ng-click="BtnStokGridSec()">Seç</button>
                             </div> 
                             <div class="col-lg-6 col-sm-6 col-lg-6">
-                                <button class="btn btn-block btn-primary" ng-click="BtnStokGridGetir()">Liste Getir</button>
+                                <button class="btn btn-round btn-block btn-primary" ng-click="BtnStokGridGetir()">Liste Getir</button>
                             </div>
                         </div>
                     </div>
@@ -623,7 +647,7 @@
                         <label class="form-control-label col-lg-11 col-md-11 col-sm-11 offset-0"><div class="float-right"><span style="color:dodgerblue;"><b>{{IskTplTutar5 | number:2}}</b></span></div></label>
                     </div>
                     <div class="form-group row my--10">
-                        <button type="submit" class="btn btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnIskontoKaydet()">Kaydet</button>
+                        <button type="submit" class="btn btn-round btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnIskontoKaydet()">Kaydet</button>
                     </div>
                 </div>
             </div>
@@ -654,7 +678,7 @@
                         </div>
                     </div>
                     <div class="row px-10">
-                        <button type="submit" class="btn btn-primary btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnDuzenleKaydet(this.IslemListeSelectedIndex)">Kaydet</button>
+                        <button type="submit" class="btn btn-round btn-primary btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnDuzenleKaydet(this.IslemListeSelectedIndex)">Kaydet</button>
                     </div>
                 </div>
             </div>

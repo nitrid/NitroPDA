@@ -81,6 +81,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SipTarih2 = moment(new Date()).format("DD.MM.YYYY");
         $scope.SipSeri = "";
         $scope.SipSira = 0;
+        $scope.IthalatKod = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -1134,7 +1135,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.Stok[0].PARTI,
             $scope.Stok[0].LOT,
             $scope.Proje,
-            '', // EXİMKODU
+            $scope.IthalatKod, // EXİMKODU
             0,  // DİSTİCARETTURU
             0,  // OTVVERGİSİZFL
             0,  // OİVVERGİSİZ
@@ -1529,13 +1530,14 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     {
         $scope.Loading = true;
         $scope.TblLoading = false;
-        console.log([$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1,UserParam.Sistem.PlasiyerKodu,1,$scope.CariKodu,0])
+        console.log([$scope.SipTarih1,$scope.SipTarih2,$scope.DepoNo,1,$scope.Cins,UserParam.Sistem.PlasiyerKodu,1,$scope.CariKodu,0])
         let TmpParam = 
         [
             $scope.SipTarih1,
             $scope.SipTarih2,
             $scope.DepoNo,
             1, // TIP
+            $scope.Cins,
             UserParam.Sistem.PlasiyerKodu,
             1, //ONAYLANANKULNO
             $scope.CariKodu];
@@ -2034,6 +2036,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     {
         if($scope.CmbEvrakTip == 0)
         {
+            $scope.Cins = 0;
             $scope.CariTip = 0;
             $scope.CariCins = 0;        
             $scope.CariNormalIade = 0;
@@ -2049,6 +2052,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         }
         if($scope.CmbEvrakTip == 1)
         { 
+            $scope.Cins = 0;
             $scope.ChaEvrakTip = 0;
             $scope.ChaTip = 1;
             $scope.ChaCins = 6;
@@ -2068,7 +2072,19 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
 
             EvrakParam = UserParam.AlisFatura;
             ParamName = 'AlisFatura'  
-        }          
+        }  
+        if($scope.CmbEvrakTip == 2)
+        {            
+            $scope.Cins = 3;
+            $scope.StokEvrakTip = 13;
+            $scope.StokNormalIade = 0;
+            $scope.StokTip = 0;
+            $scope.StokCins = 12;
+
+            EvrakParam = UserParam.AlisIrsaliye;  
+            ParamName = 'AlisIrsaliye'  
+            alertify.alert("Lütfen Belge Bilgisinden İthalat Kodu Giriniz.");    
+        }         
         $scope.Seri = EvrakParam.Seri;
         $scope.Sira = EvrakParam.Sira;
         $scope.BelgeNo = EvrakParam.BelgeNo;
@@ -2102,16 +2118,8 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data){$scope.PersonelListe = data;$scope.Personel = EvrakParam.Personel});    
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data;$scope.ProjeKodu = ''});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
-
-        if($scope.CmbEvrakTip == 0)
-        {
-            await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
-        }
-       
-       if($scope.CmbEvrakTip == 1)
-       {
-            await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
-       }     
+        
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.StokEvrakTip],function(data){$scope.Sira = data});
     }
     $scope.YeniEvrak = function ()
     {
@@ -2154,7 +2162,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             }
         }
 
-        if($scope.CmbEvrakTip == 0)
+        if($scope.CmbEvrakTip == 0 || $scope.CmbEvrakTip == 2)
         {
             IrsInsert();
         }
@@ -2382,6 +2390,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         SiparisKabulListeSelectedRow = $row;
         $scope.SiparisKabulListeSelectedIndex = pIndex;
+        $scope.IthalatKod = $scope.SiparisKabulListe[pIndex].EXIM;
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -2513,6 +2522,14 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         }
         else
         {
+            if($scope.CmbEvrakTip == 3)
+            {
+                if($scope.IthalatKod == '')
+                {
+                    alertify.alert("Lütfen Belge Bilgisinden İthalat Kodu Giriniz.")
+                    return;
+                }
+            }
             if($scope.CariKodu != "")
             {
                 $("#TbBarkodGiris").addClass('active');
@@ -2539,6 +2556,13 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbSiparisSecimi").removeClass('active');
+    }
+    $scope.YazdirTipSecim = function()
+    {
+        if(UserParam.Sistem.OnlineYazdir == "1")
+        {
+            $scope.BtnOnlineYazdir();
+        }
     }
     $scope.EvrakGonder = async function()
     {

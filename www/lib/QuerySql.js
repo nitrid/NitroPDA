@@ -741,7 +741,7 @@ var QuerySql =
     },
     FiyatListeUpdate :
     {
-        query : "UPDATE STOK_SATIS_FIYAT_LISTELERI SET sfiyat_fiyati = @FIYAT WHERE sfiyat_stokkod = @KODU and sfiyat_listesirano = @LISTENO ",
+        query : "UPDATE STOK_SATIS_FIYAT_LISTELERI SET sfiyat_fiyati = @FIYAT,sfiyat_lastup_date = getdate() WHERE sfiyat_stokkod = @KODU and sfiyat_listesirano = @LISTENO ",
         param : ['FIYAT','KODU','LISTENO'],
         type : ['float','string|25','int']
     },
@@ -893,13 +893,15 @@ var QuerySql =
                 "pl_lotno AS LOT, " +
                 "pl_stokkodu AS STOK, " +
                 "ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,@DEPONO,GETDATE(),pl_partikodu,pl_lotno)),0) AS MIKTAR, " +
+                "pl_son_kullanim_tar as SKTTARIHDATE, " + 
+                "CONVERT(VARCHAR(10),pl_create_date,112) AS TARIH," + 
                 "0 AS KALAN, " +
-                "pl_son_kullanim_tar AS SKTTARIH " + 
+                "CONVERT(VARCHAR(10),pl_son_kullanim_tar,112) AS SKTTARIH " + 
                 "FROM PARTILOT " +
                 "WHERE pl_stokkodu = @pl_stokkodu " +
                 "AND ((pl_partikodu = @pl_partikodu) OR (@pl_partikodu = '')) AND ((pl_lotno = @pl_lotno) OR (@pl_lotno = 0)) " +
                 "AND ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,@DEPONO,GETDATE(),pl_partikodu,pl_lotno)),0) > 0 " +
-                "ORDER BY pl_son_kullanim_tar ASC ",
+                "ORDER BY pl_create_date ASC ",
         param : ['pl_stokkodu','DEPONO','pl_partikodu','pl_lotno'],
         type : ['string|25','int','string|25','int']
     },
@@ -1078,6 +1080,7 @@ var QuerySql =
                 "MAX(SIPARIS.sip_cari_sormerk) AS SORUMLULUK, " +
                 "MAX(SIPARIS.sip_satici_kod) AS PERSONEL, " +
                 "MAX(sip_projekodu) AS PROJE, " +
+                "MAX(sip_Exp_Imp_Kodu) AS EXIM, " +
                 "MAX(CARI_HESAPLAR.cari_temsilci_kodu) AS TEMSILCIKODU, " +
                 "MAX(SIPARIS.sip_opno) AS ODEMENO, " +
                 "SIPARIS.sip_aciklama AS ACIKLAMA " +
@@ -1087,13 +1090,13 @@ var QuerySql =
                 "CARI_HESAPLAR ON SIPARIS.sip_musteri_kod = CARI_HESAPLAR.cari_kod " +
                 "WHERE SIPARIS.sip_teslim_tarih>=@ILKTARIH AND SIPARIS.sip_teslim_tarih<=@SONTARIH AND " +
                 "((CARI_HESAPLAR.cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) AND SIPARIS.sip_OnaylayanKulNo <> @ONAYLAYANKULNO AND ((SIPARIS.sip_musteri_kod = @CARIKODU) OR (@CARIKODU = '')) " +
-                "AND ((SIPARIS.sip_depono=@DEPONO) OR (@DEPONO = 0))AND SIPARIS.sip_tip=@TIP " +
+                "AND ((SIPARIS.sip_depono=@DEPONO) OR (@DEPONO = 0))AND SIPARIS.sip_tip=@TIP AND SIPARIS.sip_cins=@CINS " +
                 "GROUP BY SIPARIS.sip_teslim_tarih,SIPARIS.sip_evrakno_seri,SIPARIS.sip_evrakno_sira,SIPARIS.sip_depono, " +
                 "SIPARIS.sip_adresno,CARI_HESAPLAR.cari_kod,CARI_HESAPLAR.cari_unvan1,SIPARIS.sip_aciklama,SIPARIS.sip_doviz_cinsi " +
                 "HAVING SUM(SIPARIS.sip_miktar - SIPARIS.sip_teslim_miktar) > 0 " +
                 "ORDER BY sip_teslim_tarih",
-        param : ['ILKTARIH','SONTARIH','DEPONO','TIP','PLASIYERKODU','ONAYLAYANKULNO','CARIKODU'],
-        type : ['date','date','int','int','string|25','int','string|25']
+        param : ['ILKTARIH','SONTARIH','DEPONO','TIP','CINS','PLASIYERKODU','ONAYLAYANKULNO','CARIKODU'],
+        type : ['date','date','int','int','int','string|25','int','string|25']
     }, 
     SiparisSeriSiraListele : 
     {
@@ -1225,8 +1228,8 @@ var QuerySql =
                 "MAX(CONVERT(NVARCHAR(50),sip_yetkili_uid)) AS YETKILI, " +
                 "sip_Exp_Imp_Kodu AS EXIMKODU, " +
                 "STOK.sto_perakende_vergi AS PERAKENDEVERGIPNTR," +
-                "ISNULL(BARKOD.bar_partikodu,sip_parti_kodu) AS PARTI, " +
-                "ISNULL(BARKOD.bar_lotno,sip_lot_no) AS LOT " +
+                "ISNULL('',sip_parti_kodu) AS PARTI, " +
+                "ISNULL('',sip_lot_no) AS LOT " +
                 "FROM SIPARISLER AS SIPARIS  " +
                 "LEFT OUTER JOIN BEDEN_HAREKETLERI AS BEDENHAR ON " +
                 "BEDENHAR.[BdnHar_Tipi] = 9 AND BEDENHAR.BdnHar_Har_uid = SIPARIS.sip_Guid " +
@@ -2260,7 +2263,24 @@ var QuerySql =
                 "sth_miktar AS MIKTAR , " +
                 "sth_miktar2 AS MIKTAR2 , " +
                 "ROUND(sth_tutar,2) AS TUTAR, " + 
-                "CASE WHEN sth_iskonto1 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto1) / sth_tutar ELSE 0 END AS ISKYUZDE , " +
+                "CASE WHEN sth_tutar <> 0 AND sth_miktar <> 0 THEN ROUND((sth_tutar / sth_miktar),2) ELSE 0 END  " +
+                "* ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sth_stok_kod)) / 100) + 1) AS KDVFIYAT, " +
+                "ROUND((CASE WHEN sth_tutar <> 0 AND sth_miktar <> 0 THEN ROUND((sth_tutar / sth_miktar),2) ELSE 0 END - " +
+                "((sth_iskonto1 / sth_miktar) + (sth_iskonto2 / sth_miktar) + (sth_iskonto3 / sth_miktar) + (sth_iskonto4 / sth_miktar) + (sth_iskonto5 / sth_miktar) +  " +
+                "(sth_iskonto6 / sth_miktar))),2) AS NETFIYAT, " +
+                "ROUND(sth_iskonto1 + sth_iskonto2 + sth_iskonto3 + sth_iskonto4 + sth_iskonto5 + sth_iskonto6,2) AS TOPIND, " +
+                "CASE WHEN sth_iskonto1 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto1) / sth_tutar ELSE 0 END AS ISKYUZDE, " +
+                "CASE WHEN sth_iskonto2 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto2) / sth_tutar ELSE 0 END AS ISKYUZDE2, " +
+                "CASE WHEN sth_iskonto3 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto3) / sth_tutar ELSE 0 END AS ISKYUZDE3, " +
+                "CASE WHEN sth_iskonto4 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto4) / sth_tutar ELSE 0 END AS ISKYUZDE4, " +
+                "CASE WHEN sth_iskonto5 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto5) / sth_tutar ELSE 0 END AS ISKYUZDE5, " +
+                "CASE WHEN sth_iskonto6 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto6) / sth_tutar ELSE 0 END AS ISKYUZDE6,  " +
+                "CASE WHEN sth_iskonto1 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto1) / sth_tutar ELSE 0 END + " +
+                "CASE WHEN sth_iskonto2 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto2) / sth_tutar ELSE 0 END + " +
+                "CASE WHEN sth_iskonto3 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto3) / sth_tutar ELSE 0 END + " +
+                "CASE WHEN sth_iskonto4 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto4) / sth_tutar ELSE 0 END + " +
+                "CASE WHEN sth_iskonto5 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto5) / sth_tutar ELSE 0 END + " +
+                "CASE WHEN sth_iskonto6 <> 0 AND sth_tutar <> 0 THEN (100 * sth_iskonto6) / sth_tutar ELSE 0 END AS ISKTOPLAMORAN,  " +
                 "(SELECT dbo.fn_StokBirimi(sth_stok_kod,sth_birim_pntr)) AS BIRIMADI, " +
                 "(SELECT dbo.fn_StokBirimHesapla(sth_stok_kod,1,sth_miktar,sth_birim_pntr)) AS BIRIM," +
                 "ISNULL((SELECT sto_birim1_ad as ADET FROM STOKLAR WHERE sto_kod = sth_stok_kod),'') AS BIRIM1, " +
@@ -3672,7 +3692,7 @@ var QuerySql =
             ",0                                    --<cari_TeslimSuresi, smallint,> \n" +
             ",''                                   --<cari_wwwadresi, nvarchar(30),> \n" +
             ",@EMAIL                               --<cari_EMail, nvarchar(127),> \n" +
-            ",''                                   --<cari_CepTel, nvarchar(20),> \n" +
+            ",@TELEFON                             --<cari_CepTel, nvarchar(20),> \n" +
             ",0                                    --<cari_VarsayilanGirisDepo, int,> \n" +
             ",0                                    --<cari_VarsayilanCikisDepo, int,> \n" +
             ",0                                    --<cari_Portal_Enabled, bit,> \n" +
@@ -3917,7 +3937,7 @@ var QuerySql =
                 ",@Etkb_BasimTipi                           --<Etkb_BasimTipi, tinyint,> \n " +
                 ",@Etkb_BasimAdet                            --<Etkb_BasimAdet, smallint,> \n " +
                 ",@Etkb_DepoNo                              --<Etkb_DepoNo, bit> \n " +
-                ",@Etkb_StokKodu                            --<Etkb_StokKodu, varchar(25),> \n " +
+                ",@Etkb_StokKodu                            --<Etkb_StokKodu, varchar(50),> \n " +
                 ",@Etkb_RenkNo                              --<Etkb_RenkNo, int,> \n " +
                 ",@Etkb_BedenNo                             --<Etkb_BedenNo, int,> \n" +
                 ",@Etkb_Barkodu                             --<Etkb_Barkodu, varchar(50),> \n" +
@@ -4993,7 +5013,7 @@ var QuerySql =
                  "DEPOSIPARIS.ssip_girdepo AS GDEPO, " +
                  "DEPOSIPARIS.ssip_cikdepo As CDEPO, " +
                  "(DEPOSIPARIS.ssip_miktar - DEPOSIPARIS.ssip_teslim_miktar) AS BMIKTAR, " +
-                 "CAST(ISNULL(NULL,0) ) AS MIKTAR, " +
+                 //"CAST(ISNULL(NULL,0) ) AS MIKTAR, " +
                  "(SELECT dbo.fn_StokBirimi (DEPOSIPARIS.ssip_stok_kod,DEPOSIPARIS.ssip_birim_pntr)) AS BIRIM, " +
                  "0 AS BEDENNO, " +
                  "BARKOD.bar_bedenpntr AS BEDENPNTR, " +
@@ -5008,10 +5028,10 @@ var QuerySql =
                  "DEPOSIPARIS.ssip_stok_kod=BARKOD.bar_stokkodu " +
                  "AND DEPOSIPARIS.ssip_birim_pntr=BARKOD.bar_birimpntr " +
                  "AND DEPOSIPARIS.ssip_teslim_miktar < DEPOSIPARIS.ssip_miktar " +
-                 "INNER JOIN STOKLAR AS STOK ON STOK.sto_kod = DEPOSIPARIS.ssip_stok_kod ",
-                 //"WHERE DEPOSIPARIS.ssip_girdepo = @GDEPO AND DEPOSIPARIS.ssip_cikdepo = @CDEPO AND DEPOSIPARIS.ssip_evrakno_seri =@SERI AND DEPOSIPARIS.ssip_evrakno_sira = @SIRA AND BARKOD.bar_kodu = @BARKOD",
-                //  param : ['GDEPO','CDEPO','SERI','SIRA','BARKOD'],
-                //  type : ['int','int','string|10','int','string|25']
+                 "INNER JOIN STOKLAR AS STOK ON STOK.sto_kod = DEPOSIPARIS.ssip_stok_kod " +
+                 "WHERE DEPOSIPARIS.ssip_girdepo = @GDEPO AND DEPOSIPARIS.ssip_cikdepo = @CDEPO AND DEPOSIPARIS.ssip_evrakno_seri =@SERI AND DEPOSIPARIS.ssip_evrakno_sira = @SIRA AND (BARKOD.bar_kodu = @BARKOD OR DEPOSIPARIS.ssip_stok_kod = @BARKOD)",
+                param : ['GDEPO','CDEPO','SERI','SIRA','BARKOD'],
+                type : ['int','int','string|10','int','string|25']
     },
     FiyatTbl :
      {

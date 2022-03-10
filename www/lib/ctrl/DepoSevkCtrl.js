@@ -40,6 +40,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.CDepoAdi;
         $scope.GDepoAdi;
         $scope.Sorumluluk = UserParam.DepoSevk.Sorumluluk;
+        $scope.SubeNo = UserParam.Sistem.SubeNo;
         $scope.Proje = "";
         $scope.Barkod = "";
         $scope.Birim = "0";
@@ -49,6 +50,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.Cins = 6;
         $scope.NormalIade = 0;
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.Tarih2Ters = moment(new Date()).format("YYYYMMDD");
         $scope.PlasiyerKodu = 0;
         $scope.SatirNo = "";
         $scope.CmbEvrakTip = "0";
@@ -414,7 +416,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FİRMA NO
-            0, //ŞUBE NO
+            $scope.SubeNo, //ŞUBE NO
             $scope.BelgeTarih,
             $scope.Tip,
             $scope.Cins,
@@ -548,13 +550,13 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
  
         for (i = 0; i < FlagDizi.length; i++ )
         {
-        if(Flag == FlagDizi[i])
-        {
-            var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
-            var Uzunluk = Kilo.slice(UserParam.Sistem.KiloBaslangic,((UserParam.Sistem.KiloBaslangic)+(UserParam.Sistem.KiloUzunluk)));
-            pBarkod = kBarkod
-            $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
-        }
+            if(Flag == FlagDizi[i])
+            {
+                var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
+                var Uzunluk = Kilo.slice(UserParam.Sistem.KiloBaslangic,((UserParam.Sistem.KiloBaslangic)+(UserParam.Sistem.KiloUzunluk)));
+                pBarkod = kBarkod
+                $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
+            }
         }
         // ----------------------------------------------------
         if(pBarkod != '')
@@ -631,16 +633,66 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                     {
                         if($scope.Stok[0].PARTI !='')
                         {
-                            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,$scope.Stok[0].PARTI,$scope.Stok[0].LOT],function(data)
+                            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,'',0],function(data)
                             {   
+                                $scope.PartiLotList = [];
                                 $scope.PartiLotListe = data;
-
-                                if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
-                                {   
-                                    $scope.Miktar = $scope.PartiLotListe[0].MIKTAR;
-                                    $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
+                                console.log(data)
+                                let Check = false;
+                                for (let i = 0; i < data.length; i++)
+                                {
+                                    if(data[i].SKTTARIH >= $scope.Tarih2Ters) // SKT BUGÜNÜ GEÇMİŞ Mİ? GEÇMEMİŞ İSE GİR.
+                                    {                        
+                                        if($scope.PartiLotList.length != 0)
+                                        {
+                                            console.log($scope.PartiLotList[0].TARIH,data[i - 1].TARIH, i-1)
+                                            if($scope.PartiLotList[0].TARIH == data[i].TARIH)
+                                            {
+                                                $scope.PartiLotList.push(data[i]);
+                                                for (let i = 0; i < $scope.PartiLotList.length; i++)
+                                                {
+                                                    if($scope.Stok[0].PARTI == $scope.PartiLotList[i].PARTI && $scope.Stok[0].LOT == $scope.PartiLotList[i].LOT)
+                                                    {
+                                                        Check = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            console.log("Girdi")
+                                            $scope.PartiLotList.push(data[i]); //DİĞERLERİNE GÖRE İLK GİRİLEN VE SKT Sİ GEÇMEMİŞ PARTILOT 
+                                            console.log($scope.PartiLotList)
+                                            for (let i = 0; i < $scope.PartiLotList.length; i++)
+                                            {
+                                                if($scope.Stok[0].PARTI == $scope.PartiLotList[i].PARTI && $scope.Stok[0].LOT == $scope.PartiLotList[i].LOT)
+                                                {
+                                                    Check = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
-                                $scope.MiktarFiyatValid();
+                                console.log($scope.PartiLotList)
+                                if(Check == true)
+                                {
+                                    if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
+                                    {   
+                                        $scope.Miktar = $scope.PartiLotList[0].MIKTAR;
+                                        $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
+                                    }
+                                    $scope.MiktarFiyatValid();
+                                }
+                                else
+                                {
+                                    alertify.alert("Daha yakın olan tarihli bir partilot mevcut veya SKT geçmiş",function()
+                                    { 
+                                        $scope.BtnTemizle();
+                                    },
+                                    function(){});      
+                                }
                             });
                         }
                         else

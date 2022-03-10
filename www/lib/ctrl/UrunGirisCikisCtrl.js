@@ -39,6 +39,8 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $scope.NormalIade = 0;
         $scope.EvrakTip = 12;
         $scope.BelgeTarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.Tarih2Ters = moment(new Date()).format("YYYYMMDD");
+        $scope.SubeNo = UserParam.Sistem.SubeNo;
         $scope.SatirNo = "";
         $scope.CmbEvrakTip = "0";
 
@@ -385,12 +387,37 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                                 let Check = false;
                                 for (let i = 0; i < data.length; i++)
                                 {
-                                    if(data[0].SKTTARIH == data[i].SKTTARIH)
-                                    {
-                                        if($scope.Stok[0].PARTI == data[i].PARTI && $scope.Stok[0].LOT == data[i].LOT)
+                                    if(data[i].SKTTARIH >= $scope.Tarih2Ters) // SKT BUGÜNÜ GEÇMİŞ Mİ? GEÇMEMİŞ İSE GİR.
+                                    {                        
+                                        if($scope.PartiLotList.length != 0)
                                         {
-                                            Check = true;
-                                            $scope.PartiLotList.push(data[i]);
+                                            console.log($scope.PartiLotList[0].TARIH,data[i - 1].TARIH, i-1)
+                                            if($scope.PartiLotList[0].TARIH == data[i].TARIH)
+                                            {
+                                                $scope.PartiLotList.push(data[i]);
+                                                for (let i = 0; i < $scope.PartiLotList.length; i++)
+                                                {
+                                                    if($scope.Stok[0].PARTI == $scope.PartiLotList[i].PARTI && $scope.Stok[0].LOT == $scope.PartiLotList[i].LOT)
+                                                    {
+                                                        Check = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            console.log("Girdi")
+                                            $scope.PartiLotList.push(data[i]); //DİĞERLERİNE GÖRE İLK GİRİLEN VE SKT Sİ GEÇMEMİŞ PARTILOT 
+                                            console.log($scope.PartiLotList)
+                                            for (let i = 0; i < $scope.PartiLotList.length; i++)
+                                            {
+                                                if($scope.Stok[0].PARTI == $scope.PartiLotList[i].PARTI && $scope.Stok[0].LOT == $scope.PartiLotList[i].LOT)
+                                                {
+                                                    Check = true;
+                                                    break;
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -406,7 +433,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                                 }
                                 else
                                 {
-                                    alertify.alert("Daha yakın olan tarihli bir partilot mevcut!",function()
+                                    alertify.alert("Daha yakın olan tarihli bir partilot mevcut veya SKT geçmiş",function()
                                     { 
                                         $scope.BtnTemizle();
                                     },
@@ -446,7 +473,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FİRMA NO
-            0, //ŞUBE NO
+            $scope.SubeNo , //ŞUBE NO
             $scope.BelgeTarih,
             $scope.Tip,
             $scope.Cins,

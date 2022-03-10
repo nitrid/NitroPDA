@@ -2283,7 +2283,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.Stok[0].ISK.TUTAR6 = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100);
         $scope.Stok[0].ISK.TIP6 = $scope.Stok[0].ISK.TUTAR6 === 0 ? 0 : 1;
         $scope.Stok[0].INDIRIM = $scope.Stok[0].INDIRIM + (($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].ISK.ORAN6 / 100));
-
+        
         $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
         $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
     }
@@ -2781,32 +2781,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.ProjeEvrakGetir();
         }
     }
-    $scope.BtnEksikEvrak = async function()
-    {
-        if($scope.SiparisListe.length > 0)
-        {
-            console.log($scope.SiparisListe)
-            for (let i = 0; i < $scope.SiparisListe.length; i++) 
-            {
-                console.log($scope.SiparisListe.length)
-                let TmpUpdateQuery = 
-                {
-                    db : '{M}.' + $scope.Firma,
-                    query: "UPDATE SIPARISLER SET sip_cari_sormerk = @STOKMERKEZ WHERE sip_evrakno_seri = @sip_evrakno_seri AND sip_evrakno_sira = @sip_evrakno_sira AND sip_tip = @sip_tip AND sip_cins = @sip_cins" ,
-                    param:  ['STOKMERKEZ:string|25','sip_evrakno_seri:string|20','sip_evrakno_sira:int','sip_tip:int','sip_cins:int'],
-                    value : ['EKSIK',$scope.SiparisListe[i].sip_evrakno_seri,$scope.SiparisListe[i].sip_evrakno_sira,$scope.SiparisListe[i].sip_tip,$scope.SiparisListe[i].sip_cins]
-                    //value : [$scope.Sorumluluk,$scope.SiparisListe[i].sip_evrakno_seri,$scope.SiparisListe[i].sip_evrakno_sira,$scope.SiparisListe[i].sip_tip,$scope.SiparisListe[i].sip_cins]
-                }
-                console.log($scope.Sorumluluk)
-                console.log(TmpUpdateQuery)
-                db.GetDataQuery(TmpUpdateQuery,function(data)
-                {
-                    alertify.alert("Sorumluluk 'Eksik' olarak kaydedildi")
-                    console.log(data)
-                })
-            }
-        }
-    }
     $scope.EvrakGetir = function()
     {
         db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(data)
@@ -3202,6 +3176,17 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 orientation : "portrait"
             }
         );
+    }
+    $scope.YazdirTipSecim = function()
+    {
+        if(UserParam.Sistem.OnlineYazdir == "1")
+        {
+            $scope.BtnOnlineYazdir();
+        }
+        else
+        {
+            $scope.BtnFisYazdir();
+        }
     }
     $scope.BtnFisYazdir = async function()
     {

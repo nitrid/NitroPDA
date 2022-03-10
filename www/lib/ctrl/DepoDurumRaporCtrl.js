@@ -201,8 +201,8 @@ function DepoDurumRaporCtrl($scope,$window,db)
         $scope.DepoAdi = "";
         $scope.StokAdi = "";
         $scope.StokKodu = "";
-        $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
-        $scope.SonTarih = moment(new Date(new Date().getFullYear(), 11, 31)).format("YYYYMMDD");
+        $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.SonTarih = moment().startOf('month').format('DD.MM.YYYY');
         $scope.Saat = moment(new Date()).format("LTS");
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn
         $scope.CmbRaporTip = "0";
@@ -247,14 +247,14 @@ function DepoDurumRaporCtrl($scope,$window,db)
                     "SELECT  " +
                     "sth_stok_kod AS STOKKOD, " +
                     "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = sth_stok_kod) AS STOKADI, " +
-                    "ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 2 and sth_tarih >= @TARIH AND sth_giris_depo_no = @DEPONO ),0) AS YUKLENEN, " +
+                    "ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 2 and sth_tarih >= @ILKTARIH AND sth_tarih <= @SONTARIH AND sth_giris_depo_no = @DEPONO ),0) AS YUKLENEN, " +
                     "(SELECT dep_adi FROM DEPOLAR WHERE	dep_no = @DEPONO) AS DEPO, " +
-                    "ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 1 and sth_tarih >= @TARIH AND sth_cikis_depo_no = @DEPONO ),0) AS SATILAN, " +
+                    "ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 1 and sth_tarih >= @ILKTARIH AND sth_tarih <= @SONTARIH AND sth_cikis_depo_no = @DEPONO ),0) AS SATILAN, " +
                     "ISNULL((SELECT dbo.fn_DepodakiMiktar (STOKLAR.sth_stok_kod,@DEPONO,GETDATE())),0) AS KALAN " +
-                    "FROM STOK_HAREKETLERI AS STOKLAR WHERE sth_giris_depo_no = @DEPONO and ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 2 and sth_tarih >= @TARIH AND sth_giris_depo_no = @DEPONO ),0) > 0 GROUP BY sth_stok_kod ",
-                    param:  ['DEPONO','TARIH'],
-                    type:   ['int','date',],
-                    value:  [$scope.DepoNo,$scope.Tarih]
+                    "FROM STOK_HAREKETLERI AS STOKLAR WHERE sth_giris_depo_no = @DEPONO and ISNULL((SELECT SUM(sth_miktar) FROM STOK_HAREKETLERI WHERE sth_stok_kod = STOKLAR.sth_stok_kod and sth_tip = 2 and sth_tarih >= @ILKTARIH AND sth_tarih <= @SONTARIH AND sth_giris_depo_no = @DEPONO ),0) > 0 GROUP BY sth_stok_kod ",
+                    param:  ['DEPONO','ILKTARIH','SONTARIH'],
+                    type:   ['int','date','date'],
+                    value:  [$scope.DepoNo,$scope.IlkTarih,$scope.SonTarih]
                 }
                 db.GetDataQuery(TmpQuery,function(Data)
                 {

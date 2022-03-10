@@ -156,6 +156,47 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             }
         });
     }
+    function InitCariGrid()
+    {
+        $("#TblCari").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.CariListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields:
+            [
+                {
+                    name: "KODU",
+                    type: "number",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "UNVAN1",
+                    type: "text",
+                    align: "center",
+                    width: 300
+                },
+                {
+                    name: "BAKIYE",
+                    type: "number",
+                    align: "center",
+                    width: 75
+                } 
+            ],
+            rowClick: function(args)
+            {
+                $scope.CariListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
     $scope.Init = function()
     {   
         $scope.Firma = $window.sessionStorage.getItem('Firma');
@@ -166,10 +207,15 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         $scope.TxtPersonelAra = "";
         $scope.CmbPersonelAra = "";
         $scope.CmbEvrakTip = "0";
+        $scope.CmbCariAra = "0";
+        $scope.TxtCariAra = "";
+        $scope.CariKodu = "";
+        $scope.CariAdi = "";
         InitTahsilatRapor();
         InitCariFoy();
         InitPersonelGrid();
-        $scope.BtnPersonelListele()
+        InitCariGrid();
+        $scope.BtnPersonelListele();
         $scope.MainClick();
         $scope.Evrakadi = 'Tahsilat Raporu'
         $scope.Tarih =  moment(new Date()).format("DD.MM.YYYY");
@@ -211,26 +257,36 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
     {
         $scope.PersonelAdi = "";
         $scope.PlasiyerKodu = "";
+        $scope.CariAdi = "";
+        $scope.Carikodu = "";
     }
     $scope.BtnGetir = function()
     {
+        console.log($scope.CariKodu)
         if($scope.CmbEvrakTip == '0')
         {
             var TmpQuery = 
             {
                 db : '{M}.' + $scope.Firma,
-                query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,(select ROUND(dbo.fn_CariHesapAnaDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,'20200101',@TARIH,0,0,0,0,0),2))  AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM from CARI_HESAPLAR " +
-                " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
-                param:  ['TARIH','PLASIYERKODU'], 
-                type:   ['date','string|25'], 
-                value:  [$scope.Tarih, $scope.PlasiyerKodu]    
+                query:  "SELECT cari_kod AS KODU,cari_unvan1 AS ADI,(SELECT ROUND(dbo.fn_CariHesapAnaDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,'20200101',@TARIH,0,0,0,0,0),2))  AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM FROM CARI_HESAPLAR " +
+                "WHERE (cari_kod = @CARIKODU OR (@CARIKODU = '')) AND ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
+                param:  ['TARIH','CARIKODU','PLASIYERKODU'],
+                type:   ['date','string|25','string|25'], 
+                value:  [$scope.Tarih,$scope.CariKodu,$scope.PlasiyerKodu]
             }
         
             db.GetDataQuery(TmpQuery,function(Data)
             {
-                $scope.IslemListe = Data;
-                $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
-                $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"BAKIYE")).toFixed(2)
+                if(Data.length > 0)
+                {
+                    $scope.IslemListe = Data;
+                    $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
+                    $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"BAKIYE")).toFixed(2)
+                }
+                else
+                {
+                    alertify.alert("Veri bulunamadı");
+                }
             });
         }
         else if($scope.CmbEvrakTip == '1')
@@ -239,22 +295,67 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             {
                 db : '{M}.' + $scope.Firma,
                 query:  "select cari_kod AS KODU,cari_unvan1 AS ADI,CONVERT(NVARCHAR,CAST(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,0,0,0,0)),0)AS DECIMAL(15,2))) AS BAKIYE,(ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) *  (-1))  AS TOPLAM from CARI_HESAPLAR " +
-                " where ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) < 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) ",
-                param:  ['PLASIYERKODU'], 
-                type:   ['string|25'], 
-                value:  [$scope.PlasiyerKodu]    
+                " where (cari_kod = @CARIKODU OR ( @CARIKODU = '')) AND ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) < 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) ",
+                param:  ['CARIKODU','PLASIYERKODU'], 
+                type:   ['string|25','string|25'], 
+                value:  [$scope.CariKodu,$scope.PlasiyerKodu]    
             }
             db.GetDataQuery(TmpQuery,function(Data)
             {
-                $scope.IslemListe = Data;
-                $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
-                $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
+                if(Data.length > 0)
+                {
+                    $scope.IslemListe = Data;
+                    $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
+                    $scope.ToplamBakiye = parseFloat(db.SumColumn($scope.IslemListe,"TOPLAM")).toFixed(2)
+                }
+                else
+                {
+                    alertify.alert("Veri bulunamadı");
+                }
             });
         }
     }
+    $scope.BtnCariListele = function()
+    {   
+        let Kodu = '';
+        let Adi = '';
+        $scope.Loading = true;
+        $scope.TblLoading = false;  
+
+        if($scope.TxtCariAra != "")
+        {
+            if($scope.CmbCariAra == "0")
+            {   
+                Adi = $scope.TxtCariAra.replace("*","%").replace("*","%");
+            }
+            else
+            {
+                Kodu = $scope.TxtCariAra.replace("*","%").replace("*","%");
+            }
+        }
+        
+        db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],function(data)
+        {
+            $scope.Loading = false;
+            $scope.TblLoading = true; 
+            $scope.CariListe = data;      
+            $("#TblCari").jsGrid({data : $scope.CariListe});
+            $("#TblCari").jsGrid({pageIndex: true})
+        });
+    }
+    $scope.CariListeRowClick = function(pIndex,pItem,pObj)
+    {
+        if ( IslemSelectedRow ) { IslemSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        var $row = $("#TblTahsilatRapor").jsGrid("rowByItem", pItem);
+        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+        IslemSelectedRow = $row;
+
+        $scope.CariKodu = $scope.CariListe[pIndex].KODU;
+        $scope.CariAdi = $scope.CariListe[pIndex].UNVAN1;
+        $scope.MainClick();
+    }
     $scope.IslemDetayRowClick = function(pIndex,pItem,pObj)
     {
-        
         if ( IslemSelectedRow ) { IslemSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
         var $row = $("#TblTahsilatRapor").jsGrid("rowByItem", pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
@@ -264,7 +365,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         $scope.CariAdi = $scope.IslemListe[pIndex].ADI;
         $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
         $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
-        
 
         let TmpQuery = 
         {
@@ -290,7 +390,6 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             type:   ['string|25','date','date',],
             value:  [$scope.CariKodu,$scope.IlkTarih,$scope.SonTarih]
         }
-
         db.GetDataQuery(TmpQuery,function(Data)
         {
             $scope.CariFoyListe = Data;
@@ -326,7 +425,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         $("#TblTahsilatRapor").jsGrid({data : $scope.IslemListe});
 
     }
-     $scope.TahsilatChange = function()
+    $scope.TahsilatChange = function()
     {
 
         $scope.Evrakadi = 'Tahsilat Raporu'
@@ -351,13 +450,20 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
         $("#TbMain").addClass('active');
         $("#TbTemsilci").removeClass('active');
         $("#TbCariFoy").removeClass('active');
-      
+        $("#TbCari").removeClass('active');
     }
     $scope.FoyClick = function()
     {
         $("#TbMain").removeClass('active');
         $("#TbTemsilci").removeClass('active');
         $("#TbCariFoy").addClass('active');
+        $("#TbCari").removeClass('active');
     }
-   
+    $scope.CariSecClick = function() 
+    {
+        $("#TbCari").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbTemsilci").removeClass('active');
+        $("#TbCariFoy").removeClass('active');
+    }
 }

@@ -538,6 +538,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
         db.GetData($scope.Firma,'DepoSiparisStok',TmpParam,function(BarkodData)
         {
             console.log(TmpParam)
+            console.log(BarkodData)
             if(BarkodData.length > 0)
             {
                 pCallback(BarkodData,'Siparis');
@@ -828,7 +829,7 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
 
         alertify.confirm('Evrağı silmek istediğinize eminmisiniz ?', 
         function()
-        { 
+        {
             if($scope.IslemListeSelectedIndex > -1)
             {
                 db.ExecuteTag($scope.Firma,'StokHarSatirDelete',[$scope.DepoMalKListe[$scope.IslemListeSelectedIndex].sth_Guid],function(data)
@@ -891,6 +892,11 @@ function DepoMalKabulCtrl($scope,$window,$timeout,db)
             $scope.Tip = 2;
             $scope.NakliyeDurum = 1
         }
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
+        {
+            console.log(data)
+            $scope.Sira = data
+        });
     }
     $scope.GDepoChange = function()
     {

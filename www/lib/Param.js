@@ -29,7 +29,8 @@ var Param = [
 			"RiskParam": "0",
 			"RiskLimitOran": "100",
 			"FisDizayn": "0",
-			"OfflineDepo": "2"
+			"OfflineDepo": "1",
+			"OnlineYazdir": "1"
 		},
 		"StokRaporu": {
 			"DepoNo": "4"
@@ -69,7 +70,7 @@ var Param = [
 			"AlisSarti": "0",
 			"FiyatListe": "1",
 			"EvrakSil": "0",
-			"PartiSec": "1",
+			"PartiSec": "0",
 			"FiyatLock": "0",
 			"SiparisOnay": "",
 			"IskontoMatris": "1",
@@ -190,7 +191,8 @@ var Param = [
 			"ProjeGetir": "0",
 			"FiyatAzalt": "1",
 			"PartiBarkodOlustur": "1",
-			"Special": "0"
+			"Special": "52",
+			"OtoEkle": "0"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -200,7 +202,7 @@ var Param = [
 			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "01",
-			"Personel": "81",
+			"Personel": "",
 			"Proje": "",
 			"SonSatisFiyati": "0",
 			"SonAlisFiyati": "0",
@@ -213,11 +215,12 @@ var Param = [
 			"IskontoMatris": "0",
 			"ProjeGetir": "0",
 			"OfflineSira": "0",
-			"FiyatAzalt": "1",
+			"FiyatAzalt": "0",
 			"Plaka": "34TS1967",
-			"EIrsaliyeDetay": "1",
+			"EIrsaliyeDetay": "0",
 			"PartiBarkodOlustur": "0",
-			"Special": "4"
+			"Special": "4",
+			"OtoEkle": "0"
 		},
 		"KonsinyeIrsaliye": {
 			"EvrakTip": "0",
@@ -235,7 +238,8 @@ var Param = [
 			"EvrakSil": "0",
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
-			"IskontoMatris": "0"
+			"IskontoMatris": "0",
+			"OtoEkle": "0"
 		},
 		"Fire": {
 			"EvrakTip": "0",
@@ -264,7 +268,8 @@ var Param = [
 			"Special": "4",
 			"FiyatGizle": "0",
 			"StokResmi": "1",
-			"KdvFiyat": "0"
+			"KdvFiyat": "0",
+			"SonAlisGizle": "1"
 		},
 		"Etiket": {
 			"Etiket": [
@@ -297,11 +302,11 @@ var Param = [
 			"Fire": "0",
 			"Cari Ekle": "0",
 			"Deposevk": "1",
-			"Depo Sipariş": "0",
-			"Depo Mal Kabul": "0",
+			"Depo Sipariş": "1",
+			"Depo Mal Kabul": "1",
 			"Depo Nakliye": "1",
 			"Depo Durum Raporu": "1",
-			"NakliyeOnay": "1",
+			"NakliyeOnay": "0",
 			"Alınan Sipariş": "1",
 			"Satış İrsaliyesi": "1",
 			"Satış Faturası": "1",
@@ -310,7 +315,7 @@ var Param = [
 			"Sipariş Eşleştirme": "1",
 			"Verilen Sipariş": "1",
 			"Alış İrsaliyesi": "1",
-			"Tediye Makbuzu": "1",
+			"Tediye Makbuzu": "0",
 			"Mal Kabul Eşleştirme": "1",
 			"Kredi Sözlesme Izleme": "0",
 			"Cari Hesap Hareket": "1",
@@ -324,12 +329,12 @@ var Param = [
 			"Stok Hareket Rapor": "1",
 			"GelenHavale": "0",
 			"Ambar Fişi": "0",
-			"Stok Virman Fişi": "0",
+			"Stok Virman Fişi": "1",
 			"Stok Listesi": "0",
 			"Stok Ekle": "0",
-			"Ürün Giriş Çıkış": "1",
+			"Ürün Giriş Çıkış": "0",
 			"Fason Giriş Çıkış": "0",
-			"Planlı Üretim": "1",
+			"Planlı Üretim": "0",
 			"Aktarim": "0",
 			"EvrakGonder": "0",
 			"Gelen Havale": "0",
@@ -360,14 +365,15 @@ var Param = [
 			"Kasa": "",
 			"IskontoMatris": "0",
 			"FiyatAzalt": "1",
-			"Special": "0"
+			"Special": "0",
+			"OtoEkle": "0"
 		},
 		"SatisFatura": {
 			"EvrakTip": "1",
 			"Seri": "FTR",
 			"BelgeNo": "",
 			"Cari": "",
-			"DepoNo": "2",
+			"DepoNo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
 			"Personel": "",
@@ -384,7 +390,9 @@ var Param = [
 			"IskontoMatris": "0",
 			"KDVYok": "1",
 			"FiyatAzalt": "0",
-			"Special": "3"
+			"Special": "3",
+			"OtoEkle": "0",
+			"BolgeKodu": ""
 		},
 		"UrunGirisCikis": {
 			"Seri": "ISM",
@@ -397,7 +405,8 @@ var Param = [
 			"EvrakSil": "0",
 			"IsMerkezi": "01",
 			"IsMerkeziListe": "",
-			"CmbEvrakTip": "0"
+			"CmbEvrakTip": "0",
+			"OtoEkle": "0"
 		},
 		"PlanliUretim": {
 			"Seri": "URT",
@@ -497,8 +506,9 @@ var Param = [
 			"FiyatListe": "1",
 			"EvrakSil": "0",
 			"FiyatLock": "0",
-			"EksiyeDusme": "0",
-			"IskontoMatris": "0"
+			"EksiyeDusme": "1",
+			"IskontoMatris": "0",
+			"PartiBarkodOlustur": "1"
 		},
 		"SarfFisi": {
 			"EvrakTip": "0",

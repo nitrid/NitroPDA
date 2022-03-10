@@ -99,12 +99,11 @@ function CariListeCtrl($scope,$window,db)
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
-            query:  "SELECT REPLACE(STR(ISNULL(MAX(CONVERT(int,SUBSTRING(cari_kod,3,LEN(cari_kod)))),0) + 1, 5), SPACE(1), '0') AS MAXCARIKOD FROM CARI_HESAPLAR WHERE cari_kod LIKE  @CARIHARF +  '%' ",
+            query:  "SELECT REPLACE(STR(ISNULL(MAX(CONVERT(int,SUBSTRING(cari_kod," + ($scope.CariHarfEkle.length + 1) + ",LEN(cari_kod)))),0) + 1, 5), SPACE(1), '') AS MAXCARIKOD FROM CARI_HESAPLAR WHERE cari_kod LIKE  @CARIHARF +  '%' ",
             param:  ['CARIHARF'], 
             type:   ['string|25'], 
             value:  [$scope.CariHarfEkle]    
         }
-
         await db.GetPromiseQuery(TmpQuery,async function(Data)
         {
             
@@ -225,19 +224,19 @@ function CariListeCtrl($scope,$window,db)
     }
     $scope.CariEkleClick = function()
     {
-        var Temsilci =
-        {
-            db : '{M}.' + $scope.Firma,
-            query : "SELECT cari_per_kod AS TEMSILCI, cari_per_adi AS TEMSILCIADI FROM CARI_PERSONEL_TANIMLARI ",
-        }
-        db.GetDataQuery(Temsilci,function(Data)
-        {   
-            $scope.TemsilciListe = Data
-            $scope.Temsilci = $scope.TemsilciListe[0].TEMSILCI
+        // var Temsilci =
+        // {
+        //     db : '{M}.' + $scope.Firma,
+        //     query : "SELECT cari_per_kod AS TEMSILCI, cari_per_adi AS TEMSILCIADI FROM CARI_PERSONEL_TANIMLARI ",
+        // }
+        // db.GetDataQuery(Temsilci,function(Data)
+        // {   
+        //     $scope.TemsilciListe = Data
+        //     $scope.Temsilci = $scope.TemsilciListe[0].TEMSILCI
             $("#TbCariEkle").addClass('active');
             $("#TbMain").removeClass('active');
             $("#TbCariDuzenle").removeClass('active');
-        });  
+        // });  
     }
     $scope.CariEkleInsert = function()
     {
@@ -315,7 +314,8 @@ function CariListeCtrl($scope,$window,db)
                         "cari_vdaire_adi = @cari_vdaire_adi, " +
                         "cari_vdaire_no = @cari_vdaire_no, " +
                         "cari_temsilci_kodu = @cari_temsilci_kodu, " +
-                        "cari_EMail = @cari_EMail " +
+                        "cari_EMail = @cari_EMail, " +
+                        "cari_CepTel = @adr_tel_no1 " +
                         "WHERE cari_kod = @cari_kod " +
                         "UPDATE CARI_HESAP_ADRESLERI SET adr_cadde = @Adres1," +
                         "adr_sokak = @Adres2, " +

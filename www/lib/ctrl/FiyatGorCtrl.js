@@ -63,6 +63,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.DepoMiktar = false;
         $scope.Combo = true;
         $scope.FiyatGizle = true;
+        $scope.SonAlisGizle = true;
         $scope.StokResim = false;
         $scope.OtoEkle = false;
         
@@ -547,6 +548,32 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     {
                         $timeout( function(){$scope.Insert();},150); 
                     }
+                    var TmpQuery =
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query:  "SELECT TOP 10 'C:\\Projeler\\DevPrint\\DevPrintDesign\\bin\\Debug\\Report1.repx' AS PATH, sth_evrakno_seri AS SERI FROM STOK_HAREKETLERI",
+                    }
+                    db.GetPromiseQuery(TmpQuery,function(pData)
+                    {
+                        console.log(pData)
+                        if(pData.length > 0)
+                        {
+                            //console.log(pData[0].BASEIMAGE.substring(pData[0].BASEIMAGE.indexOf(",") +1 ))
+                            $scope.Base64ImageSrc = '../../img/' + BarkodData[0].KODU + '.png'
+                            console.log($scope.Base64ImageSrc)
+                            console.log("{TYPE:'REVIEW',PATH:'" + pData[0].PATH.replaceAll('\\','/') + "',DATA:" + JSON.stringify(pData) + "}")
+                            db.Emit('DevPrint',"{TYPE:'REVIEW',PATH:'" + pData[0].PATH.replaceAll('\\','/') + "',DATA:" + JSON.stringify(pData) + "}",(pResult)=>
+                            {
+                                console.log(pResult)
+                                if(pResult.split('|')[0] != 'ERR')
+                                {
+                                    // var mywindow = window.open('printview.html','_blank',"width=900,height=1000,left=500");      
+                                    $window.document.getElementById("view").innerHTML="<iframe src='data:application/pdf;base64," + pResult.split('|')[1] + "' type='application/pdf' width='100%' height='100%'></iframe>" 
+                                }
+                            })
+                        }
+                        console.log($scope.Base64ImageSrc)
+                    });
                     BarkodFocus();
                 }
             });
@@ -560,10 +587,26 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     }
     function InsertData()
     {   
-        console.log(InsertData)
         console.log($scope.StokKodu)
-        if($scope.Barkod > 0)
+        console.log($scope.Barkod.length)
+        if($scope.Barkod.length > 0)
         {
+            console.log(UserParam.MikroId,
+                UserParam.MikroId,
+                $scope.Special,
+                $scope.Seri,         
+                $scope.Sira,        
+                $scope.Aciklama,     
+                $scope.BelgeNo,
+                $scope.EtiketTip,
+                $scope.BasimTipi,
+                $scope.BasimAdet,
+                $scope.DepoNo,
+                $scope.StokKodu,
+                $scope.RenkNo,
+                $scope.BedenNo,
+                $scope.Barkod,
+                $scope.BasilacakMiktar)
                 var InsertData = 
                 [
                     UserParam.MikroId,
@@ -583,6 +626,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     $scope.Barkod,
                     $scope.BasilacakMiktar
                 ];
+                console.log(InsertData)
                 db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
                 {   
                     console.log(InsertData)
@@ -1035,6 +1079,10 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         {
             $scope.FiyatGizle = false;
         }
+        if(UserParam.FiyatGor.SonAlisGizle == "1")
+        {
+            $scope.SonAlisGizle = false;
+        }
         if(UserParam.FiyatGor.StokResmi == "1")
         {
             $scope.StokResim = true;
@@ -1113,14 +1161,26 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     }
     $scope.Insert = function()
     {
-        if(String($scope.Miktar).length > 3)
+        console.log($scope.BasilacakMiktar)
+        if(String($scope.BasilacakMiktar).length > 3)
         {
             alertify.alert("Etiket miktarı 3 karakterden fazla olamaz")
             return;
         }
-        if(typeof($scope.BasilacakMiktar) != "undefined" || $scope.BasilacakMiktar > 0 || $scope.BasilacakMiktar != "")
+        if(typeof($scope.BasilacakMiktar) != "undefined")
         {
-            InsertData();
+            if(($scope.BasilacakMiktar > 0 && $scope.BasilacakMiktar != ""))
+            {
+                InsertData();
+            }
+            else
+            {
+                alertify.alert("Miktar 0 veya boş olamaz")
+            }
+        }
+        else
+        {
+            alertify.alert("Miktar da hata")
         }
     }
     $scope.ManuelAramaCikis = function()

@@ -84,6 +84,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.BirimAdi = "";
         $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
+        $scope.SubeNo = UserParam.Sistem.SubeNo;
+        $scope.BolgeKodu = "";
         $scope.RotaKontrol = false;
         $scope.RotaAciklama = "";
         $scope.Indirim = 0;
@@ -198,12 +200,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                     width: 75
                 },
                 {
-                    name: "RISK",
-                    type: "number",
-                    align: "center",
-                    width: 75
-                },
-                {
                     name: "RISKLIMIT",
                     type: "number",
                     align: "center",
@@ -279,6 +275,27 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 type: "number",
                 align: "center",
                 width: 200
+            },
+            {
+                name: "NETFIYAT",
+                title: "NET FİYAT",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "ISKTOPLAMORAN",
+                title: "ISKONTO ORAN",
+                type: "number",
+                align: "center",
+                width: 100
+            },
+            {
+                name: "TOPTANVERGI",
+                title: "KDV ORANI",
+                type: "number",
+                align: "center",
+                width: 100
             },
             {
                 name: "sth_iskonto1",
@@ -971,7 +988,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.BarkodLock = false;
 
         $scope.StokHarListe = pData;
-        $("#TblIslem").jsGrid({data : $scope.StokHarListe});    
+        $("#TblIslem").jsGrid({data : $scope.StokHarListe});
         $scope.BtnTemizle();
         DipToplamHesapla();
         ToplamMiktarHesapla();
@@ -1000,7 +1017,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             db.StokBarkodGetir($scope.Firma,pBarkod,$scope.DepoNo,async function(BarkodData)
             {   
                 if(BarkodData.length > 0)
-                { 
+                {
                     $scope.Stok = BarkodData;
                     $scope.Stok[0].FIYAT = 0;
                     $scope.Stok[0].TUTAR = 0;
@@ -1158,7 +1175,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             UserParam.MikroId,
             UserParam.MikroId,
             0, //FİRMA NO
-            0, //ŞUBE NO
+            $scope.SubeNo, //ŞUBE NO
             $scope.Tarih,
             $scope.Tip,
             $scope.Cins,
@@ -1471,6 +1488,9 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                         {
                             $scope.AdresNo = $scope.AdresNoListe[i].KODU.toString()
                             $scope.SiraNo = $scope.AdresNoListe.map(function(e) {return e.KODU; }).indexOf(Number($scope.AdresNo))
+                            console.log($scope.AdresNoListe.map(function(e) {return e.KODU; }))
+                            console.log($scope.AdresNo)
+                            console.log($scope.AdresNoListe.map(function(e) {return e.KODU; }).indexOf(Number($scope.AdresNo)))
                         }
                     }
                 }
@@ -1649,7 +1669,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             
                     $scope.BirimListe = [];
                 }
-            },250)         
+            },250)
         }
     }
     $scope.BtnRenkBedenSec = function()
@@ -1795,7 +1815,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 Kodu = $scope.TxtCariAra.replace("*","%").replace("*","%");
             }
         }
-        await db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu],async function(data)
+        await db.GetData($scope.Firma,'CariListeGetir',[Kodu,Adi,UserParam.Sistem.PlasiyerKodu,],async function(data)
         {
             if(data.length > 0)
             {
@@ -1889,20 +1909,28 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     $scope.BtnDuzenle = function()
     {   
         $scope.MiktarEdit = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar;
+        console.log($scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_tutar,$scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar) 
         $scope.FiyatEdit = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_tutar / $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar;
-
+        console.log($scope.FiyatEdit)
         $("#MdlDuzenle").modal('show');
     }
     $scope.BtnDuzenleKaydet = function(pIndex)
-    {   
+    {
         let TmpTutar = $scope.FiyatEdit * $scope.MiktarEdit;
+        console.log(TmpTutar)
+        if($scope.StokHarListe[pIndex].sth_tutar == 0)
+        {
+            $scope.StokHarListe[pIndex].sth_tutar = 1;
+        }
         let TmpYuzde1 = $scope.StokHarListe[pIndex].sth_iskonto1 / $scope.StokHarListe[pIndex].sth_tutar; 
+        console.log(TmpYuzde1)
         let TmpYuzde2 = $scope.StokHarListe[pIndex].sth_iskonto2 / ($scope.StokHarListe[pIndex].sth_tutar - $scope.StokHarListe[pIndex].sth_iskonto1); 
         let TmpYuzde3 = $scope.StokHarListe[pIndex].sth_iskonto3 / ($scope.StokHarListe[pIndex].sth_tutar - ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2));
         let TmpYuzde4 = $scope.StokHarListe[pIndex].sth_iskonto4 / ($scope.StokHarListe[pIndex].sth_tutar - ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2 + $scope.StokHarListe[pIndex].sth_iskonto3));
         let TmpYuzde5 = $scope.StokHarListe[pIndex].sth_iskonto5 / ($scope.StokHarListe[pIndex].sth_tutar - ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2 + $scope.StokHarListe[pIndex].sth_iskonto3 + $scope.StokHarListe[pIndex].sth_iskonto4));
 
         $scope.StokHarListe[pIndex].sth_iskonto1 = TmpTutar * TmpYuzde1;
+        console.log($scope.StokHarListe[pIndex].sth_iskonto1)
         $scope.StokHarListe[pIndex].sth_iskonto2 = (TmpTutar - $scope.StokHarListe[pIndex].sth_iskonto1) * TmpYuzde2;
         $scope.StokHarListe[pIndex].sth_iskonto3 = (TmpTutar - ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2)) * TmpYuzde3;
         $scope.StokHarListe[pIndex].sth_iskonto4 = (TmpTutar- ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2 + $scope.StokHarListe[pIndex].sth_iskonto3)) * TmpYuzde4;
@@ -2598,6 +2626,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                             console.log(Data)
                         });
                     }
+
                     if($scope.RiskParam == 1)
                     {
                         let TmpRiskOran = ($scope.Risk / $scope.RiskLimit) * 100;
@@ -2611,6 +2640,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                             alertify.alert("Risk limitinin %" + parseInt(TmpRiskOran) + " kadarı doldu");
                         }
                     }
+                    
                     if($scope.RiskParam == 2)
                     {
                         console.log($scope.CariBakiye)
@@ -2871,6 +2901,16 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.CariKodu = UserParam[ParamName].Cari;
         $scope.AdresNo = UserParam[ParamName].AdresNo;
         $scope.Special = UserParam[ParamName].Special;
+        $scope.BolgeKodu = UserParam[ParamName].BolgeKodu;
+        if(UserParam[ParamName].OtoEkle == "0")
+        {
+            $scope.OtoEkle = false;
+        }
+        else
+        {
+            $scope.OtoEkle = true;
+        }
+        console.log($scope.OtoEkle)
         if(UserParam[ParamName].KDVYok == "1")
         {
             $scope.VergiChk = true;
@@ -3390,6 +3430,17 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
               orientation : "portrait"
             }
         );
+    }
+    $scope.YazdirTipSecim = function()
+    {
+        if(UserParam.Sistem.OnlineYazdir == "1")
+        {
+            $scope.BtnOnlineYazdir();
+        }
+        else
+        {
+            $scope.BtnFisYazdir();
+        }
     }
     $scope.BtnFisYazdir = async function()
     {

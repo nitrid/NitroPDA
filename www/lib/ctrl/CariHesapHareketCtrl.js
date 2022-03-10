@@ -63,7 +63,6 @@ function CariHesapHareketCtrl($scope,$window,db)
                     type: "text",
                     align: "center",
                     width: 120
-                    
                 },
                 {
                     name: "SERISIRA",
@@ -87,7 +86,13 @@ function CariHesapHareketCtrl($scope,$window,db)
                     align: "center",
                     width: 120
                 },
-           
+                {
+                    name: "VADEGUN",
+                    title: "VADE",
+                    type: "text",
+                    align: "center",
+                    width: 120
+                },
                 {
                     name: "ANADOVIZBORC",
                     title: "BORÇ",
@@ -285,9 +290,9 @@ function CariHesapHareketCtrl($scope,$window,db)
                             "CASE msg_S_0094 WHEN 'Satış faturası' THEN 4 WHEN  'Alış faturası' THEN 3 ELSE 0 END AS EVRAKTIPNO , " +
                             "msg_S_0003 AS CINSI, " +
                             "CONVERT(VARCHAR(10),msg_S_0098,112) VADETARIH, " +
-                            "msg_S_0099 AS VADEGUN, " +
+                            "CASE WHEN CONVERT(NVARCHAR,msg_S_0099) != 0 THEN CONVERT(NVARCHAR,msg_S_0099) ELSE 'PEŞİN' END AS VADEGUN, " +
                             "msg_S_0100 AS BA, " +
-                            "msg_s_0112 AS DOVIZCINS, " +
+                            "msg_S_0112 AS DOVIZCINS, " +
                             "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
                             "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
                             "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE, " +
@@ -405,8 +410,7 @@ function CariHesapHareketCtrl($scope,$window,db)
       else
       {
           alertify.alert('Sadece Fatura Evraklarının Detayı Görülebilir...')
-      }
-        
+      } 
     }
     $scope.BtnCariListeleEnter = function(keyEvent)
     {
@@ -504,7 +508,7 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TbMain").removeClass('active');
         $("#TbDetay").removeClass('active');
     }
-    $scope.MainClick = function() 
+    $scope.MainClick = function()
     {
         $("#TbMain").addClass('active');
         $("#TbCari").removeClass('active');

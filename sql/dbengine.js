@@ -4,7 +4,7 @@ var io = require('socket.io')();
 var lic = require('./license');
 var emikro = require('./emikro');
 var ehizli = require('./ehizli');
-
+let devprint = new (require('../devprint/devprint'));
 var msql;
 var tsql;
 
@@ -317,6 +317,13 @@ io.on('connection', function(socket)
         let TmpData = await ehizli.eIrsGoster(5,pDocumentId);
         fn(TmpData);
     });
+    socket.on("DevPrint",function(pParam,fn)
+    {
+        devprint.Print(pParam,function(pData)
+        {
+            fn(pData)
+        });
+    })
 });
 
 module.exports = dbengine;

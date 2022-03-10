@@ -28,7 +28,7 @@
                                 <button class="dropdown-item" ng-click="ProjeEvrakGetirModal()" data-toggle="modal" role="menu-item">Evrak Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(1)">Evrak Sil</button>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRaporClick()">Gün Sonu Raporu</button>
-                                <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnEIrsGonder()">E-Irsaliye Gönder</button>
+                                <!-- <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnEIrsGonder()">E-Irsaliye Gönder</button> -->
                                 <!-- <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnEIrsGoster()">E-Irsaliye Göster</button> -->
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGonder()">Gönder</button>
                                 <!-- <button class="dropdown-item" data-target="#RenkBeden" data-toggle="modal" role="menu-item">Renk Beden</a>
@@ -319,13 +319,13 @@
                     </div>
                     <div class="row my-0">
                         <div class="col-3 text-info px-1">
-                            <div class="col-form-label float-right py-1">Miktar:</div>
+                            <div class="col-form-label float-right py-1">Birim Miktar:</div>
                         </div>
-                        <div class="col-4 px-1">
-                            <input disabled type="number" class="form-control form-control-sm" ng-disabled="MiktarLock" ng-model="Stok[0].CARPAN">
+                        <div class="col-3 px-1">
+                            <input disabled type="number" class="form-control form-control-sm" ng-model="Stok[0].CARPAN">
                         </div>
-                        <div class="col-1 text-info px-1">
-                            <div class="col-form-label text-center py-1">X</div>
+                        <div class="col-2 text-info px-1">
+                            <div class="col-form-label px-1 float-right py-1">Miktar:</div>
                         </div>
                         <div class="col-4 px-1">
                             <input type="number" class="form-control form-control-sm" ng-model="Miktar" ng-disabled="MiktarLock" ng-change="MiktarFiyatValid()" id="Miktar" ng-keydown="MiktarPress($event)">
@@ -398,9 +398,8 @@
                                 <button class="dropdown-item" ng-click="BtnIskontoEkran(0)" data-toggle="modal"  role="menu-item">Evrak İskonto</button>
                                 <button class="dropdown-item" ng-click="BtnIskontoEkran(1)" data-toggle="modal"  role="menu-item">Satır İskonto</button>
                                 <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button>
-                                <button class="dropdown-item"  ng-click="BtnVergiDuzenle()" data-toggle="modal" role="menu-item">Vergi Düzenle</button>
-                                <button class="dropdown-item"  ng-click="BtnOnlineYazdir()"  role="menu-item">Online Yazdır</button>
-                                <button class="dropdown-item" ng-click="BtnEtiketBas()" role="menu-item">Etiket Bas</button>
+                                <!-- <button class="dropdown-item"  ng-click="BtnVergiDuzenle()" data-toggle="modal" role="menu-item">Vergi Düzenle</button> -->
+                                <!-- <button class="dropdown-item" ng-click="BtnEtiketBas()" role="menu-item">Etiket Bas</button> -->
                                 <button class="dropdown-item" ng-click="BtnEIrsModalAc()" role="menu-item">İrsaliye Detay</button>
                                 <button class="dropdown-item"  ng-click="BtnAciklamaGir()"  role="menu-item">Açıklama</button>
                             </div>
@@ -413,7 +412,7 @@
                         <div class="col-4">
                             <div class="row">
                                 <div class="col-12">
-                                    <button class="btn btn-round btn-block btn-primary h-60" ng-click="DizaynSec()">
+                                    <button class="btn btn-round btn-block btn-primary h-60" ng-click="YazdirTipSecim()">
                                         <span class="glyphicon glyphicon-print"  aria-hidden="true" ></span>
                                     </button>
                                 </div>
@@ -549,7 +548,7 @@
                 <div id="TblAciklama"  class="tab-pane">
                     <div class="row">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="TbIslemSatirlariClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="IslemSatirlariClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="row">
@@ -653,13 +652,13 @@
             </div>
                 <div class="panel-body">
                         <label class="form-control-label col-lg-12 col-md-12 col-sm-12  pr-2" id="LblPartiLotAlert"><div class="float-right"><b><span style="color:dodgerblue;">{{LblPartiLotAlert}}</span></b></div></label>
-                    <div class="form-group row my--5">
+                    <div ng-show="PartiOlusturShow" class="form-group row my--5">
                         <label class="form-control-label col-lg-1 col-md-1 col-sm-2 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Parti:</span></b></div></label>
                         <input type="text" class="form-control col-lg-5 col-md-4 col-sm-4 form-control-sm" ng-model="TxtParti" id="Parti"  ng-keypress = "BtnPartiEnter($event)">
                         <label class="form-control-label col-lg-1 col-md-2 col-sm-2 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Lot :</span></b></div></label>
                         <input type="text" class="form-control col-lg-5 col-md-4 col-sm-4 form-control-sm" ng-model="TxtLot">
                     </div>
-                    <div class="form-group row my-5">
+                    <div ng-show="PartiOlusturShow" class="form-group row my-5">
                         <label class="form-control-label col-lg-6 col-md-5 col-sm-5 offset-1 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Skt Tarih :</span></b></div></label>
                         <div class="col-lg-5 col-md-6 col-sm-6">
                             <div class="row">
@@ -672,17 +671,17 @@
                             </div>
                         </div>
                     </div>
+                    <div ng-show="PartiOlusturShow" class="form-group row my--5">
+                        <div class="form-group col-md-12 col-sm-12 col-lg-12">
+                            <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotOlustur()">Oluştur Ve Seç</button>
+                        </div>
+                    </div>
                     <div class="form-group row my--5">
                         <div class="form-group col-md-6 col-sm-6 col-lg-6">
                             <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotSec()">Seç</button>
                         </div>
                         <div class="form-group col-md-6 col-sm-6 col-lg-6">
                             <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotGetir()">Getir</button>
-                        </div>
-                    </div>
-                    <div class="form-group row my--5">
-                        <div class="form-group col-md-12 col-sm-12 col-lg-12">
-                            <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotOlustur()">Oluştur Ve Seç</button>
                         </div>
                     </div>
                     <div id="TblPartiLot"></div>

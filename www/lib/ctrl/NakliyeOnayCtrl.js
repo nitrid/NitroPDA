@@ -238,7 +238,8 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
         $window.document.getElementById("Barkod").focus();
     } 
     function UpdateData(pData) 
-    { console.log(pData)
+    { 
+        console.log(pData)
         if((parseFloat($scope.NakliyeOnayListe[NakliyeIndex].sth_special1) + parseFloat($scope.Miktar)) <=  $scope.NakliyeOnayListe[NakliyeIndex].MIKTAR)
         {
             db.ExecuteTag($scope.Firma,'NakliyeOnayUpdate',pData.Param,function(pData)
@@ -319,14 +320,14 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
         console.log(pDataListe)
         for(var i = 0; i < pDataListe.length; i++)
         {  
-          if(pStokKodu == pDataListe[i].sth_stok_kod) 
-          { 
-              if(pDataListe[i].sth_special1 != pDataListe[i].MIKTAR)
-              {
-                NakliyeIndex = i;
-                return true;
-              }
-          }
+            if(pStokKodu == pDataListe[i].sth_stok_kod) 
+            { 
+                if(pDataListe[i].sth_special1 != pDataListe[i].MIKTAR)
+                {
+                    NakliyeIndex = i;
+                    return true;
+                }
+            }
         } 
         return false;
     }
@@ -791,7 +792,8 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
     $scope.BtnKaydetClick = function()
     {
         for(var i = 0; i < $scope.NakliyeOnayListe.length; i++)
-        { console.log($scope.NakliyeOnayListe[i])
+        {
+            console.log($scope.NakliyeOnayListe[i])
             let pData = 
             {
                 Param :
@@ -803,114 +805,116 @@ function NakliyeOnayCtrl($scope,$window,$timeout,db)
                     $scope.NakliyeOnayListe[i].sth_Guid
                 ],
                 Miktar : $scope.Miktar * $scope.Stok1[0].CARPAN
-                
             };
-            db.ExecuteTag($scope.Firma,'NakliyeOnayKaydet',pData.Param,function(pData)
+            if($scope.NakliyeOnayListe[i].sth_special1 != "")
             {
-                console.log(112)
-                if(pData != 0)
+                db.ExecuteTag($scope.Firma,'NakliyeOnayKaydet',pData.Param,function(pData)
                 {
-                    db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
+                    console.log(112)
+                    if(pData != 0)
                     {
-                        InsertAfterRefresh(BosData)
-                    });
-                }
-            });
-            if($scope.NakliyeOnayListe[i].MIKTAR != $scope.NakliyeOnayListe[i].sth_special1 && $scope.NakliyeOnayListe[i].sth_special1 > 0)
-            {
-                var InsertData = 
-                [
-                    UserParam.MikroId,
-                    UserParam.MikroId,
-                    0, //FİRMA NO
-                    0, //ŞUBE NO
-                    $scope.BelgeTarih,
-                    $scope.Tip,
-                    $scope.Cins,
-                    $scope.NormalIade,
-                    $scope.EvrakTip,
-                    $scope.Seri,
-                    $scope.Sira,
-                    $scope.BelgeNo,
-                    $scope.BelgeTarih,
-                    $scope.NakliyeOnayListe[i].sth_stok_kod,
-                    0, //ISKONTO TUTAR 1
-                    0, //ISKONTO TUTAR 2
-                    0, //ISKONTO TUTAR 3
-                    0, //ISKONTO TUTAR 4 
-                    0, //ISKONTO TUTAR 5
-                    0, //ISKONTO TUTAR 6
-                    0, //ISKONTO TUTAR 7
-                    0, //ISKONTO TUTAR 8
-                    0, //ISKONTO TUTAR 9
-                    0, //ISKONTO TUTAR 10
-                    0, //SATIR ISKONTO TİP 1
-                    0, //SATIR ISKONTO TİP 2
-                    0, //SATIR ISKONTO TİP 3
-                    0, //SATIR ISKONTO TİP 4
-                    0, //SATIR ISKONTO TİP 5
-                    0, //SATIR ISKONTO TİP 6
-                    0, //SATIR ISKONTO TİP 7
-                    0, //SATIR ISKONTO TİP 8
-                    0, //SATIR ISKONTO TİP 9
-                    0, //SATIR ISKONTO TİP 10
-                    0, //CARİCİNSİ
-                    "",
-                    '', //İŞEMRİ KODU
-                    0, //PLASİYER
-                    0, //HARDOVİZCİNSİ
-                    0, //HARDOVİZKURU
-                    0, //ALTDOVİZKURU
-                    0, //STOKDOVİZCİNSİ
-                    0, //STOKDOVİZKURU
-                    parseFloat($scope.NakliyeOnayListe[i].MIKTAR) - parseFloat($scope.NakliyeOnayListe[i].sth_special1),
-                    $scope.Miktar2,
-                    0,
-                    0, // TUTAR
-                    0, // İSKONTO 1
-                    0, // İSKONTO 2
-                    0, // İSKONTO 3
-                    0, // İSKONTO 4
-                    0, // İSKONTO 5
-                    0, // İSKONTO 6
-                    0, // MASRAF 1
-                    0, // MASRAF 2
-                    0, // MASRAF 3
-                    0, // MASRAF 4
-                    0, // VERİPNTR
-                    0, // VERGİ
-                    0, // MASRAFVERGİPNTR
-                    0, // MASRAFVERGİ
-                    0, // ODEMEOP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    '', //AÇIKLAMA
-                    '00000000-0000-0000-0000-000000000000', //sth_sip_uid
-                    '00000000-0000-0000-0000-000000000000', //sth_fat_uid,
-                    $scope.GDepo,
-                    $scope.CDepo,
-                    $scope.BelgeTarih, // MALKABULTARİH
-                    '', // CARİSORUMLULUKMERKEZİ
-                    '', // STOKSORUMLULUKMERKEZİ
-                    0,  // VERGİSİZFL
-                    0,  // ADRESNO
-                    0,
-                    0,
-                    '', // PROJE
-                    '', // EXİMKODU
-                    0,  // DİSTİCARETTURU
-                    0,  // OTVVERGİSİZFL
-                    0,  // OİVVERGİSİZ
-                    0,   // FİYATLİSTENO
-                    $scope.NDepo,
-                    0,
-                    
-                ];
-                console.log(InsertData)
-                db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData)
+                        db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
+                        {
+                            InsertAfterRefresh(BosData)
+                        });
+                    }
+                });
+                if($scope.NakliyeOnayListe[i].MIKTAR != $scope.NakliyeOnayListe[i].sth_special1 && $scope.NakliyeOnayListe[i].sth_special1 > 0)
                 {
-                    db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
+                    var InsertData = 
+                    [
+                        UserParam.MikroId,
+                        UserParam.MikroId,
+                        0, //FİRMA NO
+                        0, //ŞUBE NO
+                        $scope.BelgeTarih,
+                        $scope.Tip,
+                        $scope.Cins,
+                        $scope.NormalIade,
+                        $scope.EvrakTip,
+                        $scope.Seri,
+                        $scope.Sira,
+                        $scope.BelgeNo,
+                        $scope.BelgeTarih,
+                        $scope.NakliyeOnayListe[i].sth_stok_kod,
+                        0, //ISKONTO TUTAR 1
+                        0, //ISKONTO TUTAR 2
+                        0, //ISKONTO TUTAR 3
+                        0, //ISKONTO TUTAR 4 
+                        0, //ISKONTO TUTAR 5
+                        0, //ISKONTO TUTAR 6
+                        0, //ISKONTO TUTAR 7
+                        0, //ISKONTO TUTAR 8
+                        0, //ISKONTO TUTAR 9
+                        0, //ISKONTO TUTAR 10
+                        0, //SATIR ISKONTO TİP 1
+                        0, //SATIR ISKONTO TİP 2
+                        0, //SATIR ISKONTO TİP 3
+                        0, //SATIR ISKONTO TİP 4
+                        0, //SATIR ISKONTO TİP 5
+                        0, //SATIR ISKONTO TİP 6
+                        0, //SATIR ISKONTO TİP 7
+                        0, //SATIR ISKONTO TİP 8
+                        0, //SATIR ISKONTO TİP 9
+                        0, //SATIR ISKONTO TİP 10
+                        0, //CARİCİNSİ
+                        "",
+                        '', //İŞEMRİ KODU
+                        0, //PLASİYER
+                        0, //HARDOVİZCİNSİ
+                        0, //HARDOVİZKURU
+                        0, //ALTDOVİZKURU
+                        0, //STOKDOVİZCİNSİ
+                        0, //STOKDOVİZKURU
+                        parseFloat($scope.NakliyeOnayListe[i].MIKTAR) - parseFloat($scope.NakliyeOnayListe[i].sth_special1),
+                        $scope.Miktar2,
+                        0,
+                        0, // TUTAR
+                        0, // İSKONTO 1
+                        0, // İSKONTO 2
+                        0, // İSKONTO 3
+                        0, // İSKONTO 4
+                        0, // İSKONTO 5
+                        0, // İSKONTO 6
+                        0, // MASRAF 1
+                        0, // MASRAF 2
+                        0, // MASRAF 3
+                        0, // MASRAF 4
+                        0, // VERİPNTR
+                        0, // VERGİ
+                        0, // MASRAFVERGİPNTR
+                        0, // MASRAFVERGİ
+                        0, // ODEMEOP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                        '', //AÇIKLAMA
+                        '00000000-0000-0000-0000-000000000000', //sth_sip_uid
+                        '00000000-0000-0000-0000-000000000000', //sth_fat_uid,
+                        $scope.GDepo,
+                        $scope.CDepo,
+                        $scope.BelgeTarih, // MALKABULTARİH
+                        '', // CARİSORUMLULUKMERKEZİ
+                        '', // STOKSORUMLULUKMERKEZİ
+                        0,  // VERGİSİZFL
+                        0,  // ADRESNO
+                        0,
+                        0,
+                        '', // PROJE
+                        '', // EXİMKODU
+                        0,  // DİSTİCARETTURU
+                        0,  // OTVVERGİSİZFL
+                        0,  // OİVVERGİSİZ
+                        0,   // FİYATLİSTENO
+                        $scope.NDepo,
+                        0,
+                        
+                    ];
+                    console.log(InsertData)
+                    db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData)
                     {
-                        InsertAfterRefresh(BosData)
-                    });
+                        db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(BosData)
+                        {
+                            InsertAfterRefresh(BosData)
+                        });
+                    }
                 }
             }
         }

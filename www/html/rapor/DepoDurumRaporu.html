@@ -8,31 +8,45 @@
                                 <h3 style="font-weight:bold" class="panel-title">Depo Durum Raporu</h3>
                             </div>
                             <div style="margin-left: 0px; margin-right: 5px; margin-top: -5px;" class="panel-body">
-                                <div class="row py-1">
+                                <div class="row">
                                     <div class="col-md-4 col-lg-4 col-sm-8 px-2">
                                         <select class="form-control form-control" ng-model="CmbRaporTip" ng-change="RaporTipChange()" ng-disabled="EvrakLock">
                                             <option value="0">Depo Durum Raporu</option>
                                         </select>
                                     </div>
                                 </div>
-                            <div class="row py-1">
-                                <div class="col-11 px-1 py-5">
+                            <div class="row">
+                                <div class="col-12 px-1 py-5">
                                     <div class="input-group px-5">
                                         <input type="text" class="form-control focus" placeholder="Depo Listelemek İçin Tıklayınız..." ng-click="DepoSec()" ng-model="DepoAdi">
+                                        <span class="input-group-append">
                                         <button type="submit" class="btn btn-round btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-md-1 text-primary px-1"><div class="col-form-label px-1 float-left  py-2"> Tarih:</div></div>
-                                <div class="col-sm-7 col-md-2 px-1 m-5">
+                                <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
+                                <div class="col-sm-7 col-md-9 px-1">
                                     <div class="input-group input-group-icon">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
                                                 <span class="icon wb-calendar" aria-hidden="true"></span>
                                             </div>
                                         </div>
-                                        <input type="text" class="form-control" id="Tarih" type="text" ng-model="Tarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                                        <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-md-3 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Son Tarih:</div></div>
+                                <div class="col-sm-7 col-md-9 px-1">
+                                    <div class="input-group input-group-icon">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span class="icon wb-calendar" aria-hidden="true"></span>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" id="SonTarih" type="text" ng-model="SonTarih" data-provide="datepicker" ng-disabled="EvrakLock">
                                     </div>
                                 </div>
                             </div>
@@ -93,7 +107,10 @@
     </div>
 </div>
 <script>
-    $("#Tarih").datepicker({
+    $("#IlkTarih").datepicker({
+    language: "tr"
+    });
+    $("#SonTarih").datepicker({
     language: "tr"
     });
 </script>

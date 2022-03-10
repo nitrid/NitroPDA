@@ -101,48 +101,72 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             fields: 
             [
                 {
-                    name: "TARIH",
-                    title: "TARIH",
+                    name: "P1",
+                    title: "",
                     type: "text",
                     align: "center",
-                    width: 180
+                    width: 120
                 },
                 {
-                    name: "SERI-SIRA",
-                    title: "SERİ - SIRA",
+                    name: "P2",
+                    title: "",
                     type: "text",
                     align: "center",
-                    width: 150
+                    width: 200
                     
                 },
                 {
-                    name: "CARIADI",
-                    title: "CARİ",
+                    name: "P3",
+                    title: "",
                     type: "text",
                     align: "center",
                     width: 150
+                },
+                {
+                    name: "P4",
+                    title: "",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                },
+                {
+                    name: "P5",
+                    title: "",
+                    type: "text",
+                    align: "center",
+                    width: 100
                     
                 },
-              
                 {
-                    name: "MIKTAR",
-                    title: "MİKTARI",
+                    name: "P6",
+                    title: "",
                     type: "text",
                     align: "center",
-                    width: 180
+                    width: 120
                 },
-                             {
-                    name: "TUTARKDVDAHIL",
-                    title: "TUTAR",
+                {
+                    name: "P7",
+                    title: "",
                     type: "text",
                     align: "center",
-                    width: 250
+                    width: 100
                 }
             ],
             rowClick: function(args)
             {
                 $scope.IslemDetayRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
+            },
+            rowClass: function(item, itemIndex) 
+            {                
+                if(item.P5 == "SIRA")
+                {
+                    return 'bg-green';
+                }
+                if(item.P5 == "TUTAR")
+                {
+                    return 'bg-green';
+                }
             }
         });
     }
@@ -172,6 +196,13 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     type: "text",
                     align: "center",
                     width: 250
+                },
+                {
+                    name: "PROJEKOD",
+                    title: "PROJEKOD",
+                    type: "text",
+                    align: "center",
+                    width: 180
                 },
                 {
                     name: "SIPMIKTAR",
@@ -276,6 +307,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $scope.SubeListe = [];
         $scope.IslemListe = [];
         $scope.IslemDetayListe = [];
+        $scope.ProjeGetirListe = [];
 
         InitCariGrid();
         IslemGrid();
@@ -358,7 +390,6 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         {
             str = " AND sip_miktar <> sip_teslim_miktar ";
         }
-
         var TmpQuery = 
         {
             db : '{M}.' + $scope.Firma,
@@ -367,6 +398,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     "sip_evrakno_seri AS SERI," +
                     "sip_evrakno_sira AS SIRA," +
                     "sip_musteri_kod AS CARIKOD, " +
+                    "sip_projekodu AS PROJEKOD, " +
                     "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sip_musteri_kod) AS CARIADI, " +
                     "SUM(sip_miktar) AS MIKTAR, " +
                     "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
@@ -374,8 +406,8 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     "CONVERT(NVARCHAR,CAST(SUM(sip_tutar) + SUM(sip_vergi) AS DECIMAL(10,2))) AS TUTARKDVDAHIL, " +
                     "(SELECT dep_adi AS ADI FROM DEPOLAR WHERE SIPARISLER.sip_depono = dep_no) AS DEPOLAR " +
                     "FROM SIPARISLER " +
-                    "WHERE (sip_depono = @DEPONO OR @DEPONO = '') AND ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
-                    "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih,sip_depono ORDER BY sip_belge_tarih DESC" ,
+                    "WHERE sip_projekodu != '' and  (sip_depono = @DEPONO OR @DEPONO = '') AND ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
+                    "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih,sip_depono,sip_projekodu ORDER BY sip_projekodu DESC" ,
             param:  ['DEPONO','KODU','ILKTARIH','SONTARIH','TIP'], 
             type:   ['string|25','string|25','date','date','int'], 
             value:  [$scope.SubeKodu,$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih,$scope.Tip]
@@ -383,7 +415,30 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
 
         db.GetDataQuery(TmpQuery,function(Data)
         {
-            $scope.IslemListe = Data;
+            let datas = {"SERI-SIRA": "","SERI": "","SIRA": '',"CARIKOD": "","PROJEKOD": 'BOŞ',"CARIADI": "","MIKTAR": '',"TARIH": '',"TUTARKDVHARIC": '',"TUTARKDVDAHIL": '',"DEPOLAR": ''};
+            console.log(datas)
+            for (let i = 0; i < Data.length; i++) 
+            {
+                if(i > 0)
+                {
+                    if(Data[i].PROJEKOD != Data[i-1].PROJEKOD)
+                    {
+                        $scope.ProjeGetirListe.push(datas)
+                        $scope.ProjeGetirListe.push(Data[i])
+                    }
+                    else
+                    {
+                        $scope.ProjeGetirListe.push(Data[i])
+                    }
+                }
+                else
+                {
+                    $scope.ProjeGetirListe.push(Data[i])
+                }
+                console.log($scope.ProjeGetirListe)
+            }
+            console.log($scope.ProjeGetirListe)
+            $scope.IslemListe = $scope.ProjeGetirListe;
             console.log(Data)
             $("#TblCariFoy").jsGrid({data : $scope.IslemListe});
         });
@@ -474,24 +529,25 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                         "ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod),'') AS STOKADI," +
                         "ISNULL((SELECT dbo.fn_StokBirimi(sip_stok_kod,sip_birim_pntr)),'') AS BIRIM, " +
                         "sip_miktar AS SIPMIKTAR, " +
+                        "sip_projekodu AS PROJEKOD, " +
                         "sip_teslim_miktar AS TESLIMMIKTAR, " +
                         "sip_miktar - sip_teslim_miktar AS TESLIMEDILMEYENMIKTAR, " +
                         "CONVERT(NVARCHAR,CAST(sip_b_fiyat AS DECIMAL(10,2))) AS BFIYAT, " +
                         "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
                         "(SELECT dbo.fn_VergiYuzde (sip_vergi_pntr)) AS TOPTANVERGI, " +
                         "CONVERT(NVARCHAR,CAST(sip_tutar AS DECIMAL(10,2))) AS TUTAR,* " +
-                        "FROM SIPARISLER  WHERE sip_evrakno_seri = @SERI AND sip_evrakno_sira = @SIRA ORDER BY sip_satirno ASC",
+                        "FROM SIPARISLER WHERE sip_evrakno_seri = @SERI AND sip_evrakno_sira = @SIRA ORDER BY sip_satirno ASC",
                 param:  ['SERI','SIRA'], 
                 type:   ['string|25','int'], 
                 value:  [$scope.Seri,$scope.Sira]
             }
-
             db.GetDataQuery(TmpQuery,function(Data)
             {
                 $scope.IslemDetayListe = Data;
                 $("#TblIslemDetay").jsGrid({data : $scope.IslemDetayListe});
                 $scope.ToplamSatir = $scope.IslemDetayListe.length;
                 DipToplamHesapla(Data);
+                
             });
         }
         
@@ -516,5 +572,224 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         $("#TbCari").removeClass('active');
         $("#TbMain").removeClass('active');
         $scope.BtnSubeListele();
+    }
+    $scope.BtnProjeListeGetir = async function()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT " +
+            "sip_stok_kod AS P1, " + //STOKKOD
+            "ISNULL((SELECT sto_isim FROM STOKLAR WHERE sto_kod = sip_stok_kod),'') AS P2," + //STOKADI
+            "sip_miktar AS P3, " + //MIKTAR
+            "CONVERT(NVARCHAR,CAST(sip_b_fiyat AS DECIMAL(10,2))) AS P4, " + //BFIYAT
+            "CONVERT(NVARCHAR,CAST(sip_tutar AS DECIMAL(10,2))) AS P5, " + //TUTARKDVDAHIL
+            "sip_evrakno_seri AS P6," + //SERI
+            "sip_evrakno_sira AS P7 " + //SIRA
+            //"sip_projekodu AS P6 " + //PROJEKOD
+            "FROM SIPARISLER WHERE sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH ORDER BY sip_satirno ASC",
+            param:  ['ILKTARIH','SONTARIH'], 
+            type:   ['date','date'], 
+            value:  [$scope.IlkTarih,$scope.SonTarih]
+        }
+        await db.GetPromiseQuery(TmpQuery,async function(StokData)
+        {
+            let StokSipData = [];
+
+            console.log(StokData)
+            var str = '';
+
+            if($scope.EvrakTip == 0)
+            {
+                $scope.Tip = "0";
+            }
+            else
+            {
+                $scope.Tip = "1";
+            }
+    
+            if($scope.SipTip == 0)
+            {
+                str = " AND sip_miktar >= 1";
+            }
+            else if ($scope.SipTip == 1)
+            {
+                str = " AND sip_miktar - sip_teslim_miktar = 0";
+            }
+            else
+            {
+                str = " AND sip_miktar <> sip_teslim_miktar ";
+            }
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "SELECT " +
+                        "sip_projekodu AS P1, " + //PROJEKOD
+                        "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sip_musteri_kod) AS P2, " + //CARIADI
+                        "CONVERT(NVARCHAR,sip_belge_tarih,104) AS P3, " + //TARIH
+                        "sip_evrakno_seri AS P4," + //SERI
+                        "sip_evrakno_sira AS P5," + //SIRA
+                        "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = sip_satici_kod),'') AS P6, " + //PLASIYER
+                        "CONVERT(NVARCHAR,CAST(SUM(sip_tutar) + SUM(sip_vergi) AS DECIMAL(10,2))) AS P7 " + //TUTAR(KDVDAHİL)
+                        "FROM SIPARISLER " +
+                        "WHERE sip_projekodu != '' and  (sip_depono = @DEPONO OR @DEPONO = '') AND ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
+                        "GROUP BY sip_evrakno_seri,sip_satici_kod,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih,sip_depono,sip_projekodu ORDER BY sip_projekodu DESC" ,
+                param:  ['DEPONO','KODU','ILKTARIH','SONTARIH','TIP'], 
+                type:   ['string|25','string|25','date','date','int'], 
+                value:  [$scope.SubeKodu,$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih,$scope.Tip]
+            }
+            console.log("1")
+            await db.GetPromiseQuery(TmpQuery,async function(SipCariData)
+            {
+                let CariBaslik = {"P1": "PROJE","P2": "CARI","P3": "TARIH","P4": "SERI","P5": "SIRA","P6": "PERSONEL","P7": "TOPLAM"};
+                let StokBaslik = {"P1": "STOK KOD","P2": "STOK AD","P3": "MİKTAR","P4": "BİRİMF","P5": "TUTAR","P6": "","P7": ""};
+
+                console.log(SipCariData)
+                console.log(StokData)
+                for (let i = 0; i < SipCariData.length; i++) 
+                {
+                    $scope.ProjeGetirListe.push(CariBaslik)
+                    console.log("Cari Sipariş Deniyor")
+                    $scope.ProjeGetirListe.push(SipCariData[i])
+                    console.log("Cari Sipariş Ekleme Başarılı!")
+                    $scope.ProjeGetirListe.push(StokBaslik)
+                    StokSipData = StokData;
+                    for (let x = 0; x < StokSipData.length; x++) 
+                    {
+                        
+                        if(SipCariData[i].P4 == StokData[x].P6 && SipCariData[i].P5 == StokData[x].P7)
+                        {
+                            console.log("Giriş başarılı!")
+                            console.log(StokSipData)
+                            StokSipData[x].P6 = "";
+                            StokSipData[x].P7 = "";
+                            $scope.ProjeGetirListe.push(StokSipData[x])
+                        }
+                    }
+                }
+                console.log("Liste son hali; ")
+                console.log($scope.ProjeGetirListe)
+                $scope.IslemListe = $scope.ProjeGetirListe;
+                $("#TblCariFoy").jsGrid({data : $scope.IslemListe});
+            });
+        });
+    }
+    $scope.ExcelExport = function()
+    {
+        if($scope.ProjeGetirListe.length > 0)
+            $scope.ExcelDataListesi = $scope.ProjeGetirListe;
+        else
+        alertify.alert("Getir işlemi yapınız")
+
+        let ExcelDataListe = [];
+        let ExcelHeaderListe = [];
+
+        for(i = 0; i < Object.keys($scope.ExcelDataListesi[0]).length; i++)
+        {
+            let a = {};
+            
+            a.text = Object.keys($scope.ExcelDataListesi[0])[i];
+            ExcelHeaderListe.push(a)
+        }
+
+        ExcelDataListe.push(ExcelHeaderListe)
+
+        for(i = 0; i < $scope.ExcelDataListesi.length; i++)
+        {
+            let Dizi = [];
+            console.log("1. For Girdi")
+            for(m = 0;m < Object.keys($scope.ExcelDataListesi[i]).length;m++)
+            {
+                console.log("2. For Girdi")
+                let b = {};
+                b.text = $scope.ExcelDataListesi[i][Object.keys($scope.ExcelDataListesi[i])[m]]
+                console.log(b.text)
+                console.log(b)
+                Dizi.push(b);
+                console.log(Dizi)
+            }
+            
+            ExcelDataListe.push(Dizi)
+        }
+        console.log(ExcelDataListe)
+        var RaporListeData = 
+        [
+            {
+                "sheetName":"Sayfa",
+                "data":  ExcelDataListe
+            },
+            
+        ];
+        var options = 
+        {
+            fileName:"VerilenSiparisRapor",
+            extension:".xlsx",
+            sheetName:"Sayfa",
+            fileFullName:"VerilenSiparisRapor.xlsx",
+            header:true,
+            maxCellWidth: 20
+        };
+
+        if (window.cordova && cordova.platformId !== "browser") 
+        {
+            document.addEventListener("deviceready", function () 
+            {
+                var storageLocation = cordova.file.externalRootDirectory  + "download/";
+                var blob = Jhxlsx.getBlob(RaporListeData,options);
+
+                switch (cordova.platform) 
+                {
+                    case "Android":
+                      storageLocation = cordova.file.externalRootDirectory  + "download/";
+                      break;
+            
+                    case "iOS":
+                      storageLocation = cordova.file.documentsDirectory;
+                      break;
+                }
+
+                window.resolveLocalFileSystemURL(storageLocation,function (dir) 
+                {
+                    dir.getFile(options.fileFullName ,{create: true},function (file) 
+                    {
+                        file.createWriter(function (fileWriter) 
+                        {
+                            fileWriter.write(blob);
+
+                            fileWriter.onwriteend = function () 
+                            {
+                                
+                            };
+        
+                            fileWriter.onerror = function (err) 
+                            {
+                                console.error(err);
+                            };
+                        },
+                        function (err) 
+                        {
+                            console.error(err);
+                        }
+                        );
+                    },
+                    function (err) 
+                    {
+                        console.error(err);
+                    }
+                    );
+                },
+                function (err) 
+                {
+                    console.error(err);
+                });
+            });
+        }
+        else
+        {
+            Jhxlsx.export(RaporListeData, options);
+        }
+        
+
+        console.log(Jhxlsx.getBlob(Jhxlsx,options))
     }
 }

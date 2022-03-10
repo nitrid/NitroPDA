@@ -9,6 +9,8 @@
     <div class="panel panel-bordered">
         <div class="panel-body py-1">
             <div class="tab-content">
+                <div id="view">
+                </div>
                 <div id="TbMain" class="tab-pane active">
                     <div class="row pb-20">
                         <div class="col-5 px-1">
@@ -21,9 +23,9 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak()">Yeni Evrak</button>
                                 <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Barkod Detay</a>
-                                <button class="dropdown-item" data-target="#MdlFiyatDegisikligi" data-toggle="modal" role="menu-item">Fiyat Değişikliği</a>
+                                <!-- <button class="dropdown-item" data-target="#MdlFiyatDegisikligi" data-toggle="modal" role="menu-item">Fiyat Değişikliği</a> -->
                                 <button class="dropdown-item" data-target="#MdlFiyatDegistir" data-toggle="modal" role="menu-item">Fiyat Değiştir</a>
-                                <button class="dropdown-item" data-target="#MdlReyonDegisikligi" data-toggle="modal" role="menu-item">Reyon Tanımları</a>
+                                <!-- <button class="dropdown-item" data-target="#MdlReyonDegisikligi" data-toggle="modal" role="menu-item">Reyon Tanımları</a> -->
                             </div>
                         </div>
                     </div>
@@ -61,7 +63,7 @@
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Birim :</label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{Stok[0].BIRIM}}</label></div>
                     </div>
-                    <div class="row" ng-show = "FiyatGizle">
+                    <div class="row"  ng-show="SonAlisGizle">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Son Alış F.: </label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{SonAlis}}  {{SonAlisDoviz}}</label></div>
                     </div>
@@ -103,7 +105,7 @@
                     </div>
                     <div class="row"  ng-show = "StokResim">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Stok Resmi:</label></div>
-                        <div class="col-4 px-0"><label class="form-control-label pl-10"><img width="100" ng-src="/image/{{Stok[0].KODU}}.jpg"></label></div>
+                        <div class="col-4 px-0" data-target="#MdlResimBuyut" data-toggle="modal"><label class="form-control-label pl-10"><img width="100" src="../../img/{{Stok[0].KODU}}.png "></label></div>
                         <div class="col-4 offset-1 px-1">
                             <div class="checkbox-custom checkbox-info my-0">
                               <input type="checkbox" name="inputCheckboxes" ng-model="OtoEkle" checked="">
@@ -167,6 +169,13 @@
         </div>
     </div>
     <!-- MODALLAR -->
+    <div class="modal fade" id="MdlResimBuyut" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <img class="rounded float-left" style="max-width:2000px;width:100%" src="{{Base64ImageSrc}}">
+            </div>
+        </div>
+    </div>
     <!-- Stok Detay -->
     <div class="modal fade" id="MdlStokDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-simple modal-center modal-primary">
@@ -202,10 +211,10 @@
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Fiyat liste 3 :</b></label></div>
                         <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{SatisFiyatListe3}}  {{SatisFiyatListe3Sembol}}</label></div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right"><b>Maliyet :</b></label></div>
                         <div class="col-8 px-0"><label class="form-control-label pl-10 text-primary">{{Maliyet}}</label></div>
-                    </div>
+                    </div> -->
                     <div class="row py-1 px-1">
                         <div id="TblDepoMiktar"></div>
                     </div>
