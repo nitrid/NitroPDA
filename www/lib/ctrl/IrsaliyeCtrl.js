@@ -226,12 +226,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     width: 75
                 },
                 {
-                    name: "RISK",
-                    type: "number",
-                    align: "center",
-                    width: 75
-                },
-                {
                     name: "RISKLIMIT",
                     type: "number",
                     align: "center",

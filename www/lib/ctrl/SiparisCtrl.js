@@ -81,7 +81,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.Risk = 0;
         $scope.RiskLimit = 0;
         $scope.CheckEvrak = 0;
-        $scope.FazlaMiktar = 0;
 
         $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
@@ -193,12 +192,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 },
                 {
                     name: "BAKIYE",
-                    type: "number",
-                    align: "center",
-                    width: 75
-                },
-                {
-                    name: "RISK",
                     type: "number",
                     align: "center",
                     width: 75
@@ -862,24 +855,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.BarkodLock = false;
 
         $scope.SiparisListe = pData;
-        $("#TblIslem").jsGrid({data : $scope.SiparisListe});    
-        if($scope.FazlaMiktar != 0)
-        {
-            $scope.Miktar = $scope.FazlaMiktar
-            $scope.Stok[0].FIYAT = 0;
-            $scope.Stok[0].TUTAR = 0;
-            console.log($scope.Stok[0])
-            $scope.Stok[0].ISK.TUTAR1 = 0; 
-            $scope.Stok[0].ISK.TUTAR2 = 0; 
-            $scope.Stok[0].ISK.TUTAR3 = 0; 
-            $scope.Stok[0].ISK.TUTAR4 = 0; 
-            $scope.Stok[0].ISK.TUTAR5 = 0; 
-            $scope.Stok[0].ISK.TUTAR6 = 0; 
-            $scope.Stok[0].TOPTANVERGIPNTR = 0;
-            $scope.Stok[0].KDV = 0;
-            $scope.FazlaMiktar = 0;
-            InsertData();
-        }     
+        $("#TblIslem").jsGrid({data : $scope.SiparisListe});     
         $scope.BtnTemizle();
         DipToplamHesapla();
         ToplamMiktarHesapla();
