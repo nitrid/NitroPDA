@@ -2,12 +2,12 @@
     <div class="page-content container-fluid">
        <div class="tab-content">
            <div id="TbMain" class="tab-pane active">
-               <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+                <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
                    <div class="panel-heading">
                        <h3 style="font-weight:bold" class="panel-title">Cari Hesap Hareket Raporu</h3>
-                   </div>
-                   
-                   <div style="margin-left: 15px; margin-right: 15px; margin-top: -5px;" class="panel-body">
+                       <ul class="panel-actions panel-actions-keep">
+                    </div>
+                   <div class="panel-body">
                        <div class="row py-1">
                            <div class="col-11 px-1 py-5">
                                <div class="input-group px-5">
@@ -43,56 +43,16 @@
                            </div>
                        </div>
                        <div class="row">
-                            <div class="col-12">
-                                <!-- Example Nav Tabs -->
-                                <h4 class="example-title">Bakiyeler</h4>
-                                    <ul class="nav nav-tabs">
-                                        <li class="nav-item"><a class="nav-link active" data-toggle="tab" data-target="#TbDov1" ng-click="Dv1Click()" >{{DovizCinsi}}</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" data-target="#TbDov2" ng-click="Dv2Click()">{{DovizCinsi1}}</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" data-target="#TbDov3" ng-click="Dv3Click()">{{DovizCinsi2}}</a></li>
-                                    </ul>
-
-                                <!-- End Example Nav Tabs -->
-                            </div>
-                       </div>
-                       <div class="row">
-                        <div class="tab-content">
-                            <div id="TbDov1" class="tab-pane active">
-                                <h4 class="example-title">DÖVİZ CİNSİ 1</h4>
-                                <div class="row">
-                                    <div class="col-sm-4 col-md-4  py-5"><div class="col-form-label px-1 float-left  py-2"> Ana Doviz Bakiye : {{Dov1AnaDovizBakiye}} TL</div></div>
-                                    <div class="col-sm-4 col-md-4  py-5"><div class="col-form-label px-1 float-left  py-2"> Alternatif Doviz Bakiye : {{Dov1AltDovizBakiye}} USD</div></div>
-                                    <div class="col-sm-4 col-md-4  py-5"><div class="col-form-label px-1 float-left  py-2"> Orjinal Doviz Bakiye : {{Dov1OrjDovizBakiye}} {{OrjDoviz}}</div></div>
-                                 </div> 
-                            </div>
-                            <div id="TbDov3" class="tab-pane">
-                                <h4 class="example-title">DÖVİZ CİNSİ 3</h4>
-                                <div class="row">
-                                    <div class="col-sm-4 col-md-4  py-5"><div class="col-form-label px-1 float-left  py-2"> Ana Doviz Bakiye : {{Dov3AnaDovizBakiye}} TL</div></div>
-                                    <div class="col-sm-4 col-md-4  py-5"><div class="col-form-label px-1 float-left  py-2"> Alternatif Doviz Bakiye : {{Dov3AltDovizBakiye}} USD</div></div>
-                                    <div class="col-sm-4 col-md-4  py-5"><div class="col-form-label px-1 float-left  py-2"> Orjinal Doviz Bakiye : {{Dov3OrjDovizBakiye}} {{OrjDoviz}}</div></div>
-                                </div> 
-                            </div>
-                            <div id="TbDov2" class="tab-pane">
-                                <h4 class="example-title">DÖVİZ CİNSİ 2</h4>
-                                <div class="row">
-                                    <div class="col-sm-4 col-md-4  py-5"><div class="col-form-label px-1 float-left  py-2"> Ana Doviz Bakiye : {{Dov2AnaDovizBakiye}} TL</div></div>
-                                 <div class="col-sm-4 col-md-4  py-5"><div class="col-form-label px-1 float-left  py-2"> Alternatif Doviz Bakiye : {{Dov2AltDovizBakiye}} USD</div></div>
-                                 <div class="col-sm-4 col-md-4  py-5"><div class="col-form-label px-1 float-left  py-2"> Orjinal Doviz Bakiye : {{Dov2OrjDovizBakiye}} {{OrjDoviz}}</div></div>
-                                 </div> 
-                            </div>
-                        </div>
-                       </div>
-                       <div class="row py-5">
                            <div class="col-12 col-sm-11 p-5 m-5" >
                                <button type="submit" class="btn btn-round btn-primary btn-block btn-sm" ng-click="BtnCariFoyGetir()">Getir</button>
                            </div>
                        </div>
-                       <div class="row ">
-                           <div class="col-12 col-sm-11 p-5 m-5" >
-                               <div id="TblCariFoy"></div>
-                           </div>
-                       </div>
+                       <div class="row">
+                            <div class="col-12 col-sm-11 p-5 m-5" >
+                                <button type="submit" class="btn btn-round btn-primary btn-block btn-sm" ng-click="PDFClick()">Paylaş</button>
+                            </div>
+                        </div>
+                        <div id="TblCariFoy" class=""></div>
                        <div class="p-5" style="text-align: right;"><br><b>Bakiye</b> : {{Bakiye | number:2}}</div>
                    </div>
                </div>
@@ -135,18 +95,36 @@
                </div>
            </div>
            <div id="TbDetay" class="tab-pane">
-            <div class="row py-1">
-                <div class="col-4 px-1">
-                    <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                <div class="row py-1">
+                    <div class="col-4 px-1">
+                        <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                    </div>
                 </div>
-            </div>
-            <div class="col-1 offset-5" ng-show="Loading" >
-                    <div class="loader vertical-align-middle loader-circle"></div>
+                <div class="col-1 offset-5" ng-show="Loading" >
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                <div class="row py-1 px-1" ng-show="TblLoading">           
+                    <div id="TblCariFoyDetay"></div>                        
                 </div>
-            <div class="row py-1 px-1" ng-show="TblLoading">           
-                <div id="TblCariFoyDetay"></div>                        
-            </div>
-        </div>
+           </div>
+           <div id="TbPDF" class="tab-pane">
+                <div class="row">
+                    <div class="col-4 mb-5">
+                        <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-4 mb-5">
+                        <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="PDFSave()"><i class="icon wb-download" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-4 mb-5">
+                        <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="PDFShareButton()"><i class="icon wb-share" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div id="view">
+                        <canvas id="the-canvas" style="border:0.5px solid" ></canvas>
+                    </div>
+                </div>
+           </div>
        </div>
    </div>
    <!-- Cari Listele Modal -->
@@ -188,7 +166,6 @@
        </div>
    </div>
 </div>
-
 <script>
        $("#IlkTarih").datepicker({
        language: "tr"

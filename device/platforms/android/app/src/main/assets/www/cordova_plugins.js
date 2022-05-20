@@ -255,6 +255,20 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "BTPrinter"
       ]
+    },
+    {
+      "id": "es6-promise-plugin.Promise",
+      "file": "plugins/es6-promise-plugin/www/promise.js",
+      "pluginId": "es6-promise-plugin",
+      "runs": true
+    },
+    {
+      "id": "cordova-plugin-x-socialsharing.SocialSharing",
+      "file": "plugins/cordova-plugin-x-socialsharing/www/SocialSharing.js",
+      "pluginId": "cordova-plugin-x-socialsharing",
+      "clobbers": [
+        "window.plugins.socialsharing"
+      ]
     }
   ];
   module.exports.metadata = {
@@ -267,6 +281,8 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-zip": "3.1.0",
     "cordova-plugin-file-downloader": "0.4.0",
     "phonegap-plugin-barcodescanner": "8.1.0",
-    "cordova-plugin-btprinter": "0.0.1-dev"
+    "cordova-plugin-btprinter": "0.0.1-dev",
+    "es6-promise-plugin": "4.2.2",
+    "cordova-plugin-x-socialsharing": "5.6.8"
   };
 });

@@ -9,8 +9,6 @@
     <div class="panel panel-bordered">
         <div class="panel-body py-1">
             <div class="tab-content">
-                <div id="view">
-                </div>
                 <div id="TbMain" class="tab-pane active">
                     <div class="row pb-20">
                         <div class="col-5 px-1">
@@ -25,7 +23,8 @@
                                 <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Barkod Detay</a>
                                 <!-- <button class="dropdown-item" data-target="#MdlFiyatDegisikligi" data-toggle="modal" role="menu-item">Fiyat Değişikliği</a> -->
                                 <button class="dropdown-item" data-target="#MdlFiyatDegistir" data-toggle="modal" role="menu-item">Fiyat Değiştir</a>
-                                <!-- <button class="dropdown-item" data-target="#MdlReyonDegisikligi" data-toggle="modal" role="menu-item">Reyon Tanımları</a> -->
+                                <button class="dropdown-item" ng-click="PDFClick()" data-toggle="modal" role="menu-item">PDF</a>
+                                <button class="dropdown-item" data-target="#MdlReyonDegisikligi" data-toggle="modal" role="menu-item">Reyon Tanımları</a>
                             </div>
                         </div>
                     </div>
@@ -63,7 +62,7 @@
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Birim :</label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{Stok[0].BIRIM}}</label></div>
                     </div>
-                    <div class="row"  ng-show="SonAlisGizle">
+                    <div class="row"  ng-show="IskontoGizle">
                         <div class="col-3 px-0 text-info"><label class="form-control-label float-right">Son Alış F.: </label></div>
                         <div class="col-7 px-0"><label class="form-control-label pl-10">{{SonAlis}}  {{SonAlisDoviz}}</label></div>
                     </div>
@@ -131,6 +130,25 @@
                         </div>
                         <div class="col-5 px-1">
                             <button type="button" data-target="#MdlIslemDetay" data-toggle="modal" class="btn btn-round btn-block btn-primary h-40">İşlem Detayları</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="TbPDF" class="tab-pane">
+                    
+                    <div class="row">
+                        <div class="col-4 mb-5">
+                            <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="ManuelAramaCikis()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                        <div class="col-4 mb-5">
+                            <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="PDFSave()"><i class="icon wb-download" aria-hidden="true"></i></button>
+                        </div>
+                        <div class="col-4 mb-5">
+                            <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="PDFShareButton()"><i class="icon wb-share" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div id="view">
+                            <canvas id="the-canvas" style="border:0.5px solid" ></canvas>
                         </div>
                     </div>
                 </div>

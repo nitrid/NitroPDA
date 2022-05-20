@@ -587,11 +587,9 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
         {   
             if(typeof(InsertResult.result.err) == 'undefined')
             {   
-              
                 db.GetData($scope.Firma,'PlanliUretimStokHarGetir',[$scope.Seri,$scope.Sira],function(IsEmriData)
                 {    
                     $scope.StokHarListe = IsEmriData;
-                   
                     InsertAfterRefresh(IsEmriData);       
                     $scope.InsertLock = false  
                     $scope.MiktarLock = false              
@@ -606,7 +604,7 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
         });
     }
     function InsertAfterRefresh(pData)
-    {    
+    {
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
 
@@ -648,7 +646,7 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
                 console.log(InsertResult.result.err);
             }
         });
-    }   
+    }
     function PartiLotEkran()
     {
         if($scope.Stok[0].PARTI == '')
@@ -697,7 +695,6 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
             }
         });
     }
-
     function Kirilim(pBeden,pRenk)
     {
         if(pBeden != 0 && pRenk != 0)
@@ -1708,5 +1705,4 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
         }
         db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
     }
-    
 } 

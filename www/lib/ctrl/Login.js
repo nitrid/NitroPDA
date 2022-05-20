@@ -6,14 +6,31 @@ function Login ($scope,$rootScope,$window,db)
     $scope.IsDbCreateWorking = false;
     $scope.TransferEventProgress = 0;    
     $scope.FirmLock = false;    
+    $scope.KulLock = false;
     
     function UserControl()
     {
         for(i = 0;i < Param.length;i++)
         {
-            if(Param[i].Kullanici == $scope.Kullanici && Param[i].Sifre == $scope.Password)
+            if(Param[i].Kullanici == $scope.Kullanici )
             {
                 return true;
+            }
+        }
+        return false;
+    }
+    function UserControl2()
+    {
+        for(x = 0;x < Param.length;x++)
+        {
+            if($scope.Kullanici == Param[x].Kullanici)
+            {
+                console.log(Param[x].Kullanici)
+                if(Param[x].Sifre == $scope.Password)
+                {
+                    console.log("asdas")
+                    return true;
+                }
             }
         }
         return false;
@@ -28,7 +45,7 @@ function Login ($scope,$rootScope,$window,db)
         });
 
         $scope.Kullanici = localStorage.username;
-        $scope.Password = localStorage.Password
+        $scope.Password = localStorage.Password;
         $scope.SecilenFirmalar = []
 
         for(i = 0;i < Param.length;i++)
@@ -52,9 +69,15 @@ function Login ($scope,$rootScope,$window,db)
         
         $scope.DepoNo = 1;
 
-        if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
+        if(localStorage.username != '' && localStorage.Password != '')
         {
-            document.getElementById("BeniHatirla").checked = true;
+            if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
+            {
+                document.getElementById("BeniHatirla").checked = true;
+                document.getElementById("Sifirla").checked = true;
+                $scope.FirmaClick();
+                $scope.KulLock = true;
+            }
         }
 
         if (typeof localStorage.host == 'undefined')
@@ -67,7 +90,6 @@ function Login ($scope,$rootScope,$window,db)
          {
 
          });
-
         $scope.ConfigControl();
     }
     $scope.HostSettingSave = function()
@@ -87,100 +109,134 @@ function Login ($scope,$rootScope,$window,db)
         {
             if(document.getElementById("BeniHatirla").checked == true)
             {
-                localStorage.username = $scope.Kullanici
-                localStorage.Password = $scope.Password
-            }
-            $window.sessionStorage.setItem('Firma', $scope.Firm);
-            var url = "main.html";
-            $window.location.href = url;
-        }
-    }    
-    $scope.FirmaClick = function()
-    {
-        console.log(1)
-        if(UserControl())
-        {
-            console.log("Kullanıcı adı ve şifre doğru");
-                
-            $window.sessionStorage.setItem('User', i);
-            UserParam = Param[$window.sessionStorage.getItem('User')];
-            if(localStorage.mode == 'true')
-            {
-                db.Connection(function(data)
-                {       
-                    if(data == true)
+                console.log(localStorage.username,localStorage.Password,$scope.Kullanici,$scope.Password)
+                if(localStorage.username != $scope.Kullanici || localStorage.Password != $scope.Password) 
+                {
+                    if($scope.FirmaClick(2))
                     {
-                        $('#alert').alert('close');                    
-
-                        db.Emit('QMikroDb',QuerySql.Firma,(data) =>
+                        $window.sessionStorage.setItem('Firma', $scope.Firm);
+                        var url = "main.html";
+                        $window.location.href = url;
+                        localStorage.username = $scope.Kullanici
+                        localStorage.Password = $scope.Password
+                    }
+                }
+                else
+                {
+                    $window.sessionStorage.setItem('Firma', $scope.Firm);
+                    var url = "main.html";
+                    $window.location.href = url;
+                    localStorage.username = $scope.Kullanici
+                    localStorage.Password = $scope.Password
+                }
+            }
+            else
+            {
+                localStorage.username = "";
+                localStorage.Password = "";
+                $window.sessionStorage.setItem('Firma', $scope.Firm);
+                var url = "main.html";
+                $window.location.href = url;
+            }
+        }
+    }
+    $scope.FirmaClick = function(pParam)
+    {
+        if(pParam == 0)
+        {
+            UserControl()
+        }
+        else if(pParam == 1)
+        {
+            UserControl()
+            UserControl2()
+        }
+        else
+        {
+            if(UserControl() && UserControl2())
+            {                    
+                $window.sessionStorage.setItem('User', i);
+                UserParam = Param[$window.sessionStorage.getItem('User')];
+                if(localStorage.mode == 'true')
+                {
+                    db.Connection(function(data)
+                    {       
+                        if(data == true)
                         {
-                            if(typeof data.result.err == 'undefined')
+                            $('#alert').alert('close');                    
+    
+                            db.Emit('QMikroDb',QuerySql.Firma,(data) =>
                             {
-                                setTimeout(function () 
+                                if(typeof data.result.err == 'undefined')
                                 {
-                                    $('select').selectpicker('refresh');
-                                },500)
-                                if(Firma != '')
-                                {
-                                    $scope.Firm = Firma;
-                                    $scope.FirmLock = true
-                                    $scope.FirmList = data.result.recordset;
-                                }
-                                else
-                                {
-                                    if(UserParam.Sistem.FirmaListe == "")
+                                    setTimeout(function () 
                                     {
+                                        $('select').selectpicker('refresh');
+                                    },500)
+                                    if(Firma != '')
+                                    {
+                                        $scope.Firm = Firma;
+                                        $scope.FirmLock = true
                                         $scope.FirmList = data.result.recordset;
                                     }
                                     else
                                     {
-                                        let FirmDizi = UserParam.Sistem.FirmaListe.split(',')
-
-                                        FirmDizi.forEach(SipItem => 
-                                                {
-                                                    console.log(SipItem)
-                                                    $scope.SecilenFirmalar.push({FIRM: SipItem})
-                                                });
-                                        $scope.FirmList = $scope.SecilenFirmalar       
+                                        if(UserParam.Sistem.FirmaListe == "")
+                                        {
+                                            $scope.FirmList = data.result.recordset;
+                                        }
+                                        else
+                                        {
+                                            let FirmDizi = UserParam.Sistem.FirmaListe.split(',')
+                                            console.log(FirmDizi)
+                                            FirmDizi.forEach(SipItem => 
+                                                    {
+                                                        console.log(SipItem)
+                                                        $scope.SecilenFirmalar = []
+                                                        $scope.SecilenFirmalar.push({FIRM: SipItem})
+                                                    });
+                                            $scope.FirmList = $scope.SecilenFirmalar       
+                                        }
                                     }
                                 }
-                            }
-                            else
-                            {
-                                console.log("Mikro Sql Query Çalıştırma Hatası : " + data.result.err);
-                            }
-                        });
-                    }
-                    else
+                                else
+                                {
+                                    console.log("Mikro Sql Query Çalıştırma Hatası : " + data.result.err);
+                                }
+                            });
+                        }
+                        else
+                        {
+                            $('#alert-box').html('<div class="alert alert-icon alert-danger alert-dismissible" role="alert" id="alert">' +
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '<i class="icon wb-bell" aria-hidden="true"></i> Sunucuya erişim sağlanamadı.' +
+                            '<p class="mt-15">' +
+                            '<button class="btn btn-primary" data-target="#server-settings" data-toggle="modal"' +
+                            'type="button">Ayarlar</button></p></div>');
+                            db.Disconnect();
+                        }
+                    });
+                }
+                else
+                {
+                    $scope.FirmList = JSON.parse(localStorage.localDb);
+                    setTimeout(function () 
                     {
-                        $('#alert-box').html('<div class="alert alert-icon alert-danger alert-dismissible" role="alert" id="alert">' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                        '</button>' +
-                        '<i class="icon wb-bell" aria-hidden="true"></i> Sunucuya erişim sağlanamadı.' +
-                        '<p class="mt-15">' +
-                        '<button class="btn btn-primary" data-target="#server-settings" data-toggle="modal"' +
-                        'type="button">Ayarlar</button></p></div>');
-                        db.Disconnect();
-                    }
-                });
+                        $('select').selectpicker('refresh');
+                    },500)
+                }
+                return true;
             }
             else
             {
-                $scope.FirmList = JSON.parse(localStorage.localDb);
-                setTimeout(function () 
-                {
-                    $('select').selectpicker('refresh');
-                },500)
+                alertify.okBtn("Tamam");
+                alertify.alert("Kullanıcı adı veya şifre yanlış");
+                return false;
             }
+        } 
 
-            return;
-        }
-        else
-        {
-            alertify.okBtn("Tamam");
-            alertify.alert("Kullanıcı adı veya şifre yanlış");
-        }
     }
     $scope.BtnExit = function()
     {
@@ -351,6 +407,10 @@ function Login ($scope,$rootScope,$window,db)
     {
         localStorage.mode = document.getElementById('inputBasicOn').checked;
         $window.location.reload();
+    }
+    $scope.SifirlaMode = function()
+    {
+       $scope.KulLock = document.getElementById("Sifirla").checked
     }
     $scope.ConfigControl = function()
     {

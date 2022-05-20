@@ -101,55 +101,42 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             fields: 
             [
                 {
-                    name: "P1",
-                    title: "",
+                    name: "TARIH",
+                    title: "TARIH",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 180
                 },
                 {
-                    name: "P2",
-                    title: "",
-                    type: "text",
-                    align: "center",
-                    width: 200
-                    
-                },
-                {
-                    name: "P3",
-                    title: "",
+                    name: "SERI-SIRA",
+                    title: "SERİ - SIRA",
                     type: "text",
                     align: "center",
                     width: 150
-                },
-                {
-                    name: "P4",
-                    title: "",
-                    type: "text",
-                    align: "center",
-                    width: 100
-                },
-                {
-                    name: "P5",
-                    title: "",
-                    type: "text",
-                    align: "center",
-                    width: 100
                     
                 },
                 {
-                    name: "P6",
-                    title: "",
+                    name: "CARIADI",
+                    title: "CARİ",
                     type: "text",
                     align: "center",
-                    width: 120
+                    width: 150
+                    
                 },
+              
                 {
-                    name: "P7",
-                    title: "",
+                    name: "MIKTAR",
+                    title: "MİKTARI",
                     type: "text",
                     align: "center",
-                    width: 100
+                    width: 180
+                },
+                             {
+                    name: "TUTARKDVDAHIL",
+                    title: "TUTAR",
+                    type: "text",
+                    align: "center",
+                    width: 250
                 }
             ],
             rowClick: function(args)
@@ -406,40 +393,15 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     "CONVERT(NVARCHAR,CAST(SUM(sip_tutar) + SUM(sip_vergi) AS DECIMAL(10,2))) AS TUTARKDVDAHIL, " +
                     "(SELECT dep_adi AS ADI FROM DEPOLAR WHERE SIPARISLER.sip_depono = dep_no) AS DEPOLAR " +
                     "FROM SIPARISLER " +
-                    "WHERE sip_projekodu != '' and  (sip_depono = @DEPONO OR @DEPONO = '') AND ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
+                    "WHERE (sip_depono = @DEPONO OR @DEPONO = '') AND ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
                     "GROUP BY sip_evrakno_seri,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih,sip_depono,sip_projekodu ORDER BY sip_projekodu DESC" ,
             param:  ['DEPONO','KODU','ILKTARIH','SONTARIH','TIP'], 
             type:   ['string|25','string|25','date','date','int'], 
             value:  [$scope.SubeKodu,$scope.Carikodu,$scope.IlkTarih,$scope.SonTarih,$scope.Tip]
         }
-
         db.GetDataQuery(TmpQuery,function(Data)
         {
-            let datas = {"SERI-SIRA": "","SERI": "","SIRA": '',"CARIKOD": "","PROJEKOD": 'BOŞ',"CARIADI": "","MIKTAR": '',"TARIH": '',"TUTARKDVHARIC": '',"TUTARKDVDAHIL": '',"DEPOLAR": ''};
-            console.log(datas)
-            for (let i = 0; i < Data.length; i++) 
-            {
-                if(i > 0)
-                {
-                    if(Data[i].PROJEKOD != Data[i-1].PROJEKOD)
-                    {
-                        $scope.ProjeGetirListe.push(datas)
-                        $scope.ProjeGetirListe.push(Data[i])
-                    }
-                    else
-                    {
-                        $scope.ProjeGetirListe.push(Data[i])
-                    }
-                }
-                else
-                {
-                    $scope.ProjeGetirListe.push(Data[i])
-                }
-                console.log($scope.ProjeGetirListe)
-            }
-            console.log($scope.ProjeGetirListe)
-            $scope.IslemListe = $scope.ProjeGetirListe;
-            console.log(Data)
+            $scope.IslemListe = Data;
             $("#TblCariFoy").jsGrid({data : $scope.IslemListe});
         });
     }
@@ -632,7 +594,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                         "ISNULL((SELECT cari_per_adi FROM CARI_PERSONEL_TANIMLARI WHERE cari_per_kod = sip_satici_kod),'') AS P6, " + //PLASIYER
                         "CONVERT(NVARCHAR,CAST(SUM(sip_tutar) + SUM(sip_vergi) AS DECIMAL(10,2))) AS P7 " + //TUTAR(KDVDAHİL)
                         "FROM SIPARISLER " +
-                        "WHERE sip_projekodu != '' and  (sip_depono = @DEPONO OR @DEPONO = '') AND ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
+                        "WHERE (sip_depono = @DEPONO OR @DEPONO = '') AND ((sip_musteri_kod = @KODU) OR (@KODU = '')) AND sip_belge_tarih >= @ILKTARIH AND sip_belge_tarih <= @SONTARIH AND sip_tip = @TIP"+ str +
                         "GROUP BY sip_evrakno_seri,sip_satici_kod,sip_evrakno_sira,sip_musteri_kod,sip_belge_tarih,sip_depono,sip_projekodu ORDER BY sip_projekodu DESC" ,
                 param:  ['DEPONO','KODU','ILKTARIH','SONTARIH','TIP'], 
                 type:   ['string|25','string|25','date','date','int'], 

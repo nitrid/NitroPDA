@@ -37,6 +37,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
 
         $scope.Seri = "";
         $scope.Sira = 0;
+        $scope.GetirSira = "";
 
         $scope.EvrakTip;
         $scope.Tip;
@@ -49,6 +50,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Saat = moment(new Date()).format("LTS");
         $scope.Vade = moment(new Date()).format("YYYY-MM-DD");
+        $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
+        $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Sorumluluk = "2";
         $scope.SorumlulukAdi = "";
         $scope.Personel = "";
@@ -133,6 +136,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.StokDetay = [];
         $scope.CariHareketGonderListe = [];
         $scope.StokHareketGonderListe = [];
+        $scope.EvrakGetirListe = [];
 
         $scope.IslemListeSelectedIndex = -1;
         $scope.PartiLotListeSelectedIndex = 0;
@@ -740,6 +744,60 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             rowClick: function(args)
             {
                 $scope.StokListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitEvrakGrid()
+    {   
+        $("#TblGetir").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.EvrakGetirListe,
+            paging : true,
+            pageSize: 30,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: 
+            [
+                {
+                    name: "SERI",
+                    type: "text",
+                    align: "center",
+                    width: 75
+                },
+                {
+                    name: "SIRA",
+                    type: "text",
+                    align: "center",
+                    width: 75
+                },
+                {
+                    name: "CARIADI",
+                    title: "CARIADI",
+                    type: "text",
+                    align: "center",
+                    width: 150
+                },
+                {
+                    name: "MIKTAR",
+                    type: "text",
+                    align: "center",
+                    width: 75
+                },                {
+                    name: "TUTAR",
+                    title: "TUTAR",
+                    type: "text",
+                    align: "center",
+                    width: 75
+                },
+            ],
+            rowClick: function(args)
+            {
+                $scope.EvrakGetirListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -2072,6 +2130,34 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             }
         });
     }
+    $scope.BtnDuzenle = function()
+    {   
+        $scope.MiktarEdit = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar;
+        $scope.FiyatEdit = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_tutar / $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar;
+        $("#MdlDuzenle").modal('show');
+    }
+    $scope.BtnEvrakGetirListele = async function()
+    {   
+
+        console.log([$scope.Seri,$scope.Sira,$scope.EvrakTip,'',''])
+        await db.GetPromiseTag($scope.Firma,'StokHarGetirListe',[$scope.Seri,$scope.GetirSira.toString(),$scope.EvrakTip,$scope.IlkTarih,$scope.SonTarih],async function(data)
+        {
+            console.log(data)
+            $scope.EvrakGetirListe = data;
+            if($scope.EvrakGetirListe.length > 0)
+            {
+                $scope.Loading = false;
+                $scope.TblLoading = true;    
+                $("#TblGetir").jsGrid({data : $scope.EvrakGetirListe});
+                $("#TblGetir").jsGrid({pageIndex : true});
+            }
+            else
+            {
+                angular.element('#MdlEvrakGetir').modal('hide');
+                alertify.alert("<a style='color:#3e8ef7''>" + "Evrak Bulunamadı !" + "</a>" );
+            }
+        });
+    }
     $scope.DepoChange = function()
     {
         $scope.DepoListe.forEach(function(item) 
@@ -2083,8 +2169,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     $scope.EvrakGetir = async function(pData)
     {
         $scope.FatKontrol = pData;
+        console.log([$scope.Seri,$scope.Sira,$scope.EvrakTip,'',''])
         await db.GetPromiseTag($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],async function(data)
         {
+            console.log(data)
             if(data.length > 0)
             {
                 Init();
@@ -2874,6 +2962,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         InitStokDurumGrid();
         InitStokHarGrid();
         InitDepoMiktarGrid();
+        InitEvrakGrid();
 
        //ALIŞ = 0 SATIŞ = 1
         if(pAlisSatis == 0)
@@ -3285,6 +3374,18 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         PartiLotSelectedRow = $row;
         $scope.PartiLotListeSelectedIndex = pIndex;
     }
+    $scope.EvrakGetirListeRowClick = function(pIndex,pItem,pObj)
+    {
+        if ( PartiLotSelectedRow ) { PartiLotSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        var $row = pObj.rowByItem(pItem);
+        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+        PartiLotSelectedRow = $row;
+        $scope.PartiLotListeSelectedIndex = pIndex;
+        $scope.Seri = $scope.EvrakGetirListe[pIndex].SERI;
+        $scope.Sira = $scope.EvrakGetirListe[pIndex].SIRA;
+        $scope.EvrakGetir(1);
+        $scope.MainClick();
+    }
     $scope.BelgeBilgisiClick = function() 
     {
         $("#TbBelgeBilgisi").addClass('active');
@@ -3315,6 +3416,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbStok").removeClass('active');
                 $("#TbStokDurum").removeClass('active');
+                $("#TbGetir").removeClass('active');
                 BarkodFocus(1);
             }
             else if($scope.CariKodu != "")
@@ -3326,6 +3428,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 $("#TbIslemSatirlari").removeClass('active');
                 $("#TbStok").removeClass('active');
                 $("#TbStokDurum").removeClass('active');
+                $("#TbGetir").removeClass('active');
                 BarkodFocus(1);
             }              
             else
@@ -3370,9 +3473,20 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $("#TbCariSec").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
+        $("#TbGetir").removeClass('active');
         StokFocus()
         $scope.ManuelArama = true;
         console.log($scope.ManuelArama)
+    }
+    $scope.BtnEvrakGetirClick = function()
+    {
+        $("#TbGetir").addClass('active');
+        $("#TbStok").removeClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbBelgeBilgisi").removeClass('active');
+        $("#TbCariSec").removeClass('active');
+        $("#TbBarkodGiris").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
     }
     $scope.CariSecClick = function()
     {
@@ -3412,6 +3526,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $("#TbCariSec").removeClass('active');
         $("#TbStok").removeClass('active');
         $("#TbDizayn").removeClass('active');
+        $("#TbGetir").removeClass('active');
     }
     $scope.ScanBarkod = function()
     {

@@ -66,7 +66,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.Personel = "";
         $scope.PersonelAdi = "";
         $scope.Proje = "";
-        $scope.Miktar2 = 0;
         $scope.CmbEvrakTip = '1';
         $scope.Cins = 0;
         $scope.ToplamSatir = 0;
@@ -97,6 +96,11 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.PartiSira = "001";
         $scope.CheckEvrak = 0;
         $scope.IhracatKodu = "";
+        $scope.BasimAdet = 0;
+        $scope.BasimMiktar = 0;
+
+        $scope.Reyon = "";
+        $scope.ReyonStok = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -118,7 +122,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.SonSatisListe = [];
         $scope.KirilimListe = [];
         $scope.IhracatListe = [];
-        $scope.PartiLotList = [];
 
         $scope.AciklamaGuid = ''
         $scope.Aciklama1 = ''
@@ -135,6 +138,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.Stok = [];
         $scope.Miktar = 1;
+        $scope.Miktar2 = 1;
 
         $scope.CmbCariAra = "0";
         $scope.TxtCariAra = "";
@@ -848,9 +852,11 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function InsertAfterRefresh(pData)
     {    
+        console.log(pData)
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
         $scope.IrsaliyeListe = pData;
+        $scope.EskiBarkod = $scope.Barkod;
         $("#TblIslem").jsGrid({data : $scope.IrsaliyeListe});    
         // if(ParamName == "AlisIrsaliye")
         // {
@@ -888,9 +894,18 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         angular.forEach($scope.IrsaliyeListe,function(value)
         {
+            console.log(value.sth_stok_kod)
+            console.log($scope.EskiBarkod)
             $scope.ToplamSatir += 1 ;
+            if(value.sth_stok_kod == $scope.EskiBarkod)
+            {
+                console.log(value.sth_miktar2)
+                $scope.BasimAdet += 1;
+                $scope.BasimMiktar = value.sth_miktar2;
+                console.log($scope.BasimMiktar)
+            }
         });
-    }    
+    }
     function InsertData()
     {   
         var InsertData = 
@@ -1079,11 +1094,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         if(pBarkod != '')
         {
             db.StokBarkodGetir($scope.Firma,pBarkod,$scope.DepoNo,async function(BarkodData)
-            {   
+            {
                 if(BarkodData.length > 0)
                 { 
                     $scope.Stok = BarkodData;
                     $scope.StokKodu = $scope.Stok[0].KODU;
+                    $scope.ReyonStok = $scope.Stok[0].BARKOD;
                     if(UserParam.Sistem.PartiLotKontrol == 1)
                     {
                         console.log(1)
@@ -1228,62 +1244,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         {
                             db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,'',0],function(data)
                             {
-                                $scope.PartiLotList = [];
                                 $scope.PartiLotListe = data;
-                                console.log(data)
-                                let Check = false;
-                                for (let i = 0; i < data.length; i++)
-                                {
-                                    if(data[i].SKTTARIH >= $scope.Tarih2Ters) // SKT BUGÜNÜ GEÇMİŞ Mİ? GEÇMEMİŞ İSE GİR.
-                                    {                        
-                                        if($scope.PartiLotList.length != 0)
-                                        {
-                                            console.log($scope.PartiLotList[0].TARIH,data[i - 1].TARIH, i-1)
-                                            if($scope.PartiLotList[0].TARIH == data[i].TARIH)
-                                            {
-                                                $scope.PartiLotList.push(data[i]);
-                                                for (let i = 0; i < $scope.PartiLotList.length; i++)
-                                                {
-                                                    if($scope.Stok[0].PARTI == $scope.PartiLotList[i].PARTI && $scope.Stok[0].LOT == $scope.PartiLotList[i].LOT)
-                                                    {
-                                                        Check = true;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            $scope.PartiLotList.push(data[i]); //DİĞERLERİNE GÖRE İLK GİRİLEN VE SKT Sİ GEÇMEMİŞ PARTILOT 
-                                            for (let i = 0; i < $scope.PartiLotList.length; i++)
-                                            {
-                                                if($scope.Stok[0].PARTI == $scope.PartiLotList[i].PARTI && $scope.Stok[0].LOT == $scope.PartiLotList[i].LOT)
-                                                {
-                                                    Check = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
+                                if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
+                                {   
+                                    $scope.Miktar = $scope.PartiLotListe[0].MIKTAR;
+                                    $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
                                 }
-                                console.log($scope.PartiLotList)
-                                if(Check == true)
-                                {
-                                    if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
-                                    {   
-                                        $scope.Miktar = $scope.PartiLotList[0].MIKTAR;
-                                        $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
-                                    }
-                                    $scope.MiktarFiyatValid();
-                                }
-                                else
-                                {
-                                    alertify.alert("Daha yakın olan tarihli bir partilot mevcut!",function()
-                                    { 
-                                        $scope.BtnTemizle();
-                                    },
-                                    function(){});      
-                                }
+                                $scope.MiktarFiyatValid();
                             });
                         }
                         else
@@ -1306,6 +1273,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 {   
                     alertify.alert("<a style='color:#3e8ef7''>" + "Stok Bulunamamıştır !" + "</a>" );          
                     console.log("Stok Bulunamamıştır.");
+                    $("#MdlReyonDegisikligi").modal('hide');
                     Beep();
                 }
             });
@@ -1379,7 +1347,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 for(let i=0; i < $scope.KirilimListe.length; i++)
                 {
                    console.log($scope.KirilimListe[i].S38 + $scope.KirilimListe[i].S40 + $scope.KirilimListe[i].S42 * Number($scope.KirilimListe[i].BFIYAT))
-                   $scope.FisData = $scope.FisData + SpaceLength($scope.KirilimListe[i].STOKKOD,20) +  SpaceLength($scope.KirilimListe[i].RENK,10) + SpaceLength($scope.KirilimListe[i].S38,2) + " " + SpaceLength($scope.KirilimListe[i].S40,2) + " " + SpaceLength($scope.KirilimListe[i].S42,2) + " " + SpaceLength($scope.KirilimListe[i].S44,2) + SpaceLength($scope.KirilimListe[i].S46,2) + " " + SpaceLength($scope.KirilimListe[i].S48,2) + " " + SpaceLength($scope.KirilimListe[i].S50,2) + " " + SpaceLength($scope.KirilimListe[i].S52,2) + " " + SpaceLength($scope.KirilimListe[i].S54,2) +   SpaceLength(($scope.KirilimListe[i].TOPMIKTAR),7) + " " + SpaceLength($scope.KirilimListe[i].BFIYAT,7) + " " + SpaceLength($scope.KirilimListe[i].TOPTUTAR,5)  + "\n";       
+                   $scope.FisData = $scope.FisData + SpaceLength($scope.KirilimListe[i].STOKKOD,20) +  SpaceLength($scope.KirilimListe[i].RENK,10) + SpaceLength($scope.KirilimListe[i].S38,2) + " " + SpaceLength($scope.KirilimListe[i].S40,2) + " " + SpaceLength($scope.KirilimListe[i].S42,2) + " " + SpaceLength($scope.KirilimListe[i].S44,2) + SpaceLength($scope.KirilimListe[i].S46,2) + " " + SpaceLength($scope.KirilimListe[i].S48,2) + " " + SpaceLength($scope.KirilimListe[i].S50,2) + " " + SpaceLength($scope.KirilimListe[i].S52,2) + " " + SpaceLength($scope.KirilimListe[i].S54,5) +   SpaceLength(($scope.KirilimListe[i].TOPMIKTAR),7) + " " + SpaceLength($scope.KirilimListe[i].BFIYAT,7) + " " + SpaceLength($scope.KirilimListe[i].TOPTUTAR,5)  + "\n";       
                 } 
            } 
            catch (error) 
@@ -1398,7 +1366,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 for(let i=0; i < $scope.KirilimListe.length; i++)
                 {
                    console.log($scope.KirilimListe[i].S36 + $scope.KirilimListe[i].S37 + $scope.KirilimListe[i].S38 * Number($scope.KirilimListe[i].BFIYAT))
-                   $scope.FisData = $scope.FisData + SpaceLength($scope.KirilimListe[i].STOKKOD,20) +  SpaceLength($scope.KirilimListe[i].RENK,10) + SpaceLength($scope.KirilimListe[i].S36,5) + " " + SpaceLength($scope.KirilimListe[i].S37,5) + " " + SpaceLength($scope.KirilimListe[i].S38,8) + SpaceLength(($scope.KirilimListe[i].TOPMIKTAR),7) + "\n";       
+                   $scope.FisData = $scope.FisData + SpaceLength($scope.KirilimListe[i].STOKKOD,20) + SpaceLength($scope.KirilimListe[i].RENK,10) + SpaceLength($scope.KirilimListe[i].S38,2) + " " + SpaceLength($scope.KirilimListe[i].S40,2) + " " + SpaceLength($scope.KirilimListe[i].S42,2) + " " + SpaceLength($scope.KirilimListe[i].S44,2) + SpaceLength($scope.KirilimListe[i].S46,2) + " " + SpaceLength($scope.KirilimListe[i].S48,2) + " " + SpaceLength($scope.KirilimListe[i].S50,2) + " " + SpaceLength($scope.KirilimListe[i].S52,2) + " " + SpaceLength($scope.KirilimListe[i].S54,2) + SpaceLength(($scope.KirilimListe[i].TOPMIKTAR),7) + "\n";       
                 } 
            } 
            catch (error) 
@@ -1450,7 +1418,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     db : '{M}.' + $scope.Firma,
                     query:  
                     "SELECT SUBSTRING(CONVERT(nvarchar,GETDATE(),112),3,4) + " + 
-                    "ISNULL(MAX(SUBSTRING(CONVERT(nvarchar,pl_partikodu,112),5,10)),'000') " + 
+                    "ISNULL(MAX(SUBSTRING(CONVERT(nvarchar,pl_partikodu,112),5,10)),'000') " +
                     "+ 1 AS PARTIKOD FROM PARTILOT WHERE pl_stokkodu = @STOKKOD AND pl_partikodu LIKE (@PARTITARIH + '%' ) ORDER BY MAX(pl_partikodu) DESC ",
                     param:  ['STOKKOD','PARTITARIH'],
                     type:   ['string|25','string|25'],
@@ -1800,7 +1768,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
             { 
-                $scope.PartiLotList = [];
                 $scope.PartiLotListe = data;
                 console.log(data)
                 $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
@@ -1816,21 +1783,20 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 {
                     if(data[i].SKTTARIH >= $scope.Tarih2Ters)
                     {                        
-                        if($scope.PartiLotList.length != 0)
+                        if($scope.PartiLotListe.length != 0)
                         {
                             if(data[i].TARIH == data[i - 1].TARIH)
                             {
-                                $scope.PartiLotList.push(data[i]);
+                                $scope.PartiLotListe.push(data[i]);
                             }
                         }
                         else
                         {
-                            $scope.PartiLotList.push(data[i]);
+                            $scope.PartiLotListe.push(data[i]);
                         }
                     }
                 }
                 console.log($scope.PartiLotListe)
-                console.log($scope.PartiLotList)
             });
         }
         else
@@ -1847,56 +1813,34 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     {   
         $('#MdlPartiLot').modal('hide');
         console.log($scope.PartiLotListeSelectedIndex)
-        if($scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].SKTTARIH >= $scope.Tarih2Ters)
+        $scope.Stok[0].PARTI = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].PARTI;
+        $scope.Stok[0].LOT = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].LOT;
+
+        $scope.TxtParti = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].PARTI;
+        $scope.TxtLot = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].LOT;
+        if(UserParam.Sistem.PartiLotKontrol == 1)//PARTI-LOT KONTROL
         {
-            if($scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].TARIH != $scope.PartiLotList[0].TARIH)
+            console.log($scope.IrsaliyeListe)
+            if($scope.IrsaliyeListe != [])
             {
-                alertify.alert("Aynı Değil");
-                $scope.BtnTemizle();
-                return;
-            }
-            else
-            {
-                $scope.Stok[0].PARTI = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].PARTI;
-                $scope.Stok[0].LOT = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].LOT;
-        
-                $scope.TxtParti = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].PARTI;
-                $scope.TxtLot = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].LOT;
-                if(UserParam.Sistem.PartiLotKontrol == 1)//PARTI-LOT KONTROL
-                {
-                    console.log($scope.IrsaliyeListe)
-                    if($scope.IrsaliyeListe != [])
+                for(i = 0;i < $scope.IrsaliyeListe.length;i++)
+                {   
+                    if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
                     {
-                        for(i = 0;i < $scope.IrsaliyeListe.length;i++)
-                        {   
-                            if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
-                            {
-                                if($scope.Stok[0].PARTI == $scope.IrsaliyeListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IrsaliyeListe[i].sth_lot_no)
-                                {
-                                    $('#MdlPartiLot').modal('hide');
-                                    console.log(1)
-                                    alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
-                                    $scope.InsertLock = false;
-                                    $scope.BtnTemizle();
-                                    return;
-                                }
-                            }
+                        if($scope.Stok[0].PARTI == $scope.IrsaliyeListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.IrsaliyeListe[i].sth_lot_no)
+                        {
+                            $('#MdlPartiLot').modal('hide');
+                            console.log(1)
+                            alertify.alert("<a style='color:#3e8ef7''>" + "Okutmuş Olduğunuz "+ $scope.Stok[0].PARTI + ". " + "Parti " + $scope.Stok[0].LOT + ". " +"Lot Daha Önceden Okutulmuş !" + "</a>" );
+                            $scope.InsertLock = false;
+                            $scope.BtnTemizle();
+                            return;
                         }
                     }
                 }
-                $scope.PartiLotListe = [];
             }
-
         }
-        else
-        {
-            alertify.alert('Daha yakın olan tarihli bir partilot mevcut!', 
-            function()
-            { 
-                $('#MdlPartiLot').modal('show');
-            },
-            function(){});            
-        }
+        $scope.PartiLotListe = [];
     }
     $scope.BtnPartiLotOlustur = function()
     {
@@ -1941,60 +1885,71 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             let Yil = $scope.Tarih2.substring(7,8)
             let TarihY = GunAy + "" + Yil;
             console.log(GunAy,Yil, GunAy + "" + Yil)
-            $scope.BarkodInsert = StokKodu + "" + Lot + "" +  TarihY + "" +  $scope.Aciklama;
+            $scope.BarkodInsert = StokKodu + "" + $scope.TxtParti + "" +  Lot + "" + TarihY;
             console.log($scope.BarkodInsert)
-            db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
-                {   
-                    if(data.length > 0)
-                    {
-                        $scope.PartiLotListe = data;
-                        $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
-                        $("#LblPartiLotAlert").show();
-                        $scope.LblPartiLotAlert = "Bu PartiLot Daha Önceden Oluşturulmuş !"
-                    }
-                    else
-                    {
-                        let Data = 
-                        [
-                            UserParam.MikroId,
-                            UserParam.MikroId,
-                            $scope.TxtParti,
-                            $scope.TxtLot,
-                            $scope.Stok[0].KODU,
-                            $scope.Aciklama,
-                            $scope.SktTarih
-                        ]   
-                        console.log(Data)
-                        db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
+            db.GetData($scope.Firma,'BarkodGetir',[$scope.BarkodInsert,0],function(BarkodData)
+            {
+                if(BarkodData.length > 0)
+                {
+                    $('#MdlPartiLot').modal('hide');
+                    alertify.alert("Barkod Daha Önceden Kaydedilmiş")
+                }
+                else
+                {
+                    db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
+                    {   
+                        if(data.length > 0)
                         {
-                            console.log(InsertResult)
-                            if(typeof(InsertResult.result.err) == 'undefined')
+                            $scope.PartiLotListe = data;
+                            $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+                            $("#LblPartiLotAlert").show();
+                            $scope.LblPartiLotAlert = "Bu PartiLot Daha Önceden Oluşturulmuş !"
+                        }
+                        else
+                        {
+                            let Data = 
+                            [
+                                UserParam.MikroId,
+                                UserParam.MikroId,
+                                $scope.TxtParti,
+                                $scope.TxtLot,
+                                $scope.Stok[0].KODU,
+                                $scope.Aciklama,
+                                $scope.SktTarih
+                            ]   
+                            console.log(Data)
+                            db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
                             {
-                                console.log(1)
-                                $scope.Stok[0].PARTI = $scope.TxtParti;
-                                $scope.Stok[0].LOT = $scope.TxtLot;
-                                if(UserParam[ParamName].PartiBarkodOlustur == 1)
+                                console.log(InsertResult)
+                                if(typeof(InsertResult.result.err) == 'undefined')
                                 {
-                                    let BarkodInsertData = 
-                                    [
-                                        $scope.BarkodInsert,
-                                        $scope.Stok[0].KODU,
-                                        $scope.Stok[0].BIRIMPNTR,
-                                        3,  //bar_baglantitipi
-                                        2,  //bar_barkodtipi
-                                        $scope.TxtParti,
-                                        $scope.TxtLot
-                                    ]
-                                    console.log(BarkodInsertData)
-                                    db.ExecuteTag($scope.Firma,'BarkodInsert',BarkodInsertData,function(InsertResult)
+                                    console.log(1)
+                                    $scope.Stok[0].PARTI = $scope.TxtParti;
+                                    $scope.Stok[0].LOT = $scope.TxtLot;
+                                    if(UserParam[ParamName].PartiBarkodOlustur == 1)
                                     {
-                                    });
+                                        let BarkodInsertData = 
+                                        [
+                                            $scope.BarkodInsert,
+                                            $scope.Stok[0].KODU,
+                                            $scope.Stok[0].BIRIMPNTR,
+                                            3,  //bar_baglantitipi
+                                            2,  //bar_barkodtipi
+                                            $scope.TxtParti,
+                                            $scope.TxtLot
+                                        ]
+                                        console.log(BarkodInsertData)
+                                        db.ExecuteTag($scope.Firma,'BarkodInsert',BarkodInsertData,function(InsertResult)
+                                        {
+                                        });
+                                    }
+                                    $('#MdlPartiLot').modal('hide');
                                 }
-                                $('#MdlPartiLot').modal('hide');
-                            }
-                        });
-                    }
-                });
+                            });
+                        }
+                    });
+                }
+            });
         }
     }
     $scope.BtnPartiEnter = function(keyEvent)
@@ -2958,8 +2913,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 return;
             } 
             $scope.InsertLock = true
-            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2  )
-            {          
+            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+            {
                 InsertData();
             }
             else
@@ -3029,7 +2984,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             UpdateData(Data);
                         }                        
                     });
-    
                     if(!UpdateStatus)
                     {
                         InsertData();
@@ -3050,7 +3004,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 Param :
                                 [
                                     TmpMiktar,
-                                    0,
+                                    value.sth_miktar2 + 1,
                                     TmpFiyat * TmpMiktar,
                                     $scope.Stok[0].TOPTANVERGIPNTR,
                                     0, //ISKONTO TUTAR 1
@@ -3076,12 +3030,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             UpdateData(Data);
                         }                        
                     });
-    
                     if(!UpdateStatus)
                     {
                         InsertData();
                     } 
-                  
                 }
             }
         }
@@ -3271,7 +3223,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         alertify.okBtn('Evet');
         alertify.cancelBtn('Hayır');
 
-        alertify.confirm('Evrağı silmek istediğinize eminmisiniz ?', 
+        alertify.confirm('Satır silmek istediğinize eminmisiniz ?', 
         function()
         { 
             if($scope.IslemListeSelectedIndex > -1)
@@ -3868,6 +3820,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }
         else if($scope.FisDizaynTip == "2")
         {
+            //DETAYLI
             let FisDizayn = "";
             let FisDeger = "";
             let i = 51 - $scope.FisLength.length;
@@ -3877,7 +3830,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 Satır += "                                                                   -" + "\n"; 
             }
             FisDeger = FisDeger + "                                " + "\n" 
-            FisDeger = FisDeger + SpaceLength($scope.CariAdi.substring(0,61),63) + $scope.Seri + "-" +  $scope.Sira + "\n" + SpaceLength($scope.CariSoyAdi.substring(0,43),45) + SpaceLength($scope.Il.substring(0,20),25) +  $scope.Tarih + "\n" + "                                                               " + $scope.Saat + "\n";
+            FisDeger = FisDeger + SpaceLength($scope.CariAdi.substring(0,61),63) + $scope.Seri + "-" +  $scope.Sira + "\n" + 
+            SpaceLength($scope.CariSoyAdi.substring(0,43),45) + SpaceLength($scope.Il.substring(0,16),18) +  $scope.Tarih + "\n" +
+             "                                                               " + $scope.Saat + "\n";
             FisDizayn = "                                             " + "\n" + 
             FisDeger +                                       
             "        " + "\n" + 
@@ -3899,6 +3854,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }
         else if($scope.FisDizaynTip == "3")
         {
+            //DETAYSIZ
             let FisDizayn = "";
             let FisDeger = "";
             let i = 55 - $scope.FisLength.length;
@@ -3908,7 +3864,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 Satır += "                                                                   -" + "\n"; 
             }
             FisDeger = FisDeger + "                                " + "\n" 
-            FisDeger = FisDeger + SpaceLength($scope.CariAdi.substring(0,61),63) + $scope.Seri + "-" +  $scope.Sira + "\n" + SpaceLength($scope.CariSoyAdi.substring(0,43),45) + SpaceLength($scope.Il.substring(0,16),18) +  $scope.Tarih + "\n" + "                                                               " + $scope.Saat + "\n";
+            FisDeger = FisDeger + SpaceLength($scope.CariAdi.substring(0,61),63) + $scope.Seri + "-" +  $scope.Sira + "\n" 
+            + SpaceLength($scope.CariSoyAdi.substring(0,43),45) + SpaceLength($scope.Il.substring(0,16),18) +  $scope.Tarih + "\n" 
+            + "                                                               " + $scope.Saat + "\n";
             FisDizayn = "                                             " + "\n" + 
             FisDeger +                                       
             "        " + "\n" + 
@@ -4423,5 +4381,51 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 console.log(data)
             };
         }
+    }
+    $scope.ReyonStokGetir = function(keyEvent)
+    {
+        if(keyEvent.which == 13)
+        {
+            StokBarkodGetir($scope.ReyonStok);
+            $window.document.getElementById("Reyon").focus();
+        }
+    }
+    $scope.BtnReyonUpdate = function()
+    {
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "UPDATE STOKLAR SET sto_reyon_kodu = @sto_reyon_kodu WHERE sto_kod = @sto_kod ",
+            param:  ['sto_reyon_kodu','sto_kod'],
+            type:   ['string|25','string|25'],
+            value:  [$scope.Reyon,$scope.Stok[0].KODU]
+        }
+
+        db.ExecuteQuery(TmpQuery,function(data)
+        {   
+           $scope.Stok[0].REYON = $scope.Reyon;f
+           $scope.Reyon = "";
+           $scope.ReyonStok = ""
+           $window.document.getElementById("ReyonStok").focus();
+        });
+    } 
+    $scope.ScanReyon = function()
+    {
+        cordova.plugins.barcodeScanner.scan(
+            function (result) 
+            { 
+                $scope.Reyon = result.text;
+                $scope.BtnReyonUpdate()
+            },
+            function (error) 
+            {
+                //alert("Scanning failed: " + error);
+            },
+            {
+                prompt : "Barkod Okutunuz",
+                orientation : "portrait"
+            },
+            
+        );
     }
 }

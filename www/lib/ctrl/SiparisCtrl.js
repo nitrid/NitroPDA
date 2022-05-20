@@ -49,6 +49,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.CariIskontoKodu = "";     
         $scope.Status = 0;   
         $scope.BelgeNo = "";
+        $scope.SatirAciklama = "";
         $scope.DepoNo;
         $scope.DepoAdi;
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
@@ -80,6 +81,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.Risk = 0;
         $scope.RiskLimit = 0;
         $scope.CheckEvrak = 0;
+        $scope.FazlaMiktar = 0;
 
         $scope.RiskParam = UserParam.Sistem.RiskParam;
         $scope.FisDizaynTip = UserParam.Sistem.FisDizayn;
@@ -160,6 +162,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.Loading = false;
         $scope.TblLoading = true;
+        $scope.IskontoGizle = true;
     }
     function InitCariGrid()
     {
@@ -860,10 +863,27 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
 
         $scope.SiparisListe = pData;
         $("#TblIslem").jsGrid({data : $scope.SiparisListe});    
+        if($scope.FazlaMiktar != 0)
+        {
+            $scope.Miktar = $scope.FazlaMiktar
+            $scope.Stok[0].FIYAT = 0;
+            $scope.Stok[0].TUTAR = 0;
+            console.log($scope.Stok[0])
+            $scope.Stok[0].ISK.TUTAR1 = 0; 
+            $scope.Stok[0].ISK.TUTAR2 = 0; 
+            $scope.Stok[0].ISK.TUTAR3 = 0; 
+            $scope.Stok[0].ISK.TUTAR4 = 0; 
+            $scope.Stok[0].ISK.TUTAR5 = 0; 
+            $scope.Stok[0].ISK.TUTAR6 = 0; 
+            $scope.Stok[0].TOPTANVERGIPNTR = 0;
+            $scope.Stok[0].KDV = 0;
+            $scope.FazlaMiktar = 0;
+            InsertData();
+        }     
         $scope.BtnTemizle();
         DipToplamHesapla();
         ToplamMiktarHesapla();
-        
+
         $window.document.getElementById("Barkod").focus();
     }  
     function InsertData()
@@ -899,7 +919,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             $scope.Stok[0].TOPTANVERGIPNTR,
             $scope.Stok[0].KDV,
             $scope.OdemeNo,
-            '', //AÇIKLAMA
+            $scope.SatirAciklama, //AÇIKLAMA
             $scope.DepoNo,
             $scope.SipOnayKulNo,
             $scope.Sorumluluk,
@@ -931,13 +951,14 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         db.ExecuteTag($scope.Firma,'SiparisInsert',InsertData,function(InsertResult)
         {          
             if(typeof(InsertResult.result.err) == 'undefined')
-            {                                        
+            {                                   
                 db.GetData($scope.Firma,'SiparisGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,0],function(SiparisData)
                 {
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
                         BedenHarInsert(InsertResult.result.recordset[0].sip_Guid);
                     } 
+                    
                     InsertAfterRefresh(SiparisData);
                     FisData(SiparisData);  
                     $scope.InsertLock = false;
@@ -1088,6 +1109,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                                     "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
                                     "END AS FIYAT, " + 
                                     "sfiyat_doviz AS DOVIZ, " + 
+                                    "dbo.fn_StokSatisFiyati(sfiyat_stokkod,2,sfiyat_deposirano,1) FIYAT2 " + 
                                     "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
                                     "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
                                     "sfiyat_iskontokod AS ISKONTOKOD " + 
@@ -1099,7 +1121,9 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                             value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
                         }
                         db.GetDataQuery(Fiyat,function(pFiyat)
-                        {                         
+                        {          
+                            console.log(pFiyat[0])
+                            $scope.Fiyat2 = pFiyat[0].FIYAT2          
                             $scope.Fiyat = pFiyat[0].FIYAT
                             $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
                             $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
@@ -1445,34 +1469,35 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                             $scope.OdemeNo = $scope.OdemePlan;
                             
                             // Fiyat Getir (Stok Detay)
-                            // var Fiyat = 
-                            // {
-                            //     db : '{M}.' + $scope.Firma,
-                            //     query : "SELECT TOP 1 " + 
-                            //             "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
-                            //             "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
-                            //             "ELSE " + 
-                            //             "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
-                            //             "END AS FIYAT, " + 
-                            //             "sfiyat_doviz AS DOVIZ, " + 
-                            //             "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
-                            //             "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
-                            //             "sfiyat_iskontokod AS ISKONTOKOD " + 
-                            //             "FROM STOK_SATIS_FIYAT_LISTELERI " +
-                            //             "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
-                            //             "ORDER BY sfiyat_deposirano DESC", 
-                            //     param: ['STOKKODU','FIYATLISTE','DEPONO'],
-                            //     type:  ['string|50','int','int'],
-                            //     value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
-                            // }
-                            // db.GetDataQuery(Fiyat,function(pFiyat)
-                            // {                         
-                                
-                            //     console.log(pFiyat)
-                            //     $scope.Fiyat = pFiyat[0].FIYAT
-                            //     $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
-                            //     $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
-                            // });
+                            var Fiyat = 
+                            {
+                                db : '{M}.' + $scope.Firma,
+                                query : "SELECT TOP 1 " + 
+                                        "CASE WHEN (SELECT sfl_kdvdahil FROM STOK_SATIS_FIYAT_LISTE_TANIMLARI WHERE sfl_sirano=sfiyat_listesirano) = 0 THEN " + 
+                                        "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) " + 
+                                        "ELSE " + 
+                                        "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) / ((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = sfiyat_stokkod)) / 100) + 1) " + 
+                                        "END AS FIYAT, " + 
+                                        "sfiyat_doviz AS DOVIZ, " + 
+                                        "dbo.fn_StokSatisFiyati(sfiyat_stokkod,2,sfiyat_deposirano,1) AS FIYAT2, " + 
+                                        "ISNULL((SELECT dbo.fn_DovizSembolu(ISNULL(sfiyat_doviz,0))),'TL') AS DOVIZSEMBOL, " + 
+                                        "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sfiyat_doviz,0),2)),1) AS DOVIZKUR, " + 
+                                        "sfiyat_iskontokod AS ISKONTOKOD " + 
+                                        "FROM STOK_SATIS_FIYAT_LISTELERI " +
+                                        "WHERE sfiyat_stokkod = @STOKKODU AND sfiyat_listesirano = @FIYATLISTE AND sfiyat_deposirano IN (0,@DEPONO) " +
+                                        "ORDER BY sfiyat_deposirano DESC", 
+                                param: ['STOKKODU','FIYATLISTE','DEPONO'],
+                                type:  ['string|50','int','int'],
+                                value: [$scope.StokKodu,$scope.FiyatListeNo,$scope.DepoNo]
+                            }
+                            db.GetDataQuery(Fiyat,function(pFiyat)
+                            {                         
+                                console.log(pFiyat[0])
+                                $scope.Fiyat2 = pFiyat[0].FIYAT2    
+                                $scope.Fiyat = pFiyat[0].FIYAT
+                                $scope.Stok[0].DOVIZSEMBOL = pFiyat[0].DOVIZSEMBOL;
+                                $scope.SatisFiyatListe2 = (pFiyat.length > 1) ? pFiyat[1].FIYAT : 0;
+                            });
                             
                             //Depo Miktar Getir (Stok Detay)
                             var DepoMiktar =
@@ -1714,6 +1739,134 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             console.log(error)
         }
+    }
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+    var blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+    }
+    $scope.PDFSave = function()
+    {
+        // /**
+        // * Convert a base64 string in a Blob according to the data and contentType.
+        // * 
+        // * @param b64Data {String} Pure base64 string without contentType
+        // * @param contentType {String} the content type of the file i.e (application/pdf - text/plain)
+        // * @param sliceSize {Int} SliceSize to process the byteCharacters
+        // * @see http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+        // * @return Blob
+        // */
+        if (window.cordova && cordova.platformId !== "browser") 
+        {
+            document.addEventListener("deviceready", function () 
+            {
+                // var storageLocation = cordova.file.externalRootDirectory  + "download/";
+                // var blob = Jhxlsx.getBlob(RaporListeData,options);
+
+                switch (cordova.platform) 
+                {
+                    case "Android":
+                      storageLocation = cordova.file.externalRootDirectory  + "download/";
+                      break;
+            
+                    case "iOS":
+                      storageLocation = cordova.file.documentsDirectory;
+                      break;
+                }
+                // The base64 content
+                var myBase64 = "JVBERi0xLjcKCjE....";
+                // Define the mimetype of the file to save, in this case a PDF
+                var contentType = "application/pdf";
+                // The path where the file will be saved
+
+                var folderpath = "file:///storage/emulated/0/download/";
+                $scope.Base64DataLong = 'data:' + contentType + ';' + 'base64,' + $scope.Base64Data
+                // The name of your file
+                var filename = "myPdf.pdf";
+                alertify.alert(folderpath,filename,$scope.Base64Data,contentType);
+                $scope.savebase64AsPDF(folderpath,filename,$scope.Base64Data,contentType);
+            });
+        }
+    }
+    $scope.savebase64AsPDF = function(folderpath,filename,content,contentType)
+    {
+        // Convert the base64 string in a Blob
+        var DataBlob = b64toBlob(content,contentType);
+
+        console.log("Starting to write the file :3");
+
+        window.resolveLocalFileSystemURL(folderpath, function(dir) {
+            console.log("Access to the directory granted succesfully");
+            dir.getFile(filename, {create:true}, function(file) {
+                console.log("File created succesfully.");
+                alertify.alert("File created succesfully.")
+                file.createWriter(function(fileWriter) {
+                    console.log("Writing content to file");
+                    fileWriter.write(DataBlob);
+                }, function(){
+                    alert('Unable to save file in path '+ folderpath);
+                });
+            });
+        });
+    }
+    $scope.PDFShareButton = function()
+    {
+        // this is the complete list of currently supported params you can pass to the plugin (all optional)
+        var options = {
+            message: '', // not supported on some apps (Facebook, Instagram)
+            subject: 'Siparis', // fi. for email
+            files: [$scope.Base64DataLong], // an array of filenames either locally or remotely
+        };
+        
+        
+        var onSuccess = function(result) {
+            console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+            console.log("Shared to app: " + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+        };
+        
+        var onError = function(msg) {
+            console.log("Sharing failed with message: " + msg);
+        };
+        console.log(options)
+        if (window.cordova && cordova.platformId !== "browser") 
+        {
+            document.addEventListener("deviceready", function () 
+            {
+                // var storageLocation = cordova.file.externalRootDirectory  + "download/";
+                // var blob = Jhxlsx.getBlob(RaporListeData,options);
+
+                switch (cordova.platform) 
+                {
+                    case "Android":
+                      storageLocation = cordova.file.externalRootDirectory  + "download/";
+                      break;
+            
+                    case "iOS":
+                      storageLocation = cordova.file.documentsDirectory;
+                      break;
+                }
+                window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+            });
+        }
+        // window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
     }
     $scope.BtnCariListele = function()
     {   
@@ -2000,6 +2153,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.Fiyat = 0;
         $scope.Miktar = 1;
         $scope.BarkodLock = false;
+        $scope.SatirAciklama = "";
 
         $scope.BirimListe = [];
         BarkodFocus();      
@@ -2118,7 +2272,11 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.PersonelTip = "0";
         else
         $scope.PersonelTip= "1"
-
+        console.log(UserParam[ParamName])
+        if(UserParam[ParamName].IskontoGizle == "1")
+        {
+            $scope.IskontoGizle = false;
+        }
         if(UserParam[ParamName].FiyatLock == 1)
         {
             $scope.FiyatLock = true;
@@ -3069,6 +3227,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbStok").removeClass('active');
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
+        $("#TbPDF").removeClass('active');
     }
     $scope.ManuelAramaClick = function() 
     {
@@ -3081,6 +3240,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TblAciklama").removeClass('active');
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
+        $("#TbPDF").removeClass('active');
 
         StokFocus();
     }
@@ -3101,6 +3261,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TblAciklama").removeClass('active');
                 $("#TbStok").removeClass('active');
                 $("#TbDizayn").removeClass('active');
+                $("#TbPDF").removeClass('active');
                 CariFocus();
             }        
             else
@@ -3117,6 +3278,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbStok").removeClass('active');
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
+        $("#TbPDF").removeClass('active');
     }
     $scope.BarkodGirisClick = function() 
     {   
@@ -3137,7 +3299,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbStok").removeClass('active');
                 $("#TbDizayn").removeClass('active');
                 $("#TbStokDurum").removeClass('active');
-
+                $("#TbPDF").removeClass('active');
                             
                 BarkodFocus();
             }
@@ -3158,6 +3320,150 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbStok").removeClass('active');
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
+        $("#TbPDF").removeClass('active');
+        var TmpQuery =
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "SELECT 'C:\\Projeler\\DevPrint\\DevPrintDesign\\bin\\Debug\\Report1.repx' AS PATH,  " +
+            "SIPARISLER.sip_stok_kod AS STOK_KOD, SIPARISLER.sip_b_fiyat AS BIRIMF, SIPARISLER.sip_miktar AS MIKTAR,   " +
+            "CONVERT(VARCHAR(10),GETDATE(),108)  as SAAT,  " +
+            "SIPARISLER.sip_iskonto_1 AS ISKONTO1,   " +
+            "SIPARISLER.sip_iskonto_1 * 100 / CASE WHEN SIPARISLER.sip_tutar = 0 THEN 1 ELSE SIPARISLER.sip_tutar END AS ISKONTOY1,   " +
+            "SIPARISLER.sip_iskonto_2 AS ISKONTO2, SIPARISLER.sip_iskonto_2 * 100 / CASE WHEN (SIPARISLER.sip_tutar - SIPARISLER.sip_iskonto_1)   " +
+            "= 0 THEN 1 ELSE (SIPARISLER.sip_tutar - SIPARISLER.sip_iskonto_1) END AS ISKONTOY2, SIPARISLER.sip_create_date AS TARIH,   " +
+            "SIPARISLER.sip_evrakno_seri AS SERI, SIPARISLER.sip_evrakno_sira AS SIRA, 0 AS EVRAKTIP, SIPARISLER.sip_belgeno AS BELGENO,   " +
+            "SIPARISLER.sip_aciklama AS ACIKLAMA, SIPARISLER.sip_musteri_kod AS CARIKODU, 0 AS MEBLAG, SIPARISLER.sip_vergi AS KDV,   " +
+            "SIPARISLER.sip_tutar AS TUTAR, 0 AS ARATOPLAM, STOKLAR.sto_isim AS STOK_ADI, CARI_HESAPLAR.cari_unvan1 AS CARIADI,   " +
+            "CARI_HESAPLAR.cari_unvan2 AS CARIADI2, CARI_HESAP_ADRESLERI.adr_cadde AS CADDE, CARI_HESAP_ADRESLERI.adr_sokak AS SOKAK,   " +
+            "CARI_HESAP_ADRESLERI.adr_ilce AS ILCE, CARI_HESAP_ADRESLERI.adr_il AS IL, CARI_HESAP_ADRESLERI.adr_tel_bolge_kodu AS BOLGE,   " +
+            "CARI_HESAP_ADRESLERI.adr_tel_no1 AS TELNO, CARI_HESAPLAR.cari_vdaire_adi AS VDADI, CARI_HESAPLAR.cari_vdaire_no AS VDNO,   " +
+            "MIN(BARKOD_TANIMLARI.bar_kodu) AS BARKOD, CASE WHEN dbo.fn_VergiYuzde(CONVERT(tinyint, SIPARISLER.sip_vergi_pntr)) = 0 THEN NULL   " +
+            "ELSE dbo.fn_VergiYuzde(CONVERT(tinyint, SIPARISLER.sip_vergi_pntr)) END AS KDVORAN,   " +
+            "CASE WHEN SIPARISLER.sip_vergi = 0 THEN (CASE WHEN SIPARISLER.sip_tutar = 0 THEN 1 ELSE SIPARISLER.sip_tutar END - (SIPARISLER.sip_iskonto_1  " +
+            "+ SIPARISLER.sip_iskonto_2)) * dbo.fn_VergiYuzde(CONVERT(tinyint, SIPARISLER.sip_vergi_pntr))   " +
+            "/ 100 ELSE SIPARISLER.sip_vergi END AS sth_vergi, SIPARISLER.sip_iskonto_1 + SIPARISLER.sip_iskonto_2 AS ISK12TOP,  " +
+            "CASE WHEN iSNULL(ODEME_PLANLARI.odp_adi, 'D') = 'D' THEN 'PESIN' ELSE ODEME_PLANLARI.odp_adi END AS ODEMEPLAN, " +
+            "(SELECT     dbo.fn_StokBirimi(SIPARISLER.sip_stok_kod, SIPARISLER.sip_birim_pntr) AS Expr1  " +
+            ") AS BIRIM, SIPARISLER.sip_tutar - (SIPARISLER.sip_iskonto_1 + SIPARISLER.sip_iskonto_2)   " +
+            "+ SIPARISLER.sip_vergi AS GENELTOPLAMA, SIPARISLER.sip_special1,  " +
+            "CASE WHEN dbo.fn_VergiYuzde(CONVERT(tinyint, SIPARISLER.sip_vergi_pntr)) = 1 THEN  " +
+            "SIPARISLER.sip_vergi  " +
+            "ELSE 0 END AS YUZDE1,  " +
+            "CASE WHEN dbo.fn_VergiYuzde(CONVERT(tinyint, SIPARISLER.sip_vergi_pntr)) = 8 THEN  " +
+            "SIPARISLER.sip_vergi  " +
+            "ELSE 0 END AS YUZDE8,  " +
+            "CASE WHEN dbo.fn_VergiYuzde(CONVERT(tinyint, SIPARISLER.sip_vergi_pntr)) = 18 THEN  " +
+            "SIPARISLER.sip_vergi  " +
+            "ELSE 0 END AS YUZDE18  " +
+            "FROM ODEME_PLANLARI RIGHT OUTER JOIN  " +
+            "SIPARISLER ON ODEME_PLANLARI.odp_no = SIPARISLER.sip_opno LEFT OUTER JOIN  " +
+            "CARI_HESAPLAR ON SIPARISLER.sip_musteri_kod = CARI_HESAPLAR.cari_kod LEFT OUTER JOIN  " +
+            "STOKLAR INNER JOIN  " +
+            "BARKOD_TANIMLARI ON STOKLAR.sto_kod = BARKOD_TANIMLARI.bar_stokkodu ON SIPARISLER.sip_stok_kod = STOKLAR.sto_kod LEFT OUTER JOIN  " +
+            "CARI_HESAP_ADRESLERI ON SIPARISLER.sip_musteri_kod = CARI_HESAP_ADRESLERI.adr_cari_kod AND   " +
+            "SIPARISLER.sip_adresno = CARI_HESAP_ADRESLERI.adr_adres_no  " +
+            "WHERE sip_evrakno_seri = @SERI AND sip_evrakno_sira = @SIRA " +
+            "GROUP BY SIPARISLER.sip_stok_kod, SIPARISLER.sip_b_fiyat, SIPARISLER.sip_miktar, SIPARISLER.sip_iskonto_1,   " +
+            "SIPARISLER.sip_iskonto_1 * 100 / CASE WHEN SIPARISLER.sip_tutar = 0 THEN 1 ELSE SIPARISLER.sip_tutar END, SIPARISLER.sip_iskonto_2,   " +
+            "SIPARISLER.sip_iskonto_2 * 100 / CASE WHEN (SIPARISLER.sip_tutar - SIPARISLER.sip_iskonto_1)   " +
+            "= 0 THEN 1 ELSE (SIPARISLER.sip_tutar - SIPARISLER.sip_iskonto_1) END, SIPARISLER.sip_create_date, SIPARISLER.sip_evrakno_seri,   " +
+            "SIPARISLER.sip_evrakno_sira, SIPARISLER.sip_belgeno, SIPARISLER.sip_aciklama, SIPARISLER.sip_musteri_kod, SIPARISLER.sip_vergi,   " +
+            "SIPARISLER.sip_tutar, STOKLAR.sto_isim, CARI_HESAPLAR.cari_unvan1, CARI_HESAPLAR.cari_unvan2, CARI_HESAP_ADRESLERI.adr_cadde,   " +
+            "CARI_HESAP_ADRESLERI.adr_sokak, CARI_HESAP_ADRESLERI.adr_ilce, CARI_HESAP_ADRESLERI.adr_il,   " +
+            "CARI_HESAP_ADRESLERI.adr_tel_bolge_kodu, CARI_HESAP_ADRESLERI.adr_tel_no1, CARI_HESAPLAR.cari_vdaire_adi,   " +
+            "CARI_HESAPLAR.cari_vdaire_no, SIPARISLER.sip_iskonto_1 + SIPARISLER.sip_iskonto_2,   " +
+            "SIPARISLER.sip_tutar - (SIPARISLER.sip_iskonto_1 + SIPARISLER.sip_iskonto_2) + SIPARISLER.sip_vergi, SIPARISLER.sip_special1,SIPARISLER.sip_vergi_pntr,ODEME_PLANLARI.odp_adi " +
+            ",CARI_HESAPLAR.cari_kod,SIPARISLER.sip_birim_pntr",
+            param:  ['SERI','SIRA'], 
+            type:   ['string|25','int'], 
+            value:  [$scope.Seri,$scope.Sira]    
+        }
+        db.GetPromiseQuery(TmpQuery,function(ppData)
+        {
+            console.log(ppData)
+            console.log(JSON.stringify(ppData[0]))
+            console.log(ppData[0])
+            let pData = []
+            if(ppData.length > 0)
+            {
+                for(let i = 0; i < ppData.length; i++)
+                {
+                    ppData[i] = JSON.parse(JSON.stringify(ppData[i]).split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u"));
+                    pData.push(ppData[i]);
+                }
+                pData = pData;
+                console.log(pData)
+
+                //console.log(pData[0].BASEIMAGE.substring(pData[0].BASEIMAGE.indexOf(",") +1 ))
+                $scope.Base64ImageSrc = '../../img/' + $scope.StokKodu + '.png'
+                console.log($scope.Base64ImageSrc)
+                console.log(JSON.stringify(pData))
+                console.log("{TYPE:'REVIEW',PATH:'" + pData[0].PATH.replaceAll('\\','/') + "',DATA:" + JSON.stringify(pData) + "}")
+                db.Emit('DevPrint',"{TYPE:'REVIEW',PATH:'" + pData[0].PATH.replaceAll('\\','/') + "',DATA:" + JSON.stringify(pData) + "}",(pResult)=>
+                {
+                    console.log(pResult)
+                    $scope.Base64Data = pResult.split('|')[1];
+                    if(pResult.split('|')[0] != 'ERR')
+                    {
+                        // atob() is used to convert base64 encoded PDF to binary-like data.
+                        // (See also https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/
+                        // Base64_encoding_and_decoding.)
+                        var pdfData = atob(pResult.split('|')[1])
+                        //
+                        // The workerSrc property shall be specified.
+                        //
+                        pdfjsLib.GlobalWorkerOptions.workerSrc =
+                            'buildpdf/pdf.worker.js';
+
+                        // Opening PDF by passing its binary data as a string. It is still preferable
+                        // to use Uint8Array, but string or array-like structure will work too.
+                        var loadingTask = pdfjsLib.getDocument({ data: pdfData, });
+                        (async function() 
+                        {
+                            var pdf = await loadingTask.promise;
+                            // Fetch the first page.
+                            var page = await pdf.getPage(1);
+                            var scale = 0.58;
+                            var viewport = page.getViewport({ scale: scale, });
+                            // Support HiDPI-screens.
+                            var outputScale = window.devicePixelRatio || 1;
+
+                            // Prepare canvas using PDF page dimensions.
+                            var canvas = document.getElementById('the-canvas');
+                            var context = canvas.getContext('2d');
+
+                            canvas.width = Math.floor(viewport.width * outputScale);
+                            canvas.height = Math.floor(viewport.height * outputScale);
+                            canvas.style.width = Math.floor(viewport.width) + "px";
+                            canvas.style.height =  Math.floor(viewport.height) + "px";
+
+                            var transform = outputScale !== 1
+                            ? [outputScale, 0, 0, outputScale, 0, 0]
+                            : null;
+
+                            // Render PDF page into canvas context.
+                            var renderContext = {
+                            canvasContext: context,
+                            transform,
+                            viewport,
+                            };
+                            page.render(renderContext);
+
+                            var contentType2 = "application/pdf";
+                            $scope.Base64DataLong = 'data:' + contentType2 + ';' + 'base64,' + $scope.Base64Data
+                            console.log($scope.Base64DataLong)
+                        })();
+                    }
+                })
+            }
+            console.log($scope.Base64ImageSrc)
+        });
+    }
+    $scope.PDFClick = function()
+    {
+        $("#TbPDF").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
     }
     $scope.ScanBarkod = function()
     {
@@ -3385,19 +3691,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         {
             alertify.alert("Etiket Yazdıralamadı.");
         }
-    }
-    function moveFile(fileUri) {
-        window.resolveLocalFileSystemURL(
-              fileUri,
-              function(fileEntry){
-    
-                    var parentEntry = storageLocation + "Download";
-                   
-                    // move the file to a new directory and rename it
-                   fileEntry.moveTo(parentEntry, "newFile.pdf", success, fail);
-                           
-              },
-              errorCallback);
     }
     $scope.ExcelExport = function()
     {

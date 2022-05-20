@@ -2297,9 +2297,33 @@ var QuerySql =
                 "ISNULL((SELECT sip_evrakno_sira from SIPARISLER WHERE sip_Guid = sth_sip_uid),0) AS SIPSIRA ," +
                 "CASE sth_tip WHEN 0 THEN 'GIREN' WHEN 1 THEN 'CIKAN' END AS VIRMANTIP, " +
                 "* FROM STOK_HAREKETLERI " +
-                "WHERE sth_evrakno_seri=@sth_evrakno_seri AND sth_evrakno_sira=@sth_evrakno_sira AND sth_evraktip=@sth_evraktip ORDER BY sth_satirno desc" ,
+                "WHERE (sth_evrakno_seri=@sth_evrakno_seri OR (@sth_evrakno_seri = '')) AND (sth_evrakno_sira=@sth_evrakno_sira OR (@sth_evrakno_sira = '')) AND sth_evraktip=@sth_evraktip " + 
+                "ORDER BY sth_satirno desc" ,
         param:   ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
-        type:    ['string|20','int','int']
+        type:    ['string|20','string|20','int','string|20','string|20']
+    },
+    StokHarGetirListe : 
+    {
+        query:  "SELECT " +
+        "sth_evrakno_seri AS SERI, " +
+        "sth_evrakno_sira AS SIRA, " +
+        "CONVERT(VARCHAR(10),GETDATE(),112) AS sth_kur_tarihi ,  " +
+        "CASE WHEN SUM(ROUND(sth_tutar,2)) <> 0 AND SUM(sth_miktar) <> 0 THEN ROUND((SUM(ROUND(sth_tutar,2)) / SUM(sth_miktar)),2) ELSE 0 END AS FIYAT,  " +
+        "ISNULL((select cari_unvan1 from CARI_HESAPLAR WHERE cari_kod=sth_cari_kodu),'') AS CARIADI, " +
+        "ISNULL((select som_isim from SORUMLULUK_MERKEZLERI where som_kod=sth_stok_srm_merkezi),'') AS SORUMLUMERADI, " +
+        "ISNULL((select cari_per_adi from CARI_PERSONEL_TANIMLARI where cari_per_kod=sth_plasiyer_kodu),'') AS PERSONELADI, " +
+        "SUM(sth_miktar) AS MIKTAR , " +
+        "SUM(sth_miktar2) AS MIKTAR2 , " +
+        "SUM(ROUND(sth_tutar,2)) AS TUTAR, " +
+        "ROW_NUMBER() OVER(ORDER BY max(sth_Guid)) AS NO " +
+        "FROM STOK_HAREKETLERI " +
+        "WHERE (sth_evrakno_seri = @sth_evrakno_seri OR (@sth_evrakno_seri = '')) AND (sth_evrakno_sira = @sth_evrakno_sira OR (@sth_evrakno_sira = '')) AND sth_evraktip=@sth_evraktip AND " + 
+        "(sth_tarih >= @ILKTARIH OR (@ILKTARIH = '')) AND (sth_tarih <= @SONTARIH OR (@SONTARIH = '')) " +
+        "GROUP BY sth_evrakno_seri,sth_evrakno_sira,sth_cari_kodu,sth_stok_srm_merkezi,sth_plasiyer_kodu, " +
+        "sth_iskonto1,sth_iskonto2,sth_iskonto3,sth_iskonto4,sth_iskonto5,sth_iskonto6 " +
+        "ORDER BY max(sth_evrakno_sira) desc ",
+        param:   ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip','ILKTARIH','SONTARIH'],
+        type:    ['string|20','string|20','int','date','date']
     },
     StokProjeGetir :
     {
@@ -4115,12 +4139,31 @@ var QuerySql =
         "FROM URETIM_MALZEME_PLANLAMA WHERE upl_depno = 14 and upl_uretim_tuket = 0 and    upl_isemri LIKE @upl_isemri + '%' AND (upl_miktar - upl_special3) > 0" ,
         param : ['upl_isemri'],
         type : ['string|50']
-
-
+    },
+    IsEmriListeGetir :
+    {
+        query : "SELECT upl_kodu AS KODU ,upl_Guid AS GUID ," +
+        "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu) AS ADI," +
+        " upl_miktar - upl_special1 AS MIKTAR," +
+        "ISNULL((SELECT  TOP 1 sth_parti_kodu FROM STOK_HAREKETLERI WHERE sth_stok_kod = upl_kodu AND sth_belge_no = upl_isemri AND sth_evraktip = 2),'') AS PARTI," +
+        "ISNULL((SELECT  TOP 1 sth_lot_no FROM STOK_HAREKETLERI WHERE sth_stok_kod = upl_kodu AND sth_belge_no = upl_isemri AND sth_evraktip = 2),0) AS LOT," +
+        "upl_isemri  AS ISEMRI, " +
+        "upl_uretim_tuket AS TIP, " + 
+        "upl_special1 AS SPECIAL, " +
+        " CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
+        "FROM URETIM_MALZEME_PLANLAMA WHERE upl_isemri = @upl_isemri AND upl_uretim_tuket = @upl_uretim_tuket AND upl_miktar - upl_special1 > 0 AND " +
+        "((UPPER(upl_kodu) LIKE UPPER(@KODU) OR LOWER(upl_kodu) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER((SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu)) LIKE UPPER(@ADI) OR LOWER((SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu)) LIKE LOWER(@ADI)) OR (@ADI = '')) ",
+        param : ['upl_isemri','upl_uretim_tuket','KODU','ADI'],
+        type : ['string|50','int','string|50','string|50']
+    },
+    IsEmriMiktarUpdate :
+    {
+        query : "UPDATE URETIM_MALZEME_PLANLAMA SET upl_special1 = upl_special1 + @upl_special WHERE upl_Guid = @upl_Guid ", 
+        param : ['upl_special:int','upl_Guid:string|50']
     },
     PlanListeUpdate : 
     {
-        query : "UPDATE URETIM_MALZEME_PLANLAMA  set upl_special3 = @upl_special3 where upl_Guid = @upl_Guid ",
+        query : "UPDATE URETIM_MALZEME_PLANLAMA set upl_special3 = @upl_special3 where upl_Guid = @upl_Guid ",
         param : ['upl_special3','upl_Guid'],
         type : ['string|4','string|50']
     },

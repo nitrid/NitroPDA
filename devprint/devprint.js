@@ -23,7 +23,7 @@ function _Once(pCallback)
     let TmpData = "";
     terminal.stdout.on('data', function (data) 
     {
-        TmpData += data.toString();         
+        TmpData += data.toString();       
     }); 
 
     terminal.stdout.on('end',function()

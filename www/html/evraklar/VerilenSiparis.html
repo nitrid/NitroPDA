@@ -379,6 +379,7 @@
                                 <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button>
                                 <button class="dropdown-item" ng-click="BtnEtiketBas()" role="menu-item">Etiket Bas</button>
                                 <button class="dropdown-item" ng-click="ExcelExport()" role="menu-item">Excele Aktar</button>
+                                <button class="dropdown-item" ng-click="PDFClick()" data-toggle="modal" role="menu-item">PDF</a>
                             </div> 
                         </div>
                     </div>
@@ -439,6 +440,25 @@
                         </div>
                     <div class="row py-1 px-1" ng-show="TblLoading">           
                         <div id="TblStok"></div>                        
+                    </div>
+                </div>
+                <div id="TbPDF" class="tab-pane">
+                    
+                    <div class="row">
+                        <div class="col-4 mb-5">
+                            <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="TbIslemSatirlariClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                        <div class="col-4 mb-5">
+                            <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="PDFSave()"><i class="icon wb-download" aria-hidden="true"></i></button>
+                        </div>
+                        <div class="col-4 mb-5">
+                            <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="PDFShareButton()"><i class="icon wb-share" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div id="view">
+                            <canvas id="the-canvas" style="border:0.5px solid" ></canvas>
+                        </div>
                     </div>
                 </div>
             </div>            

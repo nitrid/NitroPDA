@@ -24,7 +24,7 @@
                             <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" href="#" role="menu-item" ng-hide="RotaKontrol" ng-click="YeniEvrak(1)">Yeni Evrak</button>
-                                <button class="dropdown-item" data-target="#MdlEvrakGetir" data-toggle="modal" role="menu-item">Evrak Getir</a>
+                                <button class="dropdown-item" ng-click="BtnEvrakGetirClick()" data-toggle="modal" role="menu-item">Evrak Getir</a>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="EvrakDelete(1)">Evrak Sil</button>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGunSonuRaporClick()">Gün Sonu Raporu</button>
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnGonder()">Gönder</button>
@@ -500,6 +500,58 @@
                         <div id="TblStokDurum"></div>
                     </div>
                 </div>
+                <div id="TbGetir" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick(1)"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Evrak Seri :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="Seri">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Evrak Sıra :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="GetirSira">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>İlk Tarih :</b></span></div></label>
+                        <div class="col-sm-7 col-md-9 px-1">
+                            <div class="input-group input-group-icon">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <span class="icon wb-calendar" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Son Tarih :</b></span></div></label>
+                        <div class="col-sm-7 col-md-9 px-1">
+                            <div class="input-group input-group-icon">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <span class="icon wb-calendar" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" id="SonTarih" type="text" ng-model="SonTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-5">
+                        <button type="submit" class="btn btn-round btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnEvrakGetirListele()">Getir</button>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading" >
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div class="row py-1 px-1" ng-show="TblLoading">           
+                        <div class="table-responsive">
+                        <div class="table" id="TblGetir"></div>                        
+                        </div>
+                    </div>
+                </div>
             </div>            
         </div>
     </div>
@@ -890,6 +942,12 @@
     language: "tr"
     });
     $("#PTarih").datepicker({
+    language: "tr"
+    });
+    $("#IlkTarih").datepicker({
+    language: "tr"
+    });
+    $("#SonTarih").datepicker({
     language: "tr"
     });
 </script>

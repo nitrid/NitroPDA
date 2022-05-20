@@ -48,7 +48,7 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TblCariFoy").jsGrid
         ({
             width: "100%",
-            height: "auto",
+            height: "300px",
             updateOnResize: true,
             heading: true,
             selecting: true,
@@ -217,6 +217,134 @@ function CariHesapHareketCtrl($scope,$window,db)
             ],
         });
     }
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+    var blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+    }
+    $scope.PDFSave = function()
+    {
+        // /**
+        // * Convert a base64 string in a Blob according to the data and contentType.
+        // * 
+        // * @param b64Data {String} Pure base64 string without contentType
+        // * @param contentType {String} the content type of the file i.e (application/pdf - text/plain)
+        // * @param sliceSize {Int} SliceSize to process the byteCharacters
+        // * @see http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+        // * @return Blob
+        // */
+        if (window.cordova && cordova.platformId !== "browser") 
+        {
+            document.addEventListener("deviceready", function () 
+            {
+                // var storageLocation = cordova.file.externalRootDirectory  + "download/";
+                // var blob = Jhxlsx.getBlob(RaporListeData,options);
+
+                switch (cordova.platform) 
+                {
+                    case "Android":
+                      storageLocation = cordova.file.externalRootDirectory  + "download/";
+                      break;
+            
+                    case "iOS":
+                      storageLocation = cordova.file.documentsDirectory;
+                      break;
+                }
+                // The base64 content
+                var myBase64 = "JVBERi0xLjcKCjE....";
+                // Define the mimetype of the file to save, in this case a PDF
+                var contentType = "application/pdf";
+                // The path where the file will be saved
+
+                var folderpath = "file:///storage/emulated/0/download/";
+                $scope.Base64DataLong = 'data:' + contentType + ';' + 'base64,' + $scope.Base64Data
+                // The name of your file
+                var filename = "CariEkstre.pdf";
+                alertify.alert(folderpath,filename,$scope.Base64Data,contentType);
+                $scope.savebase64AsPDF(folderpath,filename,$scope.Base64Data,contentType);
+            });
+        }
+    }
+    $scope.savebase64AsPDF = function(folderpath,filename,content,contentType)
+    {
+        // Convert the base64 string in a Blob
+        var DataBlob = b64toBlob(content,contentType);
+
+        console.log("Starting to write the file :3");
+
+        window.resolveLocalFileSystemURL(folderpath, function(dir) {
+            console.log("Access to the directory granted succesfully");
+            dir.getFile(filename, {create:true}, function(file) {
+                console.log("File created succesfully.");
+                alertify.alert("File created succesfully.")
+                file.createWriter(function(fileWriter) {
+                    console.log("Writing content to file");
+                    fileWriter.write(DataBlob);
+                }, function(){
+                    alert('Unable to save file in path '+ folderpath);
+                });
+            });
+        });
+    }
+    $scope.PDFShareButton = function()
+    {
+        // this is the complete list of currently supported params you can pass to the plugin (all optional)
+        var options = {
+            message: '', // not supported on some apps (Facebook, Instagram)
+            subject: 'CariEkstre', // fi. for email
+            files: [$scope.Base64DataLong], // an array of filenames either locally or remotely
+        };
+        
+        
+        var onSuccess = function(result) {
+            console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+            console.log("Shared to app: " + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+        };
+        
+        var onError = function(msg) {
+            console.log("Sharing failed with message: " + msg);
+        };
+        console.log(options)
+        if (window.cordova && cordova.platformId !== "browser") 
+        {
+            document.addEventListener("deviceready", function () 
+            {
+                // var storageLocation = cordova.file.externalRootDirectory  + "download/";
+                // var blob = Jhxlsx.getBlob(RaporListeData,options);
+
+                switch (cordova.platform) 
+                {
+                    case "Android":
+                      storageLocation = cordova.file.externalRootDirectory  + "download/";
+                      break;
+            
+                    case "iOS":
+                      storageLocation = cordova.file.documentsDirectory;
+                      break;
+                }
+                window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+            });
+        }
+        // window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+    }
     $scope.Init = function()
     {   console.log(123)
         $scope.Firma = $window.sessionStorage.getItem('Firma');
@@ -281,7 +409,7 @@ function CariHesapHareketCtrl($scope,$window,db)
                 let TmpQuery = 
                 {
                     db : '{M}.' + $scope.Firma,
-                    query:  "SELECT  " +
+                    query:  "SELECT  'C:\\Projeler\\DevPrint\\DevPrintDesign\\bin\\Debug\\CariHesapHareket.repx' AS PATH," +
                             "CONVERT(VARCHAR(10),msg_S_0089,104) AS TARIH, " +       
                             "msg_S_0090 + '-' + CONVERT(NVARCHAR,msg_S_0091) AS SERISIRA, " +
                             "msg_S_0090 AS SERI, " +
@@ -293,6 +421,11 @@ function CariHesapHareketCtrl($scope,$window,db)
                             "CASE WHEN CONVERT(NVARCHAR,msg_S_0099) != 0 THEN CONVERT(NVARCHAR,msg_S_0099) ELSE 'PEŞİN' END AS VADEGUN, " +
                             "msg_S_0100 AS BA, " +
                             "msg_S_0112 AS DOVIZCINS, " +
+                            "CASE WHEN #msg_S_0200 = '' THEN (SELECT cari_kod FROM CARI_HESAPLAR WHERE cari_kod = @KODU) " +
+                            "ELSE #msg_S_0200 END AS CARIKODU,  " +
+                            "CASE WHEN #msg_S_0201 = '' THEN (SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = @KODU) " +
+                            "ELSE #msg_S_0201 END AS CARIADI, " +
+                            "CONVERT(FLOAT,ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2))  AS TOPLAMBAKIYE, " +
                             "CONVERT(NVARCHAR,CAST([msg_S_0101\\T] AS DECIMAL(10,2))) AS ANADOVIZBORC, " +
                             "CONVERT(NVARCHAR,CAST([msg_S_0102\\T] AS DECIMAL(10,2))) AS ANADOVIZALACAK, " +
                             "ROUND(CONVERT(NVARCHAR,CAST([#msg_S_0103\\T] AS DECIMAL(10,2))),2)  AS ANADOVIZBAKIYE, " +
@@ -325,6 +458,7 @@ function CariHesapHareketCtrl($scope,$window,db)
                         $("#TblCariFoy").jsGrid({data : Data});
                         return;
                     }           
+                    
                     $scope.Bakiye = db.SumColumn($scope.CariFoyListe,"ANADOVIZBAKIYE");
                     $scope.Dov1AnaDovizBakiye = $scope.CariFoyListe[0].DOV1ANADOVIZBAKIYE
                     $scope.Dov1OrjDovizBakiye = $scope.CariFoyListe[0].DOV1ORJINALDOVIZBAKIYE
@@ -347,7 +481,76 @@ function CariHesapHareketCtrl($scope,$window,db)
                         console.log($scope.CariFoyListe[i].ANADOVIZBAKIYE);
                         $scope.CariFoyListe[i].ANADOVIZBAKIYE = TmpBakiye.toFixed(2);
                     }
-
+                    let pData = []
+                    for(let i = 0; i < Data.length; i++)
+                    {
+                        Data[i] = JSON.parse(JSON.stringify(Data[i]).split("İ").join("I").split("ı").join("i").split("Ç").join("C").split("ç").join("c").split("Ğ").join("G").split("ğ").join("g").split("Ş").join("S").split("ş").join("s").split("Ö").join("O").split("ö").join("o").split("Ü").join("U").split("ü").join("u"));
+                        pData.push(Data[i]);
+                    }
+                    pData = pData;
+                    console.log(pData)
+    
+                    //console.log(pData[0].BASEIMAGE.substring(pData[0].BASEIMAGE.indexOf(",") +1 ))
+                    $scope.Base64ImageSrc = '../../img/' + $scope.StokKodu + '.png'
+                    console.log($scope.Base64ImageSrc)
+                    console.log(JSON.stringify(pData))
+                    console.log("{TYPE:'REVIEW',PATH:'" + pData[0].PATH.replaceAll('\\','/') + "',DATA:" + JSON.stringify(pData) + "}")
+                    db.Emit('DevPrint',"{TYPE:'REVIEW',PATH:'" + pData[0].PATH.replaceAll('\\','/') + "',DATA:" + JSON.stringify(pData) + "}",(pResult)=>
+                    {
+                        console.log(pResult)
+                        $scope.Base64Data = pResult.split('|')[1];
+                        if(pResult.split('|')[0] != 'ERR')
+                        {
+                            // atob() is used to convert base64 encoded PDF to binary-like data.
+                            // (See also https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/
+                            // Base64_encoding_and_decoding.)
+                            var pdfData = atob(pResult.split('|')[1])
+                            //
+                            // The workerSrc property shall be specified.
+                            //
+                            pdfjsLib.GlobalWorkerOptions.workerSrc =
+                                'buildpdf/pdf.worker.js';
+    
+                            // Opening PDF by passing its binary data as a string. It is still preferable
+                            // to use Uint8Array, but string or array-like structure will work too.
+                            var loadingTask = pdfjsLib.getDocument({ data: pdfData, });
+                            (async function() 
+                            {
+                                var pdf = await loadingTask.promise;
+                                // Fetch the first page.
+                                var page = await pdf.getPage(1);
+                                var scale = 0.58;
+                                var viewport = page.getViewport({ scale: scale, });
+                                // Support HiDPI-screens.
+                                var outputScale = window.devicePixelRatio || 1;
+    
+                                // Prepare canvas using PDF page dimensions.
+                                var canvas = document.getElementById('the-canvas');
+                                var context = canvas.getContext('2d');
+    
+                                canvas.width = Math.floor(viewport.width * outputScale);
+                                canvas.height = Math.floor(viewport.height * outputScale);
+                                canvas.style.width = Math.floor(viewport.width) + "px";
+                                canvas.style.height =  Math.floor(viewport.height) + "px";
+    
+                                var transform = outputScale !== 1
+                                ? [outputScale, 0, 0, outputScale, 0, 0]
+                                : null;
+    
+                                // Render PDF page into canvas context.
+                                var renderContext = {
+                                canvasContext: context,
+                                transform,
+                                viewport,
+                                };
+                                page.render(renderContext);
+    
+                                var contentType2 = "application/pdf";
+                                $scope.Base64DataLong = 'data:' + contentType2 + ';' + 'base64,' + $scope.Base64Data
+                                console.log($scope.Base64DataLong)
+                            })();
+                        }
+                    })
                     $("#TblCariFoy").jsGrid({data : $scope.CariFoyListe});
                 });
             }
@@ -418,6 +621,12 @@ function CariHesapHareketCtrl($scope,$window,db)
         {
             $scope.BtnCariListele();
         }
+    }
+    $scope.PDFClick = function()
+    {
+        $("#TbPDF").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
     }
     $scope.CariListeRowClick = function(pIndex,pItem,pObj)
     {
@@ -507,9 +716,11 @@ function CariHesapHareketCtrl($scope,$window,db)
         $("#TbCari").addClass('active');
         $("#TbMain").removeClass('active');
         $("#TbDetay").removeClass('active');
+        $("#TbPDF").removeClass('active');
     }
     $scope.MainClick = function()
     {
+        $("#TbPDF").removeClass('active');
         $("#TbMain").addClass('active');
         $("#TbCari").removeClass('active');
         $("#TbDetay").removeClass('active');

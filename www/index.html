@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="theme/global/css/bootstrap.min.css">
     <link rel="stylesheet" href="theme/global/css/bootstrap-extend.min.css">
     <link rel="stylesheet" href="theme/base/assets/css/site.min.css">
+    
 
     <!-- Plugins -->
     <link rel="stylesheet" href="theme/global/vendor/animsition/animsition.css">
@@ -47,6 +48,8 @@
 
     <!-- Scripts -->
     <script src="theme/global/vendor/breakpoints/breakpoints.js"></script>
+    <script src="buildpdf/pdf.js"></script>
+
     <script>
       Breakpoints();
     </script>
@@ -126,10 +129,14 @@
                 <div class="col-xl-4 form-group">
                     <input type="text" class="form-control" name="socket_port" placeholder="Soket Port" id="socket_port" ng-model="socket_port">
                 </div>               
-                <div class="col-xl-offset-12 form-group">
+                <div class="col-xl-4 form-group">
                   <a class="btn btn-round btn-primary" href="#" ng-click="BtnTryConnect()">Bağlantı Test</a>                
                   <a class="btn btn-round btn-success" href="#" ng-click="HostSettingSave()" data-dismiss="modal">Kaydet</a>   
-                </div>       
+                </div>   
+                <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
+                  <input type="checkbox" id="Sifirla" name="remember" ng-click="SifirlaMode()" >
+                  <label for="inputCheckbox">Kilit</label>
+                </div>    
               </div>
             </form>         
           </div>
@@ -183,20 +190,22 @@
               <img class="brand-img col-xl-10 offset-xl-1 py-10" src="img/logo.png" alt="...."> 
               <!-- <h2 class="brand-text font-size-18 col-xl-5 offset-xl-5">Nitro</h2>     -->
             </div>
-             
               <div class="form-group form-material floating" data-plugin="formMaterial">
-                  <input required id="kullanıcı-secim" class="form-control" placeholder="Kullanıcı" ng-model="Kullanici">
+                  <input required id="kullanıcı-secim" class="form-control" placeholder="Kullanıcı" ng-disabled="KulLock"  ng-model="Kullanici">
                  <!--<label class="floating-label">Kullanıcı</label> -->
               </div>
               <div class="form-group form-material floating" data-plugin="formMaterial">
-                <input required type="password" class="form-control" name="password" placeholder="Şifre" ng-model="Password" />
+                <input required type="password" class="form-control" name="password" ng-disabled="KulLock" placeholder="Şifre" ng-blur="FirmaClick(1)" ng-model="Password" />
                <!-- <label class="floating-label">Şifre</label> -->
               </div>
-               <div class="form-group form-material" ng-click="FirmaClick()">
-                 <select class="form-control" data-plugin="selectpicker" data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
-                    <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
-                </select>
+              <div ng-click="FirmaClick(2)">
+                <div class="form-group form-material" >
+                  <select class="form-control" data-plugin="selectpicker" data-style="btn-outline " required id="firma-secim" ng-model="Firm" ng-disabled='FirmLock' title="Lütfen Firma Seçimi Yapınız" >
+                     <option ng-repeat="option in FirmList" value="{{option.FIRM}}">{{option.FIRM}}</option>
+                 </select>
+               </div>
               </div>
+
               <div class="form-group clearfix">
                 <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
                   <input type="checkbox" id="BeniHatirla" name="remember">
@@ -210,7 +219,7 @@
                     <div class="dropdown-divider" role="presentation"></div>                
                     <a class="dropdown-item" data-toggle="modal" role="menuitem" ng-click="BtnMenuDbTransfer()">Veri Tabanı Oluştur</a>                    
                   </div>
-              </div>  
+                </div>  
               </div>
               <div class="form-group clearfix">
                 <div class="row">
@@ -345,7 +354,6 @@
     <script src="js/socket.io.js"></script>
     <script src="js/moment.min.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
-     
     <script src="js/DbService.js"></script>
     <script src="js/LocalDb.js"></script>
 

@@ -2476,7 +2476,6 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                                 {
                                     let TmpMiktar = value.sth_miktar * -1
                                     db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[TmpMiktar,value.sth_sip_uid,value.sth_Guid]);
-                                    console.log(value.sth_miktar,value.sth_sip_uid,value.sth_Guid);
                                 }
                                 db.ExecuteTag($scope.Firma,'BedenHarDelete',[value.sth_Guid,11],function(data)
                                 {

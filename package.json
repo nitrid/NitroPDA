@@ -1,8 +1,11 @@
 {
   "dependencies": {
+    "add": "^2.0.6",
     "adm-zip": "^0.5.4",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
+    "cordova": "^11.0.0",
+    "cordova-plugin-x-socialsharing": "^6.0.3",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
@@ -13,6 +16,7 @@
     "mssql": "^6.3.2",
     "node-machine-id": "^1.1.12",
     "node-windows": "^1.0.0-beta.5",
+    "plugin": "^0.3.3",
     "soap": "^0.36.0",
     "socket.io": "^2.4.1",
     "socket.io-client": "^2.3.1",
