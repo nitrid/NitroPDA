@@ -190,7 +190,7 @@ function DepoDurumRaporCtrl($scope,$window,db)
          {
              console.log(error)
          }
-     }
+    }
     $scope.Init = function()
     {   
         $scope.Firma = $window.sessionStorage.getItem('Firma');

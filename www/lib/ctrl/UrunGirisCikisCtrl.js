@@ -387,29 +387,30 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                         $scope.Stok[0].Miktar = 0;
                         $scope.Stok[0].TOPMIKTAR = 1;
                         $scope.Stok[0].UPLGUID = StokData[0].GUID;
+                        $scope.Stok[0].ISEMRI = StokData[0].ISEMRI;
                         console.log($scope.Stok[0].UPLGUID)
                         $scope.BarkodLock = true;
     
                         await db.GetPromiseTag($scope.Firma,'CmbBirimGetir',[$scope.Stok[0].KODU],function(data)
-                    {
-                        $scope.BirimListe = data; 
-                        $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
-    
-                        if($scope.BirimListe.length > 0)
-                        { 
-                            console.log($scope.BirimListe)
-                            $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;  
-                            $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
-                            $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
-                        }
-                        else
-                        { //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
-                            console.log(2)
-                            $scope.Stok[0].BIRIMPNTR = 1;
-                            $scope.Stok[0].BIRIM = 'ADET';
-                            $scope.Stok[0].CARPAN = 1;
-                        }
-                    });
+                        {
+                            $scope.BirimListe = data; 
+                            $scope.Birim = JSON.stringify($scope.Stok[0].BIRIMPNTR);
+        
+                            if($scope.BirimListe.length > 0)
+                            { 
+                                console.log($scope.BirimListe)
+                                $scope.Stok[0].BIRIMPNTR = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIMPNTR;  
+                                $scope.Stok[0].BIRIM = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].BIRIM;
+                                $scope.Stok[0].CARPAN = $scope.BirimListe.filter(function(d){return d.BIRIMPNTR == $scope.Birim})[0].KATSAYI;
+                            }
+                            else
+                            { //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
+                                console.log(2)
+                                $scope.Stok[0].BIRIMPNTR = 1;
+                                $scope.Stok[0].BIRIM = 'ADET';
+                                $scope.Stok[0].CARPAN = 1;
+                            }
+                        });
     
                         if($scope.Stok[0].BEDENPNTR == 0 || $scope.Stok[0].RENKPNTR == 0)
                         {   
@@ -524,7 +525,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                     alertify.alert("Stok Bulunamadı");
                 }
             });
-            
         }
     }
     function InsertData()
@@ -620,8 +620,11 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             if(typeof(InsertResult.result.err) == 'undefined')
             {   
                 db.ExecuteTag($scope.Firma,'IsEmriMiktarUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].UPLGUID]);
+                console.log([$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].ISEMRI,$scope.Stok[0].KODU])
+                db.ExecuteTag($scope.Firma,'IsEmriUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].ISEMRI,$scope.Stok[0].KODU]);
+                console.log([$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].ISEMRI,$scope.Stok[0].KODU])
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(IsEmriData)
-                {    
+                {
                     $scope.StokHarListe = IsEmriData;
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {
@@ -641,7 +644,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         });
     }
     function InsertAfterRefresh(pData)
-    {    
+    {
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
 
@@ -649,7 +652,6 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         $("#TblIslem").jsGrid({data : $scope.StokHarListe});
         $scope.BtnTemizle(); 
         ToplamMiktarHesapla();
-        
         $window.document.getElementById("Barkod").focus();
     }
     function ToplamMiktarHesapla()

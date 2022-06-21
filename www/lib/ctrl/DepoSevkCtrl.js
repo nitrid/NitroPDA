@@ -635,63 +635,28 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                         {
                             db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.CDepo,'',0],function(data)
                             {   
-                                $scope.PartiLotList = [];
                                 $scope.PartiLotListe = data;
                                 console.log(data)
                                 let Check = false;
                                 for (let i = 0; i < data.length; i++)
-                                {
-                                    if(data[i].SKTTARIH >= $scope.Tarih2Ters) // SKT BUGÜNÜ GEÇMİŞ Mİ? GEÇMEMİŞ İSE GİR.
-                                    {                        
-                                        if($scope.PartiLotList.length != 0)
-                                        {
-                                            console.log($scope.PartiLotList[0].TARIH,data[i - 1].TARIH, i-1)
-                                            if($scope.PartiLotList[0].TARIH == data[i].TARIH)
-                                            {
-                                                $scope.PartiLotList.push(data[i]);
-                                                for (let i = 0; i < $scope.PartiLotList.length; i++)
-                                                {
-                                                    if($scope.Stok[0].PARTI == $scope.PartiLotList[i].PARTI && $scope.Stok[0].LOT == $scope.PartiLotList[i].LOT)
-                                                    {
-                                                        Check = true;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            console.log("Girdi")
-                                            $scope.PartiLotList.push(data[i]); //DİĞERLERİNE GÖRE İLK GİRİLEN VE SKT Sİ GEÇMEMİŞ PARTILOT 
-                                            console.log($scope.PartiLotList)
-                                            for (let i = 0; i < $scope.PartiLotList.length; i++)
-                                            {
-                                                if($scope.Stok[0].PARTI == $scope.PartiLotList[i].PARTI && $scope.Stok[0].LOT == $scope.PartiLotList[i].LOT)
-                                                {
-                                                    Check = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
+                                {                      
+                                    console.log("Girdi")
+                                    console.log($scope.PartiLotListe)
+                                    if($scope.Stok[0].PARTI == $scope.PartiLotListe[i].PARTI && $scope.Stok[0].LOT == $scope.PartiLotListe[i].LOT)
+                                    {
+                                        Check = true;
+                                        break;
                                     }
                                 }
-                                console.log($scope.PartiLotList)
+                                console.log($scope.PartiLotListe)
                                 if(Check == true)
                                 {
                                     if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
                                     {   
-                                        $scope.Miktar = $scope.PartiLotList[0].MIKTAR;
+                                        $scope.Miktar = $scope.PartiLotListe[0].MIKTAR;
                                         $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
                                     }
                                     $scope.MiktarFiyatValid();
-                                }
-                                else
-                                {
-                                    alertify.alert("Daha yakın olan tarihli bir partilot mevcut veya SKT geçmiş",function()
-                                    { 
-                                        $scope.BtnTemizle();
-                                    },
-                                    function(){});      
                                 }
                             });
                         }

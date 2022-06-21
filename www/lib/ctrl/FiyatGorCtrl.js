@@ -1013,12 +1013,12 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
 
         if($scope.StokGridTip == "0")
         {   
-            Adi = $scope.StokGridText.replace("*","%").replace("*","%");
+            Adi = $scope.StokGridText.replace("*","%").replace("*","%") + '%';
             console.log(1)
         }
         else if($scope.StokGridTip == "1")
         {
-            Kodu = $scope.StokGridText.replace("*","%").replace("*","%");
+            Kodu = $scope.StokGridText.replace("*","%").replace("*","%") + '%';
         } 
         else if($scope.StokGridTip == "2")
         {

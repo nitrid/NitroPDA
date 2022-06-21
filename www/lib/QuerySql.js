@@ -4128,8 +4128,8 @@ var QuerySql =
     IsEmriPlanListeGetir : 
     {
         query : "SELECT upl_kodu AS KODU ,upl_Guid AS GUID ," +
-        " (SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu) AS ADI," +
-        " upl_miktar  AS MIKTAR," +
+        "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu) AS ADI," +
+        "upl_miktar AS MIKTAR," +
         "ISNULL((Select  top 1 pl_partikodu from PARTILOT WHERE pl_stokkodu = upl_kodu  and ISNULL((SELECT [dbo].[fn_DepodakiPartiliMiktar] (pl_stokkodu,14,GETDATE(),pl_partikodu,pl_lotno)),0) > 0 order by pl_son_kullanim_tar asc),'')  AS PARTI," +
         "0 AS LOT," +
         "upl_miktar - upl_special3 AS KALAN, " +
@@ -4144,13 +4144,13 @@ var QuerySql =
     {
         query : "SELECT upl_kodu AS KODU ,upl_Guid AS GUID ," +
         "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu) AS ADI," +
-        " upl_miktar - upl_special1 AS MIKTAR," +
+        "upl_miktar - upl_special1 AS MIKTAR," +
         "ISNULL((SELECT  TOP 1 sth_parti_kodu FROM STOK_HAREKETLERI WHERE sth_stok_kod = upl_kodu AND sth_belge_no = upl_isemri AND sth_evraktip = 2),'') AS PARTI," +
         "ISNULL((SELECT  TOP 1 sth_lot_no FROM STOK_HAREKETLERI WHERE sth_stok_kod = upl_kodu AND sth_belge_no = upl_isemri AND sth_evraktip = 2),0) AS LOT," +
-        "upl_isemri  AS ISEMRI, " +
+        "upl_isemri AS ISEMRI, " +
         "upl_uretim_tuket AS TIP, " + 
         "upl_special1 AS SPECIAL, " +
-        " CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
+        "CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
         "FROM URETIM_MALZEME_PLANLAMA WHERE upl_isemri = @upl_isemri AND upl_uretim_tuket = @upl_uretim_tuket AND upl_miktar - upl_special1 > 0 AND " +
         "((UPPER(upl_kodu) LIKE UPPER(@KODU) OR LOWER(upl_kodu) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER((SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu)) LIKE UPPER(@ADI) OR LOWER((SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu)) LIKE LOWER(@ADI)) OR (@ADI = '')) ",
         param : ['upl_isemri','upl_uretim_tuket','KODU','ADI'],
@@ -4160,6 +4160,11 @@ var QuerySql =
     {
         query : "UPDATE URETIM_MALZEME_PLANLAMA SET upl_special1 = upl_special1 + @upl_special WHERE upl_Guid = @upl_Guid ", 
         param : ['upl_special:int','upl_Guid:string|50']
+    },
+    IsEmriUpdate :
+    {
+        query : "UPDATE ISEMRI_MALZEME_DURUMLARI SET ish_sevk_miktar = ish_sevk_miktar + @MIKTAR, ish_lastup_date = GETDATE() WHERE ish_isemri = @ISEMRI AND ish_stokhizm_gid_kod = @STOKKOD",
+        param: ['MIKTAR:float','ISEMRI:string|50','STOKKOD:string|50']
     },
     PlanListeUpdate : 
     {
@@ -4193,6 +4198,112 @@ var QuerySql =
                 "WHERE sth_evrakno_seri=@sth_evrakno_seri AND sth_evrakno_sira=@sth_evrakno_sira AND sth_evraktip IN(0,12) ORDER BY sth_satirno desc" ,
         param:   ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
         type:    ['string|20','int','int']
+    },
+    IsEmriInsert:
+    {
+        query: "INSERT INTO [dbo].[ISEMRI_MALZEME_DURUMLARI] " +
+        "( " +
+        "[ish_Guid] " +
+        ",[ish_DBCno] " +
+        ",[ish_SpecRecNo] " +
+        ",[ish_iptal] " +
+        ",[ish_fileid] " +
+        ",[ish_hidden] " +
+        ",[ish_kilitli] " +
+        ",[ish_degisti] " +
+        ",[ish_checksum] " +
+        ",[ish_create_user] " +
+        ",[ish_create_date] " +
+        ",[ish_lastup_user] " +
+        ",[ish_lastup_date] " +
+        ",[ish_ozelkod1] " +
+        ",[ish_ozelkod2] " +
+        ",[ish_ozelkod3] " +
+        ",[ish_stok_hizm_gider] " +
+        ",[ish_stokhizm_gid_kod] " +
+        ",[ish_isemri] " +
+        ",[ish_fasoncu] " +
+        ",[ish_sevk_miktar] " +
+        ",[ish_sevk_deger0] " +
+        ",[ish_sevk_deger1] " +
+        ",[ish_sevk_deger2] " +
+        ",[ish_iade_miktar] " +
+        ",[ish_iade_deger0] " +
+        ",[ish_iade_deger1] " +
+        ",[ish_iade_deger2] " +
+        ",[ish_tuket_miktar] " +
+        ",[ish_tuket_deger0] " +
+        ",[ish_tuket_deger1] " +
+        ",[ish_tuket_deger2] " +
+        ",[ish_uret_miktar] " +
+        ",[ish_uret_deger0] " +
+        ",[ish_uret_deger1] " +
+        ",[ish_uret_deger2] " +
+        ",[ish_uretiade_miktar] " +
+        ",[ish_uretiade_deg0] " +
+        ",[ish_uretiade_deg1] " +
+        ",[ish_uretiade_deg2] " +
+        ",[ish_plan_sevkmiktar] " +
+        ",[ish_planuretim] " +
+        ",[ish_GenelUretimMaliyeti_Ana] " +
+        ",[ish_GenelUretimMaliyeti_Alt] " +
+        ",[ish_GenelUretimMaliyeti_Orj] " +
+        ",[ish_DirektIscilikMaliyeti_Ana] " +
+        ",[ish_DirektIscilikMaliyeti_Alt] " +
+        ",[ish_DirektIscilikMaliyeti_Orj] " +
+        ") " +
+        "VALUES " +
+        "( " +
+        "NEWID()     --<ish_Guid, uniqueidentifier,> " +
+        ",0           --<ish_DBCno, smallint,> " +
+        ",0           --<ish_SpecRecNo, int,> " +
+        ",0           --<ish_iptal, bit,> " +
+        ",1013           --<ish_fileid, smallint,> " +
+        ",0           --<ish_hidden, bit,> " +
+        ",0           --<ish_kilitli, bit,> " +
+        ",0           --<ish_degisti, bit,> " +
+        ",0           --<ish_checksum, int,> " +
+        ",1           --<ish_create_user, smallint,> " +
+        ",GETDATE()           --<ish_create_date, datetime,> " +
+        ",1           --<ish_lastup_user, smallint,> " +
+        ",GETDATE()           --<ish_lastup_date, datetime,> " +
+        ",''           --<ish_ozelkod1, nvarchar(4),> " +
+        ",''           --<ish_ozelkod2, nvarchar(4),> " +
+        ",''           --<ish_ozelkod3, nvarchar(4),> " +
+        ",0           --<ish_stok_hizm_gider, tinyint,> " +
+        ",@STOKKODU           --<ish_stokhizm_gid_kod, nvarchar(25),> " +
+        ",@ISEMRI           --<ish_isemri, nvarchar(25),> " +
+        ",''           --<ish_fasoncu, nvarchar(25),> " +
+        ",@SEVKMIKTAR           --<ish_sevk_miktar, float,> " +
+        ",0           --<ish_sevk_deger0, float,> " +
+        ",0           --<ish_sevk_deger1, float,> " +
+        ",0           --<ish_sevk_deger2, float,> " +
+        ",@IADEMIKTAR           --<ish_iade_miktar, float,> " +
+        ",0           --<ish_iade_deger0, float,> " +
+        ",0           --<ish_iade_deger1, float,> " +
+        ",0           --<ish_iade_deger2, float,> " +
+        ",@TUKETMIKTAR           --<ish_tuket_miktar, float,> " +
+        ",0           --<ish_tuket_deger0, float,> " +
+        ",0           --<ish_tuket_deger1, float,> " +
+        ",0           --<ish_tuket_deger2, float,> " +
+        ",@URETMIKTAR           --<ish_uret_miktar, float,> " +
+        ",0           --<ish_uret_deger0, float,> " +
+        ",0           --<ish_uret_deger1, float,> " +
+        ",0           --<ish_uret_deger2, float,> " +
+        ",@URETIADEMIKTAR           --<ish_uretiade_miktar, float,> " +
+        ",0           --<ish_uretiade_deg0, float,> " +
+        ",0           --<ish_uretiade_deg1, float,> " +
+        ",0           --<ish_uretiade_deg2, float,> " +
+        ",@PLANSEVKMIKTAR           --<ish_plan_sevkmiktar, float,> " +
+        ",@PLANURETIM           --<ish_planuretim, float,> " +
+        ",0           --<ish_GenelUretimMaliyeti_Ana, float,> " +
+        ",0           --<ish_GenelUretimMaliyeti_Alt, float,> " +
+        ",0           --<ish_GenelUretimMaliyeti_Orj, float,> " +
+        ",0           --<ish_DirektIscilikMaliyeti_Ana, float,> " +
+        ",0           --<ish_DirektIscilikMaliyeti_Alt, float,> " +
+        ",0           --<ish_DirektIscilikMaliyeti_Orj, float,> " +
+        " ) ",
+        param:['STOKKODU:string|25','ISEMRI:string|25','SEVKMIKTAR:float','IADEMIKTAR:float','TUKETMIKTAR:float','URETMIKTAR:float','PLANSEVKMIKTAR:float','PLANURETIM:float']
     },
     // Konsinye Hareket
     KonsinyeHarInsert :

@@ -2254,7 +2254,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                             const datas = await data;
                             for(x = 0;x < datas.length;x++)
                             {
-                                $scope.CariListe = datas;  
+                                $scope.CariListe = datas;
                                 let item = x;
                                 await db.GetData($scope.Firma,'CariMiktarHesapla',[datas[x].KODU],async function(CariHarData)
                                 {
@@ -2262,6 +2262,15 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                                     {
                                         datas[item].BAKIYE += CariHarData[0].BAKIYE;
                                         $scope.CariListe = datas;  
+                                        $scope.CariFiyatListe = $scope.CariListe[0].SATISFK;
+                                        $scope.CariDovizCinsi = $scope.CariListe[0].DOVIZCINSI;
+                                        $scope.CariDovizCinsi1 = $scope.CariListe[0].DOVIZCINSI1;
+                                        $scope.CariDovizCinsi2 = $scope.CariListe[0].DOVIZCINSI2;
+                                        $scope.CariDovizKuru = $scope.CariListe[0].DOVIZKUR;
+                                        $scope.CariDovizKuru1 = $scope.CariListe[0].DOVIZKUR1;
+                                        $scope.CariDovizKuru2 = $scope.CariListe[0].DOVIZKUR2;
+                                        $scope.CariAltDovizKuru = $scope.CariListe[0].ALTDOVIZKUR;
+                                        $scope.CariIskontoKodu = $scope.CariListe[0].ISKONTOKOD;
                                         $scope.Adres = $scope.CariListe[0].ADRES;
                                         $scope.Adres1 = $scope.CariListe[0].ADRES1;
                                         $scope.Adres2 = $scope.CariListe[0].ADRES2;

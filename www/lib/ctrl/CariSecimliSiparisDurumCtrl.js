@@ -123,7 +123,6 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     width: 150
                     
                 },
-              
                 {
                     name: "MIKTAR",
                     title: "MİKTARI",
@@ -131,7 +130,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     align: "center",
                     width: 180
                 },
-                             {
+                {
                     name: "TUTARKDVDAHIL",
                     title: "TUTAR",
                     type: "text",
@@ -381,7 +380,7 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         {
             db : '{M}.' + $scope.Firma,
             query:  "SELECT " +
-                    "sip_evrakno_seri + ' - ' +CONVERT(NVARCHAR(25),sip_evrakno_sira) AS [SERI-SIRA], " +
+                    "sip_evrakno_seri + ' - ' + CONVERT(NVARCHAR(25),sip_evrakno_sira) AS [SERI-SIRA], " +
                     "sip_evrakno_seri AS SERI," +
                     "sip_evrakno_sira AS SIRA," +
                     "sip_musteri_kod AS CARIKOD, " +
@@ -478,7 +477,9 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
             var $row = $("#TblIslem").jsGrid("rowByItem", pItem);
             $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
             IslemSelectedRow = $row;
-
+            $scope.SelectedIslemDetayRowIndex = pIndex;
+            $scope.SelectedIslemDetayRowItem = pItem;
+            $scope.SelectedIslemDetayRowObj = pObj;
             $scope.Seri = $scope.IslemListe[pIndex].SERI;
             $scope.Sira = $scope.IslemListe[pIndex].SIRA;
 
@@ -498,10 +499,10 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                         "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
                         "(SELECT dbo.fn_VergiYuzde (sip_vergi_pntr)) AS TOPTANVERGI, " +
                         "CONVERT(NVARCHAR,CAST(sip_tutar AS DECIMAL(10,2))) AS TUTAR,* " +
-                        "FROM SIPARISLER WHERE sip_evrakno_seri = @SERI AND sip_evrakno_sira = @SIRA ORDER BY sip_satirno ASC",
-                param:  ['SERI','SIRA'], 
-                type:   ['string|25','int'], 
-                value:  [$scope.Seri,$scope.Sira]
+                        "FROM SIPARISLER WHERE sip_evrakno_seri = @SERI AND sip_evrakno_sira = @SIRA AND sip_tip = @TIP ORDER BY sip_satirno ASC",
+                param:  ['SERI','SIRA','TIP'],
+                type:   ['string|25','int','int'], 
+                value:  [$scope.Seri,$scope.Sira,$scope.Tip]
             }
             db.GetDataQuery(TmpQuery,function(Data)
             {
@@ -509,12 +510,10 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                 $("#TblIslemDetay").jsGrid({data : $scope.IslemDetayListe});
                 $scope.ToplamSatir = $scope.IslemDetayListe.length;
                 DipToplamHesapla(Data);
-                
             });
         }
-        
         $("#MdlIslemDetay").modal('show');
-        $('#IlkTarih').bootstrapMaterialDatePicker({format: "DD.MM.YYYY",lang: "tr",time:false,date:true,currentDate:new Date()});
+        // $('#IlkTarih').bootstrapMaterialDatePicker({format: "DD.MM.YYYY",lang: "tr",time:false,date:true,currentDate:new Date()});
     }
     $scope.MainClick = function()
     {
@@ -753,5 +752,42 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
         
 
         console.log(Jhxlsx.getBlob(Jhxlsx,options))
+    }
+    $scope.ButonOnayla = function()
+    {
+        $("#MdlIslemDetay").modal('hide');
+        alertify.okBtn('Evet');
+        alertify.cancelBtn('Hayır');
+
+        alertify.confirm('Evrağı onaylamak istediğinize emin misiniz ?', 
+        function()
+        { 
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "UPDATE SIPARISLER SET sip_cagrilabilir_fl = 1 " +
+                        "WHERE sip_evrakno_seri = @SERI AND sip_evrakno_sira = @SIRA AND sip_tip = @TIP",
+                param:  ['SERI','SIRA','TIP'], 
+                type:   ['string|25','int','int'], 
+                value:  [$scope.Seri,$scope.Sira,$scope.Tip]
+            }
+            db.ExecuteQuery(TmpQuery,function(data)
+            {
+                console.log(data)
+                if(typeof(data.result.err) == 'undefined')
+                {
+                    alertify.alert("Sipariş Onaylandı")
+                }
+                else
+                {
+                    alertify.alert("<a style='color:#3e8ef7''>" + "Onaylama İşleminde Hata !" + "</a>" ); 
+                }
+            });
+        }
+        ,function()
+        {
+            $scope.IslemDetayRowClick($scope.SelectedIslemDetayRowIndex,$scope.SelectedIslemDetayRowItem,$scope.SelectedIslemDetayRowObj);
+        });
+
     }
 }
