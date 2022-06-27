@@ -1121,7 +1121,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $scope.Stok[0].TUTAR = 0;
                     $scope.Stok[0].INDIRIM = 0;
                     $scope.Stok[0].ISK = {ORAN1: 0,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
-
                     $scope.Stok[0].KDV = 0;
                     $scope.Stok[0].TOPTUTAR = 0;
                     //----------OFFLINE ICIN GEÇİCİ OLARAK KAPATILDI------------\\ 
@@ -1755,11 +1754,12 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         });
     }
     $scope.BtnPartiLotGetir = function()
-    {   
+    {
         if(isNaN($scope.TxtLot) || $scope.TxtLot == "")
         $scope.TxtLot = 0;
         if(ParamName == "SatisIrsaliye")
         {
+            console.log([$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot])
             db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
             { 
                 $scope.PartiLotListe = data;
@@ -1804,7 +1804,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         }
     }
     $scope.BtnPartiLotSec = function()
-    {   
+    {
         $('#MdlPartiLot').modal('hide');
         console.log($scope.PartiLotListeSelectedIndex)
         $scope.Stok[0].PARTI = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].PARTI;
@@ -2907,7 +2907,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 return;
             } 
             $scope.InsertLock = true
-            if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
+            if(UserParam.Sistem.SatirBirlestir == 0 )
             {
                 InsertData();
             }
@@ -2989,7 +2989,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     console.log("Girdi")
                     angular.forEach($scope.IrsaliyeListe,function(value)
                     {
-                        if(value.sth_stok_kod == $scope.Stok[0].KODU)
+                        if(value.sth_stok_kod == $scope.Stok[0].KODU && value.sth_parti_kodu == $scope.Stok[0].PARTI && value.sth_lot_no == $scope.Stok[0].LOT)
                         {   
                             let TmpFiyat  = value.sth_tutar / value.sth_miktar
                             let TmpMiktar = value.sth_miktar + ($scope.Miktar * $scope.Stok[0].CARPAN);
@@ -4397,7 +4397,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
 
         db.ExecuteQuery(TmpQuery,function(data)
         {   
-           $scope.Stok[0].REYON = $scope.Reyon;f
+           $scope.Stok[0].REYON = $scope.Reyon;
            $scope.Reyon = "";
            $scope.ReyonStok = ""
            $window.document.getElementById("ReyonStok").focus();
