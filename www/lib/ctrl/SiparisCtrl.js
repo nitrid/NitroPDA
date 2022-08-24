@@ -1255,7 +1255,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                             $scope.Stok[0].TUTAR = 0;
                             $scope.Stok[0].INDIRIM = 0;
                             $scope.Stok[0].ISKONTOKOD = "";
-                            $scope.Stok[0].ISK = {ORAN1: 1,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
+                            $scope.Stok[0].ISK = {ORAN1: 0,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
                             $scope.Stok[0].KDV = 0;
                             $scope.Stok[0].TOPTUTAR = 0;
                             $scope.OdemeNo = $scope.OdemePlan;
@@ -1439,7 +1439,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                             $scope.Stok[0].TUTAR = 0;
                             $scope.Stok[0].INDIRIM = 0;
                             $scope.Stok[0].ISKONTOKOD = "";
-                            $scope.Stok[0].ISK = {ORAN1: 1,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
+                            $scope.Stok[0].ISK = {ORAN1: 0,ORAN2: 0, ORAN3:0, ORAN4: 0, ORAN5: 0, ORAN6: 0, TUTAR1: 0, TUTAR2: 0, TUTAR3: 0, TUTAR4: 0, TUTAR5: 0, TUTAR6: 0, TIP1: 0, TIP2: 0, TIP3: 0, TIP4: 0, TIP5: 0, TIP6: 0}
                             $scope.Stok[0].KDV = 0;
                             $scope.Stok[0].TOPTUTAR = 0;
                             $scope.OdemeNo = $scope.OdemePlan;
@@ -1776,7 +1776,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 var folderpath = "file:///storage/emulated/0/download/";
                 $scope.Base64DataLong = 'data:' + contentType + ';' + 'base64,' + $scope.Base64Data
                 // The name of your file
-                var filename = "myPdf.pdf";
+                var filename = "Siparis" + $scope.CariKodu + '-' + $scope.Tarih + ".pdf";
                 alertify.alert(folderpath,filename,$scope.Base64Data,contentType);
                 $scope.savebase64AsPDF(folderpath,filename,$scope.Base64Data,contentType);
             });
@@ -2962,7 +2962,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 });
                 
                 db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(CariData)
-                {   
+                {
                     $scope.CariListe = CariData;
                     $scope.CariAdi = $scope.CariListe[0].UNVAN1
                     $scope.Adres = $scope.CariListe[0].ADRES;
@@ -3297,6 +3297,13 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
         $("#TbPDF").removeClass('active');
+    }
+    $scope.PDFClick = function()
+    {
+        $("#TbPDF").addClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbIslemSatirlari").removeClass('active');
+
         var TmpQuery =
         {
             db : '{M}.' + $scope.Firma,
@@ -3434,12 +3441,6 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
             }
             console.log($scope.Base64ImageSrc)
         });
-    }
-    $scope.PDFClick = function()
-    {
-        $("#TbPDF").addClass('active');
-        $("#TbMain").removeClass('active');
-        $("#TbIslemSatirlari").removeClass('active');
     }
     $scope.ScanBarkod = function()
     {

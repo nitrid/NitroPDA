@@ -134,7 +134,6 @@
                     </div>
                 </div>
                 <div id="TbPDF" class="tab-pane">
-                    
                     <div class="row">
                         <div class="col-4 mb-5">
                             <button class="form-group btn btn-round btn-block mb-1 h-40" ng-click="ManuelAramaCikis()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
@@ -343,6 +342,55 @@
             </div>
         </div>
     </div>
+    <!-- PartiLot Modal -->
+    <div class="modal fade" id="MdlPartiLot" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">X</span>
+                </button>
+                <h4 class="modal-title">Parti Lot Seçim Ekranı</h4>
+            </div>
+                <div class="panel-body">
+                        <label class="form-control-label col-lg-12 col-md-12 col-sm-12  pr-2" id="LblPartiLotAlert"><div class="float-right"><b><span style="color:dodgerblue;">{{LblPartiLotAlert}}</span></b></div></label>
+                    <div class="form-group row my--5">
+                        <label class="form-control-label col-lg-1 col-md-1 col-sm-2 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Parti:</span></b></div></label>
+                        <input type="text" class="form-control col-lg-5 col-md-4 col-sm-4 form-control-sm" ng-model="TxtParti" id="Parti"  ng-keypress = "BtnPartiEnter($event)">
+                        <label class="form-control-label col-lg-1 col-md-2 col-sm-2 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Lot :</span></b></div></label>
+                        <input type="text" class="form-control col-lg-5 col-md-4 col-sm-4 form-control-sm" ng-model="TxtLot">
+                    </div>
+                    <div class="form-group row my-5">
+                        <label class="form-control-label col-lg-6 col-md-5 col-sm-5 offset-1 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Skt Tarih :</span></b></div></label>
+                        <div class="col-lg-5 col-md-6 col-sm-6">
+                            <div class="row">
+                                <div class="input-group">
+                                    <input type="text" class="form-control form-control-sm ng-valid ng-dirty ng-touched ng-empty" id="PTarih" ng-model="SktTarih" data-provide="datepicker">
+                                    <div class="input-group-append">
+                                    <button type="button col-sm-1" class="btn btn-round btn-block form-control-sm wb-calendar"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my--5">
+                        <div class="form-group col-md-12 col-sm-12 col-lg-12">
+                            <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotOlustur()">Oluştur Ve Seç</button>
+                        </div>
+                    </div>
+                    <div class="form-group row my--5">
+                        <div class="form-group col-md-6 col-sm-6 col-lg-6">
+                            <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotSec()">Seç</button>
+                        </div>
+                        <div class="form-group col-md-6 col-sm-6 col-lg-6">
+                            <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotGetir()">Getir</button>
+                        </div>
+                    </div>
+                    <div id="TblPartiLot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- İşlem Detayı Modal-->
     <div class="modal fade" id="MdlIslemDetay" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-simple modal-primary modal-center px-10">
@@ -362,7 +410,7 @@
     <!-- Barkod Liste -->
     <div class="modal fade" id="MdlBarkodlar" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-simple modal-primary modal-center px-10">
-            <div class="modal-content ">
+            <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">X</span>
@@ -521,10 +569,29 @@
                     <div id="TblPartiLot"></div>
                 </div>
             </div>
-        </div>
+    </div>
     </div>
 </div>
 <script>
+    $("#IlkTarih").datepicker({
+    language: "tr"
+    });
+    $("#SonTarih").datepicker({
+    language: "tr"
+    });
+    $("#BTarih").datepicker({
+    language: "tr",
+    startDate: new Date()
+    });
+    $("#STarih").datepicker({
+    language: "tr"
+    });
+    $("#ETarih").datepicker({
+    language: "tr"
+    });
+    $("#PTarih").datepicker({
+    language: "tr"
+    });
     $("#IlkTarih").datepicker({
     language: "tr"
     });

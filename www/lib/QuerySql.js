@@ -30,6 +30,10 @@ var QuerySql =
                 "FROM CARI_PERSONEL_TANIMLARI AS PER1 INNER JOIN CARI_PERSONEL_TANIMLARI AS PER2 ON " +
                 "PER1.cari_per_kod = PER2.cari_per_kod --AND PER1.cari_per_tip = 0 "
     },
+    CmbIhracatGetir :
+    {
+        query: "SELECT ihr_kodu AS KODU, ihr_ismi AS ADI, ihr_Satici AS CARI FROM IHRACAT_DOSYALARI"
+    },
     PersonelTipGetir : 
     {
         query : "SELECT '' AS KODU, '' AS ADI,'' AS SOYADI,'' AS TIP,'' AS TCKN,'00000000-0000-0000-0000-000000000000' AS GUID UNION ALL SELECT PER1.cari_per_kod AS KODU,PER1.cari_per_adi AS ADI,PER1.cari_per_soyadi AS SOYADI,PER1.cari_per_tip AS TIP,PER1.cari_per_TcKimlikNo AS TCKN, PER1.cari_per_Guid AS GUID " +
@@ -686,6 +690,7 @@ var QuerySql =
                 "sto_isim AS ADI, " +
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar(sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
                 "sto_birim1_ad AS BIRIM1, " +
+                "(SELECT dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) FROM STOK_SATIS_FIYAT_LISTELERI WHERE sfiyat_stokkod = sto_kod AND sfiyat_listesirano = 1) AS FIYAT, " +
                 "CASE sto_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "sto_kod AS BARKOD " +
                 "FROM STOKLAR " +
@@ -1152,7 +1157,7 @@ var QuerySql =
         param : ['ILKTARIH','SONTARIH','TIP'],
         type : ['date','date','int']
 
-    },  
+    },
     SiparisStokGetir :
     {
         query : "SELECT " +
@@ -2311,7 +2316,7 @@ var QuerySql =
         "CASE WHEN SUM(ROUND(sth_tutar,2)) <> 0 AND SUM(sth_miktar) <> 0 THEN ROUND((SUM(ROUND(sth_tutar,2)) / SUM(sth_miktar)),2) ELSE 0 END AS FIYAT,  " +
         "ISNULL((select cari_unvan1 from CARI_HESAPLAR WHERE cari_kod=sth_cari_kodu),'') AS CARIADI, " +
         "ISNULL((select som_isim from SORUMLULUK_MERKEZLERI where som_kod=sth_stok_srm_merkezi),'') AS SORUMLUMERADI, " +
-        "ISNULL((select cari_per_adi from CARI_PERSONEL_TANIMLARI where cari_per_kod=sth_plasiyer_kodu),'') AS PERSONELADI, " +
+        "ISNULL((select cari_per_adi from CARI_PERSONEL_TANIMLARI where cari_per_kod=MAX(sth_plasiyer_kodu)),'') AS PERSONELADI, " +
         "SUM(sth_miktar) AS MIKTAR , " +
         "SUM(sth_miktar2) AS MIKTAR2 , " +
         "SUM(ROUND(sth_tutar,2)) AS TUTAR, " +
@@ -2319,8 +2324,7 @@ var QuerySql =
         "FROM STOK_HAREKETLERI " +
         "WHERE (sth_evrakno_seri = @sth_evrakno_seri OR (@sth_evrakno_seri = '')) AND (sth_evrakno_sira = @sth_evrakno_sira OR (@sth_evrakno_sira = '')) AND sth_evraktip=@sth_evraktip AND " + 
         "(sth_tarih >= @ILKTARIH OR (@ILKTARIH = '')) AND (sth_tarih <= @SONTARIH OR (@SONTARIH = '')) " +
-        "GROUP BY sth_evrakno_seri,sth_evrakno_sira,sth_cari_kodu,sth_stok_srm_merkezi,sth_plasiyer_kodu, " +
-        "sth_iskonto1,sth_iskonto2,sth_iskonto3,sth_iskonto4,sth_iskonto5,sth_iskonto6 " +
+        "GROUP BY sth_evrakno_seri,sth_evrakno_sira,sth_cari_kodu,sth_stok_srm_merkezi " +
         "ORDER BY max(sth_evrakno_sira) desc ",
         param:   ['sth_evrakno_seri','sth_evrakno_sira','sth_evraktip','ILKTARIH','SONTARIH'],
         type:    ['string|20','string|20','int','date','date']

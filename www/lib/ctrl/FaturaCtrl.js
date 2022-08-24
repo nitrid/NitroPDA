@@ -4,6 +4,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     let IslemSelectedRow = null;
     let StokSelectedRow = null;
     let PartiLotSelectedRow = null;
+    let EvrakGetirListeSelectedRow = null;
     let ParamName = "";
 
     $('#MdlPartiLot').on('hide.bs.modal', function () 
@@ -51,7 +52,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.Saat = moment(new Date()).format("LTS");
         $scope.Vade = moment(new Date()).format("YYYY-MM-DD");
         $scope.IlkTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
-        $scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
+        $scope.SonTarih = moment(new Date(new Date().getFullYear(), 0, 1)).format("DD.MM.YYYY");
+        //$scope.SonTarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Sorumluluk = "2";
         $scope.SorumlulukAdi = "";
         $scope.Personel = "";
@@ -140,6 +142,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
 
         $scope.IslemListeSelectedIndex = -1;
         $scope.PartiLotListeSelectedIndex = 0;
+        $scope.EvrakGetirListeSelectedIndex = 0;
 
         // DÜZENLE MODAL
         $scope.MiktarEdit = 0;
@@ -3385,11 +3388,11 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     }
     $scope.EvrakGetirListeRowClick = function(pIndex,pItem,pObj)
     {
-        if ( PartiLotSelectedRow ) { PartiLotSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        if ( EvrakGetirListeSelectedRow ) { EvrakGetirListeSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
-        PartiLotSelectedRow = $row;
-        $scope.PartiLotListeSelectedIndex = pIndex;
+        EvrakGetirListeSelectedRow = $row;
+        $scope.EvrakGetirListeListeSelectedIndex = pIndex;
         $scope.Seri = $scope.EvrakGetirListe[pIndex].SERI;
         $scope.Sira = $scope.EvrakGetirListe[pIndex].SIRA;
         $scope.EvrakGetir(1);

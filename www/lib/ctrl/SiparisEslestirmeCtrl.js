@@ -73,6 +73,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SipSira = 0;
         $scope.SipSeriSira = "";
         $scope.IhracKod = "";
+        $scope.IhracatAdi = "";
         $scope.Aciklama = "";
         $scope.DetSipSeri = "";
         $scope.DetSipSira = "";
@@ -93,6 +94,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.BedenListe = [];
         $scope.SiparisKabulListe = [];
         $scope.EIrsListe = [];
+        $scope.IhracatListe = [];
         
         $scope.AraToplam = 0;
         $scope.ToplamIndirim = 0;
@@ -587,7 +589,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             $scope.SipSira,
             pBarkod,
             ''
-        ]; 
+        ];
         db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(BarkodData)
         {
             console.log(BarkodData)
@@ -708,6 +710,7 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
             EslestirmeStokGetir(pBarkod,async function(pData,pTip)
             {
                 $scope.Stok = pData
+                $scope.ProjeKodu = $scope.Stok[0].PROJE;
                 //FONKSİYONDA $scope.Stok İÇERİĞİ BOŞ GELİRSE TÜM İŞLEMLER İPTAL EDİLİYOR. ALI KEMAL KARACA 18.09.2019
                 if($scope.Stok.length == 0)
                 {
@@ -1636,7 +1639,17 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 }
             });
         });    
-        
+        db.FillCmbDocInfo($scope.Firma,'CmbIhracatGetir',function(data)
+        {
+            $scope.IhracatListe = data;
+            $scope.IhracatListe.forEach(function(item)
+            {
+                if(item.KODU == $scope.IhracKod)
+                {
+                    $scope.IhracatAdi = item.ADI;
+                }
+            });
+        });
         db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(data){$scope.ProjeListe = data;$scope.ProjeKodu = ''});
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data){$scope.OdemePlanListe = data; $scope.OdemeNo = '0'});
 
@@ -1958,7 +1971,10 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         SiparisKabulListeSelectedRow = $row;
         $scope.SiparisKabulListeSelectedIndex = pIndex;
-        $scope.IhracKod = $scope.SiparisKabulListe[pIndex].EXIM;
+        if($scope.IhracKod == 'undefined')
+        {
+            $scope.IhracKod = $scope.SiparisKabulListe[pIndex].EXIM;
+        }
     }
     $scope.BtnPartiLotGetir = function()
     {   
@@ -2426,9 +2442,9 @@ function SiparisEslestirmeCtrl($scope,$window,$timeout,db)
                 db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(e){$scope.PersonelListe = e; $scope.Personel = data[0].sth_plasiyer_kodu});
                 db.FillCmbDocInfo($scope.Firma,'CmbProjeGetir',function(e){$scope.ProjeListe = e; $scope.Proje = data[0].sth_proje_kodu});
                 db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(e){$scope.OdemePlanListe = e; $scope.OdemeNo = data[0].sth_odeme_op.toString()});
-                
+                db.FillCmbDocInfo($scope.Firma,'CmbIhracatGetir',function(data){$scope.IhracatListe = data;$scope.IhracKod = data[0].sth_exim_kodu;}); 
                 $scope.StokHarListe = data;
-                $("#TblIslem").jsGrid({data : $scope.StokHarListe});  
+                $("#TblIslem").jsGrid({data : $scope.StokHarListe});
 
                 DipToplamHesapla();
 

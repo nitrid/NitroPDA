@@ -5,7 +5,7 @@ var Param = [
 		"MikroId": "3",
 		"Sistem": {
 			"FirmaNo": "0",
-			"Firma": "Bekasoft",
+			"Firma": "",
 			"SubeNo": "0",
 			"SatirBirlestir": "1",
 			"MalKabulEvrakTip": "1",
@@ -24,13 +24,14 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "SPP-R310",
-			"FirmaListe": "Bekasoft",
+			"BTYaziciAdi": "SW_C58B",
+			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "100",
 			"FisDizayn": "0",
 			"OfflineDepo": "1",
-			"OnlineYazdir": "0"
+			"OnlineYazdir": "0",
+			"PartiBarkodOlustur": "1"
 		},
 		"StokRaporu": {
 			"DepoNo": "4"

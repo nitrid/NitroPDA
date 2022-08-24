@@ -121,11 +121,24 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     type: "text",
                     align: "center",
                     width: 150
-                    
                 },
                 {
                     name: "MIKTAR",
                     title: "MİKTARI",
+                    type: "text",
+                    align: "center",
+                    width: 180
+                },
+                {
+                    name: "TESLIMMIKTAR",
+                    title: "TESLIM MIKTARI",
+                    type: "text",
+                    align: "center",
+                    width: 180
+                },
+                {
+                    name: "KALANMIKTAR",
+                    title: "KALAN MIKTARI",
                     type: "text",
                     align: "center",
                     width: 180
@@ -387,6 +400,8 @@ function CariSecimliSiparisDurumCtrl($scope,$window,db)
                     "sip_projekodu AS PROJEKOD, " +
                     "(SELECT cari_unvan1 FROM CARI_HESAPLAR WHERE cari_kod = sip_musteri_kod) AS CARIADI, " +
                     "SUM(sip_miktar) AS MIKTAR, " +
+                    "SUM(sip_teslim_miktar) AS TESLIMMIKTAR, " +
+                    "SUM(sip_miktar) - SUM(sip_teslim_miktar) AS KALANMIKTAR, " +
                     "CONVERT(NVARCHAR,sip_belge_tarih,104) AS TARIH, " +
                     "CONVERT(NVARCHAR,CAST(SUM(sip_tutar)  AS DECIMAL(10,2))) AS TUTARKDVHARIC, " +
                     "CONVERT(NVARCHAR,CAST(SUM(sip_tutar) + SUM(sip_vergi) AS DECIMAL(10,2))) AS TUTARKDVDAHIL, " +

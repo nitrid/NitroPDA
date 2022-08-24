@@ -173,9 +173,11 @@
                         </div>
                     </div>
                     <div class="row my-0 py-0">
-                        <div class="col-4 text-info px-1"><div class="col-form-label float-right py-2">İhrac Kodu:</div></div>
+                        <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right  py-2">İhracat Kodu:</div></div>
                         <div class="col-8 px-1">
-                            <input type="text" class="form-control" ng-model="IhracKod" ng-disabled="EvrakLock">
+                            <select class="form-control" ng-model="IhracKod" ng-disabled="EvrakLock">
+                                <option ng-repeat="option in IhracatListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row my-0 py-0">

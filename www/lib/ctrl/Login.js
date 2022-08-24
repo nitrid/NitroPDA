@@ -43,7 +43,7 @@ function Login ($scope,$rootScope,$window,db)
             'page_title' : 'Login',
             'page_path': '/Login'
         });
-
+        
         $scope.Kullanici = localStorage.username;
         $scope.Password = localStorage.Password;
         $scope.SecilenFirmalar = []
