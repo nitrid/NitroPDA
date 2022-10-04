@@ -271,7 +271,7 @@ var Param = [
 			"DovizTipi": "-1",
 			"Special": "4",
 			"FiyatGizle": "0",
-			"StokResmi": "1",
+			"StokResmi": "0",
 			"KdvFiyat": "0",
 			"SonAlisGizle": "1"
 		},
@@ -338,7 +338,7 @@ var Param = [
 			"Stok Ekle": "0",
 			"Ürün Giriş Çıkış": "1",
 			"Fason Giriş Çıkış": "0",
-			"Planlı Üretim": "0",
+			"Planlı Üretim": "1",
 			"Aktarim": "0",
 			"EvrakGonder": "0",
 			"Gelen Havale": "0",
@@ -424,7 +424,7 @@ var Param = [
 			"EvrakSil": "0",
 			"IsMerkezi": "01",
 			"IsMerkeziListe": "",
-			"CmbEvrakTip": "0"
+			"CmbEvrakTip": "2"
 		},
 		"FasonGirisCikis": {
 			"Seri": "FSN",

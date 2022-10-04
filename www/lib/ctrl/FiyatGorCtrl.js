@@ -642,7 +642,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         }
                         
                         db.GetDataQuery(BarkodGetir,function(data)
-                        {   
+                        {
                             if(data.length > 0)
                             $scope.Barkodliste = data
                             $("#TblBarkodlar").jsGrid({data : $scope.Barkodliste});
@@ -670,7 +670,10 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     }
                     else
                     {
-                        $("#MdlBarkodlar").modal('show');
+                        if($scope.Barkod == "")
+                        {
+                            $("#MdlBarkodlar").modal('show');
+                        }
                     }
                     if($scope.OtoEkle == true)
                     {

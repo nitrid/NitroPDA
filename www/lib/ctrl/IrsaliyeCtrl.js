@@ -4,6 +4,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     let IslemSelectedRow = null;
     let StokSelectedRow = null;
     let PartiLotSelectedRow = null;
+    let SeriNoSelectedRow = null;
+    let EvrakGetirListeSelectedRow = null;
     let ProjeEvrakSelectedRow = null;
     let IhracatSelectedRow = null;
     let ParamName = "";
@@ -53,7 +55,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Tarih2 = moment(new Date()).format("DDMMYYYY");
         $scope.Tarih2Ters = moment(new Date()).format("YYYYMMDD");
-        console.log($scope.Tarih2Ters)
         $scope.Saat = moment(new Date()).format("LTS");
         $scope.MalKabulSevkTarihi = moment(new Date()).format("DD.MM.YYYY");
         $scope.IlkTarih = moment(new Date()).format("DD.MM.YYYY");
@@ -100,6 +101,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.IhracatKodu = "";
         $scope.BasimAdet = 0;
         $scope.BasimMiktar = 0;
+        $scope.SeriNoSayi = 0;
 
         $scope.Reyon = "";
         $scope.ReyonStok = "";
@@ -460,6 +462,42 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             rowClick: function(args)
             {
                 $scope.PartiLotListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    function InitSeriNoGrid()
+    {
+        $("#TblSeriNo").jsGrid
+        ({
+            width: "100%",         
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.SeriNoListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: [
+                {
+                    name: "SERINO",
+                    title: "SERINO",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+                {
+                    name: "STOK",
+                    title: "STOK",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+            ],
+            rowClick: function(args)
+            {
+                $scope.SeriNoListeRowClick(args.itemIndex,args.item,this);
                 $scope.$apply();
             }
         });
@@ -903,7 +941,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     function InsertAfterRefresh(pData)
     {    
-        console.log(pData)
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
         $scope.IrsaliyeListe = pData;
@@ -1047,6 +1084,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         console.log(InsertData)
         db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
         {  
+            console.log(InsertResult)
             if(typeof(InsertResult.result.err) == 'undefined')
             {  
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(IrsaliyeData)
@@ -1308,6 +1346,22 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             PartiLotEkran();
                         }
                     }
+                    if($scope.Stok[0].DETAYTAKIP == 3)
+                    {
+                        console.log($scope.Stok[0].SERINO)
+
+                        if($scope.Stok[0].SERINO != '')
+                        {
+                            db.GetData($scope.Firma,'SeriNoGetir',[$scope.Stok[0].KODU,''],function(data)
+                            {
+                                $scope.MiktarFiyatValid();
+                            });
+                        }
+                        else
+                        {
+                            SeriNoEkran();
+                        }
+                    }
                     if($scope.OtoEkle == true)
                     {
                         $scope.Insert()
@@ -1456,7 +1510,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         if($scope.Stok[0].PARTI == '')
         {   
             if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
-            {   
+            {
                 $scope.LblPartiLotAlert = "";
                 $scope.TxtParti = "";
                 $scope.TxtLot = 0;
@@ -1489,6 +1543,27 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $timeout( function(){
                 $window.document.getElementById("Parti").focus();
                 $window.document.getElementById("Parti").select();
+                },400)
+            }
+        }
+    }
+    function SeriNoEkran()
+    {
+        console.log($scope.Stok[0].SERINO)
+        if($scope.Stok[0].SERINO == '')
+        {   
+            console.log($scope.Stok[0].DETAYTAKIP)
+            if($scope.Stok[0].DETAYTAKIP == 3)
+            {
+                $scope.TxtSeriNo = "";
+                $scope.SeriNoListe = [];
+                $scope.BtnSeriNoGetir()
+                $("#TblSeriNo").jsGrid({data : $scope.SeriNoListe});
+
+                $('#MdlSeriNo').modal('show');
+                $timeout( function(){
+                    $window.document.getElementById("SeriNo").focus();
+                    $window.document.getElementById("SeriNo").select();
                 },400)
             }
         }
@@ -1544,6 +1619,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         InitIslemGrid();
         InitStokGrid();
         InitPartiLotGrid();
+        InitSeriNoGrid();
         InitDizaynGrid();
         InitProjeEvrakGetirGrid();
         InitStokHarGrid();
@@ -2042,6 +2118,195 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             },250)         
         }
     }
+    $scope.BtnSeriNoOlustur = function()
+    {
+        if($scope.TxtSeriNo == '')
+        {
+            $("#LblSeriNoAlert").show();
+            $scope.LblSeriNoAlert = "SeriNo Alanı Boş Geçilemez !"
+        }
+        else
+        {   
+            db.GetData($scope.Firma,'StokSeriNoGetir',['',0,$scope.Stok[0].KODU,$scope.TxtSeriNo,''],function(data)
+            {
+                console.log(data)
+                if(data.length > 0)
+                {
+                    $("#TblSeriNo").jsGrid({data : $scope.SeriNoListe});
+                    $("#LblSeriNoAlert").show();
+                    $scope.LblSeriNoAlert = "Bu SeriNo Daha Önceden Oluşturulmuş ! Üzerine kaydedildi.."
+                    let AlsStsSorgu = "";
+                    if(ParamName == "AlisIrsaliye")
+                    {
+                        AlsStsSorgu = "chz_al_evr_seri = @SERI, chz_al_evr_sira = @SIRA, chz_al_cari_kodu = @CARIKOD,chz_lastup_date = GETDATE(),chz_al_tarih = GETDATE() "
+                    }
+                    else
+                    {
+                        AlsStsSorgu = "chz_st_evr_seri = @SERI, chz_st_evr_sira = @SIRA, chz_st_cari_kodu = @CARIKOD,chz_lastup_date = GETDATE(),chz_st_tarih = GETDATE() "
+                    }
+                    var TmpQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query:  "UPDATE STOK_SERINO_TANIMLARI SET " + AlsStsSorgu +
+                        "WHERE chz_stok_kodu = @chz_stok_kodu " +
+                        "AND ((chz_serino = @chz_serino) OR (@chz_serino = ''))",
+                        param : ['SERI','SIRA','CARIKOD','chz_stok_kodu','chz_serino'],
+                        type : ['string|25','int','string|25','string|25','string|25'],
+                        value:  [$scope.Seri,$scope.Sira,$scope.CariKodu,$scope.Stok[0].KODU,$scope.TxtSeriNo]
+                    }
+                    console.log([$scope.Seri,$scope.Sira,$scope.CariKodu,$scope.Stok[0].KODU,$scope.TxtSeriNo])
+                    console.log(TmpQuery)
+                    db.ExecuteQuery(TmpQuery,function(uData)
+                    {
+                        $scope.Stok[0].SERINO = $scope.TxtSeriNo;
+                        db.GetData($scope.Firma,'StokSeriNoGetir',[$scope.Seri,$scope.Sira,$scope.Stok[0].KODU,'',$scope.CariKodu],function(pData)
+                        {
+                            console.log(pData)
+                            if(typeof(uData.result.err) == 'undefined')
+                            {
+                                console.log(pData)
+                                if(pData.length > 0)
+                                {
+                                    $scope.SeriNoSayi = pData.length;
+                                    console.log($scope.SeriNoSayi)
+                                    $scope.Miktar = $scope.SeriNoSayi;
+                                    $scope.MiktarFiyatValid();
+                                    $scope.SeriNoListe = pData;
+                                    $("#TblSeriNo").jsGrid({data : $scope.SeriNoListe});
+                                    $timeout( function(){$("#LblSeriNoAlert").hide();},1000)
+                                    $scope.TxtSeriNo = "";
+                                }
+                            }
+                        });
+                    });
+                }
+                else
+                {
+                    let Data = 
+                    [
+                        UserParam.MikroId,
+                        UserParam.MikroId,
+                        $scope.TxtSeriNo,
+                        $scope.Stok[0].KODU
+                    ]
+                    db.ExecuteTag($scope.Firma,'StokSeriNoInsert',Data,function(InsertResult)
+                    {
+                        console.log(InsertResult)
+                        console.log(Data)
+                        if(typeof(InsertResult.result.err) == 'undefined')
+                        {
+                            let AlsStsSorgu = "";
+                            if(ParamName == "AlisIrsaliye")
+                            {
+                                AlsStsSorgu = "chz_al_evr_seri = @SERI, chz_al_evr_sira = @SIRA, chz_al_cari_kodu = @CARIKOD, chz_al_tarih = GETDATE(), "
+                            }
+                            else
+                            {
+                                AlsStsSorgu = "chz_st_evr_seri = @SERI, chz_st_evr_sira = @SIRA, chz_st_cari_kodu = @CARIKOD, chz_st_tarih = GETDATE(), "
+                            }
+                            var TmpQuery = 
+                            {
+                                db : '{M}.' + $scope.Firma,
+                                query:  "UPDATE STOK_SERINO_TANIMLARI SET " + AlsStsSorgu + "chz_lastup_date = GETDATE() " +
+                                "WHERE chz_stok_kodu = @chz_stok_kodu " +
+                                "AND ((chz_serino = @chz_serino) OR (@chz_serino = '')) AND (chz_al_evr_sira = 0 OR chz_st_evr_sira = 0) ",
+                                param : ['SERI','SIRA','CARIKOD','chz_stok_kodu','chz_serino'],
+                                type : ['string|25','int','string|25','string|25','string|25'],
+                                value:  [$scope.Seri,$scope.Sira,$scope.CariKodu,$scope.Stok[0].KODU,$scope.TxtSeriNo]
+                            }
+                            console.log(TmpQuery)
+                            db.ExecuteQuery(TmpQuery,function(uData)
+                            {   
+                                $scope.Stok[0].SERINO = $scope.TxtSeriNo;
+                                db.GetData($scope.Firma,'StokSeriNoGetir',[$scope.Seri,$scope.Sira,$scope.Stok[0].KODU,'',$scope.CariKodu],function(data)
+                                {
+                                    console.log(data)
+                                    if(typeof(uData.result.err) == 'undefined')
+                                    {
+                                        console.log(data)
+                                        if(data.length > 0)
+                                        {
+                                            $scope.SeriNoSayi = data.length;
+                                            console.log($scope.SeriNoSayi)
+                                            $scope.Miktar = $scope.SeriNoSayi;
+                                            $scope.MiktarFiyatValid();
+                                            $scope.SeriNoListe = data;
+                                            $("#TblSeriNo").jsGrid({data : $scope.SeriNoListe});
+                                            $timeout( function(){$("#LblSeriNoAlert").hide();},1000)
+                                            $scope.TxtSeriNo = "";
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
+    $scope.BtnSeriNoGetir = function()
+    {
+        if(ParamName == "SatisIrsaliye")
+        {
+            db.GetData($scope.Firma,'StokSeriNoGetir',[$scope.Seri,$scope.Sira,$scope.Stok[0].KODU,$scope.TxtSeriNo,$scope.CariKodu],function(data)
+            { 
+                $scope.SeriNoListe = data;
+                $scope.SeriNoSayi = data.length;
+                $scope.Miktar = $scope.SeriNoSayi;
+                $scope.MiktarFiyatValid();
+                
+                console.log(data)
+                console.log($scope.SeriNoSayi)
+                $("#TblSeriNo").jsGrid({data : $scope.SeriNoListe});
+            });
+        }
+        else
+        {
+            db.GetData($scope.Firma,'StokSeriNoGetir',[$scope.Seri,$scope.Sira,$scope.Stok[0].KODU,$scope.TxtSeriNo,$scope.CariKodu],function(data)
+            { 
+                $scope.SeriNoListe = data;
+                $scope.SeriNoSayi = data.length;
+                $scope.Miktar = $scope.SeriNoSayi;
+                $scope.MiktarFiyatValid();
+                
+                console.log(data)
+                console.log($scope.SeriNoSayi)
+                $("#TblSeriNo").jsGrid({data : $scope.SeriNoListe});
+            });
+        }
+    }
+    $scope.BtnSeriNoEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnSeriNoOlustur(); 
+        }
+    }
+    $scope.BtnSeriNoDelete = function()
+    {
+        console.log($scope.SeriNoListeSelectedIndex)
+        if(typeof $scope.SeriNoListeSelectedIndex != "undefined")
+        {
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query: "DELETE FROM STOK_SERINO_TANIMLARI WHERE chz_Guid = @GUID  ",
+                param:  ['GUID'],
+                type:   ['string|50'],
+                value:  [$scope.SeriNoListe[$scope.SeriNoListeSelectedIndex].chz_Guid]
+            }
+            db.ExecuteQuery(TmpQuery,function(data)
+            {
+                console.log($scope.SeriNoListe[$scope.SeriNoListeSelectedIndex])
+                console.log(data)
+                $scope.BtnSeriNoGetir();
+            });
+        }
+        else
+        {
+            alertify.alert("Lütfen Satır Seçin")
+        }
+    }
     $scope.BtnRenkBedenSec = function()
     {
         $scope.Stok[0].RENK = $.grep($scope.RenkListe, function (Item) 
@@ -2411,6 +2676,15 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         PartiLotSelectedRow = $row;
         $scope.PartiLotListeSelectedIndex = pIndex;
     }
+    $scope.SeriNoListeRowClick = function(pIndex,pItem,pObj)
+    {   
+        if ( SeriNoSelectedRow ) { SeriNoSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        var $row = pObj.rowByItem(pItem);
+        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+        SeriNoSelectedRow = $row;
+        $scope.SeriNoListeSelectedIndex = pIndex;
+        console.log($scope.SeriNoListeSelectedIndex)
+    }
     $scope.ProjeEvrakListeRowClick = function(pIndex,pItem,pObj)
     {
         if ( ProjeEvrakSelectedRow ) { ProjeEvrakSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
@@ -2424,11 +2698,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.EvrakGetirListeRowClick = function(pIndex,pItem,pObj)
     {
-        if ( PartiLotSelectedRow ) { PartiLotSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        if ( EvrakGetirListeSelectedRow ) { EvrakGetirListeSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
         var $row = pObj.rowByItem(pItem);
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
-        PartiLotSelectedRow = $row;
-        $scope.PartiLotListeSelectedIndex = pIndex;
+        EvrakGetirListeSelectedRow = $row;
         $scope.Seri = $scope.EvrakGetirListe[pIndex].SERI;
         $scope.Sira = $scope.EvrakGetirListe[pIndex].SIRA;
         $scope.EvrakGetir();
@@ -3452,7 +3725,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BarkodGirisClick = function() 
     {   
-        console.log(UserParam[ParamName].OnlineYazdir)
         if($scope.Sira == 0 || typeof $scope.Sira == "undefined")
         {            
             alertify.alert("<a style='color:#3e8ef7''>" + "Lütfen Evrak Siranın Gelmesini Bekleyin!" + "</a>" );

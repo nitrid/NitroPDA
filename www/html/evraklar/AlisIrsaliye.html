@@ -499,10 +499,99 @@
                         </div>
                     </div>
                 </div>
+                <div id="TbGetir" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick(1)"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Evrak Seri :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="Seri">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Evrak Sıra :</b></span></div></label>
+                        <input type="text" class="form-control col-lg-9 col-md-9 col-sm-8 offset-0" ng-model="GetirSira">
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>İlk Tarih :</b></span></div></label>
+                        <div class="col-sm-7 col-md-9 px-1">
+                            <div class="input-group input-group-icon">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <span class="icon wb-calendar" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-10">
+                        <label class="form-control-label col-lg-3 col-md-3 col-sm-4 offset-0 pr-20"><div class="float-right"><span style="color:dodgerblue;"><b>Son Tarih :</b></span></div></label>
+                        <div class="col-sm-7 col-md-9 px-1">
+                            <div class="input-group input-group-icon">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <span class="icon wb-calendar" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" id="SonTarih" type="text" ng-model="SonTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-5">
+                        <button type="submit" class="btn btn-round btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="BtnEvrakGetirListele()">Getir</button>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading" >
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div class="row py-1 px-1" ng-show="TblLoading">           
+                        <div class="table-responsive">
+                        <div class="table" id="TblGetir"></div>                        
+                        </div>
+                    </div>
+                </div>
             </div>            
         </div>
     </div>
     <!-- MODALLAR -->
+    <!-- SeriNo Modal -->
+    <div class="modal fade" id="MdlSeriNo" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">X</span>
+                </button>
+                <h4 class="modal-title">SeriNo Seçim Ekranı</h4>
+            </div>
+                <div class="panel-header">
+                    <div class="offset-8 col-4 px-1 my-5">
+                        <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
+                            <button class="dropdown-item" href="#" role="menu-item" ng-click="BtnSeriNoDelete()">SeriNo Sil</button>
+                        </div>
+                    </div>
+                    <div class="row my-0 px-2">
+                        <label class="form-control-label col-lg-4 col-md-4 col-sm-4 pr-2"><b><span style="color:dodgerblue;">Miktar: {{SeriNoSayi}}</span></b></label>
+                        <label class="form-control-label col-lg-12 col-md-12 col-sm-12 pr-2" id="LblSeriNoAlert"><div class="float-right"><b><span style="color:dodgerblue;">{{LblSeriNoAlert}}</span></b></div></label>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-3 text-primary px-1"><div class="col-form-label float-right py-2">SeriNo :</div></div>
+                        <div class="col-8 px-1">
+                            <input ng-keypress = "BtnSeriNoEnter($event)" type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="SeriNo" ng-model="TxtSeriNo">
+                        </div>
+                    </div>
+                    <!-- <div class="form-group row my-1">
+                        <div class="col-12">
+                            <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="BtnSeriNoOlustur()">Oluştur Ve Seç</button>
+                        </div>
+                    </div> -->
+                    <div id="TblSeriNo"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- PartiLot Modal -->
     <div class="modal fade" id="MdlPartiLot" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-simple modal-primary modal-center px-10">
@@ -906,7 +995,8 @@
         }
     }
     $("#BTarih").datepicker({
-    language: "tr"
+    language: "tr",
+    startDate: new Date()
     });
     $("#STarih").datepicker({
     language: "tr"
@@ -915,6 +1005,12 @@
     language: "tr"
     });
     $("#PTarih").datepicker({
+    language: "tr"
+    });
+    $("#IlkTarih").datepicker({
+    language: "tr"
+    });
+    $("#SonTarih").datepicker({
     language: "tr"
     });
 </script>
