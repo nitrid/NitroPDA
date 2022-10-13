@@ -985,7 +985,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $scope.TxtLot = 0;
           
             db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.Depo,$scope.TxtParti,$scope.TxtLot],function(data)
-            {   
+            {
                 if(data.length > 0)
                 {
                     $scope.PartiLotListe = data;
@@ -1002,6 +1002,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                         $scope.TxtParti,
                         $scope.TxtLot,
                         $scope.Stok[0].KODU,
+                        '',
                         $scope.SktTarih
                     ]   
                     db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)

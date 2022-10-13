@@ -294,6 +294,32 @@ var QuerySql =
         param : ['BARKOD','DEPONO'],
         type : ['string|50','int']
     },
+    PaketBarkodGetir:
+    {
+        query : 
+        "SELECT STOKFIYAT / (TOPSTOKFIYAT / PKTFIYAT) AS BIRIMFIYAT, " +
+        "STOKFIYAT / (TOPSTOKFIYAT / PKTFIYAT) * MIKTAR * VERGIYUZDE AS KDV," +
+        "STOKFIYAT / (TOPSTOKFIYAT / PKTFIYAT) * MIKTAR AS TUTAR,*  " +
+        "FROM  " +
+        "(SELECT  " +
+        "pak_kod as KODU, " +
+        "pak_stokkod AS STOKKODU, " +
+        "pak_ismi AS ADI, " +
+        "bar_kodu AS BARKOD, " +
+        "pak_miktar AS MIKTAR, " +
+        "pak_fiyat AS PKTFIYAT, " +
+        "((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = pak_stokkod)))) AS VERGI, " +
+        "((SELECT dbo.fn_VergiYuzde ((SELECT TOP 1 sto_toptan_vergi FROM STOKLAR WHERE sto_kod = pak_stokkod)) / 100)) AS VERGIYUZDE," +
+        "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) AS STOKFIYAT, " +
+        "dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) * pak_miktar AS STOKMIKTARFIYAT, " +
+        "(SELECT SUM(dbo.fn_StokSatisFiyati(pak_stokkod,1,1,1) * pak_miktar) FROM STOK_PAKET_TANIMLARI AS STOKPAKET INNER JOIN BARKOD_TANIMLARI AS BARKOD ON STOKPAKET.pak_kod = BARKOD.bar_stokkodu WHERE bar_kodu = @BARKOD) AS TOPSTOKFIYAT,* " +
+        "FROM STOK_PAKET_TANIMLARI AS STOKPAKET " +
+        "INNER JOIN STOK_SATIS_FIYAT_LISTELERI AS STOKFIYAT ON STOKPAKET.pak_stokkod = STOKFIYAT.sfiyat_stokkod " +
+        "INNER JOIN BARKOD_TANIMLARI AS BARKOD ON STOKPAKET.pak_kod = BARKOD.bar_stokkodu " +
+        "WHERE bar_kodu = @BARKOD AND sfiyat_listesirano = @LISTESIRANO) AS TBL ",
+        param : ['BARKOD','DEPONO','LISTESIRANO'],
+        type : ['string|50','int','int']
+    },
     TedarikciBarkodGetir:
     {
         query : "SELECT sto_kod AS KODU, " +

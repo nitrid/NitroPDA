@@ -537,8 +537,6 @@ angular.module('app.db', []).service('db',function($rootScope)
         }        
         _SqlExecute(m,function(data)
         {
-            console.log(data)
-            console.log(pCallback)
             if(pCallback)
             {
                 pCallback(data);
@@ -700,7 +698,6 @@ angular.module('app.db', []).service('db',function($rootScope)
         }
         _SqlExecute(m,function(data)
         {
-            console.log(1)
             if(pCallback)
             {
                 $rootScope.StokData = data.result.recordset;
@@ -744,7 +741,6 @@ angular.module('app.db', []).service('db',function($rootScope)
                     }
                     _SqlExecute(m,function(data)
                     {
-                        console.log(1)
                         $rootScope.StokData = data.result.recordset;
                         if(pCallback)
                         {
@@ -914,15 +910,13 @@ angular.module('app.db', []).service('db',function($rootScope)
         else
             FiyatParam[1] = pFiyatParam.FiyatListe;
         // FİYAT GETİR
-        await _GetPromiseTag(pFirma,'FiyatGetir',FiyatParam,function(FiyatData)
+        await _GetPromiseTag(pFirma,'FiyatGetir',FiyatParam,async function(FiyatData)
         {   
-            console.log(FiyatData)
             if(FiyatData.length > 0)
-            {   
+            {
                 console.log(FiyatData)
                 BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
                 BarkodData[0].FIYAT = (FiyatData[0].FIYAT)
-                console.log(FiyatData[0].FIYAT,FiyatData[0].DOVIZKUR,pFiyatParam.CariDovizKuru)
             }
             else
             {
@@ -933,7 +927,6 @@ angular.module('app.db', []).service('db',function($rootScope)
         // İSKONTO MATRİS
         if(pEvrParam.IskontoMatris == "1")
         {
-            console.log([BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo])
             await _GetPromiseTag(pFirma,"IskontoMatrisGetir",[BarkodData[0].ISKONTOKOD,pFiyatParam.CariIskontoKodu,pFiyatParam.OdemeNo],function(Data)
             { 
                 if(Data.length > 0)
