@@ -4348,13 +4348,14 @@ var QuerySql =
         query : "SELECT upl_kodu AS KODU ,upl_Guid AS GUID ," +
         "(SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu) AS ADI," +
         "upl_miktar - upl_special1 AS MIKTAR," +
+        "upl_miktar AS MIKTAR2," + 
         "ISNULL((SELECT  TOP 1 sth_parti_kodu FROM STOK_HAREKETLERI WHERE sth_stok_kod = upl_kodu AND sth_belge_no = upl_isemri AND sth_evraktip = 2),'') AS PARTI," +
         "ISNULL((SELECT  TOP 1 sth_lot_no FROM STOK_HAREKETLERI WHERE sth_stok_kod = upl_kodu AND sth_belge_no = upl_isemri AND sth_evraktip = 2),0) AS LOT," +
         "upl_isemri AS ISEMRI, " +
         "upl_uretim_tuket AS TIP, " + 
         "upl_special1 AS SPECIAL, " +
         "CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
-        "FROM URETIM_MALZEME_PLANLAMA WHERE upl_isemri = @upl_isemri AND upl_uretim_tuket = @upl_uretim_tuket AND upl_miktar - upl_special1 > 0 AND " +
+        "FROM URETIM_MALZEME_PLANLAMA WHERE upl_isemri = @upl_isemri AND upl_uretim_tuket = @upl_uretim_tuket AND " +
         "((UPPER(upl_kodu) LIKE UPPER(@KODU) OR LOWER(upl_kodu) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER((SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu)) LIKE UPPER(@ADI) OR LOWER((SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu)) LIKE LOWER(@ADI)) OR (@ADI = '')) ",
         param : ['upl_isemri','upl_uretim_tuket','KODU','ADI'],
         type : ['string|50','int','string|50','string|50']
@@ -4385,7 +4386,7 @@ var QuerySql =
         "upl_isemri  AS ISEMRI, " +
         "upl_uretim_tuket AS TIP, " +
         " CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
-        "FROM URETIM_MALZEME_PLANLAMA WHERE    upl_isemri = @upl_isemri " ,
+        "FROM URETIM_MALZEME_PLANLAMA WHERE upl_isemri = @upl_isemri " ,
         param : ['upl_isemri'],
         type : ['string|50']
     },
