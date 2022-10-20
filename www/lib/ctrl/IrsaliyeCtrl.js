@@ -126,6 +126,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $scope.SonSatisListe = [];
         $scope.KirilimListe = [];
         $scope.IhracatListe = [];
+        $scope.PBarkodListe = [];
 
         $scope.AciklamaGuid = ''
         $scope.Aciklama1 = ''
@@ -1290,6 +1291,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             else
                             {
                                 $scope.Fiyat = $scope.Stok[0].FIYAT;
+                                await $scope.MiktarFiyatValid(); 
                             }
                             $scope.BarkodLock = true;
                             $scope.$apply();

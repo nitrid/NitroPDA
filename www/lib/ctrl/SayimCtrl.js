@@ -406,55 +406,23 @@ function SayimCtrl($scope,$window,$timeout,db)
     }
     function UpdateData(pData) 
     {  
-        if($scope.SayimListe.find(s=>s.sym_Stokkodu == $scope.Stok[0].KODU))
-        {
-            console.log(13213132132132121321312)
-            console.log($scope.SayimListe.find(s=>s.sym_Stokkodu == $scope.Stok[0].KODU))
-            alertify.okBtn('Evet');
-            alertify.cancelBtn('Hayır');
-
-            alertify.confirm('Bu Stokun ' + $scope.SayimListe.find(s=>s.sym_Stokkodu == $scope.Stok[0].KODU).sym_miktar1 + ' Tanesi Sayılmış! Yinede Eklemek İstediğinize Emin Misiniz? ', 
-            function()
-            { 
-                db.ExecuteTag($scope.Firma,'SayimUpdate',pData.Param,function(InsertResult)
-                {  
-                    if(typeof(InsertResult.result.err) == 'undefined')
-                    {   
-                        db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
-                        {
-                            InsertAfterRefresh(SayimData);
-                            $("#TblIslem").jsGrid({data : $scope.SayimListe});
-                            Confirmation();
-                            //ToplamMiktarHesapla();
-                        });
-                    }
-                    else
-                    {
-                        console.log(InsertResult.result.err);
-                    }
-                });
-            });
-        }
-        else
-        {
-            db.ExecuteTag($scope.Firma,'SayimUpdate',pData.Param,function(InsertResult)
-            {  
-                if(typeof(InsertResult.result.err) == 'undefined')
-                {   
-                    db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
-                    {
-                        InsertAfterRefresh(SayimData);
-                        $("#TblIslem").jsGrid({data : $scope.SayimListe});
-                        Confirmation();
-                        //ToplamMiktarHesapla();
-                    });
-                }
-                else
+        db.ExecuteTag($scope.Firma,'SayimUpdate',pData.Param,function(InsertResult)
+        {  
+            if(typeof(InsertResult.result.err) == 'undefined')
+            {   
+                db.GetData($scope.Firma,'SayimGetir',[$scope.DepoNo,$scope.EvrakNo,$scope.Tarih],function(SayimData)
                 {
-                    console.log(InsertResult.result.err);
-                }
-            });
-        }
+                    InsertAfterRefresh(SayimData);
+                    $("#TblIslem").jsGrid({data : $scope.SayimListe});
+                    Confirmation();
+                    //ToplamMiktarHesapla();
+                });
+            }
+            else
+            {
+                console.log(InsertResult.result.err);
+            }
+        });
     }
     function StokBarkodGetir(pBarkod)
     {
@@ -652,6 +620,8 @@ function SayimCtrl($scope,$window,$timeout,db)
 
         $scope.EvrakLock = false;
         $scope.DepoNo = UserParam.Sayim.DepoNo;
+        console.log(UserParam.Sayim.EvrakNo)
+        $scope.EvrakNo = UserParam.Sayim.EvrakNo;
         $scope.CmbEvrakTip = "0";
         $scope.Stok = 
         [
@@ -672,11 +642,14 @@ function SayimCtrl($scope,$window,$timeout,db)
                     $scope.DepoAdi = item.ADI;
             });     
         }); 
-        
-       await db.MaxSiraPromiseTag($scope.Firma,'MaxSayimSira',[$scope.DepoNo,$scope.Tarih],function(data)
-        {  
-            $scope.EvrakNo = data;
-        });
+        if(UserParam.Sayim.EvrakNo == 1)
+        {
+            await db.MaxSiraPromiseTag($scope.Firma,'MaxSayimSira',[$scope.DepoNo,$scope.Tarih],function(data)
+            {  
+                $scope.EvrakNo = data;
+            });
+        }
+
         BarkodFocus();
     }
     $scope.BtnStokGridGetir = function()

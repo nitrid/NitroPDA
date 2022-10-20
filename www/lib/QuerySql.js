@@ -4356,6 +4356,7 @@ var QuerySql =
         "upl_special1 AS SPECIAL, " +
         "CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
         "FROM URETIM_MALZEME_PLANLAMA WHERE upl_isemri = @upl_isemri AND upl_uretim_tuket = @upl_uretim_tuket AND " +
+        "(upl_kodu = (SELECT bar_stokkodu FROM BARKOD_TANIMLARI WHERE bar_kodu = @KODU) OR (@KODU = '')) OR " +
         "((UPPER(upl_kodu) LIKE UPPER(@KODU) OR LOWER(upl_kodu) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER((SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu)) LIKE UPPER(@ADI) OR LOWER((SELECT sto_isim FROM STOKLAR WHERE sto_kod = upl_kodu)) LIKE LOWER(@ADI)) OR (@ADI = '')) ",
         param : ['upl_isemri','upl_uretim_tuket','KODU','ADI'],
         type : ['string|50','int','string|50','string|50']

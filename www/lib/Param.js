@@ -49,7 +49,7 @@ var Param = [
 			"EvrakTip": "0"
 		},
 		"Sayim": {
-			"EvrakNo": "0",
+			"EvrakNo": "10",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"BelgeBilgisi": "",
@@ -302,7 +302,7 @@ var Param = [
 		"Menu": {
 			"Stok Detay": "1",
 			"Sayım Fişi": "1",
-			"Cari Listesi": "0",
+			"Cari Listesi": "1",
 			"Fire": "0",
 			"Cari Ekle": "0",
 			"Deposevk": "1",
@@ -573,7 +573,7 @@ var Param = [
 			"OnlineYazdir": "0"
 		},
 		"Sayim": {
-			"EvrakNo": "1",
+			"EvrakNo": "200",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"BelgeBilgisi": "",
