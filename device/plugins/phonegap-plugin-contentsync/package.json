@@ -45,7 +45,7 @@
   "deprecated": false,
   "description": "Fetch and cache content for your PhoneGap app.",
   "devDependencies": {
-    "jasmine-node": "1.14.5",
+    "jasmine-node": "1.16.2",
     "pluginpub": "^0.0.9"
   },
   "engines": [
