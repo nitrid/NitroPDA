@@ -96,6 +96,8 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         $scope.Indirim = 0;
         $scope.RiskLimit = 0
         $scope.Risk = 0;
+        $scope.BasimAdet = 0;
+        $scope.BasimMiktar = 0;
 
         //CARİHAREKET
         if(ParamName == "AlisFatura")
@@ -1149,9 +1151,17 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                         AlisSatis : ($scope.EvrakTip === 3 ? 0 : 1),
                         OdemeNo : $scope.OdemeNo
                     };
-                    await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],function()//FİYAT GETİR
+                    await db.FiyatGetir($scope.Firma,BarkodData,FiyatParam,UserParam[ParamName],async function()//FİYAT GETİR
                     {   
                         $scope.Fiyat = $scope.Stok[0].FIYAT;
+                        await db.GetPromiseTag($scope.Firma,'FiyatGetir',[BarkodData[0].KODU,2,FiyatParam.DepoNo],async function(FiyatData)
+                        {   
+                            if(FiyatData.length > 0)
+                            {
+                                console.log(FiyatData)
+                                $scope.Stok[0].FIYAT2 = FiyatData[0].FIYAT;
+                            }
+                        });
                         $scope.MiktarFiyatValid();
                         $scope.BarkodLock = true;
                         $scope.$apply();
@@ -1472,6 +1482,24 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.ToplamSatir += 1 ;
         });
     }
+    function ToplamMiktarHesapla()
+    {
+        $scope.ToplamSatir = 0;
+
+        angular.forEach($scope.StokHarListe,function(value)
+        {
+            console.log(value.sth_stok_kod)
+            console.log($scope.EskiBarkod)
+            $scope.ToplamSatir += 1 ;
+            if(value.sth_stok_kod == $scope.EskiBarkod)
+            {
+                console.log(value.sth_miktar2)
+                $scope.BasimAdet += 1;
+                $scope.BasimMiktar = value.sth_miktar2;
+                console.log($scope.BasimMiktar)
+            }
+        });
+    }
     function FisData(pData)
     { 
         $scope.FisLength = pData;
@@ -1610,10 +1638,10 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         });
     }
     $scope.BtnPartiLotGetir = function()
-    {   
+    {
         if(isNaN($scope.TxtLot))
         $scope.TxtLot = 0;
-
+        
         db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
         {   
             $scope.PartiLotListe = data;
@@ -1984,20 +2012,49 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.StokHarListe[pIndex].sth_tutar = 1;
         }
         let TmpYuzde1 = $scope.StokHarListe[pIndex].sth_iskonto1 / $scope.StokHarListe[pIndex].sth_tutar; 
-        console.log(TmpYuzde1)
         let TmpYuzde2 = $scope.StokHarListe[pIndex].sth_iskonto2 / ($scope.StokHarListe[pIndex].sth_tutar - $scope.StokHarListe[pIndex].sth_iskonto1); 
         let TmpYuzde3 = $scope.StokHarListe[pIndex].sth_iskonto3 / ($scope.StokHarListe[pIndex].sth_tutar - ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2));
         let TmpYuzde4 = $scope.StokHarListe[pIndex].sth_iskonto4 / ($scope.StokHarListe[pIndex].sth_tutar - ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2 + $scope.StokHarListe[pIndex].sth_iskonto3));
         let TmpYuzde5 = $scope.StokHarListe[pIndex].sth_iskonto5 / ($scope.StokHarListe[pIndex].sth_tutar - ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2 + $scope.StokHarListe[pIndex].sth_iskonto3 + $scope.StokHarListe[pIndex].sth_iskonto4));
 
         $scope.StokHarListe[pIndex].sth_iskonto1 = TmpTutar * TmpYuzde1;
-        console.log($scope.StokHarListe[pIndex].sth_iskonto1)
         $scope.StokHarListe[pIndex].sth_iskonto2 = (TmpTutar - $scope.StokHarListe[pIndex].sth_iskonto1) * TmpYuzde2;
         $scope.StokHarListe[pIndex].sth_iskonto3 = (TmpTutar - ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2)) * TmpYuzde3;
         $scope.StokHarListe[pIndex].sth_iskonto4 = (TmpTutar- ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2 + $scope.StokHarListe[pIndex].sth_iskonto3)) * TmpYuzde4;
         $scope.StokHarListe[pIndex].sth_iskonto5 = (TmpTutar - ($scope.StokHarListe[pIndex].sth_iskonto1 + $scope.StokHarListe[pIndex].sth_iskonto2 + $scope.StokHarListe[pIndex].sth_iskonto3 + $scope.StokHarListe[pIndex].sth_iskonto4)) * TmpYuzde5;
 
-        $scope.Update(pIndex);
+        if(UserParam[ParamName].FiyatAzalt == 1)
+        {
+            let Fiyat2 = 0
+            db.GetPromiseTag($scope.Firma,'FiyatGetir',[$scope.StokHarListe[pIndex].sth_stok_kod,2,$scope.StokHarListe[pIndex].sth_cikis_depo_no],async function(FiyatData)
+            {
+                if(FiyatData.length > 0)
+                {
+                    console.log(FiyatData)
+                    Fiyat2 = FiyatData[0].FIYAT;
+                    
+                    if($scope.FiyatEdit < Fiyat2)
+                    {
+                        alertify.alert("Fiyat düşürülemez")
+                        return;
+                    }
+                    else
+                    {
+                        $scope.Update(pIndex);
+                    }
+                }
+                else
+                {
+                    alertify.alert("2.Fiyat Listesi yok. Satır Güncellendi")
+                    $scope.Update(pIndex);
+                }
+            });
+        }
+        else
+        {
+            $scope.Update(pIndex);
+        }
+
         angular.element('#MdlDuzenle').modal('hide');
     }
     $scope.BtnIskontoEkran = function(pTip)
@@ -2087,7 +2144,43 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                 $scope.FiyatEdit = $scope.StokHarListe[i].sth_tutar / $scope.StokHarListe[i].sth_miktar;
                 $scope.MiktarEdit = $scope.StokHarListe[i].sth_miktar;
 
-                $scope.Update(i);
+                let NetFiyat = ($scope.StokHarListe[i].sth_tutar / $scope.StokHarListe[i].sth_miktar) -
+                ($scope.StokHarListe[i].sth_iskonto1 / $scope.StokHarListe[i].sth_miktar) + ($scope.StokHarListe[i].sth_iskonto2 / $scope.StokHarListe[i].sth_miktar) +
+                ($scope.StokHarListe[i].sth_iskonto3 / $scope.StokHarListe[i].sth_miktar) + ($scope.StokHarListe[i].sth_iskonto4 / $scope.StokHarListe[i].sth_miktar) +
+                ($scope.StokHarListe[i].sth_iskonto5 / $scope.StokHarListe[i].sth_miktar) + ($scope.StokHarListe[i].sth_iskonto6 / $scope.StokHarListe[i].sth_miktar);
+                if(UserParam[ParamName].FiyatAzalt == 1)
+                {
+                    let Fiyat2 = 0
+                    let pIndex = i;
+                    db.GetPromiseTag($scope.Firma,'FiyatGetir',[$scope.StokHarListe[pIndex].sth_stok_kod,2,$scope.StokHarListe[pIndex].sth_cikis_depo_no],async function(FiyatData)
+                    {
+                        if(FiyatData.length > 0)
+                        {
+                            console.log(FiyatData)
+                            Fiyat2 = FiyatData[0].FIYAT;
+                            
+                            if(NetFiyat < Fiyat2)
+                            {
+                                alertify.alert("Fiyat düşürülemez");
+                                return;
+                            }
+                            else
+                            {
+                                $scope.Update(pIndex);
+                            }
+                        }
+                        else
+                        {
+                            alertify.alert("2.Fiyat Listesi yok. Satır Güncellendi")
+                            console.log($scope.StokHarListe)
+                            $scope.Update(pIndex);
+                        }
+                    });
+                }
+                else
+                {
+                    $scope.Update(pIndex);
+                }
             }
         }
         else
@@ -2099,11 +2192,45 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             $scope.StokHarListe[i].sth_iskonto3 = ($scope.StokHarListe[i].sth_tutar - ($scope.StokHarListe[i].sth_iskonto1 + $scope.StokHarListe[i].sth_iskonto2)) * ($scope.IskYuzde3 / 100);
             $scope.StokHarListe[i].sth_iskonto4 = ($scope.StokHarListe[i].sth_tutar - ($scope.StokHarListe[i].sth_iskonto1 + $scope.StokHarListe[i].sth_iskonto2 + $scope.StokHarListe[i].sth_iskonto3)) * ($scope.IskYuzde4 / 100);
             $scope.StokHarListe[i].sth_iskonto5 = ($scope.StokHarListe[i].sth_tutar - ($scope.StokHarListe[i].sth_iskonto1 + $scope.StokHarListe[i].sth_iskonto2 + $scope.StokHarListe[i].sth_iskonto3 + $scope.StokHarListe[i].sth_iskonto4)) * ($scope.IskYuzde5 / 100);
-            
+            console.log([$scope.StokHarListe[i].sth_iskonto1,$scope.StokHarListe[i].sth_iskonto2,$scope.StokHarListe[i].sth_iskonto3,$scope.StokHarListe[i].sth_iskonto4,$scope.StokHarListe[i].sth_iskonto5])
             $scope.FiyatEdit = $scope.StokHarListe[i].sth_tutar / $scope.StokHarListe[i].sth_miktar;
             $scope.MiktarEdit = $scope.StokHarListe[i].sth_miktar;
-
-            $scope.Update(i);
+            let NetFiyat = ($scope.StokHarListe[i].sth_tutar / $scope.StokHarListe[i].sth_miktar) -
+            ($scope.StokHarListe[i].sth_iskonto1 / $scope.StokHarListe[i].sth_miktar) + ($scope.StokHarListe[i].sth_iskonto2 / $scope.StokHarListe[i].sth_miktar) +
+            ($scope.StokHarListe[i].sth_iskonto3 / $scope.StokHarListe[i].sth_miktar) + ($scope.StokHarListe[i].sth_iskonto4 / $scope.StokHarListe[i].sth_miktar) +
+            ($scope.StokHarListe[i].sth_iskonto5 / $scope.StokHarListe[i].sth_miktar) + ($scope.StokHarListe[i].sth_iskonto6 / $scope.StokHarListe[i].sth_miktar);
+            console.log(NetFiyat)
+            if(UserParam[ParamName].FiyatAzalt == 1)
+            {
+                let Fiyat2 = 0
+                db.GetPromiseTag($scope.Firma,'FiyatGetir',[$scope.StokHarListe[i].sth_stok_kod,2,$scope.StokHarListe[i].sth_cikis_depo_no],async function(FiyatData)
+                {
+                    if(FiyatData.length > 0)
+                    {
+                        console.log(FiyatData)
+                        Fiyat2 = FiyatData[0].FIYAT;
+                        
+                        if(NetFiyat < Fiyat2)
+                        {
+                            alertify.alert("Fiyat düşürülemez");
+                            return;
+                        }
+                        else
+                        {
+                            $scope.Update(i);
+                        }
+                    }
+                    else
+                    {
+                        alertify.alert("2.Fiyat Listesi yok. Satır Güncellendi")
+                        $scope.Update(i);
+                    }
+                });
+            }
+            else
+            {
+                $scope.Update(i);
+            }
         }
 
         $("#MdlIskontoEkran").modal('hide');
@@ -2133,12 +2260,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             }
         });
     }
-    $scope.BtnDuzenle = function()
-    {   
-        $scope.MiktarEdit = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar;
-        $scope.FiyatEdit = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_tutar / $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar;
-        $("#MdlDuzenle").modal('show');
-    }
+    // $scope.BtnDuzenle = function()
+    // {   
+    //     $scope.MiktarEdit = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar;
+    //     $scope.FiyatEdit = $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_tutar / $scope.StokHarListe[$scope.IslemListeSelectedIndex].sth_miktar;
+    //     $("#MdlDuzenle").modal('show');
+    // }
     $scope.BtnEvrakGetirListele = async function()
     {   
 
@@ -2323,7 +2450,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                     {
                         if(item.KODU == $scope.DepoNo)
                             $scope.DepoAdi = item.ADI;
-                    });     
+                    });
                 });
                 db.GetData($scope.Firma,'StokBedenHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip,11],function(BedenData)
                 {   
@@ -2671,11 +2798,12 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         console.log($scope.Stok[0].FIYAT + "   " + $scope.Fiyat)
         if(UserParam[ParamName].FiyatAzalt == 1)
         {
-            console.log($scope.Stok[0].FIYAT + "   " + $scope.Fiyat)
-            if($scope.Stok[0].FIYAT < $scope.Fiyat)
+            console.log($scope.Stok[0].FIYAT2 + "   " + $scope.Fiyat)
+            if($scope.Stok[0].FIYAT < $scope.Stok[0].FIYAT2)
             {
-                alertify.alert("Fiyatı düşüremezsin")
+                alertify.alert("Fiyat düşürülemez")
                 $scope.Stok[0].FIYAT = $scope.Fiyat
+                $scope.MiktarFiyatValid();
                 return;
             }
         }
@@ -3078,6 +3206,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
         {
             $scope.ProjeListe = data; 
             $scope.Proje = UserParam[ParamName].Proje
+            console.log(data)
         });
         db.FillCmbDocInfo($scope.Firma,'CmbOdemePlanGetir',function(data)
         {
@@ -3303,7 +3432,6 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
             {
                 $scope.Stok[0].KDV = 0;
                 $scope.Stok[0].TOPTANVERGI1 = 0;
-                if(localStorage.mode == "false"){$scope.Stok[0].TOPTANVERGIPNTR = 1;}else{$scope.Stok[0].TOPTANVERGIPNTR = 0;}
             }
             $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
 
@@ -3402,6 +3530,7 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
     {
         $("#TbBelgeBilgisi").addClass('active');
         $("#TbMain").removeClass('active');
+        $("#TbCariSec").removeClass('active');
     }
     $scope.BarkodGirisClick = function(pData) 
     {   
@@ -4165,131 +4294,156 @@ function FaturaCtrl($scope,$window,$timeout,$location,db,$filter,$rootScope)
                     {
                         TmpStatus = 0;
                     }
-                    var TmpStokHar = TmpStokHarData.find(x => x.sth_fat_uid == TmpCariHarData[m].cha_Guid)
-                    if(TmpStokHar)
+                    if(TmpStatus == 0)
                     {
-                        console.log(Status)
-                        let TmpMaxFatSira = await db.GetPromiseTag($scope.Firma,'MaxStokHarSira',[TmpStokHar.sth_evrakno_seri,TmpStokHar.sth_evraktip])
-                        for (let m = 0; m < TmpStokHarData.length; m++)
+                        $("#MdlGonder").modal('hide');
+                        
+                        await db.ExecutePromiseTag($scope.Firma,'CariHarEvrDelete',[TmpCariHarData[m].cha_evrakno_seri,TmpMaxSira[0].MAXEVRSIRA,TmpCariHarData[m].cha_evrak_tip],function(data)
                         {
-                            let InsertData = 
-                            [
-                                TmpStokHarData[m].sth_create_user,
-                                TmpStokHarData[m].sth_lastup_user,
-                                TmpStokHarData[m].sth_firmano, //FIRMA NO
-                                TmpStokHarData[m].sth_subeno, //ŞUBE NO
-                                TmpStokHarData[m].sth_tarih,
-                                TmpStokHarData[m].sth_tip,
-                                TmpStokHarData[m].sth_cins, //CİNSİ
-                                TmpStokHarData[m].sth_normal_iade,
-                                TmpStokHarData[m].sth_evraktip,
-                                TmpStokHarData[m].sth_evrakno_seri,
-                                TmpMaxFatSira[0].MAXEVRSIRA,
-                                TmpStokHarData[m].sth_belge_no,
-                                TmpStokHarData[m].sth_belge_tarih,
-                                TmpStokHarData[m].sth_stok_kod,
-                                TmpStokHarData[m].sth_isk_mas1,
-                                TmpStokHarData[m].sth_isk_mas2,
-                                TmpStokHarData[m].sth_isk_mas3,
-                                TmpStokHarData[m].sth_isk_mas4,
-                                TmpStokHarData[m].sth_isk_mas5,
-                                TmpStokHarData[m].sth_isk_mas6,
-                                TmpStokHarData[m].sth_isk_mas7,
-                                TmpStokHarData[m].sth_isk_mas8,
-                                TmpStokHarData[m].sth_isk_mas9,
-                                TmpStokHarData[m].sth_isk_mas10,
-                                TmpStokHarData[m].sth_sat_iskmas1,
-                                TmpStokHarData[m].sth_sat_iskmas2,
-                                TmpStokHarData[m].sth_sat_iskmas3,
-                                TmpStokHarData[m].sth_sat_iskmas4,
-                                TmpStokHarData[m].sth_sat_iskmas5,
-                                TmpStokHarData[m].sth_sat_iskmas6,
-                                TmpStokHarData[m].sth_sat_iskmas7,
-                                TmpStokHarData[m].sth_sat_iskmas8,
-                                TmpStokHarData[m].sth_sat_iskmas9,
-                                TmpStokHarData[m].sth_sat_iskmas10,
-                                TmpStokHarData[m].sth_cari_cinsi,
-                                TmpStokHarData[m].sth_cari_kodu,
-                                TmpStokHarData[m].sth_isemri_gider_kodu,
-                                TmpStokHarData[m].sth_plasiyer_kodu,
-                                TmpStokHarData[m].sth_har_doviz_cinsi,
-                                TmpStokHarData[m].sth_har_doviz_kuru,
-                                TmpStokHarData[m].sth_alt_doviz_kuru,
-                                TmpStokHarData[m].sth_stok_doviz_cinsi,
-                                TmpStokHarData[m].sth_stok_doviz_kuru,
-                                TmpStokHarData[m].sth_miktar,
-                                TmpStokHarData[m].sth_miktar2,
-                                TmpStokHarData[m].sth_birim_pntr,
-                                TmpStokHarData[m].sth_tutar,
-                                TmpStokHarData[m].sth_iskonto1,
-                                TmpStokHarData[m].sth_iskonto2,
-                                TmpStokHarData[m].sth_iskonto3,
-                                TmpStokHarData[m].sth_iskonto4,
-                                TmpStokHarData[m].sth_iskonto5,
-                                TmpStokHarData[m].sth_iskonto6,
-                                TmpStokHarData[m].sth_masraf1,
-                                TmpStokHarData[m].sth_masraf2,
-                                TmpStokHarData[m].sth_masraf3,
-                                TmpStokHarData[m].sth_masraf4,
-                                TmpStokHarData[m].sth_vergi_pntr, 
-                                TmpStokHarData[m].sth_vergi, 
-                                TmpStokHarData[m].sth_masraf_vergi_pntr,
-                                TmpStokHarData[m].sth_masraf_vergi,
-                                TmpStokHarData[m].sth_odeme_op,
-                                TmpStokHarData[m].sth_aciklama,
-                                TmpStokHarData[m].sth_sip_uid,
-                                TmpStokHar.sth_fat_uid,
-                                TmpStokHarData[m].sth_giris_depo_no,
-                                TmpStokHarData[m].sth_cikis_depo_no,
-                                TmpStokHarData[m].sth_malkbl_sevk_tarihi,
-                                TmpStokHarData[m].sth_cari_srm_merkezi,
-                                TmpStokHarData[m].sth_stok_srm_merkezi,
-                                TmpStokHarData[m].sth_vergisiz_fl,
-                                TmpStokHarData[m].sth_adres_no,
-                                TmpStokHarData[m].sth_parti_kodu,
-                                TmpStokHarData[m].sth_lot_no,
-                                TmpStokHarData[m].sth_proje_kodu,
-                                TmpStokHarData[m].sth_exim_kodu,
-                                TmpStokHarData[m].sth_disticaret_turu,
-                                TmpStokHarData[m].sth_otvvergisiz_fl,
-                                TmpStokHarData[m].sth_oivvergisiz_fl,
-                                TmpStokHarData[m].sth_fiyat_liste_no,
-                                TmpStokHarData[m].sth_nakliyedeposu,
-                                TmpStokHarData[m].sth_nakliyedurumu,
-                            ];
-                            var TmpResult =  await db.ExecutePromiseTag($scope.Firma,'StokHarInsert',InsertData)
-
-                            if(typeof(TmpResult.result.err) != 'undefined')
+                            if(typeof(data.result.err) != 'undefined')
                             {
-                                TmpStatus = 0;
+                                console.log(data.result.err);
+                                localStorage.mode = 'false';
+                                return;
                             }
-                            let TmpBeden = TmpBedenData.find(x => x.BdnHar_Har_uid == TmpStokHarData[m].sth_Guid)
-                            if(typeof TmpBeden != 'undefined')
+                            else
                             {
-                                let InsertDataBdn =
-                                [
-                                    TmpBeden.BdnHar_create_user, // KULLANICI
-                                    TmpBeden.BdnHar_lastup_user, // KULLANICI
-                                    TmpBeden.BdnHar_Tipi, // BEDEN TİP
-                                    TmpResult.result.recordset[0].sth_Guid, // GUID
-                                    TmpBeden.BdnHar_BedenNo, // BEDEN NO
-                                    TmpBeden.BdnHar_HarGor,  // MİKTAR
-                                    0, // REZERVASYON MİKTAR
-                                    0  // REZERVASYON TESLİM MİKTAR
-                                ]
-                                let TmpBdnResult = await db.ExecutePromiseTag($scope.Firma,'BedenHarInsert',InsertDataBdn)
-                                if(typeof(TmpBdnResult.result.err) != 'undefined')
-                                {
-                                    alertify.alert("Bağlantı Problemi")
-                                    TmpStatus = 0;
-                                }
+                                alertify.alert("Gönderilen kayıt silindi tekrar gönderin!")
+                                alertify.alert("Aktarımda hata")
+                                localStorage.mode = 'false';
+                                return;
                             }
-                        }
+                        });
+                        return;
                     }
                     else
                     {
-                        console.log("GUID BULUNAMADI")
-                    }
+                        var TmpStokHar = TmpStokHarData.find(x => x.sth_fat_uid == TmpCariHarData[m].cha_Guid)
+                        if(TmpStokHar)
+                        {
+                            console.log(Status)
+                            let TmpMaxFatSira = await db.GetPromiseTag($scope.Firma,'MaxStokHarSira',[TmpStokHar.sth_evrakno_seri,TmpStokHar.sth_evraktip])
+                            for (let m = 0; m < TmpStokHarData.length; m++)
+                            {
+                                let InsertData = 
+                                [
+                                    TmpStokHarData[m].sth_create_user,
+                                    TmpStokHarData[m].sth_lastup_user,
+                                    TmpStokHarData[m].sth_firmano, //FIRMA NO
+                                    TmpStokHarData[m].sth_subeno, //ŞUBE NO
+                                    TmpStokHarData[m].sth_tarih,
+                                    TmpStokHarData[m].sth_tip,
+                                    TmpStokHarData[m].sth_cins, //CİNSİ
+                                    TmpStokHarData[m].sth_normal_iade,
+                                    TmpStokHarData[m].sth_evraktip,
+                                    TmpStokHarData[m].sth_evrakno_seri,
+                                    TmpMaxFatSira[0].MAXEVRSIRA,
+                                    TmpStokHarData[m].sth_belge_no,
+                                    TmpStokHarData[m].sth_belge_tarih,
+                                    TmpStokHarData[m].sth_stok_kod,
+                                    TmpStokHarData[m].sth_isk_mas1,
+                                    TmpStokHarData[m].sth_isk_mas2,
+                                    TmpStokHarData[m].sth_isk_mas3,
+                                    TmpStokHarData[m].sth_isk_mas4,
+                                    TmpStokHarData[m].sth_isk_mas5,
+                                    TmpStokHarData[m].sth_isk_mas6,
+                                    TmpStokHarData[m].sth_isk_mas7,
+                                    TmpStokHarData[m].sth_isk_mas8,
+                                    TmpStokHarData[m].sth_isk_mas9,
+                                    TmpStokHarData[m].sth_isk_mas10,
+                                    TmpStokHarData[m].sth_sat_iskmas1,
+                                    TmpStokHarData[m].sth_sat_iskmas2,
+                                    TmpStokHarData[m].sth_sat_iskmas3,
+                                    TmpStokHarData[m].sth_sat_iskmas4,
+                                    TmpStokHarData[m].sth_sat_iskmas5,
+                                    TmpStokHarData[m].sth_sat_iskmas6,
+                                    TmpStokHarData[m].sth_sat_iskmas7,
+                                    TmpStokHarData[m].sth_sat_iskmas8,
+                                    TmpStokHarData[m].sth_sat_iskmas9,
+                                    TmpStokHarData[m].sth_sat_iskmas10,
+                                    TmpStokHarData[m].sth_cari_cinsi,
+                                    TmpStokHarData[m].sth_cari_kodu,
+                                    TmpStokHarData[m].sth_isemri_gider_kodu,
+                                    TmpStokHarData[m].sth_plasiyer_kodu,
+                                    TmpStokHarData[m].sth_har_doviz_cinsi,
+                                    TmpStokHarData[m].sth_har_doviz_kuru,
+                                    TmpStokHarData[m].sth_alt_doviz_kuru,
+                                    TmpStokHarData[m].sth_stok_doviz_cinsi,
+                                    TmpStokHarData[m].sth_stok_doviz_kuru,
+                                    TmpStokHarData[m].sth_miktar,
+                                    TmpStokHarData[m].sth_miktar2,
+                                    TmpStokHarData[m].sth_birim_pntr,
+                                    TmpStokHarData[m].sth_tutar,
+                                    TmpStokHarData[m].sth_iskonto1,
+                                    TmpStokHarData[m].sth_iskonto2,
+                                    TmpStokHarData[m].sth_iskonto3,
+                                    TmpStokHarData[m].sth_iskonto4,
+                                    TmpStokHarData[m].sth_iskonto5,
+                                    TmpStokHarData[m].sth_iskonto6,
+                                    TmpStokHarData[m].sth_masraf1,
+                                    TmpStokHarData[m].sth_masraf2,
+                                    TmpStokHarData[m].sth_masraf3,
+                                    TmpStokHarData[m].sth_masraf4,
+                                    TmpStokHarData[m].sth_vergi_pntr, 
+                                    TmpStokHarData[m].sth_vergi, 
+                                    TmpStokHarData[m].sth_masraf_vergi_pntr,
+                                    TmpStokHarData[m].sth_masraf_vergi,
+                                    TmpStokHarData[m].sth_odeme_op,
+                                    TmpStokHarData[m].sth_aciklama,
+                                    TmpStokHarData[m].sth_sip_uid,
+                                    TmpStokHar.sth_fat_uid,
+                                    TmpStokHarData[m].sth_giris_depo_no,
+                                    TmpStokHarData[m].sth_cikis_depo_no,
+                                    TmpStokHarData[m].sth_malkbl_sevk_tarihi,
+                                    TmpStokHarData[m].sth_cari_srm_merkezi,
+                                    TmpStokHarData[m].sth_stok_srm_merkezi,
+                                    TmpStokHarData[m].sth_vergisiz_fl,
+                                    TmpStokHarData[m].sth_adres_no,
+                                    TmpStokHarData[m].sth_parti_kodu,
+                                    TmpStokHarData[m].sth_lot_no,
+                                    TmpStokHarData[m].sth_proje_kodu,
+                                    TmpStokHarData[m].sth_exim_kodu,
+                                    TmpStokHarData[m].sth_disticaret_turu,
+                                    TmpStokHarData[m].sth_otvvergisiz_fl,
+                                    TmpStokHarData[m].sth_oivvergisiz_fl,
+                                    TmpStokHarData[m].sth_fiyat_liste_no,
+                                    TmpStokHarData[m].sth_nakliyedeposu,
+                                    TmpStokHarData[m].sth_nakliyedurumu,
+                                ];
+                                var TmpResult =  await db.ExecutePromiseTag($scope.Firma,'StokHarInsert',InsertData)
+
+                                if(typeof(TmpResult.result.err) != 'undefined')
+                                {
+                                    TmpStatus = 0;
+                                }
+                                let TmpBeden = TmpBedenData.find(x => x.BdnHar_Har_uid == TmpStokHarData[m].sth_Guid)
+                                if(typeof TmpBeden != 'undefined')
+                                {
+                                    let InsertDataBdn =
+                                    [
+                                        TmpBeden.BdnHar_create_user, // KULLANICI
+                                        TmpBeden.BdnHar_lastup_user, // KULLANICI
+                                        TmpBeden.BdnHar_Tipi, // BEDEN TİP
+                                        TmpResult.result.recordset[0].sth_Guid, // GUID
+                                        TmpBeden.BdnHar_BedenNo, // BEDEN NO
+                                        TmpBeden.BdnHar_HarGor,  // MİKTAR
+                                        0, // REZERVASYON MİKTAR
+                                        0  // REZERVASYON TESLİM MİKTAR
+                                    ]
+                                    let TmpBdnResult = await db.ExecutePromiseTag($scope.Firma,'BedenHarInsert',InsertDataBdn)
+                                    if(typeof(TmpBdnResult.result.err) != 'undefined')
+                                    {
+                                        alertify.alert("Bağlantı Problemi")
+                                        TmpStatus = 0;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            console.log("GUID BULUNAMADI")
+                        }
+                    } 
                 }
                 localStorage.mode = 'false';
                 if (TmpStatus == 1)

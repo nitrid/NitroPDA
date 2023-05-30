@@ -54,6 +54,8 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.PlasiyerKodu = 0;
         $scope.SatirNo = "";
         $scope.CmbEvrakTip = "0";
+        $scope.RafKodu = "";
+        $scope.RafHarTip = 0;
         
         $scope.CDepoListe = [];
         $scope.GDepoListe = [];
@@ -91,7 +93,6 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.MiktarEdit = 0;
 
         $scope.TblLoading = true;
-       // $scope.EvrakTipChange();
         
     }
     function InitIslemGrid()
@@ -397,7 +398,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     {
         navigator.vibrate([100,100,200,100,300]);
     }
-    function InsertAfterRefresh(pData)
+    async function InsertAfterRefresh(pData)
     {    
         $scope.EvrakLock = true;
         $scope.BarkodLock = false;
@@ -409,7 +410,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         
         $window.document.getElementById("Barkod").focus();
     } 
-    function InsertData()
+    async function InsertData()
     {   
         var InsertData = 
         [
@@ -496,21 +497,30 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             0,   //NAKLİYEDEPO
             0   //NAKLİYEDURUM
         ];
-        db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
+        db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,async function(InsertResult)
         {   
+            console.log(InsertResult.result.recordset[0].sth_Guid)
             console.log(InsertResult.result.err)
+
             if(typeof(InsertResult.result.err) == 'undefined')
             {      
-                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(DepoSevkData)
+                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],async function(DepoSevkData)
                 {  
-                    
-                    console.log("2")
+                    $scope.DepoSevkListe = DepoSevkData
+
                     if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
                     {   
                         BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
-                    } 
-                    console.log("3")
-                    InsertAfterRefresh(DepoSevkData);   
+                    }
+                    if($scope.CmbEvrakTip == 1)
+                    {
+                        await $scope.RafInsUpdate(InsertResult.result.recordset[0].sth_Guid);
+                    }
+                    else
+                    {
+                        await InsertAfterRefresh(DepoSevkData);  
+                    }
+                    
                     $scope.InsertLock = false;
                     if(UserParam.Sistem.Titresim == 1)
                     {
@@ -568,7 +578,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                 {
                     for(i = 0;i < $scope.DepoSevkListe.length;i++)
                     {   
-                        if($scope.Stok[0].PARTI != "" && $scope.Stok[0].LOT != "")
+                        if($scope.Stok[0].PARTI != "")
                         {
                             if($scope.Stok[0].PARTI == $scope.DepoSevkListe[i].sth_parti_kodu && $scope.Stok[0].LOT == $scope.DepoSevkListe[i].sth_lot_no)
                             {
@@ -669,7 +679,10 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
                                 },250)
                         }
                     }
-
+                    if($scope.CmbEvrakTip == "1")
+                    {
+                        $("#MdlRaf").modal('show');
+                    }
                     if($scope.OtoEkle == true)
                     {
                         $scope.Insert()
@@ -695,6 +708,19 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     {
         db.ExecuteTag($scope.Firma,'StokHarUpdate',pData.Param,function(InsertResult)
         {   
+            var RafUrunUpdate =
+            [
+                RafData[0].RAF_KODU,
+                RafData[0].MIKTAR,
+                RafData[0].URUN_KODU,
+                RafData[0].PARTI,
+                RafData[0].LOT,
+            ];
+            console.log(RafUrunUpdate)
+            db.ExecuteTag($scope.Firma,'RafUrunUpdate',RafUrunUpdate,async function(InsertResult)
+            {
+                
+            });
             if(typeof(InsertResult.result.err) == 'undefined')
             {   
                 db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(DepoSevkData)
@@ -792,6 +818,11 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
 
         $scope.TxtParti = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].PARTI;
         $scope.TxtLot = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].LOT;
+        if(UserParam.Sistem.PartiLotMiktarKontrol == 1 && $scope.Stok[0].LOT != 0)
+        {   
+            $scope.Miktar = $scope.PartiLotListe[$scope.PartiLotListeSelectedIndex].MIKTAR;
+            $scope.Stok[0].TOPMIKTAR = $scope.Miktar * $scope.Stok[0].CARPAN;
+        }
         $scope.PartiLotListe = [];
         
         $('#MdlPartiLot').modal('hide');
@@ -1047,7 +1078,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             return 'Depolar Arası Satış';
         } 
     }
- /* $scope.EvrakTipChange = function()
+    $scope.EvrakTipChange = async function()
     {
         if($scope.CmbEvrakTip == 0)
         {   
@@ -1055,14 +1086,17 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             $scope.Cins = 6;
             $scope.NormalIade = 0;
         }
-        else if($scope.CmbEvrakTip == 15)
+        else if($scope.CmbEvrakTip == 1)
         {
             $scope.Tip = 2;
             $scope.Cins = 6;
             $scope.NormalIade = 0;
         }
-        db.MaxSira($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data){$scope.Sira = data});
-    } */
+        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
+        {
+            $scope.Sira = data
+        });
+    } 
     $scope.EvrakGetir = function ()
     {   
         db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.EvrakTip],function(data)
@@ -1269,20 +1303,44 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         
         BarkodFocus();
     }
-    $scope.SatirDelete = function()
+    $scope.SatirDelete = async function()
     {
         alertify.okBtn('Evet');
         alertify.cancelBtn('Hayır');
 
         alertify.confirm('Bu Belgeyi Satırı İstediğinize Eminmisiniz ?', 
-        function()
+        async function()
         { 
             if($scope.IslemListeSelectedIndex > -1)
             {
                 if(UserParam.DepoSevk.EvrakSil == 0)
                 {
-                    db.ExecuteTag($scope.Firma,'StokHarSatirDelete',[$scope.DepoSevkListe[$scope.IslemListeSelectedIndex].sth_Guid],function(data)
+                    let Guid = $scope.DepoSevkListe[$scope.IslemListeSelectedIndex].sth_Guid 
+                    await db.ExecutePromiseTag($scope.Firma,'StokHarSatirDelete',[Guid],async function(data)
                     {
+                       await db.GetData($scope.Firma,'RafHarGetir',[Guid],async function(RafData)
+                        {
+                            await db.ExecutePromiseTag($scope.Firma,'RafSatirDelete',[Guid],async function(data)
+                            {
+                                if(RafData[0].HAR_TIP == 0)
+                                {
+                                    RafData[0].MIKTAR = RafData[0].MIKTAR * -1
+                                }
+                                var RafUrunUpdate =
+                                [
+                                    RafData[0].RAF_KODU,
+                                    RafData[0].MIKTAR,
+                                    RafData[0].URUN_KODU,
+                                    RafData[0].PARTI,
+                                    RafData[0].LOT,
+                                ];
+                                console.log(RafUrunUpdate)
+                                db.ExecuteTag($scope.Firma,'RafUrunUpdate',RafUrunUpdate,async function(InsertResult)
+                                {
+                                    
+                                });
+                            });
+                        });
                         if(typeof(data.result.err) == 'undefined')
                         {
                             db.ExecuteTag($scope.Firma,'BedenHarDelete',[$scope.DepoSevkListe[$scope.IslemListeSelectedIndex].sth_Guid,11],function(data)
@@ -1348,6 +1406,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.Seri = UserParam.DepoSevk.Seri;
         $scope.BelgeNo = UserParam.DepoSevk.BelgeNo;
         $scope.CmbEvrakTip = UserParam.DepoSevk.EvrakTip;
+        $scope.EvrakTipChange();
 
         $scope.Stok = 
         [
@@ -1392,10 +1451,6 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         {
             $scope.ProjeListe = data; 
             $scope.Proje = UserParam.DepoSevk.Proje
-        });
-        await db.MaxSiraPromiseTag($scope.Firma,'MaxStokHarSira',[$scope.Seri,$scope.EvrakTip],function(data)
-        {
-            $scope.Sira = data
         });
         
         BarkodFocus();
@@ -1603,26 +1658,26 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
     $scope.BtnGonder = function()
     {
         db.GetData($scope.Firma,'StokHareketGonderGetir',[2],function(Data)
+        {
+            $scope.StokHareketGonderListe = Data;
+            console.log(Data)
+            if($scope.StokHareketGonderListe.length > 0)
             {
-                $scope.StokHareketGonderListe = Data;
-                console.log(Data)
-                if($scope.StokHareketGonderListe.length > 0)
-                {
-                    $scope.Loading = false;
-                    $scope.TblLoading = true;
-                    $("#TblStokHarListe").jsGrid({data : $scope.StokHareketGonderListe});
-                    $("#TblStokHarListe").jsGrid({pageIndex: true});
-                    $("#MdlGonder").modal('show');
-                }
-                else
-                {
-                    alertify.alert("Sipariş Bulunamadı");
-                    $scope.Loading = false;
-                    $scope.TblLoading = true;
-                    $("#TblStokHarListe").jsGrid({data : $scope.StokHareketGonderListe});
-                    $("#TblStokHarListe").jsGrid({pageIndex: true});
-                }   
-            });
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStokHarListe").jsGrid({data : $scope.StokHareketGonderListe});
+                $("#TblStokHarListe").jsGrid({pageIndex: true});
+                $("#MdlGonder").modal('show');
+            }
+            else
+            {
+                alertify.alert("Sipariş Bulunamadı");
+                $scope.Loading = false;
+                $scope.TblLoading = true;
+                $("#TblStokHarListe").jsGrid({data : $scope.StokHareketGonderListe});
+                $("#TblStokHarListe").jsGrid({pageIndex: true});
+            }   
+        });
     }
     $scope.EvrakGonder = async function()
     {
@@ -1788,5 +1843,109 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             alertify.okBtn("Tamam");
             alertify.alert("Bu menü sadece offline mod'da çalışır !");
         }
+    }
+    // RAF SİSTEMİ
+    $scope.RafEkle = function()
+    {
+        db.GetData($scope.Firma,'RafGetir',[$scope.RafKodu],function(RafData)
+        {
+            $scope.RafListe = RafData;
+            if ($scope.RafListe.length > 0)
+            {
+                $scope.RafListe.forEach(item => 
+                {
+                    if(item.DEPO == $scope.GDepo)
+                    {
+                        $scope.RafHarTip = 0;
+                    }
+                    else if(item.DEPO == $scope.CDepo)
+                    {
+                        $scope.RafHarTip = 1;
+                    }
+                    else
+                    {
+                        alertify.alert("Öyle bir depo kaydı yok");
+                    }
+                });
+                $("#MdlRaf").modal('hide');
+            }
+            else
+            {
+                $scope.RafKodu = "";
+                $("#MdlRaf").modal('hide');
+                alertify.alert("Raf Bulunamadı")
+            }
+        });
+    }
+    $scope.RafInsUpdate = async function(pGuid)
+    {
+        var RafHarInsert = 
+        [
+            pGuid,
+            UserParam.MikroId,
+            UserParam.MikroId,
+            $scope.RafHarTip,
+            $scope.Stok[0].KODU,
+            $scope.RafKodu,
+            $scope.Stok[0].PARTI,
+            $scope.Stok[0].LOT,
+            $scope.Miktar * $scope.Stok[0].CARPAN,
+        ];
+        console.log(RafHarInsert)
+        db.ExecuteTag($scope.Firma,'RafHareketleriInsert',RafHarInsert,function(InsertResult)
+        {
+            let RafMiktar = "";
+            if($scope.RafHarTip == 1)
+            {
+                RafMiktar = ($scope.Miktar * $scope.Stok[0].CARPAN) * -1;
+            }
+            else
+            {
+                RafMiktar = $scope.Miktar * $scope.Stok[0].CARPAN;
+            }
+            console.log([$scope.Stok[0].KODU,$scope.Stok[0].PARTI,$scope.Stok[0].LOT])
+            db.GetData($scope.Firma,'RafUrunBilgiGetir',[$scope.Stok[0].KODU,$scope.Stok[0].PARTI,$scope.Stok[0].LOT,$scope.RafKodu],function(RafUrunData)
+            {
+                $scope.RafUrunListe = RafUrunData;
+                if(RafUrunData.length == 0)
+                {
+                    var RafUrunInsertData = 
+                    [
+                        pGuid,
+                        UserParam.MikroId,
+                        UserParam.MikroId,
+                        $scope.RafKodu,
+                        $scope.Miktar * $scope.Stok[0].CARPAN,
+                        $scope.Stok[0].KODU,
+                        $scope.Stok[0].PARTI,
+                        $scope.Stok[0].LOT,
+                    ];
+                    console.log(RafUrunInsertData)
+                    db.ExecuteTag($scope.Firma,'RafUrunBilgiInsert',RafUrunInsertData,async function(InsertResult)
+                    {
+                        await InsertAfterRefresh($scope.DepoSevkListe);   
+                        $scope.RafKodu = ""
+                    });
+                }
+                else
+                {
+                    //UPDATE
+                    var RafUrunUpdate = 
+                    [
+                        $scope.RafKodu,
+                        RafMiktar,
+                        $scope.Stok[0].KODU,
+                        $scope.Stok[0].PARTI,
+                        $scope.Stok[0].LOT,
+                    ];
+                    console.log(RafUrunUpdate)
+                    db.ExecuteTag($scope.Firma,'RafUrunUpdate',RafUrunUpdate,async function(InsertResult)
+                    {
+                        await InsertAfterRefresh($scope.DepoSevkListe);
+                        $scope.RafKodu = "";
+                    });
+                }
+            });
+        });
     }
 }

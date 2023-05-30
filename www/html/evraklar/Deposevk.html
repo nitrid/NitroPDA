@@ -14,6 +14,7 @@
                         <div class="col-8 px-1">
                             <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
                                 <option value="0">Depolar Arası Sevk</option>
+                                <option value="1">Raflı Depo Sevk</option>
                                 <!-- <option value="15">Depolar Arası Satış</option> -->
                             </select>
                         </div>
@@ -463,10 +464,10 @@
                     <h4 class="modal-title">Düzenle</h4>
                 </div>
                 <div class="modal-body">
-                        <div class="form-group row my-5">
-                            <label class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>Toplam :</b></span></div></label>
-                            <input type="text" class="form-control col-8" ng-model="MiktarEdit">
-                        </div>
+                    <div class="form-group row my-5">
+                        <label class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>Toplam :</b></span></div></label>
+                        <input type="text" class="form-control col-8" ng-model="MiktarEdit">
+                    </div>
                     <div class="row px-10">
                         <button type="submit" class="btn btn-round btn-primary btn-block col-12" ng-click="BtnDuzenleKaydet(this.IslemListeSelectedIndex)">Kaydet</button>
                     </div>
@@ -490,6 +491,31 @@
                     </div>
                     <div class="row py-1 px-1">
                         <button class="btn btn-round btn-block btn-primary h-50" ng-click="EvrakGonder()">Gönder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Raf Modal -->
+    <div class="modal fade" id="MdlRaf" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Raf Ekle</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row my-5">
+                        <label class="form-control-label col-3 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>Raf Kodu :</b></span></div></label>
+                        <input type="text" class="form-control col-8" ng-model="RafKodu">
+                    </div>
+                    <!-- <div class="row py-1 px-1">
+                        <div id="TblRafListe"></div>
+                    </div> -->
+                    <div class="row py-1 px-1">
+                        <button class="btn btn-round btn-block btn-primary " ng-click="RafEkle()">Ekle</button>
                     </div>
                 </div>
             </div>

@@ -2,6 +2,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
 {   
     let FiyatDegisSelectedRow = null;
     let StokSelectedRow = null;
+    let PaletSelectedRow = null;
     let EklenecekStokSelectedRow= null;
     let BarkodSelectedRow = null;
     let PartiLotSelectedRow = null;
@@ -43,6 +44,13 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.Reyon = "";
         $scope.ReyonStok = "";
         $scope.MaxSkt = "";
+        $scope.PaletKodu = "";
+        $scope.PaletBarkod = "";
+        $scope.PaletGuid = "";
+        $scope.PaletStokMiktar = 0;
+        $scope.PaletMiktar = 0;
+        $scope.PltBrutAgr = 0;
+        $scope.PltNetAgr = 0;
 
         $scope.BasimTipi = 0;
         $scope.BasimAdet = 1;
@@ -62,6 +70,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $scope.BarkodListe = [];
         $scope.SktGetirListe = [];
         $scope.PartiLotListe = [];
+        $scope.PaletListe = [];
 
         $scope.Special = UserParam.FiyatGor.Special;
         $scope.SpecialListe = [];
@@ -324,6 +333,56 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             }
         });
     }
+    function InitPaletGrid()
+    {
+        $("#TblPalet").jsGrid
+        (   {
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : $scope.PaletListe,
+            paging : true,
+            pageSize: 10,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: [
+                {
+                    name: "PALET_KOD",
+                    title: "PALET KODU",
+                    type: "text",
+                    align: "center",
+                    width: 125
+                }, 
+                {
+                    name: "STOK_KOD",
+                    title: "STOK KODU",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+                {
+                    name: "STOK_BARKOD",
+                    title: "BARKODU",
+                    type: "text",
+                    align: "center",
+                    width: 300
+                },
+                {
+                    name: "MIKTAR",
+                    title: "MIKTAR",
+                    type: "text",
+                    align: "center",
+                    width: 300
+                }
+            ],
+            rowClick: function(args)
+            {
+                $scope.PaletListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
     function InitBarkodOlusturGrid()
     {
         $("#TblBarkodStok").jsGrid
@@ -418,6 +477,13 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     width: 200
                 }, 
                 {
+                    name: "BARKOD",
+                    title: "BARKOD",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+                {
                     name: "MIKTAR",
                     title: "MIKTAR",
                     type: "number",
@@ -482,8 +548,12 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                 if(BarkodData.length > 0)
                 {          
                            
-                    $scope.Stok = BarkodData;                    
-                    $scope.Barkod = $scope.Stok[0].BARKOD;
+                    $scope.Stok = BarkodData;   
+                    console.log(BarkodData)
+                    if($scope.Stok[0].BARKOD != "")
+                    {
+                        $scope.Barkod = $scope.Stok[0].BARKOD;
+                    }
                     console.log($scope.Barkod)
                     $scope.StokKodu = $scope.Stok[0].KODU;
                     $scope.BarkodLock = true;
@@ -640,7 +710,6 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                                 value : [$scope.StokKodu]
                             }
                         }
-                        
                         db.GetDataQuery(BarkodGetir,function(data)
                         {
                             if(data.length > 0)
@@ -650,7 +719,6 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     }
                     if($scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
                     {
-                        console.log("SELAMLAR")
                         if($scope.Stok[0].PARTI !='')
                         {
                             db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,'',0],function(data)
@@ -845,7 +913,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     db : '{M}.' + $scope.Firma,
                     query:  
                     "SELECT SUBSTRING(CONVERT(nvarchar,GETDATE(),112),3,4) + " + 
-                    "ISNULL(MAX(SUBSTRING(CONVERT(nvarchar,pl_partikodu,112),5,10)),'000') " +
+                    "ISNULL(MAX(SUBSTRING(CONVERT(nvarchar,pl_partikodu,112),5,15)),'000000') " +
                     "+ 1 AS PARTIKOD FROM PARTILOT WHERE pl_stokkodu = @STOKKOD AND pl_partikodu LIKE (@PARTITARIH + '%' ) ORDER BY MAX(pl_partikodu) DESC ",
                     param:  ['STOKKOD','PARTITARIH'],
                     type:   ['string|25','string|25'],
@@ -962,7 +1030,11 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     {   
         console.log($scope.StokKodu)
         console.log($scope.Barkod.length)
-        if($scope.Barkod.length > 0)
+        if($scope.BarkodInsert != "")
+        {
+            $scope.Barkod = $scope.BarkodInsert
+        }
+        if($scope.Barkod.length > 0 || $scope.StokKodu.length > 0)
         {
             var InsertData = 
             [
@@ -988,7 +1060,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             {   
                 console.log(InsertData)
                 db.GetData($scope.Firma,'EtiketGetir',[$scope.Seri,$scope.Sira],function(EtiketData)
-                { 
+                {
                     if(typeof(InsertResult.result.err) == 'undefined')
                     {   
                         $scope.Stok = [];
@@ -998,10 +1070,10 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                         $scope.Fiyat = "";
                         $scope.Barkod = "";
                         $scope.SonAlis = "";
-                        $scope.SonAlisDoviz = ""
+                        $scope.SonAlisDoviz = "";
                         $scope.BarkodLock = false;
                         BarkodFocus();
-                        
+
                         InsertAfterRefresh(EtiketData);
                         alertify.alert("Etiket Yazdırıldı.", function (pUyari) {
                             BarkodFocus();
@@ -1029,9 +1101,14 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     {
         $timeout( function(){$window.document.getElementById("Barkod").focus();},100);
     }
+    function PaletBarkodFocus()
+    {
+        $timeout( function(){$window.document.getElementById("PaletBarkod").focus();},100);
+    }
     function InsertAfterRefresh(pData)
     {   
         $scope.EtiketListe = pData;
+        $scope.BarkodInsert = "";
         $("#TblIslem").jsGrid({data : $scope.EtiketListe});    
         $scope.BtnTemizle();
         $window.document.getElementById("Barkod").focus();
@@ -1201,7 +1278,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             }
            
         });
-    },
+    }
     $scope.BtnBarkodEkleGridGetir = function()
     {
         let Kodu = '';
@@ -1462,6 +1539,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
     }
     $scope.YeniEvrak = function()
     {
+        
         Init();
         InitIslemGrid();
         InitDepoMiktarGrid();
@@ -1472,6 +1550,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         InitBarkodOlusturGrid()
         InitBarkodlarGrid();
         InitPartiLotGrid();
+        InitPaletGrid();
         
         if(UserParam.FiyatGor.FiyatGizle == "1")
         {
@@ -1505,10 +1584,15 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     $scope.DepoAdi = item.ADI;
             });          
         });
+        db.GetPromiseTag($scope.Firma,'PaletBarkodSira',[],function(data)
+        {
+            console.log(data)
+            $scope.PaletKodu = data[0].PALET_KOD
+        });
         
-       // db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(data){$scope.DepoListe = data; $scope.DepoNo = UserParam.FiyatGor.DepoNo});
-        //db.MaxSiraPromiseTag($scope.Firma,'MaxEtiketSira',[$scope.Seri],function(data){$scope.Sira = data});
-        $scope.Sira = 1;
+        // db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(data){$scope.DepoListe = data; $scope.DepoNo = UserParam.FiyatGor.DepoNo});
+        db.MaxSiraPromiseTag($scope.Firma,'MaxEtiketSira',[$scope.Seri],function(data){$scope.Sira = data});
+        //$scope.Sira = 1;
     }
     $scope.DepoChange = function()
     {
@@ -1556,6 +1640,15 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $("#TbStok").addClass('active');
         $("#TbMain").removeClass('active');
         $("#TbPDF").removeClass('active');
+        $("#TbPalet").removeClass('active');
+    }
+    $scope.PaletClick = async function() 
+    {
+        $("#TbPalet").addClass('active');
+        $("#TbStok").removeClass('active');
+        $("#TbMain").removeClass('active');
+        $("#TbPDF").removeClass('active');
+        PaletBarkodFocus();
     }
     $scope.PartiLotListeRowClick = function(pIndex,pItem,pObj)
     {   
@@ -1564,12 +1657,21 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
         PartiLotSelectedRow = $row;
         $scope.PartiLotListeSelectedIndex = pIndex;
+        $scope.BarkodInsert = $scope.PartiLotListe[pIndex].BARKOD;
     }
     $scope.PDFClick = function()
     {
         $("#TbPDF").addClass('active');
         $("#TbMain").removeClass('active');
         $("#TbStok").removeClass('active');
+        $("#TbPalet").removeClass('active');
+    }
+    $scope.MainClick = function()
+    {
+        $("#TbMain").addClass('active');
+        $("#TbPDF").removeClass('active');
+        $("#TbStok").removeClass('active');
+        $("#TbPalet").removeClass('active');
     }
     $scope.Insert = function()
     {
@@ -1683,7 +1785,7 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             {  //BİRİMSİZ ÜRÜNLERDE BİRİMİ ADETMİŞ GİBİ DAVRANIYOR. RECEP KARACA 23.09.2019
                 $scope.EklenecekBirimPntr = 1;
                 $scope.EklenecekBirim = 'ADET';
-                $scopeEklenecekCarpan = 1;
+                $scope.EklenecekCarpan = 1;
             }
         });
     }
@@ -1722,12 +1824,16 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             StokBarkodGetir($scope.Barkod)
             $("#MdlBarkodEkle").modal('hide');
             $("#MdlBarkodEkle").hide();
-
-
         });
     }
     $scope.BtnPartiLotGetir = function()
     {
+        for (let i = 0; i < $scope.TxtSayiArttir; i++) 
+        {            
+            $scope.TxtParti = $scope.TxtParti + 1
+            console.log($scope.TxtParti)
+        }
+
         if(isNaN($scope.TxtLot) || $scope.TxtLot == "")
         $scope.TxtLot = 0;
         console.log([$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot])
@@ -1817,7 +1923,11 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
             let Yil = $scope.Tarih2.substring(7,8)
             let TarihY = GunAy + "" + Yil;
             console.log(GunAy,Yil, GunAy + "" + Yil)
-            $scope.BarkodInsert = StokKodu + "" + $scope.TxtParti + "" +  Lot + "" + TarihY;
+            if($scope.BarkodInsert != "")
+            {
+                $scope.BarkodInsert = StokKodu + "" + $scope.TxtParti + "" +  Lot + "" + TarihY;
+                $scope.BarkodInsert = $scope.TxtParti
+            }
             console.log($scope.BarkodInsert)
             db.GetData($scope.Firma,'BarkodGetir',[$scope.BarkodInsert,0],function(BarkodData)
             {
@@ -1938,5 +2048,234 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
         {
             $scope.TxtLot = 1;
         }
+    }
+    $scope.PaletListeRowClick = function(pIndex,pItem,pObj)
+    {
+        console.log(13231)
+        if ( PaletSelectedRow ) { PaletSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        var $row = pObj.rowByItem(pItem);
+        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+        PaletSelectedRow = $row;
+        $scope.PaletListeSelectedIndex = pIndex;
+        $scope.PaletBarkod = $scope.PaletListe[pIndex].STOK_BARKOD;
+        $scope.PaletGuid = $scope.PaletListe[pIndex].GUID;
+        $scope.PaletStokMiktar = $scope.PaletListe[pIndex].MIKTAR;
+    }
+    $scope.BtnPaletBarkodEkle = async function()
+    {
+        let BarkodListe = [];
+
+        BarkodListe = await db.GetPromiseTag($scope.Firma,'PaletBarkodStokGetir',[$scope.PaletBarkod])
+        console.log(BarkodListe)
+
+        if(BarkodListe.length > 0)
+        {
+            alertify.alert("Bu barkod " + BarkodListe[0].PALET_KOD + " adlı Palette mevcut" ,function()
+            {
+                $("#TblPalet").jsGrid({data : $scope.PaletListe});
+                PaletBarkodFocus();
+            })
+            return;
+        }
+        db.GetData($scope.Firma,'BarkodGetir',[$scope.PaletBarkod,0],function(BarkodData)
+        {
+            if(BarkodData.length == 0)
+            {
+                alertify.alert("Okutmuş olduğunuz barkod bulunamadı",function()
+                {
+                    $("#TblPalet").jsGrid({data : $scope.PaletListe});
+                    PaletBarkodFocus();
+                })
+            }
+            else if($scope.PaletKodu.toUpperCase() == $scope.PaletBarkod)
+            {
+                alertify.alert("Barkod ve Palet Kodu aynı olamaz!");
+                
+            }
+            else
+            {
+                var InsertData = 
+                [
+                    UserParam.MikroId,
+                    UserParam.MikroId,
+                    $scope.PaletKodu.toUpperCase(),
+                    BarkodData[0].KODU,
+                    $scope.PaletBarkod,
+                    BarkodData[0].PARTILOTMIKTAR,
+                    0, // DURUM
+                    $scope.PltBrutAgr,
+                    $scope.PltNetAgr
+                ];
+                db.ExecuteTag($scope.Firma,'PaletBarkodInsert',InsertData,function(InsertResult)
+                {
+                    $scope.PaletMiktar = $scope.PaletMiktar + BarkodData[0].PARTILOTMIKTAR;
+                    //YAZDIRMA İÇİN
+                    $scope.BasimAdet = $scope.PaletMiktar;
+                    $scope.StokKodu = $scope.PaletKodu.toUpperCase();
+                    $scope.Barkod = $scope.PaletKodu.toUpperCase();
+                    db.GetData($scope.Firma,'PaletBarkodGetir',[$scope.PaletKodu.toUpperCase()],function(data)
+                    {
+                        console.log(data)
+                        $scope.PaletListe = data;
+                        $("#TblPalet").jsGrid({data : $scope.PaletListe});
+                        PaletBarkodFocus();
+                    });
+                    $scope.PaletBarkod = "";
+                });
+            }
+        });
+    }
+    $scope.PaletBarkodGetir = async function(pData)
+    {
+        if($scope.PaletListe.length > 0)
+        {
+            if($scope.PaletListe[0].PALET_KOD == $scope.PaletKodu.toUpperCase())
+            {
+                if(pData == 1)
+                {
+                    return;
+                }
+            }
+        }
+        db.GetData($scope.Firma,'PaletBarkodGetir',[$scope.PaletKodu.toUpperCase()],function(data)
+        {
+            console.log(data)
+            $scope.PaletListe = data;
+            if($scope.PaletListe.length > 0)
+            {
+                $scope.PaletMiktar = db.SumColumn($scope.PaletListe,"MIKTAR");
+                $scope.PltBrutAgr = $scope.PaletListe[0].BRUTAGR;
+                $scope.PltNetAgr = $scope.PaletListe[0].NETAGR;
+                $scope.BasimAdet = $scope.PaletMiktar;
+                $scope.StokKodu = $scope.PaletKodu.toUpperCase();
+                $scope.Barkod = $scope.PaletKodu.toUpperCase();
+                if(pData == 1)
+                {
+                    alertify.alert("Palet Koduna ait kayıtlar bulundu",function()
+                    {
+                        $("#TblPalet").jsGrid({data : $scope.PaletListe});
+                        PaletBarkodFocus();
+                    })
+                }
+                else
+                {
+                    $("#TblPalet").jsGrid({data : $scope.PaletListe});
+                }
+            }
+            else
+            {
+                $("#TblPalet").jsGrid({data : $scope.PaletListe});
+            }
+            PaletBarkodFocus();
+        });
+    }
+    $scope.BtnPaletBarkodSil = function()
+    {
+        if($scope.PaletListeSelectedIndex > -1)
+        {
+            alertify.okBtn("Evet");
+            alertify.cancelBtn("Hayır");
+            alertify.confirm("Seçili satırı silmek istediğinize emin misiniz ?",function()
+            {
+                db.ExecuteTag($scope.Firma,'PaletBarkodSil',[$scope.PaletGuid],function(InsertResult)
+                {
+                    $scope.PaletMiktar = $scope.PaletMiktar - $scope.PaletStokMiktar;
+                    $scope.PaletBarkod = "";
+                    $scope.PaletGuid = "";
+                    $scope.PaletListeSelectedIndex = -1;
+                    $scope.PaletBarkodGetir(0)
+                });
+            },function(){})
+        }
+        else
+        {
+            alertify.alert("Lütfen Silmek İstediğiniz Satırı Seçiniz")
+        }
+    }
+    $scope.YeniPaletKod = function()
+    {
+        db.GetPromiseTag($scope.Firma,'PaletBarkodSira',[],function(data)
+        {
+            console.log(data)
+            PaletBarkodFocus();
+            $scope.PaletKodu = data[0].PALET_KOD
+            $scope.PaletMiktar = 0;
+            $scope.PaletListe = [];
+            $("#TblPalet").jsGrid({data : $scope.PaletListe});
+        });
+    }
+    $scope.BtnPaletEnter = function(keyEvent)
+    {
+        if(keyEvent.which === 13)
+        {
+            $scope.BtnPaletBarkodEkle();
+        }
+    }
+    $scope.BtnPaletYazdir = async function()
+    {
+        alertify.okBtn("Evet");
+        alertify.cancelBtn("Hayır");
+        alertify.confirm("Yazdırmak istediğinize emin misiniz?",
+        async function()
+        {
+            //UPDATE TARAFI
+            for (let i = 0; i < $scope.PaletListe.length; i++) 
+            {
+                console.log(i + 1 + ". yazdırma")
+                await $scope.NetBrutUpd(i)
+            }
+            //YAZDIRMA TARAFI
+            console.log("Insert tarafı")
+            await $scope.Insert()
+        },
+        function(){})
+    }
+    $scope.NetBrutUpd =  function(i)
+    {
+        return new Promise(async resolve => 
+        { 
+            let BrtAgirlik = $scope.PltBrutAgr / $scope.PaletListe.length
+            let NetAgirlik = $scope.PltNetAgr / $scope.PaletListe.length;
+            console.log(1)
+            var TmpQuery = 
+            {
+                db : '{M}.' + $scope.Firma,
+                query:  "UPDATE BEKA_PALET_TANIMLARI SET BRUTAGR = @sth_brutagirlik, NETAGR = @sth_netagirlik WHERE PALET_KOD = @PALETKOD ",
+                param:  ['sth_brutagirlik','sth_netagirlik','PALETKOD'],
+                type:   ['float','float','string|25'],
+                value:  [$scope.PltBrutAgr,$scope.PltNetAgr,$scope.PaletListe[0].PALET_KOD]
+            }
+            console.log(2)
+            await db.ExecutePromiseQuery(TmpQuery,async function(data)
+            {   
+                console.log(3)
+                console.log(data)
+                resolve();
+            });
+            await db.GetPromiseTag($scope.Firma,'BarkodGetir',[$scope.PaletListe[i].STOK_BARKOD,0],async function(BarkodData)
+            {
+                if(BarkodData.length > 0)
+                {
+                    var TmpQuery = 
+                    {
+                        db : '{M}.' + $scope.Firma,
+                        query:  "UPDATE STOK_HAREKETLERI SET sth_brutagirlik = @sth_brutagirlik, sth_netagirlik = @sth_netagirlik WHERE sth_parti_kodu = @sth_parti_kodu AND " +
+                        "sth_tip = 0 AND sth_cins = 7 AND sth_evraktip = 12 ",
+                        param:  ['sth_brutagirlik','sth_netagirlik','sth_parti_kodu'],
+                        type:   ['float','float','string|25'],
+                        value:  [BrtAgirlik,NetAgirlik,BarkodData[0].PARTI]
+                    }
+                    console.log(2)
+                    await db.ExecutePromiseQuery(TmpQuery,async function(data)
+                    {   
+                        console.log(3)
+                        console.log(data)
+                        resolve();
+                    });
+                }
+            });
+            console.log(5)
+        })
+
     }
 }

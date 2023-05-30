@@ -58,9 +58,9 @@ function AnaSayfaCtrl($scope,$window,$timeout,db)
             {
                 if(MenuData.length > 0)
                 {
-                    $scope.Loading = false;
+                    MenuOlustur(JSON.parse(MenuData));
                 }
-                MenuOlustur(JSON.parse(MenuData));
+                $scope.Loading = false;
       
                // $scope.AnimLoading = false;
             });

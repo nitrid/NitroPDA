@@ -100,7 +100,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
         $scope.PartiLotListe = [];
         $scope.RenkListe = [];
         $scope.BedenListe = [];
-        DepoMiktarListe = [];
+        $scope.DepoMiktarListe = [];
         $scope.StokDurumListe = [];
         $scope.ProjeEvrakGetirListe = [];
 

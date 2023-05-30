@@ -1,6 +1,5 @@
 function KasaRaporCtrl($scope,$window,db)
 {   
-
     function InitKasaRaporGrid()
     {   
         $("#TblKasaListe").jsGrid

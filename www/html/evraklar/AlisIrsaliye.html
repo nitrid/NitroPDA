@@ -502,7 +502,7 @@
                 <div id="TbGetir" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick(1)"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="form-group row my-10">
@@ -555,6 +555,60 @@
         </div>
     </div>
     <!-- MODALLAR -->
+    <!--Düzenle MODAL-->
+    <div class="modal fade" id="MdlMetreKupHsp" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Metre Küp Hesapla</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row my-5">
+                        <label  class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>Kalınlık :</b></span></div></label>
+                        <input disabled type="text" class="form-control col-8" ng-model="Kalinlik">
+                    </div>
+                    <div class="row my-5">
+                        <label class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>En :</b></span></div></label>
+                        <input type="text" class="form-control col-8" ng-model="En" ng-change="BtnMKupHesapla()">
+                    </div>
+                    <div class="row my-5">
+                        <label class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>Boy :</b></span></div></label>
+                        <input type="text" class="form-control col-8" ng-model="Boy" ng-change="BtnMKupHesapla()">
+                    </div>
+                    <div class="row my-5">
+                        <label class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>MetreKüp :</b></span></div></label>
+                        <input disabled type="text" class="form-control col-8" ng-model="MetreKup">
+                    </div>
+                    <div class="row px-10">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-round btn-primary btn-block" ng-click="BtnMKupEkle()">Ekle</button>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-round btn-primary btn-block" ng-click="BtnMKupSil()">Sil</button>
+                        </div>
+                    </div>
+                    <div id="TblMKupListe"></div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Mik :</span> {{MKupToplamMiktar | number:2}}</h5>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Satır :</span> {{MKupToplamSatir | number:2}}</h5>
+                        </div>
+                    </div>
+                    <div class="row px-10">
+                        <button type="submit" class="btn btn-round btn-primary btn-block col-12" ng-click="BtnMKupKaydet()">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- SeriNo Modal -->
     <div class="modal fade" id="MdlSeriNo" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-simple modal-primary modal-center px-10">

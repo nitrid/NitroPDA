@@ -25,6 +25,7 @@
                                 <button class="dropdown-item" data-target="#MdlFiyatDegistir" data-toggle="modal" role="menu-item">Fiyat Değiştir</a>
                                 <button class="dropdown-item" ng-click="PDFClick()" data-toggle="modal" role="menu-item">PDF</a>
                                 <button class="dropdown-item" data-target="#MdlReyonDegisikligi" data-toggle="modal" role="menu-item">Reyon Tanımları</a>
+                                <button class="dropdown-item" ng-click="PaletClick()" data-toggle="modal" role="menu-item">Palet Barkod Oluşturma</a>
                             </div>
                         </div>
                     </div>
@@ -182,7 +183,73 @@
                         </div>
                     </div>
                 </div>
-            </div>            
+                <div id="TbPalet" class="tab-pane">
+                    <div class="row py-1">
+                        <div class="col-4 px-1">
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                        </div>
+                        <div class="col-4 offset-4 px-1">
+                            <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0 h-40" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniPaletKod()">Yeni Evrak</button>
+                                <button class="dropdown-item" ng-click="BtnPaletBarkodSil()" role="menu-item">Satır Sil</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="row">
+                        <div class="col-12">
+                            <h4 class="text-center">Mevcut Reyon : {{Stok[0].REYON}}</h4>
+                        </div>
+                    </div> -->
+                    <div class="row py-10">
+                        <div class="col-4 text-info"><div  class="col-form-label float-right"><b>Palet :</b></div></div>
+                        <div class="col-8">
+                            <div class="input-group input-group-icon">
+                                <input type="text" class="form-control" ng-model="PaletKodu" ng-blur="PaletBarkodGetir(1)" id="PaletKodu">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row py-10">
+                        <div class="col-4 text-info"><div class="col-form-label float-right"><b>Barkod :</b></div></div>
+                        <div class="col-8">
+                            <div class="input-group input-group-icon">
+                                <input type="text" class="form-control" ng-model="PaletBarkod" ng-keypress = "BtnPaletEnter($event)" id="PaletBarkod" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row py-10">
+                        <div class="col-6 text-info"><b>Brüt Ağırlık :</b>
+                            <div class="input-group input-group-icon">
+                                <input type="text" class="form-control" ng-model="PltBrutAgr" ng-keypress = "BtnPaletEnter($event)" >
+                            </div>
+                        </div>
+                        <div class="col-6 text-info"><b>Net Ağırlık :</b>
+                            <div class="input-group input-group-icon">
+                                <input type="text" class="form-control" ng-model="PltNetAgr" ng-keypress = "BtnPaletEnter($event)" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 p-5">
+                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnPaletBarkodEkle()">Ekle</button>
+                        </div>
+                        <div class="col-6 p-5">
+                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnPaletYazdir()">Yazdır</button>
+                        </div>
+                    </div>
+                    <div class="col-1 offset-5" ng-show="Loading">
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                    <div class="row py-1 px-1" ng-show="TblLoading">
+                        <div class="table-responsive">
+                        <div class="table" id="TblPalet"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-info"><div class="col-form-label float-right"><b>Toplam Miktar : {{PaletMiktar}}</b></div></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- MODALLAR -->
@@ -353,7 +420,7 @@
                 <h4 class="modal-title">Parti Lot Seçim Ekranı</h4>
             </div>
                 <div class="panel-body">
-                        <label class="form-control-label col-lg-12 col-md-12 col-sm-12  pr-2" id="LblPartiLotAlert"><div class="float-right"><b><span style="color:dodgerblue;">{{LblPartiLotAlert}}</span></b></div></label>
+                    <label class="form-control-label col-lg-12 col-md-12 col-sm-12  pr-2" id="LblPartiLotAlert"><div class="float-right"><b><span style="color:dodgerblue;">{{LblPartiLotAlert}}</span></b></div></label>
                     <div class="form-group row my--5">
                         <label class="form-control-label col-lg-1 col-md-1 col-sm-2 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Parti:</span></b></div></label>
                         <input type="text" class="form-control col-lg-5 col-md-4 col-sm-4 form-control-sm" ng-model="TxtParti" id="Parti"  ng-keypress = "BtnPartiEnter($event)">
@@ -361,8 +428,10 @@
                         <input type="text" class="form-control col-lg-5 col-md-4 col-sm-4 form-control-sm" ng-model="TxtLot">
                     </div>
                     <div class="form-group row my-5">
-                        <label class="form-control-label col-lg-6 col-md-5 col-sm-5 offset-1 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Skt Tarih :</span></b></div></label>
-                        <div class="col-lg-5 col-md-6 col-sm-6">
+                        <label class="form-control-label col-lg-1 col-md-1 col-sm-2 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Sayı:</span></b></div></label>
+                        <input type="text" class="form-control col-lg-4 col-md-3 col-sm-2 form-control-sm" ng-model="TxtSayiArttir" id="Sayi">
+                        <label class="form-control-label col-lg-2 col-md-2 col-sm-2 pr-2"><div class="float-right"><b><span style="color:dodgerblue;">Skt :</span></b></div></label>
+                        <div class="col-lg-4 col-md-5 col-sm-6">
                             <div class="row">
                                 <div class="input-group">
                                     <input type="text" class="form-control form-control-sm ng-valid ng-dirty ng-touched ng-empty" id="PTarih" ng-model="SktTarih" data-provide="datepicker">
@@ -491,6 +560,38 @@
             </div>
         </div>
     </div>
+    <!-- Barkod Ekle Modal-->
+    <div class="modal fade" id="MdlBarkodEkle" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">X</span>
+                </button>
+                <h4 class="modal-title">Barkod Ekle</h4>
+            </div>
+                <div class="panel-body">
+                    <div class="row">{{EklenecekStokKodu}}-{{EklenecekStokAdi}}</div>
+                    <div class="row my-0 py-0">
+                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Barkod :</div></div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtEklenecekBarkod">
+                        </div>
+                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Birim :</div></div>
+                        <div class="col-4 px-1">
+                            <select class="form-control form-control-sm" ng-model="EklenecekBirim" ng-change="BirimChange()">
+                                <option ng-repeat="option in BirimListe" value="{{option.BIRIMPNTR}}">{{option.BIRIM}}</option>
+                            </select>
+                        </div>
+                    </div>
+                        <div class="col-6">
+                            <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="BtnBarkodEkle()">Barkod Ekle</button>
+                        </div>
+                    </div>
+                    <div id="TblPartiLot"></div>
+                </div>
+            </div>
+    </div>
     <!-- Reyon Degisikligi -->
     <div class="modal fade" id="MdlReyonDegisikligi" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-simple modal-center modal-primary">
@@ -537,39 +638,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Barkod Ekle Modal-->
-    <div class="modal fade" id="MdlBarkodEkle" aria-labelledby="exampleOptionalSmall" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
-            <div class="modal-content ">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">X</span>
-                </button>
-                <h4 class="modal-title">Barkod Ekle</h4>
-            </div>
-                <div class="panel-body">
-                    <div class="row">{{EklenecekStokKodu}}-{{EklenecekStokAdi}}</div>
-                    <div class="row my-0 py-0">
-                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Barkod :</div></div>
-                        <div class="col-4 px-1">
-                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtEklenecekBarkod">
-                        </div>
-                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Birim :</div></div>
-                        <div class="col-4 px-1">
-                            <select class="form-control form-control-sm" ng-model="EklenecekBirim" ng-change="BirimChange()">
-                                <option ng-repeat="option in BirimListe" value="{{option.BIRIMPNTR}}">{{option.BIRIM}}</option>
-                            </select>
-                        </div>
-                    </div>
-                        <div class="col-6">
-                            <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="BtnBarkodEkle()">Barkod Ekle</button>
-                        </div>
-                    </div>
-                    <div id="TblPartiLot"></div>
-                </div>
-            </div>
-    </div>
     </div>
 </div>
 <script>

@@ -102,11 +102,10 @@ function CariListeCtrl($scope,$window,db)
             query:  "SELECT REPLACE(STR(ISNULL(MAX(CONVERT(int,SUBSTRING(cari_kod," + ($scope.CariHarfEkle.length + 1) + ",LEN(cari_kod)))),0) + 1, 5), SPACE(1), '') AS MAXCARIKOD FROM CARI_HESAPLAR WHERE cari_kod LIKE  @CARIHARF +  '%' ",
             param:  ['CARIHARF'], 
             type:   ['string|25'], 
-            value:  [$scope.CariHarfEkle]    
+            value:  [$scope.CariHarfEkle]
         }
         await db.GetPromiseQuery(TmpQuery,async function(Data)
         {
-            
             $scope.CariEkleKodu = $scope.CariHarfEkle + Data[0].MAXCARIKOD;
         });
     }

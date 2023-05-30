@@ -7,7 +7,10 @@ function Login ($scope,$rootScope,$window,db)
     $scope.TransferEventProgress = 0;    
     $scope.FirmLock = false;    
     $scope.KulLock = false;
-    
+    $rootScope.MessageBox = function(pMsg)
+    {
+        alertify.alert(pMsg);
+    }
     function UserControl()
     {
         for(i = 0;i < Param.length;i++)
@@ -86,10 +89,6 @@ function Login ($scope,$rootScope,$window,db)
             $scope.server_adress = window.location.hostname;
             $scope.HostSettingSave();
         }
-         db.Connection(function(data)
-         {
-
-         });
         $scope.ConfigControl();
     }
     $scope.HostSettingSave = function()

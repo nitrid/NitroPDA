@@ -80,15 +80,22 @@ function dbengine(config)
 }
 io.on('connection', function(socket) 
 {     
-    //console.log(io.engine.clientsCount);
-    // if(Object.keys(io.sockets.connected).length > LicKullanici)
-    // {
-    //     socket.emit('MaxUserCounted');
-    // }
-    // else
-    // {
-    //     socket.emit('MaxUserCounted',LicMenu);
-    // }
+    console.log("Socket Kullanıcı " + Object.keys(io.sockets.connected).length);
+    console.log("Lisans Kullanıcı " + LicKullanici)
+    if(LicKullanici == 0)
+    {
+        return;
+    }
+    if(Object.keys(io.sockets.connected).length > LicKullanici)
+    {
+        console.log("Giriş yapamazsın")
+        socket.emit('MaxUserCounted');
+    }
+    else
+    {
+        console.log("Giriş yapabilirsin")
+        socket.emit('MaxUserCounted',LicMenu);
+    }
 
     socket.on('GetMenu',function(pParam,pFn)
     {

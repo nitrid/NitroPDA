@@ -113,6 +113,7 @@
             {
                 db.Emit('GetMenu','',function(MenuData)
                 {
+                    if(MenuData.length > 0)
                     MenuOlustur(JSON.parse(MenuData));
                 });    
             });

@@ -374,6 +374,60 @@
         </div>
     </div>
     <!-- MODALLAR -->
+    <!--Metre Küp Düzenle MODAL-->
+    <div class="modal fade" id="MdlMetreKupHsp" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Metre Küp Hesapla</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row my-5">
+                        <label  class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>Kalınlık :</b></span></div></label>
+                        <input disabled type="text" class="form-control col-8" ng-model="Kalinlik">
+                    </div>
+                    <div class="row my-5">
+                        <label class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>En :</b></span></div></label>
+                        <input type="text" class="form-control col-8" ng-model="En" ng-change="BtnMKupHesapla()">
+                    </div>
+                    <div class="row my-5">
+                        <label class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>Boy :</b></span></div></label>
+                        <input type="text" class="form-control col-8" ng-model="Boy" ng-change="BtnMKupHesapla()">
+                    </div>
+                    <div class="row my-5">
+                        <label class="form-control-label col-4 pr-5"><div class="float-right"><span style="color:dodgerblue;"><b>MetreKüp :</b></span></div></label>
+                        <input disabled type="text" class="form-control col-8" ng-model="MetreKup">
+                    </div>
+                    <div class="row px-10">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-round btn-primary btn-block" ng-click="BtnMKupEkle()">Ekle</button>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-round btn-primary btn-block" ng-click="BtnMKupSil()">Sil</button>
+                        </div>
+                    </div>
+                    <div id="TblMKupListe"></div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Mik :</span> {{MKupToplamMiktar | number:2}}</h5>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-right my-1"><span style="color:dodgerblue;">Toplam Satır :</span> {{MKupToplamSatir | number:2}}</h5>
+                        </div>
+                    </div>
+                    <div class="row px-10">
+                        <button type="submit" class="btn btn-round btn-primary btn-block col-12" ng-click="BtnMKupKaydet()">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Manuel Giriş -->
     <div class="modal fade" id="MdlStokGetir" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-simple modal-center modal-primary">
@@ -455,7 +509,7 @@
                         </div>
                     </div>
                     <div class="row my-0 py-0">
-                        <div class="col-4 text-primary px-1"><div class="col-form-label px-1 float-right  py-2">Skt Tarih :</div></div>
+                        <div class="col-4 text-primary px-1"><div class="col-form-label px-1 py-2">Skt Tarih :</div></div>
                         <div class="col-8 px-1">
                             <div class="input-group input-group-icon">
                                 <div class="input-group-prepend">
@@ -467,7 +521,40 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="row my-0 py-0">
+                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">En :</div></div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtEn">
+                        </div>
+                        <div class="col-2 text-primary px-1"><div class="col-form-label float-right py-2">Boy :</div></div>
+                        <div class="col-4 px-1">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtBoy">
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-primary px-1"><div class="col-form-label float-right py-2">Daralı Ağr. :</div></div>
+                        <div class="col-5 px-1">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtDaraliAgr">
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-primary px-1"><div class="col-form-label float-right py-2">Safi Ağırlık :</div></div>
+                        <div class="col-5 px-1">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtSafiAgr">
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-primary px-1"><div class="col-form-label float-right py-2">Yükseklik :</div></div>
+                        <div class="col-5 px-1">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtYukseklik">
+                        </div>
+                    </div>
+                    <div class="row my-0 py-0">
+                        <div class="col-4 text-primary px-1"><div class="col-form-label float-right py-2">Özgül Ağırlık :</div></div>
+                        <div class="col-5 px-1">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="TxtOzgulAgr">
+                        </div>
+                    </div>
                     <div class="form-group row my-1">
                         <div class="col-12">
                             <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="BtnPartiLotOlustur()">Oluştur Ve Seç</button>

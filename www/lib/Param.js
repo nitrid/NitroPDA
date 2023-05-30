@@ -7,7 +7,7 @@ var Param = [
 			"FirmaNo": "0",
 			"Firma": "",
 			"SubeNo": "0",
-			"SatirBirlestir": "1",
+			"SatirBirlestir": "0",
 			"MalKabulEvrakTip": "1",
 			"EslestirmeEvrakTip": "0",
 			"DepoMalKabulEvrakTip": "1",
@@ -24,7 +24,7 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "SW_C58B",
+			"BTYaziciAdi": "SP320_008C",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "100",
@@ -49,12 +49,13 @@ var Param = [
 			"EvrakTip": "0"
 		},
 		"Sayim": {
-			"EvrakNo": "10",
+			"EvrakNo": "15",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"BelgeBilgisi": "",
 			"BarkodOlustur": "1",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"RafYonetimi": "0"
 		},
 		"AlinanSiparis": {
 			"Seri": "T",
@@ -194,9 +195,10 @@ var Param = [
 			"IskontoMatris": "0",
 			"ProjeGetir": "0",
 			"FiyatAzalt": "0",
-			"PartiBarkodOlustur": "0",
+			"PartiBarkodOlustur": "1",
 			"Special": "52",
-			"OtoEkle": "0"
+			"OtoEkle": "0",
+			"PartiMKupEkran": "1"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -303,7 +305,7 @@ var Param = [
 			"Stok Detay": "1",
 			"Sayım Fişi": "1",
 			"Cari Listesi": "1",
-			"Fire": "0",
+			"Fire": "1",
 			"Cari Ekle": "0",
 			"Deposevk": "1",
 			"Depo Sipariş": "1",
@@ -328,16 +330,16 @@ var Param = [
 			"Cari Secimli Siparis Raporu": "1",
 			"Cari Secimli Siparis Durum Raporu": "1",
 			"Durağan Cariler Raporu": "0",
-			"Kasa Rapor": "0",
+			"Kasa Rapor": "1",
 			"Banka Rapor": "0",
-			"Stok Hareket Rapor": "0",
+			"Stok Hareket Rapor": "1",
 			"GelenHavale": "0",
 			"Ambar Fişi": "0",
 			"Stok Virman Fişi": "0",
 			"Stok Listesi": "0",
 			"Stok Ekle": "0",
 			"Ürün Giriş Çıkış": "1",
-			"Fason Giriş Çıkış": "0",
+			"Fason Giriş Çıkış": "1",
 			"Planlı Üretim": "1",
 			"Aktarim": "0",
 			"EvrakGonder": "0",
@@ -347,7 +349,8 @@ var Param = [
 			"Cari Analiz": "0",
 			"Is Emri Depo Sevk": "0",
 			"Sipariş Operasyonları": "0",
-			"Proforma Alınan Siparis": "0"
+			"Proforma Alınan Siparis": "0",
+			"Raf Yönetimi": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "1",
@@ -393,7 +396,7 @@ var Param = [
 			"Kasa": "0",
 			"IskontoMatris": "0",
 			"KDVYok": "1",
-			"FiyatAzalt": "0",
+			"FiyatAzalt": "1",
 			"Special": "3",
 			"OtoEkle": "0",
 			"BolgeKodu": ""
@@ -411,7 +414,9 @@ var Param = [
 			"IsMerkeziListe": "",
 			"CmbEvrakTip": "0",
 			"OtoEkle": "0",
-			"ReceteKontrol": "1"
+			"ReceteKontrol": "1",
+			"EksiyeDusme": "1",
+			"PartiMKupEkran": "0"
 		},
 		"PlanliUretim": {
 			"Seri": "URT",
@@ -432,12 +437,15 @@ var Param = [
 			"Depo": "1",
 			"DepoListe": "",
 			"Sorumluluk": "",
+			"FiyatListe": "1",
 			"Personel": "",
 			"Proje": "",
 			"EvrakSil": "0",
 			"IsMerkezi": "",
 			"IsMerkeziListe": "",
-			"CmbEvrakTip": "0"
+			"CmbEvrakTip": "0",
+			"Cari": "",
+			"ReceteKontrol": "0"
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",
@@ -573,7 +581,7 @@ var Param = [
 			"OnlineYazdir": "0"
 		},
 		"Sayim": {
-			"EvrakNo": "200",
+			"EvrakNo": "205",
 			"DepoNo": "1",
 			"DepoListe": "",
 			"BelgeBilgisi": "",

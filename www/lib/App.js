@@ -211,6 +211,14 @@ angular.module("app",
     {
         templateUrl : "html/evraklar/SarfFisi.html"
     })
+    .when("/RafYonetimi",
+    {
+        templateUrl : "html/evraklar/RafYonetimi.html"
+    })
+    .when("/EvrakDbAktarim",
+    {
+        templateUrl : "html/ayarlar/EvrakDbAktarim.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

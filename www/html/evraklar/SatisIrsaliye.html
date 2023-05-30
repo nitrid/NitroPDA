@@ -269,7 +269,8 @@
                             <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0 h-40" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" data-target="#MdlStokDetay" ng-click="StokDetayClick()" data-toggle="modal" role="menu-item">Detay</button> 
-                                <button class="dropdown-item" href="#" role="menu-item" ng-click="StokDurumRaporClick()">Cari Detaylı Stok Durumu</button>                                   
+                                <button class="dropdown-item" href="#" role="menu-item" ng-click="StokDurumRaporClick()">Cari Detaylı Stok Durumu</button> 
+                                <button class="dropdown-item" data-target="#MdlPaletDetay" ng-click="PaletDetayClick([])" data-toggle="modal" role="menu-item">Palet Detay</button>                                   
                             </div>
                         </div>
                     </div>
@@ -404,11 +405,19 @@
                                 <button class="dropdown-item" ng-click="BtnIskontoEkran(1)" data-toggle="modal"  role="menu-item">Satır İskonto</button>
                                 <button class="dropdown-item"  ng-click="BtnDuzenle()" data-toggle="modal" role="menu-item">Düzenle</button>
                                 <!-- <button class="dropdown-item"  ng-click="BtnVergiDuzenle()" data-toggle="modal" role="menu-item">Vergi Düzenle</button> -->
-                                <!-- <button class="dropdown-item" ng-click="BtnEtiketBas()" role="menu-item">Etiket Bas</button> -->
+                                <button class="dropdown-item" ng-click="BtnEtiketBas()" role="menu-item">Etiket Bas</button>
                                 <button class="dropdown-item" ng-click="BtnEIrsModalAc()" role="menu-item">İrsaliye Detay</button>
                                 <button class="dropdown-item"  ng-click="BtnAciklamaGir()"  role="menu-item">Açıklama</button>
                             </div>
                         </div>
+                    </div>
+                    <div class="row py-1">
+                        <div class="col-8 px-1">
+                            <div class="checkbox-custom checkbox-info my-0">
+                              <input ng-change="CokluSecimChange()" type="checkbox" name="inputCheckboxes" ng-model="CokluSecim" checked="">
+                              <label for="inputUnchecked"><div class="col-form-label py-0"><b>Çoklu Seçim</b></div></label>
+                            </div>
+                        </div> 
                     </div>
                     <div class="row py-1 px-1">
                         <div id="TblIslem"></div>
@@ -608,7 +617,7 @@
                 <div id="TbGetir" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick(1)"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="form-group row my-10">
@@ -1110,6 +1119,28 @@
                     </div>
                     <div class="row py-1 px-1">
                         <div id="TblDepoMiktar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Palet Detay Modal -->
+    <div class="modal fade" id="MdlPaletDetay" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-center modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Palet Detay</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- <div class="row">
+                        <div class="col-6 px-0 text-info"><label class="form-control-label float-right"><b>Son Satis Fiyat :</b></label></div>
+                        <div class="col-6 px-0"><label class="form-control-label pl-10 text-primary">{{StokDetay[0].SONFIYAT}}</label></div>
+                    </div> -->
+                    <div class="row py-1 px-1">
+                        <div id="TblPaletDetay"></div>
                     </div>
                 </div>
             </div>

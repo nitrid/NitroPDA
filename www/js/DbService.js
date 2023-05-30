@@ -33,20 +33,24 @@ angular.module('app.db', []).service('db',function($rootScope)
     
             _Socket.on('MaxUserCounted',function(MenuData)
             {               
+                console.log(typeof MenuData)
                 if (typeof(MenuData) !== "undefined")
                 {
                     _MenuData = MenuData;
                 }
                 else
                 {
-                    _Socket.disconnect();
-                
+                    _MenuData = [];
+                    console.log("selami")
+                    $rootScope.MessageBox("Maksimum kullanıcı sayısına eriştiniz... Diğer kullanıcılardan çıkınız ya da ek lisans satın alınız.")
                     $('#alert-box').html('<div class="alert alert-icon alert-danger alert-dismissible" role="alert" id="alert">' +
                         '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
                         '<span aria-hidden="true">&times;</span>' +
                         '</button>' +
                         '<i class="icon wb-bell" aria-hidden="true"></i> Maksimum kullanıcı sayısına eriştiniz... Diğer kullanıcılardan çıkınız ya da ek lisans satın alınız.' +
                         '</div>');
+                        $('#menubarr').hide()
+                    //_Socket.disconnect();
                 }
             });
 
@@ -904,7 +908,7 @@ angular.module('app.db', []).service('db',function($rootScope)
     {
         let FiyatParam = [BarkodData[0].KODU,1,pFiyatParam.DepoNo,pFiyatParam.OdemeNo];
         let Fiyat = 0;
-
+        console.log(FiyatParam)
         if(pEvrParam.FiyatListe  == 0)
             FiyatParam[1] = pFiyatParam.CariFiyatListe;
         else
@@ -916,7 +920,7 @@ angular.module('app.db', []).service('db',function($rootScope)
             {
                 console.log(FiyatData)
                 BarkodData[0].ISKONTOKOD = FiyatData[0].ISKONTOKOD;
-                BarkodData[0].FIYAT = (FiyatData[0].FIYAT)
+                BarkodData[0].FIYAT = FiyatData[0].FIYAT;
             }
             else
             {
@@ -1051,6 +1055,12 @@ angular.module('app.db', []).service('db',function($rootScope)
     }
     this.BTYazdir = function(pData,pParam,pCallback)
     {
+        var system = 0; /* Barcode system, defined as "m" at https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=128 */
+        var data = "012345678901"; /* Barcode data, according to barcode system */
+        var align = 1; /* 0, 1, 2 */
+        var position = 2; /* Text position: https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=125 */;
+        var font = 0; /* Font for HRI characters: https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=126 */
+        var height = 64; /* Set barcode height: https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=127*/
         if(pParam.BTYaziciTip == "CORDOVABT")
         {
             window.BTPrinter.connect(function()
@@ -1071,19 +1081,27 @@ angular.module('app.db', []).service('db',function($rootScope)
 
                     console.log("Success");
                     pCallback(true);
-                },function(err)
-                {                    
+                },function(err){                    
                     console.log("Error");
                     console.log(err);
                     pCallback(false);
-                }, pData,'0','0')
-
+                }, pData,'2','0')
+                // BTPrinter.printBarcode(function(data){
+                //     console.log("Success");
+                //     console.log(data);
+                //     pCallback(true);
+                // },
+                // function(err)
+                // {
+                //     console.log("Error");
+                //     console.log(err);
+                // }, system, data, align, position, font, height);
             },function(err)
             {
                 console.log("Error");
                 console.log(err)
                 pCallback(false);
-            }, pParam.BTYaziciAdi);      
+            }, pParam.BTYaziciAdi);
         }
         else if(pParam.BTYaziciTip == "RAWBT")
         {

@@ -36,7 +36,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
                     
                 },
                 {
-                    name: "BAKIYE",
+                    name: "TOPLAM",
                     title: "BAKİYE",
                     type: "text",
                     align: "center",
@@ -268,7 +268,7 @@ function YapilacakTahsilatlarCtrl($scope,$window,db)
             var TmpQuery = 
             {
                 db : '{M}.' + $scope.Firma,
-                query:  "SELECT cari_kod AS KODU,cari_unvan1 AS ADI,(SELECT ROUND(dbo.fn_CariHesapAnaDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,'20200101',@TARIH,0,0,0,0,0),2))  AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM FROM CARI_HESAPLAR " +
+                query:  "SELECT cari_kod AS KODU,cari_unvan1 AS ADI,(SELECT ROUND(dbo.fn_CariHesapAnaDovizBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,'20150101',@TARIH,0,0,0,0,0),2))  AS BAKIYE,ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) AS TOPLAM FROM CARI_HESAPLAR " +
                 "WHERE (cari_kod = @CARIKODU OR (@CARIKODU = '')) AND ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) > 0 AND ((cari_temsilci_kodu = @PLASIYERKODU) OR (@PLASIYERKODU = '')) ORDER BY ISNULL((SELECT dbo.fn_CariHesapBakiye(0,cari_baglanti_tipi,cari_kod,'','',0,cari_doviz_cinsi,1,1,1,1)),0) desc ",
                 param:  ['TARIH','CARIKODU','PLASIYERKODU'],
                 type:   ['date','string|25','string|25'], 

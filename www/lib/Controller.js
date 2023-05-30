@@ -45,6 +45,8 @@ angular.module('app.controller', [])
 .controller('RotaCtrl',['$scope','$window','$timeout','db',RotaCtrl])
 .controller('SiparisOperasyonlariCtrl',['$scope','$window','$timeout','db',SiparisOperasyonlariCtrl])
 .controller('SarfFisiCtrl',['$scope','$window','$timeout','db','$filter',SarfFisiCtrl])
+.controller('RafYonetimiCtrl',['$scope','$window','$timeout','db','$filter',RafYonetimiCtrl])
+.controller('EvrakDbAktarimCtrl',['$scope','$window','db',EvrakDbAktarimCtrl])
 
 
 

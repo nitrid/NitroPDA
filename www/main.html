@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="theme/global/css/bootstrap-extend.css">
     <link rel="stylesheet" href="theme/base/assets/css/site.css">
     <link rel="stylesheet" href="theme/base/assets/css/custom.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" rel="stylesheet"/>
+
 
     <!-- Add-on Stil Dosyaları Basla -->
     <link rel="stylesheet" href="theme/global/vendor/animsition/animsition.css">
@@ -32,8 +35,8 @@
     <link rel="stylesheet" href="theme/global/vendor/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="theme/base/assets/examples/css/advanced/lightbox.css">
     <link rel="stylesheet" href="theme/global/vendor/bootstrap-datepicker/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="theme/global/vendor/jsgrid/jsgrid.css">
-    <link rel="stylesheet" href="theme/base/assets/examples/css/tables/jsgrid.css">
+    <!-- <link rel="stylesheet" href="theme/global/vendor/jsgrid/jsgrid.css">
+    <link rel="stylesheet" href="theme/base/assets/examples/css/tables/jsgrid.css"> -->
     <link rel="stylesheet" href="theme/base/assets/examples/css/uikit/modals.css">
     <link rel="stylesheet" href="theme/base/assets/examples/css/pages/profile.css">
     <link rel="stylesheet" href="theme/global/vendor/bootstrap-select/bootstrap-select.css">
@@ -98,6 +101,9 @@
     </style>
     </head>
     <body class="animsition site-navbar-small site-menubar-open" ng-controller="Main" ng-init = "Init()">
+      <div id="alert-box">
+
+      </div>
       <div id="loading" style="display:none;z-index: 1800;">    
         <div class="navbar-brand navbar-brand-center">
           <i ng-click="BtnMain()" class="fas fa-lg fa-home"></i>
@@ -160,7 +166,7 @@
         </div>
       </nav>
     <!-- Navigasyon Basla -->
-      <div class="site-menubar site-menubar-light">
+      <div class="site-menubar site-menubar-light" id="menubarr">
         <div class="site-menubar-body">
           <div>
             <div>
@@ -276,8 +282,10 @@
     <script src="theme/global/vendor/intro-js/intro.js"></script>
     <script src="theme/global/vendor/screenfull/screenfull.js"></script>
     <script src="theme/global/vendor/slidepanel/jquery-slidePanel.js"></script>
-    <script src="theme/global/vendor/jsgrid/jsgrid.js"></script>
-    <script src="theme/global/vendor/jquery-ui/jquery-ui.min.js"></script>
+    <!-- <script src="theme/global/vendor/jsgrid/jsgrid.js"></script> -->
+    <script src="theme/global/vendor/jquery-ui/jquery-ui.min.js"></script> 
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
     <script src="theme/global/vendor/bootstrap-datepicker/bootstrap-datepicker.js"></script>
     <script src="theme/global/vendor/alertify/alertify.js"></script>
     <script src="theme/global/vendor/aspaginator/jquery-asPaginator.min.js"></script>
@@ -361,7 +369,8 @@
     <script src="lib/ctrl/ProformaSiparisCtrl.js"></script>
     <script src="lib/ctrl/SiparisOperasyonlariCtrl.js"></script>
     <script src="lib/ctrl/SarfFisiCtrl.js"></script>
-
+    <script src="lib/ctrl/RafYonetimiCtrl.js"></script>
+    <script src="lib/ctrl/EvrakDbAktarimCtrl.js"></script>
 
     <!-- RAPORLAR -->
     <script src="lib/ctrl/CariHesapHareketCtrl.js"></script>

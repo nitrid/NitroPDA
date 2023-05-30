@@ -240,7 +240,7 @@
                     </div>
                     <div class="form-group row my-1">
                         <div class="col-6">
-                            <button class="btn btn-round btn-block btn-primary h-40" ng-click="BarkodGirisClick(0)">Seç</button>
+                            <button class="btn btn-round btn-block btn-primary h-40" ng-click="BarkodGirisClick()">Seç</button>
                         </div>
                         <div class="col-6">
                             <button class="btn btn-round btn-block btn-primary h-40" ng-click="BtnCariListele()">Listele</button>
@@ -424,6 +424,13 @@
                                     <a href="#!TahsilatMakbuzu"><button class="btn btn-round btn-block btn-primary h-60" ng-click="BtnTahClick()"><b>T</b>
                                     </button></a>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <h5 class="my-1"><span style="color:dodgerblue;">Mik. :</span> {{ToplamMiktar | number:2}}</h5>
+                                <h5 class="my-1"><span style="color:dodgerblue;">Mik.2 :</span> {{BasimAdet | number:2}}</h5>
+                                <h5 class="my-1"><span style="color:dodgerblue;">Satır :</span> {{ToplamSatir | number:2}}</h5>
                             </div>
                         </div>
                         <div class="col-8">

@@ -12,7 +12,7 @@
             <div id="TbMain" class="tab-pane active">
                 <div class="row pb-10">
                     <div class="col-8  px-1">
-                        <select class="form-control form-control">
+                        <select class="form-control form-control" ng-model="CmbEvrakTip" ng-change="EvrakTipChange()" ng-disabled="EvrakLock">
                             <option value="0">Fason Giriş Fişi</option>
                             <option value="1">Fason Çıkış Fişi</option>
                         </select>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="row">
                     <div class="col-4 px-0 text-info"><label class="form-control-label float-right">İşemri İsim :</label></div>
-                    <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10"></label></div>
+                    <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{IsEmriAdi}}</label></div>
                 </div>
                 <div class="row">
                     <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Cari :</label></div>
@@ -178,7 +178,7 @@
                         <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                     </div>
                     <div class="col-4 px-1">
-                        <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="TbIslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
+                        <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="IslemSatirlariClick()"><i class="far fa-file-alt fa-lg" ></i></button>
                     </div>
                     <div class="col-4 px-1">
                         <div class="checkbox-custom checkbox-info">
@@ -187,46 +187,75 @@
                         </div>
                     </div>
                 </div>
-                <div class="row my-0">
-                    <div class="col-4 px-1">
-                        <div class="radio-custom radio-primary">
-                            <input type="radio" id="inputRadiosUnchecked" name="inputRadios">
-                            <label for="inputRadiosUnchecked">Barkodu</label>                           
-                        </div>
-                    </div>
-                    <div class="col-4 px-15">
-                        <div class="radio-custom radio-primary">
-                            <input type="radio" id="inputRadiosUnchecked" name="inputRadios">
-                            <label for="inputRadiosUnchecked">Kodu</label>                           
-                        </div>
-                       
-                    </div>
-                    <div class="col-4 px-30">
-                        <div class="radio-custom radio-primary">
-                            <input type="radio" id="inputRadiosUnchecked" name="inputRadios">
-                            <label for="inputRadiosUnchecked">Adı</label>                           
-                        </div>
-                    </div>
-                </div>
                 <div class="row py-1">
-                    <div class="col-8 px-1">
+                    <div class="col-12 px-1">
                         <div class="input-group">
-                            <input type="text" class="form-control" ng-model="Barkod" ng-keypress = "BtnStokBarkodGetir($event)" ng-disabled="BarkodLock" id="Barkod">                               
+                            <input type="text" class="form-control" ng-model="Barkod" ng-keypress = "BtnStokBarkodGetir($event)" ng-disabled="BarkodLock" id="Barkod">
+                            <span class="input-group-append">
+                            <button type="submit" class="btn btn-round btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                            </span>
                         </div>
                     </div>
-                    <div class="col-2 px-1">
-                        <button class="btn btn-round btn-block btn-primary h-40">T</button>
+                </div>
+                <div class="row pt-5">
+                    <div class="col-5 px-1">
+                        <button type="submit" ng-click="ManuelAramaClick()" class="btn btn-round btn-primary btn-block h-40">Manuel Arama</button>       
                     </div>
                     <div class="col-2 px-1">
-                        <button class="btn btn-round btn-block btn-primary h-40">G</button>
+                        <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
+                    </div>
+                    <div class="col-5 px-1">
+                        <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnBarkodGetirClick()">Getir</button>        
                     </div>
                 </div>
-                <div class="row py-1 px-1">
-                    <div id="TblBarkTab"></div>
+                <div class="row">
+                    <div class="col-lg-12" style="display: inline; text-align: center; overflow: hidden;">  
+                        <label class="mb-0 h5 text-black">{{Stok[0].KODU}} - {{Stok[0].ADI}} - {{Stok[0].BEDEN}} - {{Stok[0].RENK}}</label> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3 text-info px-1"><div class="col-form-label float-right py-1" ng-disabled="EvrakLock">Çıkış Depo:</div></div>
+                    <div class="col-9 px-1">
+                        <select class="form-control" ng-model="Depo" ng-change="DepoChange()">
+                            <option ng-repeat="option in DepoListe" value="{{option.KODU}}">{{option.ADI}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row my-0 pt-50">
+                    <div class="col-4 offset-4 text-info px-1">
+                        <div class="col-form-label px-1 float-right py-1">Birim:</div>
+                    </div>
+                    <div class="col-4 px-1">
+                        <select class="form-control form-control-sm" ng-model="Birim" ng-change="BirimChange()">
+                            <option ng-repeat="option in BirimListe" value="{{option.BIRIMPNTR}}">{{option.BIRIM}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-3 text-info px-1">
+                        <div class="col-form-label float-right py-1">Miktar:</div>
+                    </div>
+                    <div class="col-4 px-1">
+                        <input disabled type="text" class="form-control form-control-sm" ng-model="Stok[0].CARPAN">
+                    </div>
+                    <div class="col-1 text-info px-1">
+                        <div class="col-form-label text-center py-1">X</div>
+                    </div>
+                    <div class="col-4 px-1">
+                        <input type="number" class="form-control form-control-sm" ng-model="Miktar" ng-change="MiktarFiyatValid()" id="Miktar" ng-keydown="MiktarPress($event)">
+                    </div>
+                </div>
+                <div class="row my-0 pb-100">
+                    <div class="col-8 text-info px-1">
+                        <div class="col-form-label float-right py-1">Toplam Miktar:</div>
+                    </div>
+                    <div class="col-4 px-1">
+                        <input disabled type="text" class="form-control form-control-sm" value="{{Stok[0].TOPMIKTAR | number:2}}">
+                    </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-12 pt-10 px-1">
-                        <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-disabled="InsertLock" ng-click="Insert()">Giriş Miktar Doldur</button>
+                        <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-disabled="InsertLock" ng-click="Insert()">Ekle</button>
                     </div>
                 </div>
             </div>
@@ -267,10 +296,10 @@
                     </div>
                     <div class="row py-1">
                         <div class="col-6">
-                            <button class="btn btn-round btn-block btn-primary h-40">İşemri Seç</button>
+                            <button class="btn btn-round btn-block btn-primary h-40" ng-click="MainClick()">İşemri Seç</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-round btn-block btn-primary h-40">İşemri Listele</button>
+                            <button class="btn btn-round btn-block btn-primary h-40" ng-click="IsEmriListele()">İşemri Listele</button>
                         </div>
                     </div>
                     <div class="row py-1 px-1">
@@ -281,7 +310,39 @@
                     <h5 class="text-right"><span style="color:dodgerblue;">Toplam Miktar 3:</span> {{ToplamMiktar3 | number:2}}</h5>
                     <h5 class="text-right"><span style="color:dodgerblue;">Toplam Miktar 4:</span> {{ToplamMiktar4 | number:2}}</h5>
                     <h5 class="text-right"><span style="color:dodgerblue;">Toplam Miktar 5:</span> {{ToplamMiktar5 | number:2}}</h5> -->
+            </div>
+            <div id="TbStok" class="tab-pane">
+                <div class="row py-1">
+                    <div class="col-4 px-1">
+                        <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                    </div>
                 </div>
+                <div class="form-group row my-1">
+                    <div class="col-4 px-1">
+                        <select class="form-control" ng-model="StokGridTip" ng-disabled="EvrakLock">
+                            <option value="0">ADI</option>
+                            <option value="1">KODU</option>
+                        </select>
+                    </div>
+                    <div class="col-8 px-1">
+                        <div class="input-group">
+                            <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText" ng-disabled="EvrakLock">
+                            <span class="input-group-append">
+                                <button type="submit" class="btn btn-round btn-primary" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 offset-5" ng-show="Loading" >
+                        <div class="loader vertical-align-middle loader-circle"></div>
+                    </div>
+                <div class="row py-1 px-1" ng-show="TblLoading">           
+                    <div class="table-responsive">
+                    <div class="table" id="TblStok" ng-show="TblStokShow"></div>           
+                    <div class="table" id="TblStok2" ng-show="TblStok2Show"></div>              
+                    </div>
+                </div>
+            </div>
         </div>            
     </div>
 </div>
