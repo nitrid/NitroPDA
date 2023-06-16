@@ -1,0 +1,27 @@
+.btn-blendpr.btn-primary {
+    color: #fff;
+    border-color: #2e86de00;
+    background: radial-gradient(circle,#2e86de, #54a0ff,#2e86de);
+    /* background: radial-gradient(circle, rgba(69,202,252,1), rgba(29,135,253,1) 40%, rgba(69,202,252,1)); */
+    /* background: linear-gradient(84deg,rgba(69,202,252,1) 0%,rgba(29,135,253,1) 40%, rgba(69,202,252,1) 90%); */
+
+    /* background-color: #5f27cd; */
+}
+.btn-blendin.btn-info {
+    color: #fff;
+    border-color: #0abbe300;
+    background: linear-gradient(95deg, rgba(82,169,255,1) 0%, rgba(65,192,255,1) 95%);
+    /* background-color: #5f27cd; */
+}
+.site-navbar {
+    /* background: rgb(93,166,199); */
+        background: linear-gradient(84deg,#2e86de 0%,rgba(29,135,253,1) 40%, rgba(69,202,252,1) 90%);
+        /* #2F2B3DAD */
+    /* background: lineer-gradient(circle,#2e86de, #54a0ff,#2e86de); */
+}
+.panel.panel
+{
+    -webkit-box-shadow: 0px 0px 46px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 46px 0px rgba(0,0,0,0.75);
+box-shadow: 0 2px 6px #cdcdcdbf,0 0 transparent,0 0 transparent
+}

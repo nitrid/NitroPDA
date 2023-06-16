@@ -17,7 +17,7 @@
                             </select>
                         </div>
                         <div class="col-5 offset-2 px-1">
-                            <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <button type="button" class="btn btn-round btn-primary btn-blendpr btn-block dropdown-toggle px-0" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniEvrak()">Yeni Evrak</button>
                                 <button class="dropdown-item" data-target="#MdlStokDetay" data-toggle="modal" role="menu-item">Barkod Detay</a>
@@ -35,20 +35,20 @@
                             <div class="input-group">
                                 <input type="text" class="form-control" ng-model="Barkod" ng-keypress ="BtnStokBarkodGetir($event)"  id="Barkod">
                                 <span class="input-group-append">
-                                <button type="submit" class="btn btn-round btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                <button type="submit" class="btn btn-round btn-primary btn-blendpr" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="row ">
                         <div class="col-5 px-1">
-                            <button type="submit" ng-click="ManuelAramaClick()" class="btn btn-round btn-primary btn-block h-40">Manuel Arama</button>        
+                            <button type="submit" ng-click="ManuelAramaClick()" class="btn btn-round btn-primary btn-blendpr btn-block h-40">Manuel Arama</button>        
                         </div>
                         <div class="col-2 px-1">
-                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block h-40" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
                         </div>
                         <div class="col-5 px-1">
-                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnBarkodGetirClick()">Getir</button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block h-40" ng-click="BtnBarkodGetirClick()">Getir</button>        
                         </div>
                     </div>
                     <div class="row pb-20">
@@ -127,10 +127,10 @@
                             </div>
                         </div>
                         <div class="col-4 px-1">
-                            <button type="button" class="btn btn-round btn-block btn-primary h-40" ng-click="Insert()">Ekle</button>
+                            <button type="button" class="btn btn-round btn-block btn-primary btn-blendpr h-40" ng-click="Insert()">Ekle</button>
                         </div>
                         <div class="col-5 px-1">
-                            <button type="button" data-target="#MdlIslemDetay" data-toggle="modal" class="btn btn-round btn-block btn-primary h-40">İşlem Detayları</button>
+                            <button type="button" data-target="#MdlIslemDetay" data-toggle="modal" class="btn btn-round btn-block btn-primary btn-blendpr h-40">İşlem Detayları</button>
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
                 <div id="TbStok" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="ManuelAramaCikis()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary btn-blendpr mb-1 h-40" ng-click="ManuelAramaCikis()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="form-group row my-1">
@@ -169,7 +169,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control" ng-keypress = "BtnManuelArama($event)"  ng-model="StokGridText" >
                                 <span class="input-group-append">
-                                    <button type="submit" class="btn btn-round btn-primary" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                                    <button type="submit" class="btn btn-round btn-primary btn-blendpr" ng-click="BtnStokGridGetir()"><i class="icon wb-search" aria-hidden="true"></i></button>
                                 </span>
                             </div>
                         </div>
@@ -186,10 +186,10 @@
                 <div id="TbPalet" class="tab-pane">
                     <div class="row py-1">
                         <div class="col-4 px-1">
-                            <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                            <button class="form-group btn btn-round btn-block btn-primary btn-blendpr mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-4 offset-4 px-1">
-                            <button type="button" class="btn btn-round btn-primary btn-block dropdown-toggle px-0 h-40" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                            <button type="button" class="btn btn-round btn-primary btn-blendpr btn-block dropdown-toggle px-0 h-40" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="orderdropdownanimation" role="menu" x-placement="bottom-start">
                                 <button class="dropdown-item" href="#" role="menu-item" ng-click="YeniPaletKod()">Yeni Evrak</button>
                                 <button class="dropdown-item" ng-click="BtnPaletBarkodSil()" role="menu-item">Satır Sil</a>
@@ -231,10 +231,10 @@
                     </div>
                     <div class="row">
                         <div class="col-6 p-5">
-                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnPaletBarkodEkle()">Ekle</button>
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block h-40" ng-click="BtnPaletBarkodEkle()">Ekle</button>
                         </div>
                         <div class="col-6 p-5">
-                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnPaletYazdir()">Yazdır</button>
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block h-40" ng-click="BtnPaletYazdir()">Yazdır</button>
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading">
@@ -353,10 +353,10 @@
                     </div> 
                     <div class="row">
                         <div class="col-6">
-                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click = "BtnEtiketEkle()">Etiket Ekle</button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block h-40" ng-click = "BtnEtiketEkle()">Etiket Ekle</button>        
                         </div>
                         <div class="col-6 ">
-                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click = "BtnFiyatDegisListe()">Getir</button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block h-40" ng-click = "BtnFiyatDegisListe()">Getir</button>        
                         </div>
                     </div>
                     <div class="row py-1 px-1">
@@ -402,7 +402,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 p-5">
-                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnFiyatUpdate()">Kaydet</button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block h-40" ng-click="BtnFiyatUpdate()">Kaydet</button>        
                         </div>
                     </div>
                 </div>
@@ -444,15 +444,15 @@
                     </div>
                     <div class="form-group row my--5">
                         <div class="form-group col-md-12 col-sm-12 col-lg-12">
-                            <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotOlustur()">Oluştur Ve Seç</button>
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block form-control-sm"  ng-click="BtnPartiLotOlustur()">Oluştur Ve Seç</button>
                         </div>
                     </div>
                     <div class="form-group row my--5">
                         <div class="form-group col-md-6 col-sm-6 col-lg-6">
-                            <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotSec()">Seç</button>
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block form-control-sm"  ng-click="BtnPartiLotSec()">Seç</button>
                         </div>
                         <div class="form-group col-md-6 col-sm-6 col-lg-6">
-                            <button type="submit" class="btn btn-round btn-primary btn-block form-control-sm"  ng-click="BtnPartiLotGetir()">Getir</button>
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block form-control-sm"  ng-click="BtnPartiLotGetir()">Getir</button>
                         </div>
                     </div>
                     <div id="TblPartiLot"></div>
@@ -525,10 +525,10 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                        <button class="btn btn-round btn-block btn-primary" ng-click="BtnBarkodEkleGridSec()">Seç</button>
+                        <button class="btn btn-round btn-block btn-primary btn-blendpr" ng-click="BtnBarkodEkleGridSec()">Seç</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-round btn-block btn-primary" ng-click="BtnBarkodEkleGridGetir()">Getir</button>
+                            <button class="btn btn-round btn-block btn-primary btn-blendpr" ng-click="BtnBarkodEkleGridGetir()">Getir</button>
                         </div>
                     </div>
                     <div class="col-1 offset-5" ng-show="Loading">
@@ -552,7 +552,7 @@
                                 </div>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-round btn-block btn-primary" ng-click="BtnTopluEtiketBas()">Toplu Etiket Bas</button>
+                                <button class="btn btn-round btn-block btn-primary btn-blendpr" ng-click="BtnTopluEtiketBas()">Toplu Etiket Bas</button>
                             </div>
                         </div>
                     </div>
@@ -585,7 +585,7 @@
                         </div>
                     </div>
                         <div class="col-6">
-                            <button class="form-group btn btn-round btn-block btn-primary my-1" ng-click="BtnBarkodEkle()">Barkod Ekle</button>
+                            <button class="form-group btn btn-round btn-block btn-primary btn-blendpr my-1" ng-click="BtnBarkodEkle()">Barkod Ekle</button>
                         </div>
                     </div>
                     <div id="TblPartiLot"></div>
@@ -616,7 +616,7 @@
                             </div>
                         </div>
                         <div class="col-2 px-1">
-                            <button type="submit" class="btn btn-round btn-primary  btn-block h-35" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr  btn-block h-35" ng-click="ScanBarkod()"><i class="fas fa-camera-retro fa-lg"></i></button>        
                         </div>
                     </div>
                     <div class="row py-10">
@@ -627,12 +627,12 @@
                             </div>
                         </div>
                         <div class="col-2 px-1">
-                            <button type="submit" class="btn btn-round btn-primary  btn-block h-35" ng-click="ScanReyon()"><i class="fas fa-camera-retro fa-lg"></i></button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr  btn-block h-35" ng-click="ScanReyon()"><i class="fas fa-camera-retro fa-lg"></i></button>        
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 p-5">
-                            <button type="submit" class="btn btn-round btn-primary btn-block h-40" ng-click="BtnReyonUpdate()">Kaydet</button>        
+                            <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block h-40" ng-click="BtnReyonUpdate()">Kaydet</button>        
                         </div>
                     </div>
                 </div>

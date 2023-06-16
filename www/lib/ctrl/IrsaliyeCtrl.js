@@ -1328,22 +1328,25 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {
                 db.StokBarkodGetir($scope.Firma,pBarkod,$scope.DepoNo,async function(BarkodData)
                 {
-                    $scope.PaletBarkodStok = await db.GetPromiseTag($scope.Firma,'PaletBarkodStokGetir',[pBarkod.toUpperCase()])
-                    if($scope.PaletBarkodStok.length > 0)
+                    if(UserParam[ParamName].Palet == "1")
                     {
-                        if($scope.PaletBarkodStok[0].DURUM == 1)
+                        $scope.PaletBarkodStok = await db.GetPromiseTag($scope.Firma,'PaletBarkodStokGetir',[pBarkod.toUpperCase()])
+                        if($scope.PaletBarkodStok.length > 0)
                         {
-                            alertify.alert("İşlem yapılmış Barkod getirelemez")
-                            return;
+                            if($scope.PaletBarkodStok[0].DURUM == 1)
+                            {
+                                alertify.alert("İşlem yapılmış Barkod getirelemez")
+                                return;
+                            }
+                            console.log($scope.PaletBarkodStok)
+                            await db.GetPromiseTag($scope.Firma,'PaletBarkodGetir',[$scope.PaletBarkodStok[0].PALET_KOD],function(paletData)
+                            {
+                                console.log(1)
+                                console.log(paletData)
+                                $scope.PltStokOnly = true;
+                                $scope.PaletDetayClick(paletData)
+                            })
                         }
-                        console.log($scope.PaletBarkodStok)
-                        await db.GetPromiseTag($scope.Firma,'PaletBarkodGetir',[$scope.PaletBarkodStok[0].PALET_KOD],function(paletData)
-                        {
-                            console.log(1)
-                            console.log(paletData)
-                            $scope.PltStokOnly = true;
-                            $scope.PaletDetayClick(paletData)
-                        })
                     }
                     console.log(BarkodData)
                     if(BarkodData.length > 0)
@@ -1604,7 +1607,10 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                             console.log(PBarkodData)
                             let PaletBarkodListe = [];
                             $scope.PBarkodListe = PBarkodData;
-                            $scope.PaletBarkodTamListe = await db.GetPromiseTag($scope.Firma,'PaletBarkodGetir',[pBarkod.toUpperCase()])
+                            if(UserParam[ParamName].Palet == "1")
+                            {
+                                $scope.PaletBarkodTamListe = await db.GetPromiseTag($scope.Firma,'PaletBarkodGetir',[pBarkod.toUpperCase()])
+                            }
                             console.log($scope.PaletBarkodTamListe)
                             if ($scope.PBarkodListe.length > 0) //PAKETTE OKUTMUŞ OLDUĞU KODDAN VAR İSE
                             {
@@ -1991,6 +1997,8 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $scope.DepoAdi = item.ADI;
             });     
         });
+        console.log($scope.DepoListe)
+        
         db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
         {
             $scope.SorumlulukListe = data; 
@@ -4256,13 +4264,13 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnAciklamaGir = function()
     {
+        $("#TbAciklama").addClass('active');
         $("#TbStok").removeClass('active');
         $("#TbIslemSatirlari").removeClass('active');
         $("#TbMain").removeClass('active');
         $("#TbCariSec").removeClass('active');
         $("#TbBelgeBilgisi").removeClass('active');
         $("#TbBarkodGiris").removeClass('active');
-        $("#TblAciklama").addClass('active');
         $("#TbGetir").removeClass('active');
         $scope.AciklamaGetir();
     }
@@ -4291,7 +4299,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
         $("#TbIhracatSec").removeClass('active');
-        $("#TblAciklama").removeClass('active');
+        $("#TbAciklama").removeClass('active');
         $("#TbGetir").removeClass('active');
     }
     $scope.BelgeBilgisiClick = function() 
@@ -4301,7 +4309,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbMain").removeClass('active');
         $("#TbDizayn").removeClass('active');
         $("#TbIhracatSec").removeClass('active');
-        $("#TblAciklama").removeClass('active');
+        $("#TbAciklama").removeClass('active');
         $("#TbGetir").removeClass('active');
     }
     $scope.BarkodGirisClick = function() 
@@ -4323,7 +4331,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $("#TbDizayn").removeClass('active');
                 $("#TbStokDurum").removeClass('active');
                 $("#TbIhracatSec").removeClass('active');
-                $("#TblAciklama").removeClass('active');
+                $("#TbAciklama").removeClass('active');
                 $("#TbGetir").removeClass('active');
                             
                 BarkodFocus();
@@ -4346,7 +4354,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $("#TbDizayn").removeClass('active');
             $("#TbStokDurum").removeClass('active');
             $("#TbIhracatSec").removeClass('active');
-            $("#TblAciklama").removeClass('active');
+            $("#TbAciklama").removeClass('active');
             $("#TbGetir").removeClass('active');
         }
         else
@@ -4358,7 +4366,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             $("#TbStok").removeClass('active');
             $("#TbStokDurum").removeClass('active');
             $("#TbIhracatSec").removeClass('active');
-            $("#TblAciklama").removeClass('active');
+            $("#TbAciklama").removeClass('active');
             $("#TbGetir").removeClass('active');
         }
     }
@@ -4375,7 +4383,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
         $("#TbIhracatSec").removeClass('active');
-        $("#TblAciklama").removeClass('active');
+        $("#TbAciklama").removeClass('active');
         $("#TbGetir").removeClass('active');
         CariFocus();
         }
@@ -4394,7 +4402,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         $("#TbMain").removeClass('active');
         $("#TbDizayn").removeClass('active');
         $("#TbStokDurum").removeClass('active');
-        $("#TblAciklama").removeClass('active');
+        $("#TbAciklama").removeClass('active');
         CariFocus();
         }
     }
@@ -4526,7 +4534,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.BtnEvrakGetirListele = async function()
     {   
-
         await db.GetPromiseTag($scope.Firma,'StokHarGetirListe',[$scope.Seri,$scope.GetirSira.toString(),$scope.EvrakTip,$scope.IlkTarih,$scope.SonTarih],async function(data)
         {
             $scope.EvrakGetirListe = data;

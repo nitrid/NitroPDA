@@ -4,7 +4,7 @@
             <div class="panel-group" aria-multiselectable="true" role="tablist">
                 <div class="panel py-1">
                     <div class="btn-group pr-10 py-1 float-right">
-                        <button type="button" class="btn btn-primary dropdown-toggle" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                        <button type="button" class="btn btn-primary btn-blendpr dropdown-toggle" id="DrpwSiparis" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
                         <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-start">
                             <button class="dropdown-item" data-target="#MdlKullanici" data-toggle="modal"  role="menu-item" ng-click="BtnYeni()">Ekle</button>
                             <button class="dropdown-item" data-target="#MdlKullanici" data-toggle="modal" role="menu-item" ng-click="BtnDuzenle()">Düzenle</a>
@@ -31,10 +31,10 @@
                                     <option ng-repeat="option in CmbParamList" value="{{option.Name}}">{{option.Name}}</option>
                                 </select>
                                 <div class="col-4">
-                                    <button type="submit" class="btn btn-primary form-control-sm btn-block" ng-click="BtnParamKaydet()">Kaydet</button>
+                                    <button type="submit" class="btn btn-primary btn-blendpr form-control-sm btn-block" ng-click="BtnParamKaydet()">Kaydet</button>
                                 </div>
                                 <div class="col-4">
-                                    <button type="submit" class="btn btn-primary form-control-sm btn-block" ng-click="BtnParamCikis()">Çıkış</button>
+                                    <button type="submit" class="btn btn-primary btn-blendpr form-control-sm btn-block" ng-click="BtnParamCikis()">Çıkış</button>
                                 </div>
                             </div>
                             <div id="ParamView">
@@ -68,7 +68,7 @@
                             <input type="text" class="form-control col-lg-10 col-md-10 col-sm-8 offset-0" ng-model="MikroId">
                         </div>
                         <div class="row my-5">
-                            <button type="submit" class="btn btn-primary form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="Kaydet()">Kaydet</button>
+                            <button type="submit" class="btn btn-primary btn-blendpr form-control-sm btn-block col-lg-12 col-sm-12 col-sm-12" ng-click="Kaydet()">Kaydet</button>
                         </div>
                     </div>
                 </div>

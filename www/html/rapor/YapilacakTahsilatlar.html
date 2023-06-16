@@ -7,7 +7,7 @@
                             <h3 style="font-weight:bold" class="panel-title">{{Evrakadi}}</h3>
                           <ul class="panel-actions panel-actions-keep">
                             <div class="btn-group dropdown">
-                                <button type="button" class="btn btn-round btn-primary btn-sm dropdown-toggle" id="exampleBulletDropdown2"
+                                <button type="button" class="btn btn-round btn-primary btn-blendpr btn-sm dropdown-toggle" id="exampleBulletDropdown2"
                                 data-toggle="dropdown" aria-expanded="false">
                                 Rapor Türü
                                 </button>
@@ -25,7 +25,7 @@
                                 <div class="col-12 px-5 py-5">
                                     <div class="input-group px-5">
                                         <input type="text" class="form-control focus" placeholder="Temsilci Seçmek İçin Tıklayınız..." ng-click="BtnTemsilciTab()" data-toggle="modal" ng-model="PersonelAdi">
-                                        <button type="submit" class="btn btn-round btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                        <button type="submit" class="btn btn-round btn-primary btn-blendpr" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -33,7 +33,7 @@
                                 <div class="col-11 px-1 py-5">
                                     <div class="input-group px-5">
                                         <input type="text" class="form-control focus" placeholder="Cari Listelemek İçin Tıklayınız..." ng-click="CariSecClick()" ng-model="CariAdi">
-                                        <button type="submit" class="btn btn-round btn-primary" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
+                                        <button type="submit" class="btn btn-round btn-primary btn-blendpr" ng-click="BtnTemizle()"><i class="fas fa-backspace fa-lg"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                             </div>
                             <div class="row py-5">
                                 <div class="col-12" >
-                                    <button type="submit" class="btn btn-round btn-primary btn-block btn-sm" ng-click="BtnGetir()">RAPOR AL</button>
+                                    <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block btn-sm" ng-click="BtnGetir()">RAPOR AL</button>
                                 </div>
                             </div>
                             <div class="row py-1 px-1">           
@@ -68,7 +68,7 @@
                     <div id="TbTemsilci" class="tab-pane">
                         <div class="row pt-0 pb-1 pb-5">
                             <div class="col-4 px-1">
-                                <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                                <button class="form-group btn btn-round btn-block btn-primary btn-blendpr mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                             </div>
                         </div>
                         <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Temsilci Seçimi</h3> </div>
@@ -79,7 +79,7 @@
                     <div id="TbCariFoy" class="tab-pane">
                         <div class="row pt-0 pb-1 pb-5">
                             <div class="col-4 px-1">
-                                <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                                <button class="form-group btn btn-round btn-block btn-primary btn-blendpr mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                             </div>
                         </div>
                         <div class="text-primary" style="padding: -10px;"><h3 class="text-center text-primary">Cari Hareket Föyü</h3> </div>
@@ -91,10 +91,10 @@
                     <div id="TbCari" class="tab-pane">
                         <div class="row py-1">
                             <div class="col-4 px-1">
-                                <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
+                                <button class="form-group btn btn-round btn-block btn-primary btn-blendpr mb-1 h-40" ng-click="MainClick()"><i class="icon wb-arrow-left" aria-hidden="true"></i></button>
                             </div>
                             <div class="col-4 px-1">
-                                <button class="form-group btn btn-round btn-block btn-primary mb-1 h-40" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
+                                <button class="form-group btn btn-round btn-block btn-primary btn-blendpr mb-1 h-40" ng-click="BarkodGirisClick()"><i class="fas fa-barcode fa-lg"></i></button>
                             </div>
                         </div>
                         <div class="row pt-5">
@@ -113,7 +113,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" ng-keypress = "BtnCariListeleEnter($event)" ng-model="TxtCariAra" ng-disabled="EvrakLock">
                                     <span class="input-group-append">
-                                        <button type="submit" class="btn btn-round btn-primary"  ng-click="BtnCariListele()"><i class="icon wb-search" aria-hidden="true"></i></button>
+                                        <button type="submit" class="btn btn-round btn-primary btn-blendpr"  ng-click="BtnCariListele()"><i class="icon wb-search" aria-hidden="true"></i></button>
                                     </span>
                                 </div>
                             </div>
