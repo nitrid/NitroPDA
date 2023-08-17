@@ -29,6 +29,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
         $scope.Birim = "0";
         $scope.StokGridTip = "0";
         $scope.StokGridText = "";
+        $scope.Special = "0";
 
         $scope.SorumlulukListe = [];
         $scope.GDepoListe = [];
@@ -352,6 +353,22 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
     }
     function StokBarkodGetir(pBarkod)
     {
+        let Kilo = pBarkod;
+        let KiloFlag = UserParam.Sistem.KiloFlag;
+        let FlagDizi = KiloFlag.split(',')
+        let Flag = Kilo.slice(0,2);
+        for (i = 0; i < FlagDizi.length; i++ )
+        {
+            if(Flag == FlagDizi[i])
+            {
+                var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
+                console.log(UserParam.Sistem.KiloBaslangic,UserParam.Sistem.KiloUzunluk)
+
+                var Uzunluk = Kilo.slice(Number(UserParam.Sistem.KiloBaslangic),(Number(UserParam.Sistem.KiloBaslangic)+Number(UserParam.Sistem.KiloUzunluk)));
+                pBarkod = kBarkod
+                $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
+            }
+        }
         if(pBarkod != '')
         {
             db.StokBarkodGetir($scope.Firma,pBarkod,$scope.GDepo,function(BarkodData)
@@ -406,6 +423,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
 
         $scope.EvrakLock = false;
         $scope.Seri = UserParam.DepoSiparis.Seri;
+        $scope.Special = UserParam.DepoSiparis.Special;
 
         $scope.Stok = 
         [
@@ -589,6 +607,41 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
             if(item.KODU == $scope.CDepo)
                 $scope.CDepoAdi = item.ADI;
         });
+    }
+    $scope.BtnOnlineYazdir = function()
+    {   
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "UPDATE STOK_HAREKETLERI SET sth_special1 = @sth_special1 " +
+                    "WHERE sth_evrakno_seri = @sth_evrakno_seri AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip ",
+            param:  ['sth_special1','sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
+            type:   ['string|25','string|25','int','int',],
+            value:  [$scope.Special,$scope.Seri,$scope.Sira,$scope.EvrakTip]
+        }
+        console.log([$scope.Special,$scope.Seri,$scope.Sira,$scope.EvrakTip])
+        db.ExecuteQuery(TmpQuery,function(data)
+        {
+            if(typeof(data.result.err) == 'undefined')
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Başarıyla Gerçekleşti !" + "</a>" );
+            }
+            else
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşleminde Hata !" + "</a>" ); 
+            }
+        });
+    }
+    $scope.YazdirTipSecim = function()
+    {
+        if(UserParam.Sistem.OnlineYazdir == "1")
+        {
+            $scope.BtnOnlineYazdir();
+        }
+        else
+        {
+            alertify.alert("Online Yazdır Parametreniz Etkin Değil!")
+        }
     }
     $scope.MiktarFiyatValid = function()
     {
@@ -869,7 +922,7 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
             if($scope.GDepo == $scope.CDepo)
             {
                 alertify.alert("Giriş ve Çıkış Deposu Aynı Olamaz!");
-
+            
                 $("#TbMain").addClass('active');
                 $("#TbBelgeBilgisi").removeClass('active');
                 $("#TbBarkodGiris").removeClass('active');
@@ -889,6 +942,11 @@ function DepoSiparisCtrl($scope,$window,$timeout,db)
     }
     $scope.IslemSatirlariClick = function()
     {   
+        if($scope.DepoSiparisListe.length == 0)
+        {
+            alertify.alert("Gösterilecek Evrak Bulunamadı!");
+            return;
+        }
         $("#TbIslemSatirlari").addClass('active');
         $("#TbMain").removeClass('active');
         $("#TbBelgeBilgisi").removeClass('active');

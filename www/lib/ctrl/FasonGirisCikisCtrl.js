@@ -464,6 +464,7 @@ function FasonGirisCikisCtrl($scope,$window,$timeout,db)
                     $scope.Stok[0].TOPMIKTAR = 1;
                     if($scope.IsEmriStokData.length > 0)
                     {
+                        console.log(1)
                         $scope.Stok[0].UPLGUID = $scope.IsEmriStokData[0].GUID;
                         $scope.Stok[0].ISEMRI = $scope.IsEmriStokData[0].ISEMRI;
                         $scope.Stok[0].KALAN = $scope.IsEmriStokData[0].KALAN;
@@ -471,10 +472,32 @@ function FasonGirisCikisCtrl($scope,$window,$timeout,db)
                     }
                     else
                     {
+                        console.log(2)
                         $scope.Stok[0].UPLGUID = "00000000-0000-0000-0000-000000000000";
                         $scope.Stok[0].ISEMRI = $scope.IsEmriKodu;
                         $scope.Stok[0].KALAN = $scope.Stok[0].DEPOMIKTAR;
-                        $scope.Stok[0].ISHGUID = "00000000-0000-0000-0000-000000000000";
+                        var TmpQuery = 
+                        {
+                            db : '{M}.' + $scope.Firma,
+                            query:  
+                            `(Select ish_Guid From dbo.ISEMRI_MALZEME_DURUMLARI where (ish_isemri=@ISEMRI) and (ish_stokhizm_gid_kod=@STOKKOD) and (ish_stok_hizm_gider = 0))`,
+                            param:  ['ISEMRI','STOKKOD'],
+                            type:   ['string|25','string|25'],
+                            value:  [$scope.IsEmriKodu,$scope.Stok[0].KODU]
+                        }
+                        console.log(TmpQuery)
+                        db.GetPromiseQuery(TmpQuery,function(data)
+                        {   
+                            console.log(data)
+                            if(data.length > 0)
+                            {
+                                $scope.Stok[0].ISHGUID = data[0].ish_Guid;
+                            }
+                            else
+                            {
+                                $scope.Stok[0].ISHGUID = "00000000-0000-0000-0000-000000000000";
+                            }
+                        });
                     }
                     
                     $scope.BarkodLock = true;
@@ -679,6 +702,7 @@ function FasonGirisCikisCtrl($scope,$window,$timeout,db)
                 }
                 else
                 {
+                    console.log($scope.Stok[0].ISHGUID)
                     if($scope.Stok[0].ISHGUID == '00000000-0000-0000-0000-000000000000')
                     {
                         var InsertData = 
@@ -701,6 +725,7 @@ function FasonGirisCikisCtrl($scope,$window,$timeout,db)
                     }
                     else
                     {
+                        console.log($scope.Miktar)
                         db.ExecuteTag($scope.Firma,'IsEmriUrtUpdate',[$scope.Miktar * $scope.Stok[0].CARPAN,$scope.Stok[0].ISHGUID]);
                     }
                 }
@@ -879,6 +904,7 @@ function FasonGirisCikisCtrl($scope,$window,$timeout,db)
 
         if($scope.CariKodu != "")
         {
+            console.log([$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu])
             db.GetData($scope.Firma,'CariGetir',[$scope.CariKodu,'',UserParam.Sistem.PlasiyerKodu],function(data)
             {
                 $scope.CariListe = data;

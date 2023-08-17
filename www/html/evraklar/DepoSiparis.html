@@ -236,8 +236,25 @@
                     <div class="row py-1 px-1">
                         <div id="TblIslem"></div>
                     </div>
-                    <h5 class="text-right"><span style="color:dodgerblue;">Toplam Satır  :</span> {{ToplamSatir | number:2}}</h5>
-                    <h5 class="text-right"><span style="color:dodgerblue;">Toplam Miktar :</span> {{ToplamMiktar | number:2}}</h5>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-round btn-block btn-primary btn-blendpr h-60" ng-click="YazdirTipSecim()">
+                                        <span class="glyphicon glyphicon-print"  aria-hidden="true" ></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="text-right"><span style="color:dodgerblue;">Toplam Satır  :</span> {{ToplamSatir | number:2}}</h5>
+                                    <h5 class="text-right"><span style="color:dodgerblue;">Toplam Miktar :</span> {{ToplamMiktar | number:2}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="TbStok" class="tab-pane">
                     <div class="row py-1">

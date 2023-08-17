@@ -393,12 +393,11 @@
                         <div class="col-4">
                             <div class="row">
                                 <div class="col-12">
-                                    <button class="btn btn-round btn-block btn-primary btn-blendpr h-60">
-                                        <span class="glyphicon glyphicon-print"  aria-hidden="true" ng-click="YazdirTipSecim()"></span>
+                                    <button ng-click="YazdirTipSecim()" class="btn btn-round btn-block btn-primary btn-blendpr h-60">
+                                        <span class="glyphicon glyphicon-print"  aria-hidden="true"></span>
                                     </button>
                                 </div>
                             </div>
-                     
                         </div>
                         <div class="col-8">
                             <div class="row">
@@ -844,6 +843,34 @@
                         <div class="loader vertical-align-middle loader-circle"></div>
                     </div>
                     <div id="TblStok" class="pt-5" ng-show="TblLoading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fiş Dizayn Seç Modal-->
+    <div class="modal fade" id="MdlDizaynEkran" role="dialog" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-simple modal-primary modal-center px-10">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title">Dizayn Seç</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row my-5">
+                        <div class="col-8 px-1">
+                            <select class="form-control form-control" ng-model="FisDizaynTip" ng-change="DizaynChange()">
+                                <option value="0">Dizayn 1</option>
+                                <option value="1">Dizayn 2</option>
+                                <option value="2">Dizayn 3</option>
+                                <option value="3">Dizayn 4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row px-10">
+                        <button type="submit" class="btn btn-round btn-primary btn-blendpr col-12" ng-click="BtnFisYazdir()">Yazdır</button>
+                    </div>
                 </div>
             </div>
         </div>

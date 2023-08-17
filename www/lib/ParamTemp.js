@@ -31,7 +31,8 @@ var ParamTemp =
 			"RiskLimitOran": {"Title" : "Risk Limit Oran","DefaultValue" : ""},
 			"FisDizayn": {"Title" : "Fiş Dizayn","DefaultValue" : "0"},
 			"OfflineDepo": {"Title" : "Offline Depo","DefaultValue" : "0"},
-			"OnlineYazdir": {"Title" : "Online Yazdır","DefaultValue" : "0"}
+			"OnlineYazdir": {"Title" : "Online Yazdır","DefaultValue" : "0"},
+			"Palet" : {"Title" : "Paletleme ","DefaultValue" : "0"}
 		},
 		"Sayim" :
 		{

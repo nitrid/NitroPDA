@@ -1328,7 +1328,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
             {
                 db.StokBarkodGetir($scope.Firma,pBarkod,$scope.DepoNo,async function(BarkodData)
                 {
-                    if(UserParam[ParamName].Palet == "1")
+                    if(UserParam.Sistem.Palet == "1")
                     {
                         $scope.PaletBarkodStok = await db.GetPromiseTag($scope.Firma,'PaletBarkodStokGetir',[pBarkod.toUpperCase()])
                         if($scope.PaletBarkodStok.length > 0)
@@ -1604,10 +1604,9 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                         //STOKTA OLMADIĞI İÇİN PAKETTE VAR MI DİYE KONTROL EDİYOR
                         await db.GetData($scope.Firma,'PaketBarkodGetir',[pBarkod,$scope.DepoNo,$scope.FiyatListeNo],async function(PBarkodData)
                         {
-                            console.log(PBarkodData)
                             let PaletBarkodListe = [];
                             $scope.PBarkodListe = PBarkodData;
-                            if(UserParam[ParamName].Palet == "1")
+                            if(UserParam.Sistem.Palet == "1")
                             {
                                 $scope.PaletBarkodTamListe = await db.GetPromiseTag($scope.Firma,'PaletBarkodGetir',[pBarkod.toUpperCase()])
                             }
@@ -1877,6 +1876,19 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                     $window.document.getElementById("SeriNo").focus();
                     $window.document.getElementById("SeriNo").select();
                 },400)
+            }
+        }
+    }
+    function FaturaKontrol()
+    {
+        if($scope.IrsaliyeListe.length > 0)
+        {
+            for (let i = 0; i < $scope.IrsaliyeListe.length; i++) 
+            {
+                if($scope.IrsaliyeListe[i].sth_fat_uid != '00000000-0000-0000-0000-000000000000')
+                {
+                    return false
+                }
             }
         }
     }
@@ -4695,6 +4707,7 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
     }
     $scope.YazdirTipSecim = function()
     {
+        console.log("yarr",UserParam.Sistem.OnlineYazdir)
         if(UserParam.Sistem.OnlineYazdir == "1")
         {
             $scope.BtnOnlineYazdir();

@@ -1,5 +1,6 @@
 function Login ($scope,$rootScope,$window,db)
 {
+    let UserSelectedRow = null;
     let Firma = "";
     let UserParam;
     $scope.server_adress = localStorage.host;
@@ -38,15 +39,65 @@ function Login ($scope,$rootScope,$window,db)
         }
         return false;
     }
+    function InitUserGrid()
+    {
+        $("#TblUser").jsGrid
+        ({
+            width: "100%",
+            updateOnResize: true,
+            heading: true,
+            selecting: true,
+            data : Param,
+            paging : true,
+            pageSize: 30,
+            pageButtonCount: 3,
+            pagerFormat: "{pages} {next} {last}    {pageIndex} of {pageCount}",
+            fields: [
+                {
+                    name: "Kullanici",
+                    title: "KULLANICI ADI",
+                    type: "text",
+                    align: "center",
+                    width: 125
+                },
+                {
+                    name: "MikroId",
+                    title: "MIKRO ID",
+                    type: "text",
+                    align: "center",
+                    width: 200
+                }, 
+            ],
+            rowClick: function(args)
+            {
+                $scope.UserListeRowClick(args.itemIndex,args.item,this);
+                $scope.$apply();
+            }
+        });
+    }
+    $scope.UserListeRowClick = function(pIndex,pItem,pObj)
+    {
+        if ( UserSelectedRow ) { UserSelectedRow.children('.jsgrid-cell').css('background-color', '').css('color',''); }
+        var $row = pObj.rowByItem(pItem);
+        $row.children('.jsgrid-cell').css('background-color','#2979FF').css('color','white');
+        UserSelectedRow = $row;
+        
+        $scope.Kullanici = Param[pIndex].Kullanici;
+        console.log($('#MdlUserList').modal)
+        setTimeout(function(){$('#MdlUserList').modal('hide');},100);
+
+    }
     $scope.Init = function()
     {   
+        InitUserGrid();
+        console.log($window.document.getElementById("TblUser"))
         $scope.Firm = ""
         gtag('config', 'UA-12198315-14', 
         {
             'page_title' : 'Login',
             'page_path': '/Login'
         });
-        
+        console.log(Param)
         $scope.Kullanici = localStorage.username;
         $scope.Password = localStorage.Password;
         $scope.SecilenFirmalar = []

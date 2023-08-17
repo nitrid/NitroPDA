@@ -21,7 +21,8 @@
     <link rel="stylesheet" href="theme/global/css/bootstrap.min.css">
     <link rel="stylesheet" href="theme/global/css/bootstrap-extend.min.css">
     <link rel="stylesheet" href="theme/base/assets/css/site.min.css">
-    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" rel="stylesheet"/>
 
     <!-- Plugins -->
     <link rel="stylesheet" href="theme/global/vendor/animsition/animsition.css">
@@ -182,6 +183,21 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="MdlUserList" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1">
+      <div class="modal-dialog modal-simple modal-center modal-primary">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">X</span>
+                  </button>
+                  <h4 class="modal-title">Kullanıcı Listesi</h4>
+              </div>
+              <div class="modal-body px-1 py-1">
+                  <div id="TblUser" class="pt-5"></div>
+              </div>
+          </div>
+      </div>
+  </div>
     <div class="page-content py-5" data-animsition-in="fade-in" data-animsition-out="fade-out"> 
       <div class="page-content animation-slide-top animation-duration-1 mx--20 py-0">
         <div class="panel modal-center"> 
@@ -205,7 +221,6 @@
                  </select>
                </div>
               </div>
-
               <div class="form-group clearfix">
                 <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
                   <input type="checkbox" id="BeniHatirla" name="remember">
@@ -223,6 +238,11 @@
               </div>
               <div class="form-group clearfix">
                 <div class="row">
+                  <div class="col-12 px-5">
+                    <button type="submit" class="btn btn-round btn-success btn-block btn-lg" href="#MdlUserList" data-toggle="modal" ng-click="BtnUserSelect()">Kullanıcı Seçimi</button>
+                  </div>
+                </div>
+                <div class="row pt-5">
                   <div class="col-6 px-5">
                     <button type="submit" class="btn btn-round btn-primary btn-block btn-lg" ng-click="BtnEntry()">Giriş</button>
                   </div>
@@ -409,7 +429,8 @@
     <script src="lib/ctrl/CariAnalizCtrl.js"></script>
     <script src="lib/ctrl/BankaRaporCtrl.js"></script>
     
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
 
     <!-- EXCEL EXPORT -->
     <script src="excel/Blob.js"></script>
@@ -424,5 +445,11 @@
     <script src="lib/App.js"></script>
     <script src="lib/Controller.js"></script>    
 
+    <style>
+      .jsgrid-cell
+      { 
+        overflow: hidden; 
+      }
+      </style>
   </body>
 </html>

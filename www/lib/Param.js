@@ -24,14 +24,15 @@ var Param = [
 			"SiparisOnayListele": "-1",
 			"EslestirmeEksiyeDusme": "0",
 			"BTYaziciTip": "CORDOVABT",
-			"BTYaziciAdi": "SP320_008C",
+			"BTYaziciAdi": "1917MZ01",
 			"FirmaListe": "",
 			"RiskParam": "0",
 			"RiskLimitOran": "100",
 			"FisDizayn": "0",
 			"OfflineDepo": "1",
 			"OnlineYazdir": "0",
-			"PartiBarkodOlustur": "1"
+			"PartiBarkodOlustur": "1",
+			"Palet": "0"
 		},
 		"StokRaporu": {
 			"DepoNo": "4"
@@ -350,7 +351,7 @@ var Param = [
 			"Is Emri Depo Sevk": "0",
 			"Sipariş Operasyonları": "0",
 			"Proforma Alınan Siparis": "0",
-			"Raf Yönetimi": "1"
+			"Raf Yönetimi": "0"
 		},
 		"AlisFatura": {
 			"EvrakTip": "1",
@@ -445,7 +446,7 @@ var Param = [
 			"IsMerkeziListe": "",
 			"CmbEvrakTip": "0",
 			"Cari": "",
-			"ReceteKontrol": "0"
+			"ReceteKontrol": "1"
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",
@@ -578,7 +579,8 @@ var Param = [
 			"RiskLimitOran": "",
 			"FisDizayn": "0",
 			"OfflineDepo": "0",
-			"OnlineYazdir": "0"
+			"OnlineYazdir": "0",
+			"Palet": "0"
 		},
 		"Sayim": {
 			"EvrakNo": "205",
@@ -890,7 +892,9 @@ var Param = [
 			"Sorumluluk": "",
 			"Personel": "",
 			"Proje": "",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"Cari": "",
+			"ReceteKontrol": "0"
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",
@@ -1036,7 +1040,8 @@ var Param = [
 			"RiskLimitOran": "",
 			"FisDizayn": "0",
 			"OfflineDepo": "0",
-			"OnlineYazdir": "0"
+			"OnlineYazdir": "1",
+			"Palet": "0"
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -1125,7 +1130,8 @@ var Param = [
 			"GDepoListe": "",
 			"Sorumluluk": "",
 			"EvrakSil": "0",
-			"EksiyeDusme": "0"
+			"EksiyeDusme": "0",
+			"Special": "1"
 		},
 		"DepoMalKabul": {
 			"EvrakTip": "0",
@@ -1170,7 +1176,8 @@ var Param = [
 			"GDepo": "1",
 			"GDepoListe": "",
 			"Sorumluluk": "",
-			"SorumlulukListe": "1"
+			"SorumlulukListe": "1",
+			"Special": "1"
 		},
 		"AlisIrsaliye": {
 			"EvrakTip": "0",
@@ -1347,7 +1354,9 @@ var Param = [
 			"Sorumluluk": "",
 			"Personel": "",
 			"Proje": "",
-			"EvrakSil": "0"
+			"EvrakSil": "0",
+			"Cari": "",
+			"ReceteKontrol": "0"
 		},
 		"TahsilatMakbuzu": {
 			"ChaEvrakTip": "1",

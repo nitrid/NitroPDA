@@ -1584,11 +1584,14 @@ function FiyatGorCtrl($scope,$window,$timeout,db)
                     $scope.DepoAdi = item.ADI;
             });          
         });
-        db.GetPromiseTag($scope.Firma,'PaletBarkodSira',[],function(data)
+        if(UserParam.Sistem.Palet == "1")
         {
-            console.log(data)
-            $scope.PaletKodu = data[0].PALET_KOD
-        });
+            db.GetPromiseTag($scope.Firma,'PaletBarkodSira',[],function(data)
+            {
+                console.log(data)
+                $scope.PaletKodu = data[0].PALET_KOD
+            });
+        }
         
         // db.FillCmbDocInfo($scope.Firma,'CmbDepoGetir',function(data){$scope.DepoListe = data; $scope.DepoNo = UserParam.FiyatGor.DepoNo});
         db.MaxSiraPromiseTag($scope.Firma,'MaxEtiketSira',[$scope.Seri],function(data){$scope.Sira = data});

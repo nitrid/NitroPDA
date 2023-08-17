@@ -56,6 +56,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.CmbEvrakTip = "0";
         $scope.RafKodu = "";
         $scope.RafHarTip = 0;
+        $scope.Special = "0";
         
         $scope.CDepoListe = [];
         $scope.GDepoListe = [];
@@ -563,7 +564,9 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
             if(Flag == FlagDizi[i])
             {
                 var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
-                var Uzunluk = Kilo.slice(UserParam.Sistem.KiloBaslangic,((UserParam.Sistem.KiloBaslangic)+(UserParam.Sistem.KiloUzunluk)));
+                console.log(UserParam.Sistem.KiloBaslangic,UserParam.Sistem.KiloUzunluk)
+
+                var Uzunluk = Kilo.slice(Number(UserParam.Sistem.KiloBaslangic),(Number(UserParam.Sistem.KiloBaslangic)+Number(UserParam.Sistem.KiloUzunluk)));
                 pBarkod = kBarkod
                 $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
             }
@@ -1406,6 +1409,7 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         $scope.Seri = UserParam.DepoSevk.Seri;
         $scope.BelgeNo = UserParam.DepoSevk.BelgeNo;
         $scope.CmbEvrakTip = UserParam.DepoSevk.EvrakTip;
+        $scope.Special = UserParam.DepoSevk.Special;
         $scope.EvrakTipChange();
 
         $scope.Stok = 
@@ -1561,6 +1565,40 @@ function DepoSevkCtrl($scope,$window,$timeout,db)
         else
         {
             $scope.TxtLot = 1;
+        }
+    }
+    $scope.BtnOnlineYazdir = function()
+    {   
+        var TmpQuery = 
+        {
+            db : '{M}.' + $scope.Firma,
+            query:  "UPDATE STOK_HAREKETLERI SET sth_special1 = @sth_special1 " +
+                    "WHERE sth_evrakno_seri = @sth_evrakno_seri AND sth_evrakno_sira = @sth_evrakno_sira AND sth_evraktip = @sth_evraktip ",
+            param:  ['sth_special1','sth_evrakno_seri','sth_evrakno_sira','sth_evraktip'],
+            type:   ['string|25','string|25','int','int',],
+            value:  [$scope.Special,$scope.Seri,$scope.Sira,$scope.EvrakTip]
+        }
+        db.ExecuteQuery(TmpQuery,function(data)
+        {
+            if(typeof(data.result.err) == 'undefined')
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşlemi Başarıyla Gerçekleşti !" + "</a>" );
+            }
+            else
+            {
+                alertify.alert("<a style='color:#3e8ef7''>" + "Yazdırma İşleminde Hata !" + "</a>" ); 
+            }
+        });
+    }
+    $scope.YazdirTipSecim = function()
+    {
+        if(UserParam.Sistem.OnlineYazdir == "1")
+        {
+            $scope.BtnOnlineYazdir();
+        }
+        else
+        {
+            alertify.alert("Online Yazdır Parametreniz Etkin Değil!")
         }
     }
     $scope.MainClick = function() 
