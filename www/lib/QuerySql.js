@@ -1820,7 +1820,7 @@ var QuerySql =
                 "sip_miktar  AS MIKTAR , (SELECT dbo.fn_StokBirimi(sip_stok_kod,sip_birim_pntr)) AS BIRIMADI,  " +
                 "ROUND((sip_tutar / sip_miktar),2) AS FIYAT, " +
                 "ROUND(sip_tutar,2) AS TUTAR, " +
-                "(SELECT TOP 1 bar_kodu  FROM  BARKOD_TANIMLARI WHERE bar_Stokkodu = sip_stok_kod) AS BARKOD " +
+                "(SELECT TOP 1 bar_kodu  FROM  BARKOD_TANIMLARI WHERE bar_stokkodu = sip_stok_kod) AS BARKOD " +
                 " FROM SIPARISLER WHERE sip_evrakno_seri = @sip_evrakno_seri AND " +
                 "sip_evrakno_sira = @sip_evrakno_sira and sip_tip = @sip_tip and sip_cins = @sip_cins " +
                 "ORDER BY sip_satirno ASC",
