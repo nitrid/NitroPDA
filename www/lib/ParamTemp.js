@@ -13,7 +13,7 @@ var ParamTemp =
 			"EslestirmeEvrakTip" : {"Title" : "Eşleştirme Evrak Tipi","DefaultValue" : "0"},
 			"DepoMalKabulEvrakTip" : {"Title" : "Depo Mal Kabul Evrak Tipi","DefaultValue" : "1"},
 			"SiparisOlmayanBarkodKabul" : {"Title" : "Siparişi Olmayan Barkod Kabul","DefaultValue" : "1"},
-			"PartiLotKontrol" : {"Title" : "Parti Lot Kontrol","DefaultValue" : "0"},
+			"PartiLotKontrol" : {"Title" : "Parti Lot Tekrar Kontrol","DefaultValue" : "0"},
 			"PartiLotMiktarKontrol" : {"Title" : "Parti Lot Miktar Kontrol","DefaultValue" : "0"},
 			"KiloFlag" : {"Title" : "Kilo Flag","DefaultValue" : "26,27,28"},
 			"KiloBaslangic" : {"Title" : "Kilo Başlangıç","DefaultValue" : "7"},
