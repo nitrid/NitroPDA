@@ -1118,6 +1118,10 @@ var QuerySql =
                 "CARI_HESAPLAR.cari_kod AS CARIKOD, " +             
                 "CARI_HESAPLAR.cari_unvan1 AS CARIADI, " +
                 "SIPARIS.sip_doviz_cinsi AS DOVIZCINSI, " +
+                "ISNULL((SELECT dbo.fn_KurBul(CONVERT(VARCHAR(10),GETDATE(),112),ISNULL(sip_doviz_cinsi,0),2)),1) AS DOVIZCINSKURU, " +
+                "MAX(SIPARIS.sip_doviz_cinsi) AS DOVIZCINSI, " +
+                "MAX(SIPARIS.sip_doviz_kuru) AS DOVIZKURU, " +
+                "MAX(SIPARIS.sip_alt_doviz_kuru) AS ALTDOVIZKURU, " +
                 "MAX(SIPARIS.sip_cari_sormerk) AS SORUMLULUK, " +
                 "MAX(SIPARIS.sip_satici_kod) AS PERSONEL, " +
                 "MAX(sip_projekodu) AS PROJE, " +
