@@ -101,7 +101,6 @@ function Login ($scope,$rootScope,$window,db)
         $scope.Kullanici = localStorage.username;
         $scope.Password = localStorage.Password;
         $scope.SecilenFirmalar = []
-
         for(i = 0;i < Param.length;i++)
         {
             if(Param[i].Kullanici == $scope.Kullanici)
@@ -122,7 +121,6 @@ function Login ($scope,$rootScope,$window,db)
         }
         
         $scope.DepoNo = 1;
-
         if(localStorage.username != '' && localStorage.Password != '')
         {
             if(typeof localStorage.username != 'undefined' && typeof localStorage.Password != 'undefined')
@@ -140,7 +138,16 @@ function Login ($scope,$rootScope,$window,db)
             $scope.server_adress = window.location.hostname;
             $scope.HostSettingSave();
         }
-        $scope.ConfigControl();
+        $scope.switchValue = localStorage.mode === "true" ? true : false; // Başlangıçta true olarak ayarla
+        setTimeout(function () 
+        {
+            new Switchery(document.querySelector('.js-switch'));
+        },500)
+        // Switchery'yi etkinleştirme
+
+        $scope.$watch('switchValue', function(newVal) {
+            console.log('Switch değeri değişti: ' + newVal);
+        });
     }
     $scope.HostSettingSave = function()
     {
@@ -214,7 +221,7 @@ function Login ($scope,$rootScope,$window,db)
                         if(data == true)
                         {
                             $('#alert').alert('close');                    
-    
+                            $scope.ConfigControl();
                             db.Emit('QMikroDb',QuerySql.Firma,(data) =>
                             {
                                 if(typeof data.result.err == 'undefined')
@@ -296,7 +303,7 @@ function Login ($scope,$rootScope,$window,db)
     {
         db.SetHost($scope.server_adress);
 
-        if(localStorage.mode == 'true')
+        if(localStorage.mode == 'false')
         {
             db.Disconnect();
         }
@@ -455,7 +462,8 @@ function Login ($scope,$rootScope,$window,db)
     }
     $scope.ChangeMode = function()
     {
-        localStorage.mode = document.getElementById('inputBasicOn').checked;
+        localStorage.mode = $scope.switchValue
+        
         $window.location.reload();
     }
     $scope.SifirlaMode = function()

@@ -254,7 +254,8 @@
                   <div class="pt-10 pl-25 offset-2 col-xl-12"> 
                     <div ng-click="ChangeMode()">
                       <label id="Off" class="pt-3" for="inputBasicOff">Offline</label>
-                      <input type="checkbox" id="inputBasicOn" data-plugin="switchery" data-switchery="true" style="display: none;">                                   
+                      <input type="checkbox" class="js-switch" ng-model="switchValue"/>
+                      <!-- <input type="checkbox" id="inputBasicOn" data-plugin="switchery" data-switchery="true" style="display: none;">                                    -->
                       <label id="On" class="pt-3" for="inputBasicOn">Online</label>
                     </div>  
                   </div>  
