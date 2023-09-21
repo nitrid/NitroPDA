@@ -1597,7 +1597,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                 $window.document.getElementById("Miktar").select();
                             }
                         }
-                    // offline için kapatıldı $scope.SonSatisGetir();
                     }
                     else
                     {   
@@ -1668,7 +1667,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                                     $scope.Stok[0].TOPTANVERGI = 0;
                                     $scope.Miktar = db.SumColumn(PaletBarkodListe,"MIKTAR");
                                     
-                                    //$scope.PaketBarkodKontrol = true;
                                     
                                     if($scope.OtoEkle == true)
                                     {
@@ -2927,7 +2925,6 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
                 $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
                 $scope.Stok[0].KDV = 0;
                 $scope.Stok[0].TOPTUTAR = $scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM;
-                $scope.Stok[0].TOPTANVERGIPNTR = 0;
             }
         })
     }
