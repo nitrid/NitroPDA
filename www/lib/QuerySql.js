@@ -720,15 +720,17 @@ var QuerySql =
         query : "SELECT " +
                 "sto_kod AS KODU, " +
                 "sto_isim AS ADI, " +
+                "sto_kisa_ismi AS KISAAD, " + 
                 "ISNULL((SELECT dbo.fn_DepodakiMiktar(sto_kod,@DEPONO,CONVERT(VARCHAR(10),GETDATE(),112))),0) AS DEPOMIKTAR, " +
                 "sto_birim1_ad AS BIRIM1, " +
                 "(SELECT top 1 dbo.fn_StokSatisFiyati(sfiyat_stokkod,sfiyat_listesirano,sfiyat_deposirano,1) FROM STOK_SATIS_FIYAT_LISTELERI WHERE sfiyat_stokkod = sto_kod AND sfiyat_listesirano = 1) AS FIYAT, " +
                 "CASE sto_doviz_cinsi WHEN 0 THEN 'TL' WHEN 1 THEN 'USD' WHEN 2 THEN 'EURO' END AS DOVIZCINS, " +
                 "sto_kod AS BARKOD " +
                 "FROM STOKLAR " +
-                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) OR LOWER(sto_kod) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER(sto_isim) LIKE UPPER(@ADI) OR LOWER(sto_isim) LIKE LOWER(@ADI)) OR (@ADI = '')) " ,
-        param : ['KODU',"ADI",'DEPONO'],
-        type :  ['string|25','string|50','int']
+                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) OR LOWER(sto_kod) LIKE LOWER(@KODU)) OR (@KODU = '')) AND ((UPPER(sto_isim) LIKE UPPER(@ADI) OR LOWER(sto_isim) LIKE LOWER(@ADI)) OR (@ADI = '')) " +
+                "AND ((UPPER(sto_kisa_ismi) LIKE UPPER(@KISAAD) OR LOWER(sto_kisa_ismi) LIKE LOWER(@KISAAD)) OR (@KISAAD = ''))" ,
+        param : ['KODU',"ADI",'DEPONO','KISAAD'],
+        type :  ['string|25','string|50','int','string|25']
     },
     StokDurumGetir :
     {

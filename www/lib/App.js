@@ -219,6 +219,10 @@ angular.module("app",
     {
         templateUrl : "html/ayarlar/EvrakDbAktarim.html"
     })
+    .when("/AlisSatisRaporu",
+    {
+        templateUrl : "html/rapor/AlisSatisRaporu.html"
+    })
 });
 
 // angular.module("app").directive("keypressDetector", function() {

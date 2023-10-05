@@ -47,7 +47,4 @@ angular.module('app.controller', [])
 .controller('SarfFisiCtrl',['$scope','$window','$timeout','db','$filter',SarfFisiCtrl])
 .controller('RafYonetimiCtrl',['$scope','$window','$timeout','db','$filter',RafYonetimiCtrl])
 .controller('EvrakDbAktarimCtrl',['$scope','$window','db',EvrakDbAktarimCtrl])
-
-
-
-
+.controller('AlisSatisRaporuCtrl',['$scope','$window','db',AlisSatisRaporuCtrl])

@@ -47,7 +47,10 @@ var Param = [
 			"Personel": "01",
 			"BankaKodu": "01",
 			"EvrakSil": "0",
-			"EvrakTip": "0"
+			"EvrakTip": "0",
+			"NakitKasa": "",
+			"KrediKasa": "",
+			"HavaleKasa": ""
 		},
 		"Sayim": {
 			"EvrakNo": "1",
@@ -351,7 +354,9 @@ var Param = [
 			"Is Emri Depo Sevk": "0",
 			"Sipariş Operasyonları": "0",
 			"Proforma Alınan Siparis": "0",
-			"Raf Yönetimi": "0"
+			"Raf Yönetimi": "0",
+			"Sarf Fişi": "1",
+			"Alış Satış Raporu": "1"
 		},
 		"AlisFatura": {
 			"EvrakTip": "1",
@@ -542,10 +547,27 @@ var Param = [
 			"EvrakSil": "0",
 			"FiyatLock": "0",
 			"EksiyeDusme": "0",
-			"IskontoMatris": "0"
+			"IskontoMatris": "0",
+			"IsEmriGiderKodu": ""
 		},
 		"RaporParams": {
 			"Depo": ""
+		},
+		"TediyeMAkbuzu": {
+			"ChaEvrakTip": "64",
+			"Seri": "THS",
+			"BelgeNo": "",
+			"Cari": "",
+			"Sorumluluk": "",
+			"Personel": "",
+			"NakitKasa": "",
+			"KrediKasa": "",
+			"CekKasa": "",
+			"SenetKasa": "",
+			"HavaleKasa": "",
+			"OdemeKasa": "",
+			"EvrakSil": "0",
+			"ChaTip": "0"
 		}
 	},
 	{
@@ -987,7 +1009,8 @@ var Param = [
 			"Gelen Havale": "0",
 			"Vade Aralıklı Fatura Raporu": "0",
 			"Proforma Alınan Siparis": "0",
-			"Sipariş Operasyonları": "0"
+			"Sipariş Operasyonları": "0",
+			"AlisSatisRaporu": "1"
 		},
 		"StokVirman": {
 			"EvrakTip": "0",
@@ -1007,6 +1030,16 @@ var Param = [
 		},
 		"RaporParams": {
 			"Depo": ""
+		},
+		"SarfFisi": {
+			"EvrakTip": "0",
+			"Seri": "FIRE",
+			"BelgeNo": "",
+			"DepoNo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"IsEmriGiderKodu": "",
+			"EvrakSil": "0"
 		}
 	},
 	{
@@ -1449,7 +1482,8 @@ var Param = [
 			"Gelen Havale": "0",
 			"Vade Aralıklı Fatura Raporu": "0",
 			"Proforma Alınan Siparis": "0",
-			"Sipariş Operasyonları": "0"
+			"Sipariş Operasyonları": "0",
+			"Alış ve Satış Raporu": "1"
 		},
 		"StokVirman": {
 			"EvrakTip": "0",
@@ -1469,6 +1503,16 @@ var Param = [
 		},
 		"RaporParams": {
 			"Depo": ""
+		},
+		"SarfFisi": {
+			"EvrakTip": "0",
+			"Seri": "FIRE",
+			"BelgeNo": "",
+			"DepoNo": "1",
+			"DepoListe": "",
+			"Sorumluluk": "",
+			"IsEmriGiderKodu": "",
+			"EvrakSil": "0"
 		}
 	}
 ]

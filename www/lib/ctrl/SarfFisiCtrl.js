@@ -3,7 +3,7 @@ function SarfFisiCtrl($scope,$window,$timeout,db,$filter)
     let IslemSelectedRow = null;
     let StokReceteSelectedRow = null;
     let StokSelectedRow = null;
-    let ParamName = "SarfFisi";
+    let ParamName = "";
     let AnaKodu = "";
 
     $('#MdlPartiLot').on('hide.bs.modal', function () 

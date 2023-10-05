@@ -307,6 +307,17 @@ var ParamTemp =
 			"IsEmriGiderKodu" : {"Title" : "İş Emri Gider Kodu","DefaultValue" : ""},
 			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
 		},
+		"SarfFisi" :
+		{
+			"EvrakTip" : {"Title" : "Evrak Tipi","DefaultValue" : "0"},
+			"Seri" : {"Title" : "Seri","DefaultValue" : "FIRE"},
+			"BelgeNo" : {"Title" : "Belge No","DefaultValue" : ""},
+			"DepoNo" : {"Title" : "Depo No","DefaultValue" : "1"},
+			"DepoListe" : {"Title" : "Depo Liste","DefaultValue" : ""},
+			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
+			"IsEmriGiderKodu" : {"Title" : "İş Emri Gider Kodu","DefaultValue" : ""},
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+		},
 		"FiyatGor" :
 		{
 			"Seri" : {"Title" : "Seri","DefaultValue" : "FGE"},
@@ -465,6 +476,8 @@ var ParamTemp =
 			"Vade Aralıklı Fatura Raporu" : {"Title" : "Vade Aralıklı Fatura Raporu","DefaultValue" : "1"},
 			"Proforma Alınan Siparis" : {"Title" : "Proforma Alınan Siparis","DefaultValue" : "1"},
 			"Sipariş Operasyonları" : {"Title" : "Sipariş Operasyonları","DefaultValue" : "1"},
+			"Alış Satış Raporu" : {"Title" : "Alış Satış Raporu","DefaultValue" : "1"},
+
 		},
 		"StokVirman" :
 		{

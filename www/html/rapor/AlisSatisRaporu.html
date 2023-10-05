@@ -1,0 +1,67 @@
+<div class="col-12" ng-controller="AlisSatisRaporuCtrl" ng-init="Init()">
+    <div class="page-content container-fluid">
+       <div class="tab-content">
+           <div id="TbMain" class="tab-pane active">
+                <div style="margin-left: -25px; margin-right: -25px; margin-top: -5px;" class="panel panel-primary panel-line">
+                   <div class="panel-heading">
+                       <h3 style="font-weight:bold" class="panel-title">Alış Satış Raporu</h3>
+                       <ul class="panel-actions panel-actions-keep">
+                    </div>
+                   <div class="panel-body">
+                       <div class="row py-1">
+                        <div class="col-8 px-1">
+                            <select class="form-control" ng-model="RaporTip" ng-change="RaporTipChange()">
+                                <option value="0">Alış</option>
+                                <option value="1">Satış</option>
+                            </select>
+                        </div>
+                       </div>
+                       <div class="row">
+                           <div class="col-sm-4 col-md-2 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">İlk Tarih:</div></div>
+                           <div class="col-sm-7 col-md-3 px-1 m-5">
+                               <div class="input-group input-group-icon">
+                                   <div class="input-group-prepend">
+                                       <div class="input-group-text">
+                                           <span class="icon wb-calendar" aria-hidden="true"></span>
+                                       </div>
+                                   </div>
+                                   <input type="text" class="form-control" id="IlkTarih" type="text" ng-model="IlkTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                               </div>
+                           </div>
+                       </div>
+                       <div class="row">
+                           <div class="col-sm-4 col-md-2 text-primary px-1"><div class="col-form-label px-1 float-left  py-2">Son Tarih:</div></div>
+                           <div class="col-sm-7 col-md-3 px-1  m-5">
+                               <div class="input-group input-group-icon">
+                                   <div class="input-group-prepend">
+                                       <div class="input-group-text">
+                                           <span class="icon wb-calendar" aria-hidden="true"></span>
+                                       </div>
+                                   </div>
+                                   <input type="text" class="form-control" id="SonTarih" type="text" ng-model="SonTarih" data-provide="datepicker" ng-disabled="EvrakLock">
+                               </div>
+                           </div>
+                       </div>
+                       <div class="row">
+                           <div class="col-12 col-sm-11 p-5 m-5" >
+                               <button type="submit" class="btn btn-round btn-primary btn-blendpr btn-block btn-sm" ng-click="BtnGetir()">Getir</button>
+                           </div>
+                       </div>
+                        <div id="TblAlisSatisRaporGrid" class=""></div>
+                       <div class="p-5" style="text-align: right;"><br><b>Toplam Tutar</b> : {{ToplamBakiye}}</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+</div>
+<script>
+       $("#IlkTarih").datepicker({
+       language: "tr"
+       });
+       $("#SonTarih").datepicker({
+       language: "tr"
+       });
+</script>
+       

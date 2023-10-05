@@ -2561,7 +2561,7 @@ function SiparisCtrl($scope,$window,$timeout,db,$filter)
                 console.log($scope.Stok[0].KDV)
             }
             $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
-            //$scope.Stok[0].TOPTANVERGIPNTR = 0;
+            $scope.Stok[0].TOPTANVERGIPNTR = 0;
             resolve()
         })
     }

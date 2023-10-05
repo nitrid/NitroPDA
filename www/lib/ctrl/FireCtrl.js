@@ -2,6 +2,8 @@ function FireCtrl($scope,$window,$timeout,db)
 {
     let IslemSelectedRow = null;
     let StokSelectedRow = null;
+    let ParamName = "Fire";
+    let AnaKodu = "";
     function Init()
     {
         gtag('config', 'UA-12198315-14', 
