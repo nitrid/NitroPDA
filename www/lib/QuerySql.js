@@ -490,8 +490,8 @@ var QuerySql =
                 "sto_paket_kodu AS PAKET, " +
                 "sto_prim_orani AS PRIMORANI " +
                 "FROM STOKLAR AS STOK WITH (NOLOCK,INDEX=NDX_STOKLAR_02) " +
-                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) + '%' OR (@KODU = '')) OR (LOWER(sto_kod) LIKE LOWER(@KODU) + '%' OR (@KODU = ''))) " +
-				"AND ((UPPER(sto_isim) LIKE UPPER(@ADI) + '%' OR (@ADI = '')) OR (LOWER(sto_isim) LIKE LOWER (@ADI) + '%' OR (@ADI = '')))" +
+                "WHERE ((UPPER(sto_kod) LIKE UPPER(@KODU) OR (@KODU = '')) OR (LOWER(sto_kod) LIKE LOWER(@KODU) OR (@KODU = ''))) " +
+				"AND ((UPPER(sto_isim) LIKE UPPER(@ADI) OR (@ADI = '')) OR (LOWER(sto_isim) LIKE LOWER (@ADI) OR (@ADI = '')))" +
                 "AND ((sto_marka_kodu LIKE @MKODU) OR (@MKODU = ''))" +
                 ") AS TMP " +
                 "GROUP BY BIRIM,UNVAN1,UNVAN2,ADI,CARIKODU,KISAAD,KODU,YABANCIAD,ALTGRUP,ALTGRUPADI,ANAGRUP,ANAGRUPADI,BEDENMIKTAR,RENKMIKTAR ORDER BY KODU" ,

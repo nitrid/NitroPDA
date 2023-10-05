@@ -202,7 +202,7 @@ var Param = [
 			"PartiBarkodOlustur": "1",
 			"Special": "52",
 			"OtoEkle": "0",
-			"PartiMKupEkran": "1"
+			"PartiMKupEkran": "0"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
