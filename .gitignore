@@ -7,3 +7,4 @@ daemon/
 *.zip
 package-lock
 package-lock.json
+config.json
