@@ -55,6 +55,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.ToplamSatir = 0;
         $scope.Tarih = moment(new Date()).format("DD.MM.YYYY");
         $scope.Tarih2 = moment(new Date()).format("DDMMYYYY");
+        $scope.Tarih2Ters = moment(new Date()).format("YYYYMMDD");
         $scope.MalKabulSevkTarihi = moment(new Date()).format("DD.MM.YYYY");
         $scope.Vade = moment(new Date()).format("YYYY-MM-DD");
         $scope.BelgeTarih = 0;
@@ -84,6 +85,9 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.SipSira = 0;
         $scope.IthalatKod = "";
         $scope.Aciklama = "";
+        $scope.Parca = 0;
+        $scope.ParcaMiktar = 0;
+        $scope.CariStok = "";
 
         $scope.DepoListe = [];
         $scope.CariListe = [];
@@ -117,6 +121,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.EvrakLock = false;
         $scope.BarkodLock = false;
         $scope.CokluSecim = true;
+        $scope.ParcaKontrol = false;
         $scope.IslemListeSelectedIndex = -1;
         $scope.PartiLotListeSelectedIndex = 0;
         $scope.SiparisKabulListeSelectedIndex = 0;
@@ -968,13 +973,24 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         $scope.NetToplam = $scope.AraToplam - $scope.ToplamIndirim;
         $scope.GenelToplam = $scope.NetToplam + $scope.ToplamKdv;
     }
-    function IrsInsert()
+    async function IrsInsert()
     { 
         if(typeof($scope.Stok[0].KODU) != 'undefined')
         {   
             if(UserParam.Sistem.SatirBirlestir == 0 || $scope.Stok[0].RENKPNTR != 0 || $scope.Stok[0].BEDENPNTR != 0 || $scope.Stok[0].DETAYTAKIP == 1 || $scope.Stok[0].DETAYTAKIP == 2)
             {   
-                InsertDataIrs();
+                $scope.MiktarFiyatValid();
+                
+                console.log($scope.Parca)
+                if($scope.Parca > 1)
+                {
+                    $scope.Miktar = $scope.ParcaMiktar;
+                    await AutoInsertData();
+                }
+                else
+                {
+                    await InsertDataIrs();
+                }
             }
             else
             {   
@@ -1067,177 +1083,182 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         }   
         BarkodFocus();
     }
-    function InsertDataIrs()
+    async function InsertDataIrs()
     {   
-        let TmpIskonto1 = 0;
-        let TmpIskonto2 = 0;
-        let TmpIskonto3 = 0;
-        let TmpIskonto4 = 0;
-        let TmpIskonto5 = 0;
-        let TmpIskonto6 = 0;
-        let TmpIskontoTip1 = 0;
-        let TmpIskontoTip2 = 1;
-        let TmpIskontoTip3 = 1;
-        let TmpIskontoTip4 = 1;
-        let TmpIskontoTip5 = 1;
-        let TmpIskontoTip6 = 1;
-        let TmpIsk1 = 0;
-        let TmpIsk2 = 0;
-        let TmpIsk3 = 0;
-        let TmpIsk4 = 0;
-        let TmpIsk5 = 0;
-        let TmpIsk6 = 0;
-        //let TmpRec = 0;
-
-        if(typeof($scope.Stok[0].RECNO) != 'undefined')
+        return new Promise(resolve => 
         {
-            TmpIskonto1 = ($scope.Stok[0].ISKONTO_1 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto2 = ($scope.Stok[0].ISKONTO_2 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto3 = ($scope.Stok[0].ISKONTO_3 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto4 = ($scope.Stok[0].ISKONTO_4 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto5 = ($scope.Stok[0].ISKONTO_5 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            TmpIskonto6 = ($scope.Stok[0].ISKONTO_6 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            
-            TmpIskontoTip1 = $scope.Stok[0].ISKONTO1;
-            TmpIskontoTip2 = $scope.Stok[0].ISKONTO2;
-            TmpIskontoTip3 = $scope.Stok[0].ISKONTO3;
-            TmpIskontoTip4 = $scope.Stok[0].ISKONTO4;
-            TmpIskontoTip5 = $scope.Stok[0].ISKONTO5;
-            TmpIskontoTip6 = $scope.Stok[0].ISKONTO6;
+            let TmpIskonto1 = 0;
+            let TmpIskonto2 = 0;
+            let TmpIskonto3 = 0;
+            let TmpIskonto4 = 0;
+            let TmpIskonto5 = 0;
+            let TmpIskonto6 = 0;
+            let TmpIskontoTip1 = 0;
+            let TmpIskontoTip2 = 1;
+            let TmpIskontoTip3 = 1;
+            let TmpIskontoTip4 = 1;
+            let TmpIskontoTip5 = 1;
+            let TmpIskontoTip6 = 1;
+            let TmpIsk1 = 0;
+            let TmpIsk2 = 0;
+            let TmpIsk3 = 0;
+            let TmpIsk4 = 0;
+            let TmpIsk5 = 0;
+            let TmpIsk6 = 0;
+            //let TmpRec = 0;
 
-            TmpIsk1 = $scope.Stok[0].ISK1;
-            TmpIsk2 = $scope.Stok[0].ISK2;
-            TmpIsk3 = $scope.Stok[0].ISK3;
-            TmpIsk4 = $scope.Stok[0].ISK4;
-            TmpIsk5 = $scope.Stok[0].ISK5;
-            TmpIsk6 = $scope.Stok[0].ISK6;
-
-            TmpRec = $scope.Stok[0].RECNO;
-        }
-        else
-        {
-            if(typeof($scope.Stok[0].SATSART) != 'undefined')
+            if(typeof($scope.Stok[0].RECNO) != 'undefined')
             {
-                TmpIskonto1 = $scope.Stok[0].SATSART.ISKONTOM1 * ($scope.Miktar * $scope.Stok[0].CARPAN);
-            }
-        }
-        var InsertData = 
-        [
-            Param[0].MikroId,
-            Param[0].MikroId,
-            0, //FİRMA NO
-            0, //ŞUBE NO
-            $scope.Tarih,
-            $scope.StokTip,
-            $scope.StokCins,
-            $scope.StokNormalIade,
-            $scope.StokEvrakTip,
-            $scope.Seri,
-            $scope.Sira,
-            $scope.BelgeNo,
-            $scope.Tarih,
-            $scope.Stok[0].KODU,
-            TmpIskontoTip1, //ISKONTO TİP 1
-            TmpIskontoTip2, //ISKONTO TİP 2
-            TmpIskontoTip3, //ISKONTO TİP 3
-            TmpIskontoTip4, //ISKONTO TİP 4
-            TmpIskontoTip5, //ISKONTO TİP 5
-            TmpIskontoTip6, //ISKONTO TİP 6
-            0, //ISKONTO TUTAR 7
-            0, //ISKONTO TUTAR 8
-            0, //ISKONTO TUTAR 9
-            0, //ISKONTO TUTAR 10
-            TmpIsk1, //ISKONTO TUTAR 1
-            TmpIsk2, //ISKONTO TUTAR 2
-            TmpIsk3, //ISKONTO TUTAR 3
-            TmpIsk4, //ISKONTO TUTAR 4
-            TmpIsk5, //ISKONTO TUTAR 5
-            TmpIsk6, //ISKONTO TUTAR 6
-            0, //SATIR ISKONTO TİP 7
-            0, //SATIR ISKONTO TİP 8
-            0, //SATIR ISKONTO TİP 9
-            0, //SATIR ISKONTO TİP 10
-            0, //CARİCİNSİ
-            $scope.CariKodu,
-            '', //İŞEMRİ KODU
-            $scope.Personel,
-            0, //HARDOVİZCİNSİ
-            1, //HARDOVİZKURU
-            1, //ALTDOVİZKURU
-            0, //STOKDOVİZCİNSİ
-            1, //STOKDOVİZKURU
-            $scope.Miktar * $scope.Stok[0].CARPAN,
-            $scope.Miktar2,
-            $scope.Stok[0].BIRIMPNTR,
-            $scope.Stok[0].TUTAR,
-            TmpIskonto1, // İSKONTO 1
-            TmpIskonto2, // İSKONTO 2
-            TmpIskonto3, // İSKONTO 3
-            TmpIskonto4, // İSKONTO 4
-            TmpIskonto5, // İSKONTO 5
-            TmpIskonto6, // İSKONTO 6
-            0, // MASRAF 1
-            0, // MASRAF 2
-            0, // MASRAF 3
-            0, // MASRAF 4
-            $scope.Stok[0].TOPTANVERGIPNTR, //VERİPNTR
-            $scope.Stok[0].KDV,             //VERGİ
-            0, // MASRAFVERGİPNTR,
-            0, // MASRAFVERGİ
-            $scope.OdemeNo,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-            '',//AÇIKLAMA
-            $scope.Stok[0].RECNO, //sth_sip_uid
-            '00000000-0000-0000-0000-000000000000', //sth_fat_uid,
-            $scope.DepoNo, //GİRİSDEPO
-            $scope.DepoNo, //CİKİS
-            $scope.Tarih, //MALKABULSEVKTARİHİ
-            $scope.Sorumluluk, // CARİSORUMLULUKMERKEZİ
-            $scope.Sorumluluk, // STOKSORUMLULUKMERKEZİ
-            0,  //VERGİSİZFL
-            0,  // ADRESNO
-            $scope.Stok[0].PARTI,
-            $scope.Stok[0].LOT,
-            $scope.Proje,
-            $scope.IthalatKod, // EXİMKODU
-            0,  // DİSTİCARETTURU
-            0,  // OTVVERGİSİZFL
-            0,  // OİVVERGİSİZ
-            $scope.CariFiyatListe ,  // FİYATLİSTENO
-            0   //NAKLİYEDEPO
-          ];
-          console.log(InsertData)
-        db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
-        {   
-            if(typeof(InsertResult.result.err) == 'undefined')
-            {   
-                if(typeof($scope.Stok[0].RECNO) != 'undefined')
-                {
-                    
-                    db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[$scope.Miktar ,$scope.Stok[0].RECNO,Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR)],function(InsertResult)
-                    {
-                        console.log(InsertResult)
-                    });
-                }
+                TmpIskonto1 = ($scope.Stok[0].ISKONTO_1 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
+                TmpIskonto2 = ($scope.Stok[0].ISKONTO_2 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
+                TmpIskonto3 = ($scope.Stok[0].ISKONTO_3 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
+                TmpIskonto4 = ($scope.Stok[0].ISKONTO_4 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
+                TmpIskonto5 = ($scope.Stok[0].ISKONTO_5 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
+                TmpIskonto6 = ($scope.Stok[0].ISKONTO_6 / $scope.Stok[0].SIPMIKTAR) * ($scope.Miktar * $scope.Stok[0].CARPAN);
                 
-                db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.StokEvrakTip],function(IrsaliyeData)
-                {    
-                    $scope.StokHarListe = IrsaliyeData;
-                    if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
-                    {
-                        BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
-                    } 
-                    InsertAfterRefresh(IrsaliyeData);       
-                    $scope.InsertLock = false  
-                    $scope.MiktarLock = false              
-                });
+                TmpIskontoTip1 = $scope.Stok[0].ISKONTO1;
+                TmpIskontoTip2 = $scope.Stok[0].ISKONTO2;
+                TmpIskontoTip3 = $scope.Stok[0].ISKONTO3;
+                TmpIskontoTip4 = $scope.Stok[0].ISKONTO4;
+                TmpIskontoTip5 = $scope.Stok[0].ISKONTO5;
+                TmpIskontoTip6 = $scope.Stok[0].ISKONTO6;
+
+                TmpIsk1 = $scope.Stok[0].ISK1;
+                TmpIsk2 = $scope.Stok[0].ISK2;
+                TmpIsk3 = $scope.Stok[0].ISK3;
+                TmpIsk4 = $scope.Stok[0].ISK4;
+                TmpIsk5 = $scope.Stok[0].ISK5;
+                TmpIsk6 = $scope.Stok[0].ISK6;
+
+                TmpRec = $scope.Stok[0].RECNO;
             }
             else
             {
-                console.log(InsertResult.result.err);
-                $scope.InsertLock = false  
-                $scope.MiktarLock = false 
+                if(typeof($scope.Stok[0].SATSART) != 'undefined')
+                {
+                    TmpIskonto1 = $scope.Stok[0].SATSART.ISKONTOM1 * ($scope.Miktar * $scope.Stok[0].CARPAN);
+                }
             }
-        });
+            var InsertData = 
+            [
+                Param[0].MikroId,
+                Param[0].MikroId,
+                0, //FİRMA NO
+                0, //ŞUBE NO
+                $scope.Tarih,
+                $scope.StokTip,
+                $scope.StokCins,
+                $scope.StokNormalIade,
+                $scope.StokEvrakTip,
+                $scope.Seri,
+                $scope.Sira,
+                $scope.BelgeNo,
+                $scope.Tarih,
+                $scope.Stok[0].KODU,
+                TmpIskontoTip1, //ISKONTO TİP 1
+                TmpIskontoTip2, //ISKONTO TİP 2
+                TmpIskontoTip3, //ISKONTO TİP 3
+                TmpIskontoTip4, //ISKONTO TİP 4
+                TmpIskontoTip5, //ISKONTO TİP 5
+                TmpIskontoTip6, //ISKONTO TİP 6
+                0, //ISKONTO TUTAR 7
+                0, //ISKONTO TUTAR 8
+                0, //ISKONTO TUTAR 9
+                0, //ISKONTO TUTAR 10
+                TmpIsk1, //ISKONTO TUTAR 1
+                TmpIsk2, //ISKONTO TUTAR 2
+                TmpIsk3, //ISKONTO TUTAR 3
+                TmpIsk4, //ISKONTO TUTAR 4
+                TmpIsk5, //ISKONTO TUTAR 5
+                TmpIsk6, //ISKONTO TUTAR 6
+                0, //SATIR ISKONTO TİP 7
+                0, //SATIR ISKONTO TİP 8
+                0, //SATIR ISKONTO TİP 9
+                0, //SATIR ISKONTO TİP 10
+                0, //CARİCİNSİ
+                $scope.CariKodu,
+                '', //İŞEMRİ KODU
+                $scope.Personel,
+                0, //HARDOVİZCİNSİ
+                1, //HARDOVİZKURU
+                1, //ALTDOVİZKURU
+                0, //STOKDOVİZCİNSİ
+                1, //STOKDOVİZKURU
+                $scope.Miktar * $scope.Stok[0].CARPAN,
+                $scope.Miktar2,
+                $scope.Stok[0].BIRIMPNTR,
+                $scope.Stok[0].TUTAR,
+                TmpIskonto1, // İSKONTO 1
+                TmpIskonto2, // İSKONTO 2
+                TmpIskonto3, // İSKONTO 3
+                TmpIskonto4, // İSKONTO 4
+                TmpIskonto5, // İSKONTO 5
+                TmpIskonto6, // İSKONTO 6
+                0, // MASRAF 1
+                0, // MASRAF 2
+                0, // MASRAF 3
+                0, // MASRAF 4
+                $scope.Stok[0].TOPTANVERGIPNTR, //VERİPNTR
+                $scope.Stok[0].KDV,             //VERGİ
+                0, // MASRAFVERGİPNTR,
+                0, // MASRAFVERGİ
+                $scope.OdemeNo,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                '',//AÇIKLAMA
+                $scope.Stok[0].RECNO, //sth_sip_uid
+                '00000000-0000-0000-0000-000000000000', //sth_fat_uid,
+                $scope.DepoNo, //GİRİSDEPO
+                $scope.DepoNo, //CİKİS
+                $scope.Tarih, //MALKABULSEVKTARİHİ
+                $scope.Sorumluluk, // CARİSORUMLULUKMERKEZİ
+                $scope.Sorumluluk, // STOKSORUMLULUKMERKEZİ
+                0,  //VERGİSİZFL
+                0,  // ADRESNO
+                $scope.Stok[0].PARTI,
+                $scope.Stok[0].LOT,
+                $scope.Proje,
+                $scope.IthalatKod, // EXİMKODU
+                0,  // DİSTİCARETTURU
+                0,  // OTVVERGİSİZFL
+                0,  // OİVVERGİSİZ
+                $scope.CariFiyatListe ,  // FİYATLİSTENO
+                0   //NAKLİYEDEPO
+            ];
+            console.log(InsertData)
+            db.ExecuteTag($scope.Firma,'StokHarInsert',InsertData,function(InsertResult)
+            {   
+                if(typeof(InsertResult.result.err) == 'undefined')
+                {   
+                    if(typeof($scope.Stok[0].RECNO) != 'undefined')
+                    {
+                        
+                        db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[$scope.Miktar ,$scope.Stok[0].RECNO,Kirilim($scope.Stok[0].BEDENPNTR,$scope.Stok[0].RENKPNTR)],function(InsertResult)
+                        {
+                            console.log(InsertResult)
+                        });
+                    }
+                    
+                    db.GetData($scope.Firma,'StokHarGetir',[$scope.Seri,$scope.Sira,$scope.StokEvrakTip],function(IrsaliyeData)
+                    {    
+                        $scope.StokHarListe = IrsaliyeData;
+                        if($scope.Stok[0].BEDENPNTR != 0 && $scope.Stok[0].RENKPNTR != 0)
+                        {
+                            BedenHarInsert(InsertResult.result.recordset[0].sth_Guid);
+                        } 
+                        InsertAfterRefresh(IrsaliyeData);       
+                        $scope.InsertLock = false  
+                        $scope.MiktarLock = false     
+                        resolve();         
+                    });
+                }
+                else
+                {
+                    console.log(InsertResult.result.err);
+                    $scope.InsertLock = false  
+                    $scope.MiktarLock = false 
+                    resolve();
+                }
+            });
+        })
     }
     function Kirilim(pBeden,pRenk)
     {
@@ -1261,7 +1282,10 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         console.log(pData)
         $scope.StokHarListe = pData;
         $("#TblIslem").jsGrid({data : $scope.StokHarListe});    
-        $scope.BtnTemizle();
+        if($scope.Parca == 1 || $scope.Parca == 0)
+        {
+            $scope.BtnTemizle();
+        }
         DipToplamHesapla();
         $scope.BtnStokGridGetir();
         ToplamMiktarHesapla();  
@@ -1507,16 +1531,15 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                 {
                     db : '{M}.' + $scope.Firma,
                     query:  
-                    "SELECT SUBSTRING(CONVERT(nvarchar,GETDATE(),112),3,4) + " + 
-                    "ISNULL(MAX(SUBSTRING(CONVERT(nvarchar,pl_partikodu,112),5,10)),'000') " +
-                    "+ 1 AS PARTIKOD FROM PARTILOT WHERE pl_stokkodu = @STOKKOD AND pl_partikodu LIKE (@PARTITARIH + '%' ) ORDER BY MAX(pl_partikodu) DESC ",
-                    param:  ['STOKKOD','PARTITARIH'],
-                    type:   ['string|25','string|25'],
-                    value:  [$scope.Stok[0].KODU,$scope.Tarih2]
+                    "SELECT CONVERT(nvarchar,GETDATE(),112) +  " +
+                    "ISNULL(MAX(SUBSTRING(CAST(CAST(pl_partikodu AS BIGINT) + 1 AS VARCHAR),9,14)),RIGHT('000000' + CAST(CAST('000000' AS INT) + 1 AS VARCHAR), 6))  AS PARTIKOD " +
+                    " FROM PARTILOT WHERE pl_partikodu LIKE (@PARTITARIH + '%' ) ORDER BY MAX(pl_partikodu) DESC ",
+                    param:  ['PARTITARIH'],
+                    type:   ['string|25'],
+                    value:  [$scope.Tarih2Ters]
                 }
                 db.GetPromiseQuery(TmpQuery,function(data)
                 {   
-                    console.log(data)
                     $scope.TxtParti = data[0].PARTIKOD;
                     $scope.Aciklama = "";
                 });
@@ -1571,6 +1594,24 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             localStorage.mode = 'false';
             pCallback(data[0].EvrakSira);
         });
+    }
+    async function AutoInsertData()
+    {
+        console.log($scope.Parca)
+        for (let i = 0; i < $scope.Parca; i++)
+        {
+            $scope.ParcaKontrol = true;
+            console.log(i);
+            console.log($scope.Stok)
+            await $scope.MiktarFiyatValid();
+            await $scope.BtnPartiLotOlustur(i);
+            if(i+1 == $scope.Parca)
+            {
+                $scope.ParcaKontrol = false;
+                console.log(i);
+                $scope.BtnTemizle();
+            }
+        }
     }
     $scope.BtnCariListele = function()
     {   
@@ -1889,111 +1930,143 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
         }
         $scope.PartiLotListe = [];
     }
-    $scope.BtnPartiLotOlustur = function()
+    $scope.BtnPartiLotOlustur = async function()
     {   
-        if($scope.TxtParti == '')
+        return new Promise(async resolve => 
         {
-            $("#LblPartiLotAlert").show();
-            $scope.LblPartiLotAlert = "Parti Alanı Boş Geçilemez !"
-        }
-        else
-        {   
-            //Sona 0 koyma işlemi Açıklama ve Lot tarafında
-            let Uzunluk = 5 - $scope.Aciklama.length;
-            let Miktar = [];
-            for (let i = 0; i < Uzunluk; i++) 
+            if($scope.TxtParti == '')
             {
-                Miktar.push(0);
+                $("#LblPartiLotAlert").show();
+                $scope.LblPartiLotAlert = "Parti Alanı Boş Geçilemez !"
+                resolve()
             }
-            Miktar = Miktar.toString();
-            Miktar = Miktar.split(",").join("");
-            $scope.Aciklama = Miktar + "" + $scope.Aciklama;
-
-            let UzunlukLot = 3 - $scope.TxtLot.toString().length;
-            let MiktarLot = [];
-            for (let i = 0; i < UzunlukLot; i++) 
-            {
-                MiktarLot.push(0);
-            }
-            MiktarLot = MiktarLot.toString();
-            MiktarLot = MiktarLot.split(",").join("");
-            let Lot = MiktarLot + "" + $scope.TxtLot;
-
-            //Stok Kodunun ilk 7 hanesi alınıyor
-            let StokKodu = $scope.Stok[0].KODU.substring(0,7)
-            console.log(StokKodu)
-
-            //Tarih Formatı yapılıyor
-            let GunAy = $scope.Tarih2.substring(0,4)
-            let Yil = $scope.Tarih2.substring(7,8)
-            let TarihY = GunAy + "" + Yil;
-            console.log(GunAy,Yil, GunAy + "" + Yil)
-            $scope.BarkodInsert = StokKodu + "" + $scope.TxtParti + "" +  Lot + "" + TarihY;
-            console.log($scope.BarkodInsert)
-            db.GetData($scope.Firma,'BarkodGetir',[$scope.BarkodInsert,0],function(BarkodData)
-            {
-                if(BarkodData.length > 0)
+            else
+            {   
+                //Sona 0 koyma işlemi Açıklama ve Lot tarafında
+                let Uzunluk = 5 - $scope.Aciklama.length;
+                let Miktar = [];
+                for (let i = 0; i < Uzunluk; i++) 
                 {
-                    $('#MdlPartiLot').modal('hide');
-                    alertify.alert("Barkod Daha Önceden Kaydedilmiş")
+                    Miktar.push(0);
                 }
-                else
+                Miktar = Miktar.toString();
+                Miktar = Miktar.split(",").join("");
+                $scope.Aciklama = Miktar + "" + $scope.Aciklama;
+
+                let UzunlukLot = 3 - $scope.TxtLot.toString().length;
+                let MiktarLot = [];
+                for (let i = 0; i < UzunlukLot; i++) 
                 {
-                    db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
-                    {   
-                        if(data.length > 0)
-                        {
-                            $scope.PartiLotListe = data;
-                            $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
-                            $("#LblPartiLotAlert").show();
-                            $scope.LblPartiLotAlert = "Bu PartiLot Daha Önceden Oluşturulmuş !"
-                        }
-                        else
-                        {
-                            let Data = 
-                            [
-                                UserParam.MikroId,
-                                UserParam.MikroId,
-                                $scope.TxtParti,
-                                $scope.TxtLot,
-                                $scope.Stok[0].KODU,
-                                $scope.Aciklama,
-                                $scope.SktTarih
-                            ]   
-                            console.log(Data)
-                            db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
+                    MiktarLot.push(0);
+                }
+                MiktarLot = MiktarLot.toString();
+                MiktarLot = MiktarLot.split(",").join("");
+                let Lot = MiktarLot + "" + $scope.TxtLot;
+
+                //Stok Kodunun ilk 7 hanesi alınıyor
+                let StokKodu = $scope.Stok[0].KODU.substring(0,7)
+                console.log(StokKodu)
+
+                //Tarih Formatı yapılıyor
+                let GunAy = $scope.Tarih2.substring(0,4)
+                let Yil = $scope.Tarih2.substring(7,8)
+                let TarihY = GunAy + "" + Yil;
+                console.log(GunAy,Yil, GunAy + "" + Yil)
+                var TmpQuery = 
+                {
+                    db : '{M}.' + $scope.Firma,
+                    query:  
+                    "SELECT CONVERT(nvarchar,GETDATE(),112) +  " +
+                    "ISNULL(MAX(SUBSTRING(CAST(CAST(pl_partikodu AS BIGINT) + 1 AS VARCHAR),9,14)),RIGHT('000000' + CAST(CAST('000000' AS INT) + 1 AS VARCHAR), 6))  AS PARTIKOD " +
+                    " FROM PARTILOT WHERE pl_partikodu LIKE (@PARTITARIH + '%' ) ORDER BY MAX(pl_partikodu) DESC ",
+                    param:  ['PARTITARIH'],
+                    type:   ['string|25'],
+                    value:  [$scope.Tarih2Ters]
+                }
+                await db.GetPromiseQuery(TmpQuery,async function(data)
+                {   
+                    $scope.TxtParti = data[0].PARTIKOD;
+                    $scope.Aciklama = "";
+                });
+                $scope.BarkodInsert = $scope.TxtParti;
+                console.log($scope.BarkodInsert)
+                db.GetData($scope.Firma,'BarkodGetir',[$scope.BarkodInsert,0],function(BarkodData)
+                {
+                    if(BarkodData.length > 0)
+                    {
+                        $('#MdlPartiLot').modal('hide');
+                        alertify.alert("Barkod Daha Önceden Kaydedilmiş")
+                        resolve()
+                    }
+                    else
+                    {
+                        db.GetData($scope.Firma,'PartiLotGetir',[$scope.Stok[0].KODU,$scope.DepoNo,$scope.TxtParti,$scope.TxtLot],function(data)
+                        {   
+                            if(data.length > 0)
                             {
-                                console.log(InsertResult)
-                                if(typeof(InsertResult.result.err) == 'undefined')
+                                $scope.PartiLotListe = data;
+                                $("#TblPartiLot").jsGrid({data : $scope.PartiLotListe});
+                                $("#LblPartiLotAlert").show();
+                                $scope.LblPartiLotAlert = "Bu PartiLot Daha Önceden Oluşturulmuş !"
+                            }
+                            else
+                            {
+                                let Data = 
+                                [
+                                    UserParam.MikroId,
+                                    UserParam.MikroId,
+                                    $scope.TxtParti,
+                                    $scope.TxtLot,
+                                    $scope.Stok[0].KODU,
+                                    $scope.Aciklama,
+                                    $scope.SktTarih
+                                ]   
+                                console.log(Data)
+                                db.ExecuteTag($scope.Firma,'PartiLotInsert',Data,function(InsertResult)
                                 {
-                                    console.log(1)
-                                    $scope.Stok[0].PARTI = $scope.TxtParti;
-                                    $scope.Stok[0].LOT = $scope.TxtLot;
-                                    if(UserParam[ParamName].PartiBarkodOlustur == 1)
+                                    console.log(InsertResult)
+                                    if(typeof(InsertResult.result.err) == 'undefined')
                                     {
-                                        let BarkodInsertData = 
-                                        [
-                                            $scope.BarkodInsert,
-                                            $scope.Stok[0].KODU,
-                                            $scope.Stok[0].BIRIMPNTR,
-                                            3,  //bar_baglantitipi
-                                            2,  //bar_barkodtipi
-                                            $scope.TxtParti,
-                                            $scope.TxtLot
-                                        ]
-                                        console.log(BarkodInsertData)
-                                        db.ExecuteTag($scope.Firma,'BarkodInsert',BarkodInsertData,function(InsertResult)
+                                        console.log(1)
+                                        $scope.Stok[0].PARTI = $scope.TxtParti;
+                                        $scope.Stok[0].LOT = $scope.TxtLot;
+                                        $('#MdlPartiLot').modal('hide');
+                                        if(UserParam[ParamName].PartiBarkodOlustur == 1)
                                         {
-                                        });
+                                            let BarkodInsertData = 
+                                            [
+                                                $scope.BarkodInsert,
+                                                $scope.Stok[0].KODU,
+                                                $scope.Stok[0].BIRIMPNTR,
+                                                3,  //bar_baglantitipi
+                                                2,  //bar_barkodtipi
+                                                $scope.TxtParti,
+                                                $scope.TxtLot
+                                            ]
+                                            db.ExecuteTag($scope.Firma,'BarkodInsert',BarkodInsertData,async function(InsertResult)
+                                            {
+                                                if($scope.Parca > 0)
+                                                {
+                                                    if($scope.ParcaKontrol == true)
+                                                    {
+                                                        await InsertDataIrs();
+                                                    }
+                                                }
+                                                resolve()
+                                            });
+                                        }
+                                        else
+                                        {
+                                            resolve()
+                                        }
                                     }
-                                    $('#MdlPartiLot').modal('hide');
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        })
     }
     $scope.BtnPartiEnter = function(keyEvent)
     {
@@ -2262,7 +2335,7 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                             {
                                 if(typeof(data.result.err) == 'undefined')
                                 {
-                                    angular.forEach(StokHarListe,function(value)
+                                    angular.forEach(StokHarListe,async function(value)
                                     {
                                         if(value.sth_Guid != '')
                                         {
@@ -2277,14 +2350,14 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                                                         var SthMiktar = BedenHarListe[i].BdnHar_HarGor * -1;
                                                         var BedenNo = BedenHarListe[i].BdnHar_BedenNo
                                                         console.log([SthMiktar,value.sth_sip_uid,BedenNo])
-                                                        db.ExecuteTag($scope.Firma,'StokHarSiparisUpdate',[SthMiktar,value.sth_sip_uid,BedenNo]);
+                                                        await db.ExecutePromiseTag($scope.Firma,'StokHarSiparisUpdate',[SthMiktar,value.sth_sip_uid,BedenNo]);
                                                     }
                                                 }
                                             }
                                             else
                                             {
                                                 var SthMiktar = value.sth_miktar * -1
-                                                db.ExecuteTag($scope.Firma,'SiparisDeleteUpdate',[SthMiktar,value.sth_sip_uid,value.sth_Guid]);
+                                                await db.ExecutePromiseTag($scope.Firma,'SiparisDeleteUpdate',[SthMiktar,value.sth_sip_uid,value.sth_Guid]);
                                             }
                                         }
                                         db.ExecuteTag($scope.Firma,'BedenHarDelete',[value.sth_Guid,11],function(data)
@@ -2633,26 +2706,44 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
     }
     $scope.MiktarFiyatValid = function()
     {
-        if(typeof($scope.Stok[0].RECNO) != 'undefined')
+        return new Promise(resolve => 
         {
-            $scope.Stok[0].INDIRIM = (($scope.Stok[0].ISKONTO_1+$scope.Stok[0].ISKONTO_2+$scope.Stok[0].ISKONTO_3+$scope.Stok[0].ISKONTO_4+$scope.Stok[0].ISKONTO_5+$scope.Stok[0].ISKONTO_6) 
-            / $scope.Stok[0].SIPMIKTAR) * ($scope.Stok[0].CARPAN * $scope.Miktar);
-        }
-        else
-        {
-            if(typeof($scope.Stok[0].SATSART) != 'undefined')
+            if($scope.Parca > 0)
             {
-                $scope.Stok[0].INDIRIM = $scope.Stok[0].SATSART.ISKONTOM1 * ($scope.Stok[0].CARPAN * $scope.Miktar);
+                if($scope.ParcaKontrol == false)
+                {
+                    $scope.ParcaMiktar = $scope.Miktar / $scope.Parca;
+                    $scope.Stok[0].INDIRIM = 0;
+                    $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.ParcaMiktar) * $scope.Stok[0].FIYAT;
+                }
+                else
+                {
+                    $scope.Stok[0].INDIRIM = 0;
+                    $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
+                }
+            }
+            if(typeof($scope.Stok[0].RECNO) != 'undefined')
+            {
+                $scope.Stok[0].INDIRIM = (($scope.Stok[0].ISKONTO_1+$scope.Stok[0].ISKONTO_2+$scope.Stok[0].ISKONTO_3+$scope.Stok[0].ISKONTO_4+$scope.Stok[0].ISKONTO_5+$scope.Stok[0].ISKONTO_6) 
+                / $scope.Stok[0].SIPMIKTAR) * ($scope.Stok[0].CARPAN * $scope.Miktar);
             }
             else
             {
-                $scope.Stok[0].INDIRIM = 0;
+                if(typeof($scope.Stok[0].SATSART) != 'undefined')
+                {
+                    $scope.Stok[0].INDIRIM = $scope.Stok[0].SATSART.ISKONTOM1 * ($scope.Stok[0].CARPAN * $scope.Miktar);
+                }
+                else
+                {
+                    $scope.Stok[0].INDIRIM = 0;
+                }
             }
-        }
                                 
-        $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
-        $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
-        $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
+            $scope.Stok[0].TUTAR = ($scope.Stok[0].CARPAN * $scope.Miktar) * $scope.Stok[0].FIYAT;
+            $scope.Stok[0].KDV = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) * ($scope.Stok[0].TOPTANVERGI / 100);
+            $scope.Stok[0].TOPTUTAR = ($scope.Stok[0].TUTAR - $scope.Stok[0].INDIRIM) + $scope.Stok[0].KDV;
+            resolve();
+        })
     }
     $scope.MiktarPress = function(keyEvent)
     {

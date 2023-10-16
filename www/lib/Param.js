@@ -202,7 +202,8 @@ var Param = [
 			"PartiBarkodOlustur": "1",
 			"Special": "52",
 			"OtoEkle": "0",
-			"PartiMKupEkran": "0"
+			"PartiMKupEkran": "0",
+			"StokKalsin": "1"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -760,7 +761,8 @@ var Param = [
 			"ProjeGetir": "0",
 			"FiyatAzalt": "0",
 			"PartiBarkodOlustur": "0",
-			"OtoEkle": "0"
+			"OtoEkle": "0",
+			"StokKalsin": "1"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",
@@ -1233,7 +1235,8 @@ var Param = [
 			"ProjeGetir": "0",
 			"FiyatAzalt": "0",
 			"PartiBarkodOlustur": "0",
-			"OtoEkle": "0"
+			"OtoEkle": "0",
+			"StokKalsin": "1"
 		},
 		"SatisIrsaliye": {
 			"EvrakTip": "1",

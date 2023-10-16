@@ -507,7 +507,18 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
                         $scope.Stok[0].UPLGUID = "00000000-0000-0000-0000-000000000000";
                         $scope.Stok[0].ISEMRI = $scope.IsEmriKodu;
                         $scope.Stok[0].KALAN = $scope.Stok[0].DEPOMIKTAR;
-                        $scope.Stok[0].ISHGUID = "00000000-0000-0000-0000-000000000000";
+                        db.GetPromiseTag($scope.Firma,'IsEmriHarGetir',[$scope.IsEmriKodu,pBarkod],function(IsEmriData)
+                        {
+                            console.log(IsEmriData)
+                            if(IsEmriData.length > 0)
+                            {
+                                $scope.Stok[0].ISHGUID = IsEmriData[0].ish_Guid;
+                            }
+                            else
+                            {
+                                $scope.Stok[0].ISHGUID = "00000000-0000-0000-0000-000000000000";
+                            }
+                        });
                     }
                     
                     $scope.BarkodLock = true;

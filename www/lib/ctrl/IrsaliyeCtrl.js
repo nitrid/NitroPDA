@@ -1083,7 +1083,14 @@ function IrsaliyeCtrl($scope,$window,$timeout,db,$filter)
         {
             if($scope.Parca == 1 || $scope.Parca == 0)
             {
-                $scope.BtnTemizle();
+                if(UserParam[UserParam[ParamName].StokKalsin == "0"])
+                {
+                    $scope.BtnTemizle();
+                }
+                else
+                {
+                    StokBarkodGetir($scope.Barkod)
+                }
             }
         }
         if(UserParam[ParamName].EIrsaliyeDetay == 1)

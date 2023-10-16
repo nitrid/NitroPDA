@@ -201,7 +201,8 @@ var ParamTemp =
 			"ProjeGetir" : {"Title" : "Proje Getir","DefaultValue" : "0"},
 			"FiyatAzalt" : {"Title" : "Fiyat Azaltmasın","DefaultValue" : "0"},
 			"PartiBarkodOlustur" : {"Title" : "Parti Barkodu Olustur","DefaultValue" : "0"}	,
-			"OtoEkle": {"Title" : "Oto Ekle","DefaultValue" : "0"}
+			"OtoEkle": {"Title" : "Oto Ekle","DefaultValue" : "0"},
+			"StokKalsin": {"Title" : "Stok Kalsın","DefaultValue" : "0"}
 		},
 		"SatisIrsaliye" :
 		{
@@ -349,7 +350,10 @@ var ParamTemp =
 			"Sorumluluk" : {"Title" : "Sorumluluk Merkezi","DefaultValue" : ""},
 			"Personel" : {"Title" : "Personel Kodu","DefaultValue" : ""},
 			"Proje" : {"Title" : "Proje Kodu","DefaultValue" : ""},
-			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"}
+			"EvrakSil" : {"Title" : "Evrak Sil","DefaultValue" : "0"},
+			"ReceteKontrol": {"Title" : "Recete Kontrol","DefaultValue" : "0"},
+			"EksiyeDusme": {"Title" : "Eksiye Dusme","DefaultValue" : "1"},
+			"PartiMKupEkran": {"Title" : "Parti Metre Küp Ekran","DefaultValue" : "0"},
 		},
 		"PlanliUretim" :
 		{
