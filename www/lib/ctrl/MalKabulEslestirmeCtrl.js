@@ -327,6 +327,22 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
                     align: "center",
                     width: 100
                 }
+                ,
+                {
+                    name: "DEPO",
+                    title: "DEPO",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                }
+                ,
+                {
+                    name: "SORUMLULUK",
+                    title: "SORUMLULUK",
+                    type: "text",
+                    align: "center",
+                    width: 100
+                }
              
             ],
             rowClick: function(args)
@@ -587,13 +603,59 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             pBeden
         ];
         console.log(TmpParam)
-        db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(BarkodData)
-        { 
-            console.log(BarkodData)
-            if(BarkodData.length > 0)
+        db.GetData($scope.Firma,'SiparisStokGetir',TmpParam,function(StokData)
+        {
+            console.log(StokData)
+            if(StokData.length > 0)
             {
-                pCallback(BarkodData,'Siparis');
-               
+                pCallback(StokData,'Siparis');
+            }
+            else if(StokData.length == 0)
+            {
+                let TmpParam =
+                [
+                    $scope.DepoNo,
+                    $scope.CariKodu,
+                    $scope.SipSeri,
+                    $scope.SipSira,
+                    pBarkod,
+                    ''
+                ];
+                db.GetData($scope.Firma,'SiparisBarkodGetir',TmpParam,function(BarkodData)
+                {
+                    if(BarkodData.length > 0)
+                    {
+                        pCallback(BarkodData,'Siparis');
+                    }
+                    else if(UserParam.Sistem.SiparisOlmayanBarkodKabul == 1)
+                    {
+                        alertify.okBtn('Evet');
+                        alertify.cancelBtn('Hayır');
+                
+                        alertify.confirm('Bu Stok Siparişe Ait değil. Yinede Devam Edilsin Mi ?',function()
+                        { 
+                            db.StokBarkodGetir($scope.Firma,pBarkod,$scope.DepoNo,function(StokData)
+                            {
+                                if(StokData.length > 0)
+                                {
+                                    pCallback(StokData,'Stok');
+                                }
+                                else
+                                {
+                                    alertify.alert("Stok Bulunamamıştır !");
+                                    pCallback([],'');
+                                    Beep();
+                                }
+                            });
+                        })
+                    }
+                    else
+                    {   
+                        alertify.alert("Siparişte Olmayan BarkodKabul Parametreniz Kapalı !");
+                        console.log("Siparişte Olmayan BarkodKabul Parametreniz Kapalı !");
+                        pCallback([],'');
+                    }
+                })
             }
             else if(UserParam.Sistem.SiparisOlmayanBarkodKabul == 1)
             {
@@ -709,6 +771,8 @@ function MalKabulEslestirmeCtrl($scope,$window,$timeout,db)
             EslestirmeStokGetir(pBarkod,pBeden,async function(pData,pTip)
             {
                 $scope.Stok = pData       
+                $scope.Sorumluluk = $scope.Stok[0].STOKSORUMLU;
+                $scope.DepoNo = $scope.Stok[0].DEPO;
                 console.log($scope.Stok)             
                 //FONKSİYONDA $scope.Stok İÇERİĞİ BOŞ GELİRSE TÜM İŞLEMLER İPTAL EDİLİYOR. ALI KEMAL KARACA 18.09.2019
                 if($scope.Stok.length == 0)

@@ -50,6 +50,7 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
         $scope.ProjeListe = [];
         $scope.PartiLotListe = [];
         $scope.BedenHarListe = [];
+        $scope.SorumlulukListe = [];
 
         $scope.Stok = [];
         $scope.Miktar = 1;
@@ -567,7 +568,7 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
                 $scope.Depo,
                 $scope.Depo,
                 $scope.BelgeTarih, // MALKABULTARİH
-                $scope.Sorumluluk, // CARİSORUMLULUKMERKEZİ
+                '', // CARİSORUMLULUKMERKEZİ
                 $scope.Sorumluluk, // STOKSORUMLULUKMERKEZİ
                 0,  // VERGİSİZFL
                 0,  // ADRESNO
@@ -750,6 +751,16 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
                 $scope.DepoAdi = item.ADI;
             });     
         });
+        db.FillCmbDocInfo($scope.Firma,'CmbSorumlulukGetir',function(data)
+        {
+            $scope.SorumlulukListe = data; 
+            $scope.Sorumluluk = UserParam.PlanliUretim.Sorumluluk;
+            $scope.SorumlulukListe.forEach(function(item)
+            {
+                if(item.KODU == $scope.Sorumluluk)
+                    $scope.SorumlulukAdi = item.ADI;
+            });
+        }); 
         db.FillCmbDocInfo($scope.Firma,'CmbPersonelGetir',function(data)
         {
             $scope.PersonelListe = data;
@@ -796,6 +807,7 @@ function PlanliUretimCtrl($scope,$window,$timeout,db)
                 $scope.Sira = data[0].sth_evrakno_sira;
                 $scope.IsEmriKodu = data[0].sth_isemri_gider_kodu;
                 $scope.EvrakTip = data[0].sth_evraktip.toString();
+                $scope.Sorumluluk = data[0].sth_stok_srm_merkezi;
                 $scope.BelgeNo = data[0].sth_belge_no;
                 $scope.Tarih = new Date(data[0].sth_tarih).toLocaleDateString();
                 $scope.BelgeTarih = new Date(data[0].sth_belge_tarih).toLocaleDateString();

@@ -51,6 +51,10 @@
                         <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Toplam Satır :</label></div>
                         <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{ToplamSatir | number:2}}</label></div>
                     </div>
+                    <div class="row">
+                        <div class="col-4 px-0 text-info"><label class="form-control-label float-right">Sorumluluk:</label></div>
+                        <div class="col-8 px-0 text-truncate"><label class="form-control-label pl-10">{{Sorumluluk}}</label></div>
+                    </div>
                     <div class="row py-5">
                         <div class="col-6">
                             <button class="btn btn-round btn-block btn-primary btn-blendpr h-50" ng-click="BelgeBilgisiClick()">Belge Bilgisi</button>
@@ -116,7 +120,7 @@
                     <div class="row my-0 py-0">
                         <div class="col-4 text-info px-1"><div class="col-form-label px-1 float-right py-2">Sorumluluk :</div></div>
                         <div class="col-8 px-1">
-                            <select class="form-control" ng-model="Sorumluluk" >
+                            <select class="form-control" ng-model="Sorumluluk" ng-disabled="EvrakLock"  >
                                 <option ng-repeat="option in SorumlulukListe" value="{{option.KODU}}">{{option.ADI}}</option>
                             </select>
                         </div>

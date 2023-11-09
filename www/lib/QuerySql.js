@@ -1351,7 +1351,7 @@ var QuerySql =
                 "BEDENHAR.BdnHar_HarGor, " +
                 "BEDENHAR.BdnHar_TesMik," +
                 "sip_parti_kodu," +
-                "sip_lot_no " ,
+                "sip_lot_no ORDER BY sip_tarih ASC" ,
         param : ['DEPONO','CARI','SERI','SIRA','BARKOD','BEDENNO'],
         type : ['int','string|25','string|10','int','string|25','string|25']
     },
@@ -1514,7 +1514,7 @@ var QuerySql =
                 "BEDENHAR.BdnHar_HarGor, " +
                 "BEDENHAR.BdnHar_TesMik," +
                 "sip_parti_kodu," +
-                "sip_lot_no " ,
+                "sip_lot_no ORDER BY sip_tarih ASC" ,
         param : ['DEPONO','CARI','SERI','SIRA','BARKOD','BEDENNO'],
         type : ['int','string|25','string|10','int','string|25','string|25']
     },
@@ -1907,12 +1907,14 @@ var QuerySql =
                 "sip_stok_kod AS KODU, " +
                 "ISNULL(CAST(BdnHar_BedenNo AS nvarchar),'') AS BEDENNO, " +
                 "sip_Guid AS GUID, " +
+                "ISNULL((select dep_adi from DEPOLAR where dep_no = sip_depono),'') AS DEPO, " +
+                "ISNULL((select som_isim from SORUMLULUK_MERKEZLERI where som_kod = sip_stok_sormerk),'') AS SORUMLULUK, " +
                 "ISNULL((dbo.fn_renk_kirilimi (dbo.fn_bedenharnodan_renk_no_bul (BdnHar_BedenNo),(SELECT sto_renk_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS RENK, " +
                 "ISNULL((dbo.fn_beden_kirilimi (dbo.fn_bedenharnodan_beden_no_bul (BdnHar_BedenNo),(SELECT sto_beden_kodu FROM STOKLAR WHERE STOKLAR.sto_kod = SIPARISLER.sip_stok_kod))),'') AS BEDEN, " +
                 "ISNULL(dbo.fn_bedenharnodan_beden_no_bul(BdnHar_BedenNo),0) AS BEDENPNTR, " +
                 "ISNULL(dbo.fn_bedenharnodan_renk_no_bul(BdnHar_BedenNo),0) AS RENKPNTR " +
                 "FROM SIPARISLER LEFT OUTER JOIN BEDEN_HAREKETLERI ON sip_Guid = BdnHar_Har_uid " +
-                "WHERE ((sip_stok_kod = @sip_stok_kod) OR (@sip_stok_kod = '')) AND sip_depono = @sip_depono AND sip_musteri_kod = @sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and ISNULL((BdnHar_HarGor - BdnHar_TesMik),(sip_miktar - sip_teslim_miktar)) > 0 ",
+                "WHERE ((sip_stok_kod = @sip_stok_kod) OR (@sip_stok_kod = '')) AND sip_musteri_kod = @sip_musteri_kod AND ((sip_evrakno_seri = @sip_evrakno_seri) OR (@sip_evrakno_seri = '')) AND ((sip_evrakno_sira = @sip_evrakno_sira) OR (@sip_evrakno_sira = 0)) AND sip_tip = @sip_tip and ISNULL((BdnHar_HarGor - BdnHar_TesMik),(sip_miktar - sip_teslim_miktar)) > 0 ORDER BY sip_tarih ASC",
         param : ['sip_stok_kod','sip_depono','sip_musteri_kod','sip_evrakno_seri','sip_evrakno_sira','sip_tip'],
         type : ['string|25','string|15','string|25','string|10','int','int']
     },

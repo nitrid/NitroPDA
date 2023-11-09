@@ -539,6 +539,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
     }    
     function InsertData()
     {   
+
         var InsertData = 
         [
             UserParam.MikroId,
@@ -610,7 +611,7 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
             $scope.DepoNo, //CİKİSDEPONO
             $scope.Tarih, //MALKABULSEVKTARİHİ
             '', // CARİSORUMLULUKMERKEZİ
-            '', // SORUMLULUK
+            $scope.Sorumluluk, // SORUMLULUK
             0,  // VERGİSİZFL
             $scope.AdresNo,  // ADRESNO
             $scope.Stok[0].PARTI,
@@ -1593,13 +1594,6 @@ function StokVirmanCtrl($scope,$window,$timeout,db,$filter)
                 1
             ]
             console.log($scope.Barkod)
-            db.ExecuteTag($scope.Firma,'EtiketInsert',InsertData,function(InsertResult)
-            {
-                if(InsertResult != 'undefined')
-                {
-                    alertify.alert("Etiket Yazdırıldı.");
-                }
-            });
         }
         else
         {

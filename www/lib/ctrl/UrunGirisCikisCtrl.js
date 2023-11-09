@@ -675,7 +675,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
             $scope.Depo,
             $scope.Depo,
             $scope.BelgeTarih, // MALKABULTARİH
-            $scope.Sorumluluk, // CARİSORUMLULUKMERKEZİ
+            '', // CARİSORUMLULUKMERKEZİ
             $scope.Sorumluluk, // STOKSORUMLULUKMERKEZİ
             0,  // VERGİSİZFL
             0,  // ADRESNO
