@@ -439,13 +439,13 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
  
         for (i = 0; i < FlagDizi.length; i++ )
         {
-        if(Flag == FlagDizi[i])
-        {
-            var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
-            var Uzunluk = Kilo.slice(UserParam.Sistem.KiloBaslangic,((UserParam.Sistem.KiloBaslangic)+(UserParam.Sistem.KiloUzunluk)));
-            pBarkod = kBarkod
-            $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
-        }
+            if(Flag == FlagDizi[i])
+            {
+                var kBarkod = Kilo.slice(0,UserParam.Sistem.KiloBaslangic);
+                var Uzunluk = Kilo.slice(UserParam.Sistem.KiloBaslangic,((UserParam.Sistem.KiloBaslangic)+(UserParam.Sistem.KiloUzunluk)));
+                pBarkod = kBarkod
+                $scope.Miktar = (Uzunluk / UserParam.Sistem.KiloCarpan)
+            }
         }
         // ----------------------------------------------------
         if(pBarkod != '')
@@ -1611,8 +1611,7 @@ function UrunGirisCikisCtrl($scope,$window,$timeout,db)
         StokSelectedRow = $row;
         
         $scope.Barkod = $scope.StokListe[pIndex].KODU;
-        $scope.Miktar = $scope.StokListe[pIndex].MIKTAR;
-        console.log($scope.StokListe[pIndex].KODU)
+        $scope.Miktar = (typeof $scope.StokListe[pIndex].MIKTAR != "undefined" ? $scope.StokListe[pIndex].MIKTAR : 1) ;
         $scope.BarkodGirisClick();
         StokBarkodGetir($scope.Barkod);
     }

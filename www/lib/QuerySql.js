@@ -4511,7 +4511,7 @@ var QuerySql =
         "upl_isemri  AS ISEMRI, " +
         "upl_uretim_tuket AS TIP, " +
         " CASE upl_uretim_tuket WHEN 0 THEN 'TUKETILECEK' WHEN 1 THEN 'URETILECEK' END AS URETIM " +
-        "FROM URETIM_MALZEME_PLANLAMA WHERE upl_depno = 14 and upl_uretim_tuket = 0 and upl_isemri LIKE @upl_isemri + '%' AND (upl_miktar - upl_special3) > 0" ,
+        "FROM URETIM_MALZEME_PLANLAMA WHERE upl_depno = 14 and upl_uretim_tuket = 0 and    upl_isemri LIKE @upl_isemri + '%' AND (upl_miktar - upl_special3) > 0" ,
         param : ['upl_isemri'],
         type : ['string|50']
     },
@@ -4591,6 +4591,11 @@ var QuerySql =
     {
         query : "UPDATE ISEMRI_MALZEME_DURUMLARI SET ish_uret_miktar = ish_uret_miktar + @MIKTAR, ish_lastup_date = GETDATE() WHERE ish_Guid = @GUID",
         param: ['MIKTAR:float','GUID:string|50']
+    },
+    IsEmriHarGetir :
+    {
+        query : "SELECT * FROM ISEMRI_MALZEME_DURUMLARI WHERE ish_isemri = @ISEMRI AND ish_stokhizm_gid_kod = @STOKKODU",
+        param: ['ISEMRI:string|50','STOKKODU:string|50']
     },
     PlanListeUpdate : 
     {
